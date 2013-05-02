@@ -60,6 +60,8 @@
     <Content Include="Attendance\index.aspx" />
     <Content Include="DivisionStats\index.aspx" />
     <Content Include="FindStudent\index.aspx" />
+    <Content Include="GovXML\index.aspx" />
+    <Content Include="INAC\index.aspx" />
     <Content Include="index.aspx" />
     <Content Include="Logo_Circle_Notext_Trans.png" />
     <Content Include="MainStyles.css" />
@@ -94,6 +96,20 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="FindStudent\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="GovXML\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GovXML\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="INAC\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="INAC\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
     <Compile Include="index.aspx.cs">

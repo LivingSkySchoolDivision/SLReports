@@ -3,7 +3,7 @@
     <h3>Currently Enrolled Student List</h3>  
     <% this.buildSchoolDropdown(Schools); %>
     <br />
-    <% this.buildGradeStatisticsTable(DisplayedStudents); %>
+    <% this.buildStatisticsTable(DisplayedStudents); %>
     <br />
     <% this.buildStudentTable(DisplayedStudents); %>
 </asp:Content>
