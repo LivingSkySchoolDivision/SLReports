@@ -2,7 +2,7 @@
 <asp:Content ID="Content1"  ContentPlaceHolderID="Main" runat="server">
 
     <div style="float:right; border: 1px solid #C0C0C0;background-color: #F0F0F0; padding: 10px;">
-<form method="get">
+<!-- <form method="get"> -->
     <input type="hidden" name="studentid" value="<% Response.Write(selectedStudentID); %>" />
     <table border="0">
         <tr>
@@ -98,7 +98,7 @@
             <td colspan="4" align="right"><input type="submit" value=">>"/></td>
         </tr>
 </table>
-</form>
+<!-- </form> -->
 </div>
 <%
     if (selectedStudent != null)

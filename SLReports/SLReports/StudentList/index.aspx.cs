@@ -67,6 +67,7 @@ namespace SLReports.StudentList
             int displayedStudentCount = 0;
             Table table = new Table();
             /* Create the table header */
+
             Response.Write("<table border=0 class=\"datatable\" cellpadding=3>");
             Response.Write("<tr class=\"datatable_header\">");
             Response.Write("<th width=\"150\"><b>Student ID</b></th>");
@@ -269,7 +270,8 @@ namespace SLReports.StudentList
                             dbDataReader["Phone"].ToString(),
                             dbDataReader["Gender"].ToString(),
                             dbDataReader["InStatus"].ToString(),
-                            DateTime.Parse(dbDataReader["InDate"].ToString())
+                            DateTime.Parse(dbDataReader["InDate"].ToString()),
+                            DateTime.Parse(dbDataReader["DateOfBirth"].ToString())
                             ));
                     }
                 }

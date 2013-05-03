@@ -284,7 +284,8 @@ namespace SLReports.DivisionStats
                             dbDataReader["Phone"].ToString(),
                             dbDataReader["Gender"].ToString(),
                             dbDataReader["InStatus"].ToString(),
-                            DateTime.Parse(dbDataReader["InDate"].ToString())
+                            DateTime.Parse(dbDataReader["InDate"].ToString()),
+                            DateTime.Parse(dbDataReader["DateOfBirth"].ToString())
                             ));
                     }
                 }

@@ -31,10 +31,10 @@ namespace SLReports.Attendance
             String dbDatabase = "SchoolLogicDB";
             String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
 
-            NameValueCollection get = Request.QueryString;
-            if (!string.IsNullOrEmpty(get["studentid"]))
+            //NameValueCollection get = Request.QueryString;
+            if (!string.IsNullOrEmpty(Request["studentid"]))
             {
-                selectedStudentID = get["studentid"];
+                selectedStudentID = Request["studentid"];
             }
             else
             {
@@ -42,15 +42,15 @@ namespace SLReports.Attendance
             }
 
             selectedStartDate = new DateTime(1900, 1, 1);
-            if (!string.IsNullOrEmpty(get["from_year"]))
+            if (!string.IsNullOrEmpty(Request["from_year"]))
             {
-                string year = get["from_year"];
-                if (!string.IsNullOrEmpty(get["from_month"]))
+                string year = Request["from_year"];
+                if (!string.IsNullOrEmpty(Request["from_month"]))
                 {
-                    string month = get["from_month"];
-                    if (!string.IsNullOrEmpty(get["from_day"]))
+                    string month = Request["from_month"];
+                    if (!string.IsNullOrEmpty(Request["from_day"]))
                     {
-                        string day = get["from_day"];
+                        string day = Request["from_day"];
                         selectedStartDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day));
                     }
                 }
@@ -58,15 +58,15 @@ namespace SLReports.Attendance
 
 
             selectedEndDate = DateTime.Now;
-            if (!string.IsNullOrEmpty(get["to_year"]))
+            if (!string.IsNullOrEmpty(Request["to_year"]))
             {
-                string year = get["to_year"];
-                if (!string.IsNullOrEmpty(get["to_month"]))
+                string year = Request["to_year"];
+                if (!string.IsNullOrEmpty(Request["to_month"]))
                 {
-                    string month = get["to_month"];
-                    if (!string.IsNullOrEmpty(get["to_day"]))
+                    string month = Request["to_month"];
+                    if (!string.IsNullOrEmpty(Request["to_day"]))
                     {
-                        string day = get["to_day"];
+                        string day = Request["to_day"];
                         selectedEndDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day));
                     }
                 }

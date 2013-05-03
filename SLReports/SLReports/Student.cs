@@ -30,6 +30,37 @@ namespace SLReports
         private DateTime trackStartDate;
         private DateTime trackEndDate;
 
+        private List<Absence> absences;
+
+        private DateTime dateOfBirth;
+
+        private string bandNo;
+        private string bandName;
+        private string reserveName;
+        private string reserveHouse;
+        private string treatyStatusNo;
+        private bool resideOnReserve;
+
+        public bool getresidesOnReserve()
+        {
+            return this.resideOnReserve;
+        }
+
+        public List<Absence> getAbsences()
+        {
+            return this.absences;
+        }
+
+        public void setAbsences(List<Absence> theseAbsences)
+        {
+           this.absences = theseAbsences;
+        }
+
+        public void addAbsence(Absence thisAbs)
+        {
+            this.absences.Add(thisAbs);
+        }
+
         public string getInStatus()
         {
             return this.InStatus;
@@ -108,8 +139,9 @@ namespace SLReports
 
         public Student(string givenName, string sn, string middleName, string id, string govID, string schoolName, string schoolID,
             string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
-            string phone, string gender, string instat, DateTime inDate)
+            string phone, string gender, string instat, DateTime inDate, DateTime dateOfBirth)
         {
+            absences = new List<Absence>();
             this.givenName = givenName;
             this.sn = sn;
             this.studentID = id;
@@ -128,9 +160,73 @@ namespace SLReports
             this.gender = gender;
             this.InStatus = instat;
             this.enrollmentDate = inDate;
+            this.dateOfBirth = dateOfBirth;
+        }
+        
+        public Student(string givenName, string sn, string middleName, string id, string govID, string schoolName, string schoolID,
+            string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
+            string phone, string gender, string instat, DateTime inDate, DateTime dateOfBirth, string bandNo, string bandName, 
+            string reserveName, string reserveHouse, string treatyStatus, bool resideonreserve)
+        {
+            absences = new List<Absence>();
+            this.givenName = givenName;
+            this.sn = sn;
+            this.studentID = id;
+            this.govID = govID;
+            this.middleName = middleName;
+            this.schoolName = schoolName;
+            this.schoolID = schoolID;
+            this.grade = grade;
+            this.region = region;
+            this.city = city;
+            this.street = street;
+            this.houseno = houseno;
+            this.apartmentno = apartmentno;
+            this.postalcode = postalcode;
+            this.phone = phone;
+            this.gender = gender;
+            this.InStatus = instat;
+            this.enrollmentDate = inDate;
+            this.dateOfBirth = dateOfBirth;
+            this.bandNo = bandNo;
+            this.bandName = bandName;
+            this.reserveName = reserveName;
+            this.reserveHouse = reserveHouse;
+            this.treatyStatusNo = treatyStatus;
+            this.resideOnReserve = resideonreserve;
+        }
+
+        public string getBandNo()
+        {
+            return this.bandNo;
+        }
+
+        public string getBandName()
+        {
+            return this.bandName;
+        }
+
+        public string getReserveName()
+        {
+            return this.reserveName;
+        }
+
+        public string getReserveHouse()
+        {
+            return this.reserveHouse;
+        }
+
+        public string getStatusNo() 
+        {
+            return this.treatyStatusNo;
         }
 
 
+        public DateTime getDateOfBirth()
+        {
+            return this.dateOfBirth;
+        }
+        
         public void setTrack(DateTime start, DateTime end)
         {
             this.trackStartDate = start;
@@ -214,7 +310,8 @@ namespace SLReports
                             dataReader["Phone"].ToString(),
                             dataReader["Gender"].ToString(),
                             dataReader["InStatus"].ToString(),
-                            DateTime.Parse(dataReader["InDate"].ToString())
+                            DateTime.Parse(dataReader["InDate"].ToString()),
+                            DateTime.Parse(dataReader["DateOfBirth"].ToString())
                             );
 
                     returnMe.setTrack(DateTime.Parse(dataReader["CurrentTrackStart"].ToString()), DateTime.Parse(dataReader["CurrentTrackEnd"].ToString()));
