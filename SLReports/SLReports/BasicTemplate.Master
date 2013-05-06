@@ -20,9 +20,8 @@
                         <div class="navbar">
                             <a href="/SLReports/" class="header_button">Front Page</a> 
                             <a href="/SLReports/StudentList/" class="header_button">Student Lists</a> 
-                            <a href="/SLReports/DivisionStats/" class="header_button">Division Stats</a>
-                            <a href="/SLReports/INAC/" class="header_button">INAC</a>  
-                            <a href="/SLReports/GovXML/" class="header_button">Student Demographics Report</a>  
+                            <a href="/SLReports/EnrollmentByGrade/" class="header_button">Enrollment By Grade</a>
+                            <a href="/SLReports/INAC/" class="header_button">INAC (Work in progress)</a>
                         </div>          
                     </td>
                 </tr>

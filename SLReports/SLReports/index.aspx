@@ -10,12 +10,7 @@
         Make a selection from the list of tools at the top of the page.
     </p>
     <p>
-        <b>Upcoming features</b>
-        <ul>
-            <li>Print friendly reports</li>
-            <li>Searching for a student</li>
-            <li>(Maybe) Marks reporting / Report Cards</li>
-        </ul>
+        <b>Warning:</b> Some pages may take a few minutes to load.
     </p>
 </div>
 

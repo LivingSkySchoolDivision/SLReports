@@ -58,7 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Attendance\index.aspx" />
-    <Content Include="DivisionStats\index.aspx" />
+    <Content Include="EnrollmentByGrade\index.aspx" />
     <Content Include="FindStudent\index.aspx" />
     <Content Include="GovXML\index.aspx" />
     <Content Include="INAC\index.aspx" />
@@ -84,11 +84,11 @@
     <Compile Include="BasicTemplate.Master.designer.cs">
       <DependentUpon>BasicTemplate.Master</DependentUpon>
     </Compile>
-    <Compile Include="DivisionStats\index.aspx.cs">
+    <Compile Include="EnrollmentByGrade\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="DivisionStats\index.aspx.designer.cs">
+    <Compile Include="EnrollmentByGrade\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
     <Compile Include="FindStudent\index.aspx.cs">
