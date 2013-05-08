@@ -18,7 +18,7 @@
             <tr>
                 <td colspan="2">
                     <div style="text-align: right;">
-                        <asp:Button ID="btnLogin" Runat=server Text="Login" OnClick="btnLogin_Click"></asp:Button>
+                        <img src="../lock.png" /> <asp:Button ID="btnLogin" Runat=server Text="Login" OnClick="btnLogin_Click"></asp:Button>
                     </div>
                 </td>
             </tr>

@@ -65,6 +65,7 @@
     <Content Include="GovXML\index.aspx" />
     <Content Include="INAC\index.aspx" />
     <Content Include="index.aspx" />
+    <Content Include="lock.png" />
     <Content Include="Login\index.aspx" />
     <Content Include="Logo_Circle_Notext_Trans.png" />
     <Content Include="MainStyles.css" />
