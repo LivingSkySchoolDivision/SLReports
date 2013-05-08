@@ -181,30 +181,33 @@ namespace SLReports.Login
 
             List<string> groupMembers = getGroupMembers("lskysd", groupName);
 
-            if (validate("lskysd", givenUsername, givenPassword))
+            if (!((string.IsNullOrEmpty(givenUsername)) || (string.IsNullOrEmpty(givenPassword))))
             {
-                if (groupMembers.Contains(givenUsername))
+                if (validate("lskysd", givenUsername, givenPassword))
                 {
-                    logLoginAttempt(txtUsername.Text, Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"], "SUCCESS", "");
-                    createSession(givenUsername, Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"]);
+                    if (groupMembers.Contains(givenUsername))
+                    {
+                        logLoginAttempt(txtUsername.Text, Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"], "SUCCESS", "");
+                        createSession(givenUsername, Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"]);
 
-                    /* Redirect somewhere else maybe */
-                    Response.Redirect("/SLReports/");
-                    
+                        /* Redirect somewhere else maybe */
+                        Response.Redirect("/SLReports/");
+
+                    }
+                    else
+                    {
+                        lblStatus.ForeColor = Color.Red;
+                        lblStatus.Text = "Access Denied";
+                        logLoginAttempt(txtUsername.Text, Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"], "DENIED", "User is not in security group");
+                    }
                 }
                 else
                 {
                     lblStatus.ForeColor = Color.Red;
                     lblStatus.Text = "Access Denied";
-                    logLoginAttempt(txtUsername.Text, Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"], "DENIED", "User is not in security group");
+                    logLoginAttempt(txtUsername.Text, Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"], "DENIED", "Incorrect username or password");
                 }
-            } 
-            else
-            {
-                lblStatus.ForeColor = Color.Red;
-                lblStatus.Text = "Access Denied";
-                logLoginAttempt(txtUsername.Text, Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"], "DENIED", "Incorrect username or password");
-            }
+            }                
         }
     }
 }
