@@ -232,9 +232,9 @@ namespace SLReports.INAC
             Response.Write("<th valign=\"top\" width=\"300\"><b>House</b></th>");
             Response.Write("<th valign=\"top\" width=\"100\"><b>Parent / Guardian Name</b></th>");
             Response.Write("<th valign=\"top\" width=\"200\"><b>Date Registered</b></th>");
-            Response.Write("<th valign=\"top\" width=\"200\"><b><span style=\"color: red\">Blocks</span> Absent (Unknown)</b></th>");
-            Response.Write("<th valign=\"top\" width=\"200\"><b><span style=\"color: red\">Blocks</span> absent (Known)</b></th>");
-            Response.Write("<th valign=\"top\" width=\"200\"><b><span style=\"color: red\">Blocks</span> Late</b></th>");
+            Response.Write("<th valign=\"top\" width=\"200\"><b><span style=\"border: 0; border-bottom: 2px solid red;\">Blocks</span> Absent (Unknown)</b></th>");
+            Response.Write("<th valign=\"top\" width=\"200\"><b><span style=\"border: 0; border-bottom: 2px solid red;\">Blocks</span> absent (Known)</b></th>");
+            Response.Write("<th valign=\"top\" width=\"200\"><b><span style=\"border: 0; border-bottom: 2px solid red;\">Blocks</span> Late</b></th>");
             Response.Write("</tr>\n");
 
             displayedStudentCount = 0;

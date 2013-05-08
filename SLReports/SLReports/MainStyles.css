@@ -3,11 +3,41 @@
     font-family: Arial;
     padding: 0;
     margin: 0;
+}
 
+#loggedInUserBanner {        
+    font-size: 8pt;
+    text-align: right;
+    padding: 10px;    
+    border: 0;
+    border-bottom: 1px solid #404040;
+    border-left: 1px solid #404040;
+    background-color: #202020;
+    float: right;
+    color: white;
+}
+
+#loggedInUserBanner a {
+    color: white;
 }
 
 h1 {
     font-family: Arial;
+}
+
+.CenteredTable {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.LoginFormContainer {
+    border: 1px solid #C0C0C0;
+    background-color: #F0F0F0;
+    text-align: center;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
 }
 
 .button {

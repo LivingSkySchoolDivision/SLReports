@@ -39,6 +39,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -63,6 +65,7 @@
     <Content Include="GovXML\index.aspx" />
     <Content Include="INAC\index.aspx" />
     <Content Include="index.aspx" />
+    <Content Include="Login\index.aspx" />
     <Content Include="Logo_Circle_Notext_Trans.png" />
     <Content Include="MainStyles.css" />
     <Content Include="StudentList\index.aspx" />
@@ -119,8 +122,16 @@
     <Compile Include="index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Login\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="School.cs" />
+    <Compile Include="session.cs" />
     <Compile Include="Student.cs" />
     <Compile Include="StudentList\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
