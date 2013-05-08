@@ -114,11 +114,22 @@ namespace SLReports.Login
             String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
 
 
-            /* Sessions last this long                                 */
-            /*                                      /- Hours            */
-            /*                                      |  /- Minutes       */
-            /*                                      |  |  /- Seconds    */
-            TimeSpan sessionDuration = new TimeSpan(8, 0, 0);
+            /* Set a limit on how long this login session will last, based on time of day */
+            /*  If logging in during the work day, make a session last 7 hours */
+            /*  If logging in after hours, make the session only last 2 hours */
+            TimeSpan workDayStart = new TimeSpan(7, 0, 0);
+            TimeSpan workDayEnd = new TimeSpan(16, 0, 0);
+            TimeSpan now = DateTime.Now.TimeOfDay;
+            TimeSpan sessionDuration;
+
+            if ((now >= workDayStart) && (now <= workDayEnd))
+            {
+                sessionDuration = new TimeSpan(8, 0, 0);
+            }
+            else
+            {
+                sessionDuration = new TimeSpan(2, 0, 0);
+            }
 
             using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
             {
