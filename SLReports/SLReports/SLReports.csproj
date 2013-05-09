@@ -89,6 +89,7 @@
     <Compile Include="BasicTemplate.Master.designer.cs">
       <DependentUpon>BasicTemplate.Master</DependentUpon>
     </Compile>
+    <Compile Include="Contact.cs" />
     <Compile Include="EnrollmentByGrade\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
