@@ -354,7 +354,8 @@ namespace SLReports
                         dataReader["Comment"].ToString(),
                         int.Parse(dataReader["Block"].ToString()),
                         DateTime.Parse(dataReader["tStartTime"].ToString()),
-                        DateTime.Parse(dataReader["tEndTime"].ToString())
+                        DateTime.Parse(dataReader["tEndTime"].ToString()),
+                        int.Parse(dataReader["Minutes"].ToString())
                         ));
                 }
             }

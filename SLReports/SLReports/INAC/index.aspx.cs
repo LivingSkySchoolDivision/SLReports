@@ -326,7 +326,8 @@ namespace SLReports.INAC
                                 dataReader["Comment"].ToString().Trim(),
                                 int.Parse(dataReader["Block"].ToString()),
                                 DateTime.Parse(dataReader["tStartTime"].ToString()),
-                                DateTime.Parse(dataReader["tEndTime"].ToString())
+                                DateTime.Parse(dataReader["tEndTime"].ToString()),
+                                int.Parse(dataReader["Minutes"].ToString())
                                 ));
                         }
                     }
@@ -383,9 +384,10 @@ namespace SLReports.INAC
             Response.Write("<th valign=\"top\" width=\"300\"><b>House</b></th>");
             Response.Write("<th valign=\"top\" width=\"100\"><b>Parent / Guardian Name(s)</b></th>");
             Response.Write("<th valign=\"top\" width=\"200\"><b>Instatus date</b></th>");
-            Response.Write("<th valign=\"top\" width=\"200\"><b><span style=\"border: 0; border-bottom: 2px solid red;\">Blocks</span> Absent (Unknown)</b></th>");
-            Response.Write("<th valign=\"top\" width=\"200\"><b><span style=\"border: 0; border-bottom: 2px solid red;\">Blocks</span> absent (Known)</b></th>");
-            Response.Write("<th valign=\"top\" width=\"200\"><b><span style=\"border: 0; border-bottom: 2px solid red;\">Blocks</span> Late</b></th>");
+            Response.Write("<th valign=\"top\" width=\"200\"><b><u>Blocks</u> Absent (Unknown)</b></th>");
+            Response.Write("<th valign=\"top\" width=\"200\"><b><u>Blocks</u> absent (Known)</b></th>");
+            Response.Write("<th valign=\"top\" width=\"200\"><b><u>Blocks</u> Late</b></th>");
+            Response.Write("<th valign=\"top\" width=\"200\"><b>Total minutes Late</b></th>");
             Response.Write("</tr>\n");
 
             displayedStudentCount = 0;
@@ -407,6 +409,7 @@ namespace SLReports.INAC
             int numAbs_Unexplained = 0;
             int numAbs_Explained = 0;
             int numLates = 0;
+            int totalMinutesLate = 0;
 
             foreach (Absence abs in student.getAbsences())
             {
@@ -423,6 +426,7 @@ namespace SLReports.INAC
                 } else if (abs.getStatus().ToLower().Equals("late"))
                 {
                     numLates++;
+                    totalMinutesLate += abs.getMinutes();
                 }
             }
 
@@ -443,7 +447,9 @@ namespace SLReports.INAC
             Response.Write("<td>" + student.getEnrollDate().ToShortDateString() + "</td>");
             Response.Write("<td>"+numAbs_Unexplained+"</td>");
             Response.Write("<td>"+numAbs_Explained+"</td>");
-            Response.Write("<td>"+numLates+"</td>");
+            Response.Write("<td>" + numLates + "</td>");
+            Response.Write("<td>" + totalMinutesLate + " </td>");
+            Response.Write("</td>");
             Response.Write("</tr>\n");
         }
         

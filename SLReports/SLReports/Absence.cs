@@ -14,11 +14,12 @@ namespace SLReports
         private string status;
         private string reason;
         private string comment;
+        private int minutes;
         private int block;
         private DateTime blockStarttime;
         private DateTime blockEndTime;
 
-        public Absence(DateTime date, string studentid, string courseName, string courseID, string status, string reason, string comment, int block, DateTime bStarttime, DateTime bEndTime)
+        public Absence(DateTime date, string studentid, string courseName, string courseID, string status, string reason, string comment, int block, DateTime bStarttime, DateTime bEndTime, int minutes)
         {
             this.date = date;
             this.studentID = studentid;
@@ -30,6 +31,7 @@ namespace SLReports
             this.block = block;
             this.blockStarttime = bStarttime;
             this.blockEndTime = bEndTime;
+            this.minutes = minutes;
         }
 
         public DateTime getStartTime()
@@ -50,6 +52,11 @@ namespace SLReports
         public string getStudentID()
         {
             return this.studentID;
+        }
+
+        public int getMinutes() 
+        {
+            return this.minutes;
         }
 
         public int getStudentIDAsInt()
