@@ -10,12 +10,25 @@ namespace SLReports
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string studentNumber { get; set; }
+        public string relation { get; set; }
+            
 
-        public Contact(string firstName, string LastName, string StudentNumber)
+        public Contact(string fn, string ln, string rel, string snumber)
         {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.studentNumber = studentNumber;
+            this.firstName = fn;
+            this.lastName = ln;
+            this.studentNumber = snumber;
+            this.relation = rel;
+        }
+
+        public override string ToString()
+        {
+            return firstName + " " + lastName + " ("+relation+")";
+        }
+
+        public string getStudentID()
+        {
+            return studentNumber;
         }
     }
 }

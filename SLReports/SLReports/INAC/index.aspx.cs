@@ -15,6 +15,8 @@ namespace SLReports.INAC
         public static List<Student> AllStudents;
         public static List<Absence> AllAbsences;
         public static List<School> Schools;
+        public static List<Contact> AllContacts;
+
         private static School selectedSchool = null;
 
         DateTime startDate = DateTime.Now.AddMonths(-1);
@@ -70,6 +72,7 @@ namespace SLReports.INAC
             AllStudents = new List<Student>();
             Schools = new List<School>();
             AllAbsences = new List<Absence>();
+            AllContacts = new List<Contact>();
 
             String dbUser = @"sql_readonly";
             String dbPassword = @"XTXVDUNHlrdbefjTBgY4";
@@ -287,9 +290,50 @@ namespace SLReports.INAC
 
             long LoadTime_Start = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
-           
-            #region Load all Absences
             
+            #region Load all contacts
+            try
+            {
+                if (AllStudents.Count > 0)
+                {
+                    SqlConnection dbConnection = new SqlConnection(dbConnectionString);
+                    SqlCommand sqlCommand = new SqlCommand();
+                    sqlCommand.Connection = dbConnection;
+                    sqlCommand.CommandType = CommandType.Text;
+                    /* This looks a bit ugly, but it tests alright, and it speeds up the loading of absences considerably */
+                    StringBuilder SQL = new StringBuilder();
+                    SQL.Append("SELECT * FROM LSKY_Contacts WHERE (");
+                    foreach (Student student in AllStudents)
+                    {
+                        SQL.Append("(StudentNumber = '" + student.getStudentID() + "') OR ");
+                    }
+                    SQL.Remove(SQL.Length - 4, 4);
+                    SQL.Append(") ORDER BY StudentNumber ASC;");
+                    sqlCommand.CommandText = SQL.ToString();
+                    sqlCommand.Connection.Open();
+                    SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+                    if (dataReader.HasRows)
+                    {
+                        AllContacts.Clear();
+                        while (dataReader.Read())
+                        {
+                            AllContacts.Add(new Contact(
+                                dataReader["FirstName"].ToString().Trim(),
+                                dataReader["LastName"].ToString().Trim(),
+                                dataReader["Relation"].ToString().Trim(),
+                                dataReader["StudentNumber"].ToString().Trim()
+                                ));
+                        }
+                    }
+                    sqlCommand.Connection.Close();
+
+                }
+            }
+            catch {} 
+            #endregion
+
+            #region Load all Absences
             try
             {
                 if (AllStudents.Count > 0)
@@ -339,7 +383,8 @@ namespace SLReports.INAC
             
             AllStudents.Sort();
 
-            /* Load absences into the Student list */
+            /* Load absences and contacts into the Student list */
+
 
             foreach (Student student in AllStudents)
             {
@@ -349,6 +394,14 @@ namespace SLReports.INAC
                     {
                         student.addAbsence(abs);
                     }
+                }
+
+                foreach (Contact con in AllContacts)
+                {
+                    if (con.getStudentID().ToLower().Equals(student.getStudentID().ToLower()))
+                    {
+                        student.addContact(con);
+                    }                    
                 }
             }
 
@@ -370,19 +423,19 @@ namespace SLReports.INAC
             Response.Write("<div class=\"small_infobox\">Found "+students.Count+" students for <b>" + selectedSchool.getName() + "</b><br/>Displaying attendance between <b>" + startDate.ToLongDateString() + "</b> and <b>" + endDate.ToLongDateString() + "</b></div><br/>");
             Response.Write("<table border=0 class=\"datatable\" cellpadding=3>");
             Response.Write("<tr valign=\"top\" class=\"datatable_header\">");
-            Response.Write("<th valign=\"top\" width=\"150\"><b>SchoolLogic Student ID</b></th>");
+            Response.Write("<th valign=\"top\" width=\"50\"><b>ID #</b></th>");
             Response.Write("<th valign=\"top\" width=\"150\"><b>Given Name</b></th>");
             Response.Write("<th valign=\"top\" width=\"150\"><b>Surname</b></th>");
             Response.Write("<th valign=\"top\" width=\"150\"><b>Middle Name</b></th>");
             Response.Write("<th valign=\"top\" width=\"150\"><b>Gender</b></th>");
             Response.Write("<th valign=\"top\" width=\"150\"><b>Birthday</b></th>");
             Response.Write("<th valign=\"top\" width=\"150\"><b>Grade</b></th>");
-            Response.Write("<th valign=\"top\" width=\"150\"><b>Band Affiliation</b></th>");
+            Response.Write("<th valign=\"top\" width=\"200\"><b>Band Affiliation</b></th>");
             Response.Write("<th valign=\"top\" width=\"150\"><b>Band No</b></th>");
             Response.Write("<th valign=\"top\" width=\"100\"><b>Status No</b></th>");
             Response.Write("<th valign=\"top\" width=\"100\"><b>Reserve of Residence</b></th>");
-            Response.Write("<th valign=\"top\" width=\"300\"><b>House</b></th>");
-            Response.Write("<th valign=\"top\" width=\"100\"><b>Parent / Guardian Name(s)</b></th>");
+            Response.Write("<th valign=\"top\" width=\"100\"><b>House</b></th>");
+            Response.Write("<th valign=\"top\" width=\"300\"><b>Parent / Guardian Name(s)</b></th>");
             Response.Write("<th valign=\"top\" width=\"200\"><b>Instatus date</b></th>");
             Response.Write("<th valign=\"top\" width=\"200\"><b><u>Blocks</u> Absent (Unknown)</b></th>");
             Response.Write("<th valign=\"top\" width=\"200\"><b><u>Blocks</u> absent (Known)</b></th>");
@@ -443,7 +496,18 @@ namespace SLReports.INAC
             Response.Write("<td>" + student.getStatusNo() + "</td>");
             Response.Write("<td>" + student.getReserveName() + "</td>");
             Response.Write("<td>" + student.getReserveHouse() + "</td>");
-            Response.Write("<td></td>");
+            Response.Write("<td>");
+            StringBuilder contactDisplay = new StringBuilder();
+            foreach (Contact con in student.getContacts())
+            {
+                contactDisplay.Append(con + ", ");
+            }
+            if (contactDisplay.Length > 2)
+            {
+                contactDisplay.Remove(contactDisplay.Length - 2, 2);
+            }
+            Response.Write(contactDisplay);
+            Response.Write("</td>");            
             Response.Write("<td>" + student.getEnrollDate().ToShortDateString() + "</td>");
             Response.Write("<td>"+numAbs_Unexplained+"</td>");
             Response.Write("<td>"+numAbs_Explained+"</td>");

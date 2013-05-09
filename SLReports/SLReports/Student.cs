@@ -31,6 +31,7 @@ namespace SLReports
         private DateTime trackEndDate;
 
         private List<Absence> absences;
+        private List<Contact> contacts;
 
         private DateTime dateOfBirth;
 
@@ -40,6 +41,16 @@ namespace SLReports
         private string reserveHouse;
         private string treatyStatusNo;
         private bool resideOnReserve;
+
+        public List<Contact> getContacts()
+        {
+            return contacts;
+        }
+
+        public void addContact(Contact thisContact)
+        {
+            this.contacts.Add(thisContact);
+        }
 
         public bool getresidesOnReserve()
         {
@@ -148,6 +159,8 @@ namespace SLReports
             string phone, string gender, string instat, DateTime inDate, DateTime dateOfBirth)
         {
             absences = new List<Absence>();
+            contacts = new List<Contact>();
+
             this.givenName = givenName;
             this.sn = sn;
             this.studentID = id;
@@ -167,6 +180,7 @@ namespace SLReports
             this.InStatus = instat;
             this.enrollmentDate = inDate;
             this.dateOfBirth = dateOfBirth;
+
         }
         
         public Student(string givenName, string sn, string middleName, string id, string govID, string schoolName, string schoolID,
@@ -175,6 +189,8 @@ namespace SLReports
             string reserveName, string reserveHouse, string treatyStatus, bool resideonreserve)
         {
             absences = new List<Absence>();
+            contacts = new List<Contact>();
+
             this.givenName = givenName;
             this.sn = sn;
             this.studentID = id;
