@@ -156,6 +156,12 @@ namespace SLReports.Logs
                 //cell_Hash.Text = ses.getHash();
                 //cell_Agent.Text = ses.getUserAgent();
 
+                if (ses.getHash().Equals(getSessionIDFromCookies()))
+                {
+                    cell_username.Text += " (You)";
+                }
+
+
                 tblRow.Cells.Add(cell_username);
                 tblRow.Cells.Add(cell_starttime);
                 tblRow.Cells.Add(cell_endtime);
