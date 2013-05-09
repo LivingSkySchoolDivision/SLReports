@@ -159,6 +159,10 @@ namespace SLReports.Logs
                 if (ses.getHash().Equals(getSessionIDFromCookies()))
                 {
                     cell_username.Text += " (You)";
+                    cell_username.Font.Bold = true;
+                    cell_starttime.Font.Bold = true;
+                    cell_endtime.Font.Bold = true;
+                    cell_IP.Font.Bold = true;
                 }
 
 
