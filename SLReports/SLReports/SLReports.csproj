@@ -68,6 +68,7 @@
     <Content Include="lock.png" />
     <Content Include="Login\index.aspx" />
     <Content Include="Logo_Circle_Notext_Trans.png" />
+    <Content Include="Logs\index.aspx" />
     <Content Include="MainStyles.css" />
     <Content Include="Nav.aspx" />
     <Content Include="StudentList\index.aspx" />
@@ -130,6 +131,13 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Login\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Logs\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Logs\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
     <Compile Include="Nav.aspx.cs">

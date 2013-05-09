@@ -1,0 +1,173 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace SLReports.Logs
+{
+    public partial class index : System.Web.UI.Page
+    {
+        string dbUser = @"data_explorer";
+        string dbPassword = @"YKy08UJBBbwOoktJ";
+        string dbHost = "localhost";
+        string dbDatabase = "DataExplorer";
+
+        List<session> AllSessions = null;
+
+        private List<session> getActiveSessions()
+        {
+            List<session> returnMe = new List<session>();
+
+            try
+            {
+                String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+                using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand())
+                    {
+                        sqlCommand.Connection = dbConnection;
+                        sqlCommand.CommandType = CommandType.Text;
+                        sqlCommand.CommandText = "SELECT * FROM sessions WHERE sessionstarts < {fn NOW()} AND sessionends > {fn NOW()};";
+
+                        sqlCommand.Connection.Open();
+                        SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
+
+                        if (dbDataReader.HasRows)
+                        {
+                            while (dbDataReader.Read())
+                            {
+                                returnMe.Add(new session(
+                                    dbDataReader["username"].ToString(),
+                                    dbDataReader["ip"].ToString(),
+                                    dbDataReader["id_hash"].ToString(),
+                                    dbDataReader["useragent"].ToString(),
+                                    DateTime.Parse(dbDataReader["sessionstarts"].ToString()),
+                                    DateTime.Parse(dbDataReader["sessionends"].ToString())
+                                    ));
+                            }
+                        }
+                        sqlCommand.Connection.Close();
+                    }
+                }
+            }
+            catch (Exception e) { Response.Write(e.Message); }
+            return returnMe;
+        }
+
+        private session getSession(string hash, string ip, string useragent)
+        {
+            session returnme = null;
+
+            /* Search for the session hash in the database */
+            try
+            {
+                String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+                using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand())
+                    {
+                        sqlCommand.Connection = dbConnection;
+                        sqlCommand.CommandType = CommandType.Text;
+                        sqlCommand.CommandText = "SELECT * FROM sessions WHERE id_hash=@Hash AND ip=@IP AND useragent=@UA;";
+                        sqlCommand.Parameters.AddWithValue("@Hash", hash);
+                        sqlCommand.Parameters.AddWithValue("@IP", ip);
+                        sqlCommand.Parameters.AddWithValue("@UA", useragent);
+
+                        sqlCommand.Connection.Open();
+                        SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
+
+                        if (dbDataReader.HasRows)
+                        {
+                            while (dbDataReader.Read())
+                            {
+                                returnme = new session(
+                                    dbDataReader["username"].ToString(),
+                                    dbDataReader["ip"].ToString(),
+                                    dbDataReader["id_hash"].ToString(),
+                                    dbDataReader["useragent"].ToString(),
+                                    DateTime.Parse(dbDataReader["sessionstarts"].ToString()),
+                                    DateTime.Parse(dbDataReader["sessionends"].ToString())
+                                    );
+                            }
+                        }
+                        sqlCommand.Connection.Close();
+                    }
+                }
+            }
+            catch { }
+
+            if (returnme != null)
+            {
+                if (returnme.getIP().Equals(ip))
+                {
+                    if (returnme.getUserAgent().Equals(useragent))
+                    {
+                        if (returnme.getStart() < DateTime.Now)
+                        {
+                            if (returnme.getEnd() > DateTime.Now)
+                            {
+                                return returnme;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+        private string getSessionIDFromCookies()
+        {
+            HttpCookie sessionCookie = Request.Cookies["lskyDataExplorer"];
+            if (sessionCookie != null)
+            {
+                return sessionCookie.Value;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            /* Load sessions */
+            AllSessions = getActiveSessions();
+            
+            foreach (session ses in AllSessions)
+            {
+                tblSessions.CellPadding = 3;
+                TableRow tblRow = new TableRow();
+                tblRow.CssClass = "datatable";
+                TableCell cell_username = new TableCell();
+                TableCell cell_starttime = new TableCell();
+                TableCell cell_endtime = new TableCell();
+                TableCell cell_IP = new TableCell();
+                //TableCell cell_Hash = new TableCell();
+                //TableCell cell_Agent = new TableCell();
+
+                cell_username.Text = ses.getUsername();
+                cell_starttime.Text = ses.getStart().ToLongDateString() + " " + ses.getStart().ToLongTimeString();
+                cell_endtime.Text = ses.getEnd().ToLongDateString() + " " + ses.getEnd().ToLongTimeString();
+                cell_IP.Text = ses.getIP();
+                //cell_Hash.Text = ses.getHash();
+                //cell_Agent.Text = ses.getUserAgent();
+
+                tblRow.Cells.Add(cell_username);
+                tblRow.Cells.Add(cell_starttime);
+                tblRow.Cells.Add(cell_endtime);
+                tblRow.Cells.Add(cell_IP);
+                //tblRow.Cells.Add(cell_Hash);
+                //tblRow.Cells.Add(cell_Agent);
+
+                tblSessions.Rows.Add(tblRow);
+
+                
+            }
+
+        }
+    }
+}
