@@ -122,6 +122,12 @@ namespace SLReports
         {
             return this.grade;
         }
+
+        public string getGenderInitial()
+        {
+            return this.gender.Substring(0, 1);
+        }
+
         public string getGender()
         {
             return this.gender;

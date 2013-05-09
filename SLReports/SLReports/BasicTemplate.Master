@@ -20,11 +20,8 @@
                         <span style="border: 0; padding-top: 10px; margin-left: 10px; font-size: 20pt;font-family: Arial;border: 0; border-bottom: 1px solid white;">SchoolLogic Data Explorer</span><br/>            
                         <div class="navbar">
                             <% if (loggedInUser != null) { %>
-                            <a href="/SLReports/" class="header_button">Front Page</a> 
-                            <a href="/SLReports/StudentList/" class="header_button">Student Lists</a> 
-                            <a href="/SLReports/EnrollmentByGrade/" class="header_button">Enrollment By Grade</a>
-                            <a href="/SLReports/INAC/" class="header_button">INAC (Work in progress)</a>
-                            <% } %>
+                                <% displayNavDropdown(); %>                            
+                            <% } else { Response.Write("&nbsp;"); /* So the empty space doesn't change the formatting as much */} %>
                         </div>          
                         
                     </td>

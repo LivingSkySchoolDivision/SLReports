@@ -18,8 +18,11 @@ namespace SLReports
         string dbPassword = @"YKy08UJBBbwOoktJ";
         string dbHost = "localhost";
         string dbDatabase = "DataExplorer";
-
+                
         string loginURL = "/SLReports/Login/index.aspx";
+
+
+        List<NavMenuItem> MainMenu;
 
         public session loggedInUser = null;
 
@@ -142,6 +145,21 @@ namespace SLReports
             }
         }
 
+        public void displayNavDropdown()
+        {
+            /* Load the menu items */
+            MainMenu = Nav.getMainMenu();
+            Response.Write("<form method=\"post\" action=\"/SLReports/Nav.aspx\">");
+            Response.Write("<select name=\"selectedMenuItem\">");
+            foreach (NavMenuItem mi in MainMenu)
+            {
+                Response.Write("<option value=\"" + mi.id + "\">" + mi.name + "</option>");
+            }
+            Response.Write("</select>");
+            Response.Write("&nbsp;<input type=\"submit\" value=\"Go\">");
+            Response.Write("</form>");
+        }
+
         public void displayUserBanner()
         {
             if (loggedInUser != null)
@@ -155,15 +173,18 @@ namespace SLReports
                     Response.Redirect(loginURL);
                 }
             }
-        }
+        }       
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if ((Request.QueryString.AllKeys.Contains("logoff")) || (Request.QueryString.AllKeys.Contains("logout")))
             {                
-                expireSession();
-                
+                expireSession();                
             }
-        }
+                           
+        
+
+        }        
     }
 }
