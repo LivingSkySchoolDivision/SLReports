@@ -435,7 +435,7 @@ namespace SLReports.INAC
             Response.Write("<th valign=\"top\" width=\"100\"><b>Status No</b></th>");
             Response.Write("<th valign=\"top\" width=\"100\"><b>Reserve of Residence</b></th>");
             Response.Write("<th valign=\"top\" width=\"100\"><b>House</b></th>");
-            Response.Write("<th valign=\"top\" width=\"300\"><b>Parent / Guardian Name(s)</b></th>");
+            Response.Write("<th valign=\"top\" width=\"300\"><b>Parent / Guardian Name(s)<a href=\"#foot_1\"><sup>1</sup></a></b></th>");
             Response.Write("<th valign=\"top\" width=\"200\"><b>Instatus date</b></th>");
             Response.Write("<th valign=\"top\" width=\"200\"><b><u>Blocks</u> Absent (Unknown)</b></th>");
             Response.Write("<th valign=\"top\" width=\"200\"><b><u>Blocks</u> absent (Known)</b></th>");
@@ -456,6 +456,7 @@ namespace SLReports.INAC
                 }
             }
             Response.Write("</table>");
+            Response.Write("<div><a name=\"foot_1\"><sup>1</sup></a>: Parent / Guardian is calculated as any priority 1 contact that lives with the student.</div>");
         }
         public void buildStudentTable_Row(Student student)
         {

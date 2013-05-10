@@ -17,6 +17,50 @@ namespace SLReports.Logs
         string dbDatabase = "DataExplorer";
 
         List<session> AllSessions = null;
+        List<LoginAttempt> AllLoginAttempts = null;
+
+        private List<LoginAttempt> getLoginAttempts(DateTime from, DateTime to)
+        {
+            List<LoginAttempt> returnMe = new List<LoginAttempt>();
+
+            try
+            {
+                String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+                using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand())
+                    {
+                        sqlCommand.Connection = dbConnection;
+                        sqlCommand.CommandType = CommandType.Text;
+                        sqlCommand.CommandText = "SELECT * FROM audit_loginAttempts WHERE eventTime < @EventTo AND eventTime > @EventFrom;";
+                        sqlCommand.Parameters.AddWithValue("@EventTo", to);
+                        sqlCommand.Parameters.AddWithValue("@EventFrom", from);
+
+                        sqlCommand.Connection.Open();
+                        SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
+
+                        if (dbDataReader.HasRows)
+                        {
+                            while (dbDataReader.Read())
+                            {
+                                returnMe.Add(new LoginAttempt(
+                                    DateTime.Parse(dbDataReader["eventTime"].ToString()),
+                                    dbDataReader["enteredUsername"].ToString(),
+                                    dbDataReader["ipaddress"].ToString(),
+                                    dbDataReader["useragent"].ToString(),
+                                    dbDataReader["status"].ToString(),
+                                    dbDataReader["info"].ToString()
+                                    ));
+                            }
+                        }
+                        sqlCommand.Connection.Close();
+                    }
+                }
+            }
+            catch (Exception e) { Response.Write(e.Message); }
+            return returnMe;
+
+        }
 
         private List<session> getActiveSessions()
         {
@@ -132,11 +176,34 @@ namespace SLReports.Logs
             }
         }
 
+        private TableRow addLoginAttemptRow(LoginAttempt thisLoginAttempt)
+        {
+            TableRow returnMe = new TableRow();
+            TableCell cell_time = new TableCell();
+            TableCell cell_username = new TableCell();
+            TableCell cell_ip = new TableCell();
+            TableCell cell_info = new TableCell();
+
+            cell_time.Text = thisLoginAttempt.eventTime.ToShortDateString() + " " + thisLoginAttempt.eventTime.ToLongTimeString();
+            cell_username.Text = thisLoginAttempt.enteredUserName;
+            cell_ip.Text = thisLoginAttempt.ipAddress;
+            cell_info.Text = thisLoginAttempt.info;
+
+            returnMe.Cells.Add(cell_time);
+            returnMe.Cells.Add(cell_username);
+            returnMe.Cells.Add(cell_ip);
+            returnMe.Cells.Add(cell_info);
+
+            return returnMe;
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             /* Load sessions */
             AllSessions = getActiveSessions();
-            
+            AllLoginAttempts = getLoginAttempts(DateTime.Now.AddMonths(-1), DateTime.Now);
+
+            #region load sessions into table
             foreach (session ses in AllSessions)
             {
                 tblSessions.CellPadding = 3;
@@ -174,9 +241,31 @@ namespace SLReports.Logs
                 //tblRow.Cells.Add(cell_Agent);
 
                 tblSessions.Rows.Add(tblRow);
-
-                
             }
+            #endregion
+
+            #region load log into table
+
+
+
+            /* Successful login attempts */
+            foreach (LoginAttempt la in AllLoginAttempts)
+            {
+                if (la.status.ToLower().Equals("success"))
+                {
+                    tblLogins_Success.Rows.Add(addLoginAttemptRow(la));
+                }
+            }
+
+            /* Unsuccessful login attempts */
+            foreach (LoginAttempt la in AllLoginAttempts)
+            {
+                if (la.status.ToLower().Equals("denied"))
+                {
+                    tblLogins_Failure.Rows.Add(addLoginAttemptRow(la));
+                }
+            }
+            #endregion
 
         }
     }
