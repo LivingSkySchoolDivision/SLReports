@@ -310,7 +310,7 @@ namespace SLReports
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = connection;
             sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = "SELECT * FROM LSKY_Students WHERE StudentNumber='" + studentID + "'";
+            sqlCommand.CommandText = "SELECT * FROM LSKY_ActiveStudents WHERE StudentNumber='" + studentID + "'";
             sqlCommand.Connection.Open();
             SqlDataReader dataReader = sqlCommand.ExecuteReader();
 

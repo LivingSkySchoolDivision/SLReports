@@ -232,10 +232,10 @@ namespace SLReports.INAC
 
                     sqlCommand.Connection = dbConnection;
                     sqlCommand.CommandType = CommandType.Text;
-                    sqlCommand.CommandText = "SELECT * FROM LSKY_Students WHERE ResideOnReserve=1 AND SchoolID=@SchoolID;";
+                    sqlCommand.CommandText = "SELECT * FROM LSKY_ActiveStudents WHERE ResideOnReserve=1 AND SchoolID=@SchoolID;";
                     sqlCommand.Parameters.AddWithValue("@SchoolID", selectedSchool.getGovID());
 
-                    //sqlCommand.CommandText = "SELECT * FROM LSKY_Students;";
+                    //sqlCommand.CommandText = "SELECT * FROM LSKY_ActiveStudents;";
                     sqlCommand.Connection.Open();
 
                     SqlDataReader dbDataReader = sqlCommand.ExecuteReader();

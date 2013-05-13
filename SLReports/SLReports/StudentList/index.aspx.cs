@@ -247,7 +247,7 @@ namespace SLReports.StudentList
 
                 sqlCommand.Connection = dbConnection;
                 sqlCommand.CommandType = CommandType.Text;
-                sqlCommand.CommandText = "SELECT * FROM LSKY_Students;";
+                sqlCommand.CommandText = "SELECT * FROM LSKY_ActiveStudents;";
                 sqlCommand.Connection.Open();
 
                 SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
