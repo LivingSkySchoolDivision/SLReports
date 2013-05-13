@@ -71,6 +71,7 @@
     <Content Include="Logs\index.aspx" />
     <Content Include="MainStyles.css" />
     <Content Include="Nav.aspx" />
+    <Content Include="ReportCard\index.aspx" />
     <Content Include="StudentList\index.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -150,6 +151,13 @@
     </Compile>
     <Compile Include="NavMenuItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportCard\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportCard\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
     <Compile Include="School.cs" />
     <Compile Include="session.cs" />
     <Compile Include="Student.cs" />
