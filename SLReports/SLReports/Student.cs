@@ -29,12 +29,10 @@ namespace SLReports
         private DateTime enrollmentDate;
         private DateTime trackStartDate;
         private DateTime trackEndDate;
-
         private List<Absence> absences;
         private List<Contact> contacts;
-
         private DateTime dateOfBirth;
-
+        private string HomeRoom;
         private string bandNo;
         private string bandName;
         private string reserveName;
@@ -154,9 +152,14 @@ namespace SLReports
             return getDisplayName() + " " + studentID;
         }
 
+        public string getHomeRoom()
+        {
+            return this.HomeRoom;
+        }
+
         public Student(string givenName, string sn, string middleName, string id, string govID, string schoolName, string schoolID,
             string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
-            string phone, string gender, string instat, DateTime inDate, DateTime dateOfBirth)
+            string phone, string gender, string instat, string homeRm, DateTime inDate, DateTime dateOfBirth)
         {
             absences = new List<Absence>();
             contacts = new List<Contact>();
@@ -180,12 +183,13 @@ namespace SLReports
             this.InStatus = instat;
             this.enrollmentDate = inDate;
             this.dateOfBirth = dateOfBirth;
+            this.HomeRoom = homeRm;
 
         }
         
         public Student(string givenName, string sn, string middleName, string id, string govID, string schoolName, string schoolID,
             string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
-            string phone, string gender, string instat, DateTime inDate, DateTime dateOfBirth, string bandNo, string bandName, 
+            string phone, string gender, string instat, string homeRm, DateTime inDate, DateTime dateOfBirth, string bandNo, string bandName, 
             string reserveName, string reserveHouse, string treatyStatus, bool resideonreserve)
         {
             absences = new List<Absence>();
@@ -216,6 +220,7 @@ namespace SLReports
             this.reserveHouse = reserveHouse;
             this.treatyStatusNo = treatyStatus;
             this.resideOnReserve = resideonreserve;
+            this.HomeRoom = homeRm;
         }
 
         public string getBandNo()
@@ -332,6 +337,7 @@ namespace SLReports
                             dataReader["Phone"].ToString(),
                             dataReader["Gender"].ToString(),
                             dataReader["InStatus"].ToString(),
+                            dataReader["HomeRoom"].ToString(),
                             DateTime.Parse(dataReader["InDate"].ToString()),
                             DateTime.Parse(dataReader["DateOfBirth"].ToString())
                             );

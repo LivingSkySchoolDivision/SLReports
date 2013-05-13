@@ -56,6 +56,7 @@ namespace SLReports.StudentList
             Response.Write("<td>" + student.getGrade() + "</td>");
             Response.Write("<td>" + student.getGender() + "</td>");
             Response.Write("<td>" + student.getSchoolName() + "</td>");
+            Response.Write("<td>" + student.getHomeRoom()+ "</td>");
             //Response.Write("<td>" + student.getInStatus() + "</td>");
             Response.Write("<td>" + student.getEnrollDate().ToShortDateString() + "</td>");
             Response.Write("<td><a href=\"/SLReports/Attendance/?studentid=" + student.getStudentID() + "\">Attendance</a></td>");
@@ -79,6 +80,7 @@ namespace SLReports.StudentList
                 Response.Write("<th width=\"100\"><b>Grade</b></th>");
                 Response.Write("<th width=\"100\"><b>Gender</b></th>");
                 Response.Write("<th width=\"300\"><b>School</b></th>");
+                Response.Write("<th width=\"300\"><b>Home Room</b></th>");
                 //Response.Write("<th width=\"200\"><b>InStatus</b></th>");
                 Response.Write("<th width=\"100\"><b>InDate</b></th>");
                 Response.Write("<th width=\"200\"><b>Reports</b></th>");
@@ -275,6 +277,7 @@ namespace SLReports.StudentList
                             dbDataReader["Phone"].ToString(),
                             dbDataReader["Gender"].ToString(),
                             dbDataReader["InStatus"].ToString(),
+                            dbDataReader["HomeRoom"].ToString(),
                             DateTime.Parse(dbDataReader["InDate"].ToString()),
                             DateTime.Parse(dbDataReader["DateOfBirth"].ToString())
                             ));

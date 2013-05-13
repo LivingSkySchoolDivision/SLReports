@@ -263,6 +263,7 @@ namespace SLReports.INAC
                                 dbDataReader["Phone"].ToString(),
                                 dbDataReader["Gender"].ToString(),
                                 dbDataReader["InStatus"].ToString(),
+                                dbDataReader["HomeRoom"].ToString(),
                                 DateTime.Parse(dbDataReader["InDate"].ToString()),
                                 DateTime.Parse(dbDataReader["DateOfBirth"].ToString()),
                                 dbDataReader["BandNo"].ToString(),
