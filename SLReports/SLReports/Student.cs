@@ -247,8 +247,7 @@ namespace SLReports
         {
             return this.treatyStatusNo;
         }
-
-
+        
         public DateTime getDateOfBirth()
         {
             return this.dateOfBirth;
