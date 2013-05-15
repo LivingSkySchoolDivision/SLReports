@@ -14,10 +14,15 @@ namespace SLReports
         public string numberMark { get; set; }
         public string outcomeMark { get; set; }
         public string className { get; set; }
+        public string classID { get; set; }
+        public string teacherFirst { get; set; }
+        public string teacherLast { get; set; }
+        public string teacherTitle { get; set; }
         public string comment { get; set; }
+
         public ReportPeriod reportPeriod { get; set; }
 
-        public Mark(int id, int reportPeriodID, string numberMark, string outcomeMark, string classname, string comment, ReportPeriod rperiod)
+        public Mark(int id, int reportPeriodID, string numberMark, string outcomeMark, string classname, string classid, string comment, string teacherFirst, string teacherLast, string teacherTitle, ReportPeriod rperiod)
         {
             this.ID = id;
             this.reportPeriodID = reportPeriodID;
@@ -26,6 +31,10 @@ namespace SLReports
             this.className = classname;
             this.comment = comment;
             this.reportPeriod = rperiod;
+            this.classID = classid;
+            this.teacherFirst = teacherFirst;
+            this.teacherLast = teacherLast;
+            this.teacherTitle = teacherTitle;
         }
 
         public string getMark()
@@ -49,7 +58,7 @@ namespace SLReports
 
         public override string ToString()
         {
-            return this.className + " Mark: " + this.getMark() + ", Period: "+this.reportPeriod+",Comment: " + this.comment;
+            return this.classID + ":" + this.className + " Mark: " + this.getMark() + ", Period: " + this.reportPeriod;
         }
 
         public static List<Mark> loadMarksFromThisReportPeriod(SqlConnection connection, ReportPeriod reportPeriod, Student student)
@@ -71,9 +80,13 @@ namespace SLReports
                             int.Parse(dataReader["iMarksID"].ToString().Trim()),
                             int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
                             dataReader["MarkPercent"].ToString().Trim(),
-                            dataReader["MarkOutcome"].ToString().Trim(),                            
-                            dataReader["Class"].ToString().Trim(),                            
+                            dataReader["MarkOutcome"].ToString().Trim(),
+                            dataReader["Class"].ToString().Trim(),
+                            dataReader["iClassID"].ToString().Trim(),
                             dataReader["mComment"].ToString().Trim(),
+                            dataReader["TeacherFirstName"].ToString().Trim(),
+                            dataReader["TeacherLastName"].ToString().Trim(),
+                            dataReader["TeacherTitle"].ToString().Trim(),
                             reportPeriod
                             ));
                 }
@@ -108,7 +121,11 @@ namespace SLReports
                                 dataReader["MarkPercent"].ToString().Trim(),
                                 dataReader["MarkOutcome"].ToString().Trim(),
                                 dataReader["Class"].ToString().Trim(),
+                                dataReader["iClassID"].ToString().Trim(),
                                 dataReader["mComment"].ToString().Trim(),
+                                dataReader["TeacherFirstName"].ToString().Trim(),
+                                dataReader["TeacherLastName"].ToString().Trim(),
+                                dataReader["TeacherTitle"].ToString().Trim(),
                                 rp
                                 );
 

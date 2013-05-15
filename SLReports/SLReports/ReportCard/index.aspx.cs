@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -102,6 +103,9 @@ namespace SLReports.ReportCard
                 }
                 TableRow_Student.Visible = true;
                 TableRow_Term.Visible = false;
+                litAttendance.Visible = false;
+                litMarks.Visible = false;
+                litNamePlate.Visible = false;
                 
             }            
         }
@@ -125,27 +129,95 @@ namespace SLReports.ReportCard
                     drpTermList.Items.Add(newItem);
                 }
                 TableRow_Term.Visible = true;
+                litAttendance.Visible = false;
+                litMarks.Visible = false;
+                litNamePlate.Visible = false;
 
             }            
             
         }
-
-        protected string generateMarkTable(List<ReportPeriod> ReportPeriodsWithMarks)
+                
+        protected string generateMarkTable(List<Course> courses)
         {
-
-            Dictionary<Mark, List<ReportPeriod>> courses = new Dictionary<Mark, List<ReportPeriod>>();
-
-
-            StringBuilder returnMe = new StringBuilder();
-
-            foreach (ReportPeriod rp in ReportPeriodsWithMarks)
-            {                
-
-                foreach (Mark mark in rp.marks)
+            List<ReportPeriod> validReportPeriods = new List<ReportPeriod>();
+            foreach (Course c in courses)
+            {
+                foreach (Mark m in c.Marks)
                 {
-
+                    if (!validReportPeriods.Contains(m.reportPeriod))
+                    {
+                        validReportPeriods.Add(m.reportPeriod);
+                    }
                 }
             }
+
+            StringBuilder returnMe = new StringBuilder();                                   
+
+            /* Headings */
+            returnMe.Append("<table>");
+            returnMe.Append("<tr class=\"datatable_header\">");
+            returnMe.Append("<th>Class</th>");
+            foreach (ReportPeriod rp in validReportPeriods)
+            {
+                returnMe.Append("<th>"+rp.name+"</th>");
+            }
+            returnMe.Append("</tr>");
+
+            
+            /* Content */
+            foreach (Course course in courses)
+            {
+                returnMe.Append("<tr>");
+                returnMe.Append("<td><b style=\"font-size: 125%\">" + course.name + "</b> - " + course.teacherName + "</td>");
+                foreach (ReportPeriod rp in validReportPeriods)
+                {
+                    returnMe.Append("<td align=\"center\" width=\"150\">");
+                    foreach (Mark mark in course.Marks)
+                    {
+                        if (mark.reportPeriod.ID == rp.ID)
+                        {
+                            returnMe.Append(mark.getMark());
+                        }
+                    } 
+                    returnMe.Append("</td>");
+                }
+                returnMe.Append("</tr>");
+                returnMe.Append("<tr>");
+                returnMe.Append("<td colspan=\"" + (validReportPeriods.Count + 1) + "\">");
+                returnMe.Append("<b>Comments:</b><br/>");
+
+                foreach (Mark mark in course.Marks)
+                {
+                    if (mark.classID == course.id)
+                    {
+                        if (!string.IsNullOrEmpty(mark.comment))
+                        {
+                            returnMe.Append("<div style=\"padding-left: 15px;\">" + mark.reportPeriod.name + ": " + mark.comment + "</div>");
+                        }
+                    }
+                }                
+
+                returnMe.Append("<br/><br/>");
+                returnMe.Append("</td>");
+                returnMe.Append("</tr>");
+
+                returnMe.Append("<tr>");
+                returnMe.Append("<td colspan=\"" + (validReportPeriods.Count + 1) + "\">");
+                returnMe.Append("<b>Outcomes:</b><br/>");
+                
+                returnMe.Append("<br/><br/>");
+                returnMe.Append("</td>");
+                returnMe.Append("</tr>");            
+            }
+            returnMe.Append("</table>");
+            return returnMe.ToString();
+        }
+
+        protected string generateAttendanceTable(Student student)
+        {
+            StringBuilder returnMe = new StringBuilder();
+
+            returnMe.Append("<hr>Attendance for " + student.getDisplayName() + "<hr>");
 
             return returnMe.ToString();
         }
@@ -154,7 +226,7 @@ namespace SLReports.ReportCard
         {
             StringBuilder returnMe = new StringBuilder();
 
-            returnMe.Append("<hr>Nameplate"+student.getDisplayName()+"<hr>");
+            returnMe.Append("<hr>Nameplate for "+student.getDisplayName()+"<hr>");
 
             return returnMe.ToString();
         }
@@ -172,23 +244,43 @@ namespace SLReports.ReportCard
                 SelectedTerm = Term.loadThisTerm(connection, int.Parse(drpTermList.SelectedValue));
 
                 DisplayedReportPeriods = ReportPeriod.loadReportPeriodsFromThisTerm(connection, SelectedTerm.ID);
-
                 DisplayedMarks = Mark.loadMarksFromTheseReportPeriods(connection, DisplayedReportPeriods, SelectedStudent);
-
+                
+                List<Course> DisplayedMarksInCourses = new List<Course>();
                 foreach (Mark m in DisplayedMarks)
                 {
-                    Response.Write("<BR>" + m);
+                    bool courseExists = false;
+                    foreach (Course c in DisplayedMarksInCourses)
+                    {
+                        if (c.id == m.classID)
+                        {
+                            courseExists = true;
+                        }
+                    }
+                    if (!courseExists)
+                    {
+                        DisplayedMarksInCourses.Add(new Course(m.className, m.classID, m.teacherFirst, m.teacherLast, m.teacherTitle));
+                    }
                 }
 
-                /*
-                foreach (ReportPeriod rp in DisplayedReportPeriods)
-                {
-                    rp.marks = Mark.loadMarksFromThisReportPeriod(connection, rp, SelectedStudent);                    
+                foreach (Course c in DisplayedMarksInCourses)
+                {   
+                    foreach (Mark m in DisplayedMarks)
+                    {
+                        if (m.classID == c.id)
+                        {
+                            c.Marks.Add(m);
+                        }
+                    }
                 }
-                 * */
 
                 litNamePlate.Text = generateStudentNameplate(SelectedStudent);
+                litMarks.Text = generateMarkTable(DisplayedMarksInCourses);
 
+
+                litAttendance.Visible = true;
+                litMarks.Visible = true;
+                litNamePlate.Visible = true;
                 
             }     
 
