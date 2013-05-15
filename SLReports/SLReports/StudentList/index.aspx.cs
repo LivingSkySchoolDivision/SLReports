@@ -279,7 +279,8 @@ namespace SLReports.StudentList
                             dbDataReader["InStatus"].ToString(),
                             dbDataReader["HomeRoom"].ToString(),
                             DateTime.Parse(dbDataReader["InDate"].ToString()),
-                            DateTime.Parse(dbDataReader["DateOfBirth"].ToString())
+                            DateTime.Parse(dbDataReader["DateOfBirth"].ToString()),
+                            dbDataReader["TrackID"].ToString()
                             ));
                     }
                 }

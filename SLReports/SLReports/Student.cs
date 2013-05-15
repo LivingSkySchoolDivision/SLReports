@@ -39,6 +39,85 @@ namespace SLReports
         private string reserveHouse;
         private string treatyStatusNo;
         private bool resideOnReserve;
+        private string trackID;
+
+        public string getTrackID()
+        {
+            return this.trackID;
+        }
+
+        public string getGradeFormatted()
+        {
+            string returnMe = this.grade;
+
+            try
+            {
+                int intVal = int.Parse(this.grade);
+                returnMe = intVal.ToString();
+            }
+            catch {
+                if (this.grade.ToLower() == "0k")
+                {
+                    returnMe = "K";
+                }
+
+                if (this.grade.ToLower() == "k")
+                {
+                    returnMe = "k";
+                }
+
+                if (this.grade.ToLower() == "pk")
+                {
+                    returnMe = "pk";
+                }
+            }
+            
+            return returnMe;
+        }
+
+        public string getCity()
+        {
+            return this.city;
+        }
+
+        public string getRegion()
+        {
+            return this.region;
+        }
+        
+        public string getStreet()
+        {
+            return this.street;
+        }
+
+        public string getHouseNo()
+        {
+            return this.houseno;
+        }
+
+        public string getApartmentNo()
+        {
+            return this.apartmentno;
+        }
+
+        public string getPostalCode()
+        {
+            return this.postalcode;
+        }
+
+        public string getTelephone()
+        {
+            return this.phone;
+        }
+
+        public string getTelephoneFormatted()
+        {
+            string areaCode = this.phone.Substring(0,3);
+            string exchange = this.phone.Substring(3,3);
+            string number = this.phone.Substring(6,4);
+
+            return "("+areaCode+") "+exchange+"-" + number;
+        }
 
         public List<Contact> getContacts()
         {
@@ -159,7 +238,7 @@ namespace SLReports
 
         public Student(string givenName, string sn, string middleName, string id, string govID, string schoolName, string schoolID,
             string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
-            string phone, string gender, string instat, string homeRm, DateTime inDate, DateTime dateOfBirth)
+            string phone, string gender, string instat, string homeRm, DateTime inDate, DateTime dateOfBirth, string trackid)
         {
             absences = new List<Absence>();
             contacts = new List<Contact>();
@@ -184,13 +263,14 @@ namespace SLReports
             this.enrollmentDate = inDate;
             this.dateOfBirth = dateOfBirth;
             this.HomeRoom = homeRm;
+            this.trackID = trackid;
 
         }
         
         public Student(string givenName, string sn, string middleName, string id, string govID, string schoolName, string schoolID,
             string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
-            string phone, string gender, string instat, string homeRm, DateTime inDate, DateTime dateOfBirth, string bandNo, string bandName, 
-            string reserveName, string reserveHouse, string treatyStatus, bool resideonreserve)
+            string phone, string gender, string instat, string homeRm, DateTime inDate, DateTime dateOfBirth, string bandNo, string bandName,
+            string reserveName, string reserveHouse, string treatyStatus, bool resideonreserve, string trackid)
         {
             absences = new List<Absence>();
             contacts = new List<Contact>();
@@ -221,6 +301,7 @@ namespace SLReports
             this.treatyStatusNo = treatyStatus;
             this.resideOnReserve = resideonreserve;
             this.HomeRoom = homeRm;
+            this.trackID = trackid;
         }
 
         public string getBandNo()
@@ -319,26 +400,27 @@ namespace SLReports
                 while (dataReader.Read())
                 {
                     returnMe = new Student(
-                            dataReader["LegalFirstName"].ToString(),
-                            dataReader["LegalLastName"].ToString(),
-                            dataReader["LegalMiddleName"].ToString(),
-                            dataReader["StudentNumber"].ToString(),
-                            dataReader["GovernmentIDNumber"].ToString(),
-                            dataReader["School"].ToString(),
-                            dataReader["SchoolID"].ToString(),
-                            dataReader["Grade"].ToString(),
-                            dataReader["Region"].ToString(),
-                            dataReader["City"].ToString(),
-                            dataReader["Street"].ToString(),
-                            dataReader["HouseNo"].ToString(),
-                            dataReader["ApartmentNo"].ToString(),
-                            dataReader["PostalCode"].ToString(),
-                            dataReader["Phone"].ToString(),
-                            dataReader["Gender"].ToString(),
-                            dataReader["InStatus"].ToString(),
-                            dataReader["HomeRoom"].ToString(),
+                            dataReader["LegalFirstName"].ToString().Trim(),
+                            dataReader["LegalLastName"].ToString().Trim(),
+                            dataReader["LegalMiddleName"].ToString().Trim(),
+                            dataReader["StudentNumber"].ToString().Trim(),
+                            dataReader["GovernmentIDNumber"].ToString().Trim(),
+                            dataReader["School"].ToString().Trim(),
+                            dataReader["SchoolID"].ToString().Trim(),
+                            dataReader["Grade"].ToString().Trim(),
+                            dataReader["Region"].ToString().Trim(),
+                            dataReader["City"].ToString().Trim(),
+                            dataReader["Street"].ToString().Trim(),
+                            dataReader["HouseNo"].ToString().Trim(),
+                            dataReader["ApartmentNo"].ToString().Trim(),
+                            dataReader["PostalCode"].ToString().Trim(),
+                            dataReader["Phone"].ToString().Trim(),
+                            dataReader["Gender"].ToString().Trim(),
+                            dataReader["InStatus"].ToString().Trim(),
+                            dataReader["HomeRoom"].ToString().Trim(),
                             DateTime.Parse(dataReader["InDate"].ToString()),
-                            DateTime.Parse(dataReader["DateOfBirth"].ToString())
+                            DateTime.Parse(dataReader["DateOfBirth"].ToString()),
+                            dataReader["TrackID"].ToString()
                             );
 
                     returnMe.setTrack(DateTime.Parse(dataReader["CurrentTrackStart"].ToString()), DateTime.Parse(dataReader["CurrentTrackEnd"].ToString()));
@@ -378,6 +460,51 @@ namespace SLReports
                         DateTime.Parse(dataReader["tEndTime"].ToString()),
                         int.Parse(dataReader["Minutes"].ToString())
                         ));
+                }
+            }
+
+            sqlCommand.Connection.Close();
+            return returnMe;
+        }
+
+        public static List<Student> loadStudentsFromThisSchool(SqlConnection connection, int schoolID)
+        {
+            List<Student> returnMe = new List<Student>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM LSKY_ActiveStudents WHERE SchoolID='" + schoolID + "'";
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    returnMe.Add(new Student(
+                            dataReader["LegalFirstName"].ToString().Trim(),
+                            dataReader["LegalLastName"].ToString().Trim(),
+                            dataReader["LegalMiddleName"].ToString().Trim(),
+                            dataReader["StudentNumber"].ToString().Trim(),
+                            dataReader["GovernmentIDNumber"].ToString().Trim(),
+                            dataReader["School"].ToString().Trim(),
+                            dataReader["SchoolID"].ToString().Trim(),
+                            dataReader["Grade"].ToString().Trim(),
+                            dataReader["Region"].ToString().Trim(),
+                            dataReader["City"].ToString().Trim(),
+                            dataReader["Street"].ToString().Trim(),
+                            dataReader["HouseNo"].ToString().Trim(),
+                            dataReader["ApartmentNo"].ToString().Trim(),
+                            dataReader["PostalCode"].ToString().Trim(),
+                            dataReader["Phone"].ToString().Trim(),
+                            dataReader["Gender"].ToString().Trim(),
+                            dataReader["InStatus"].ToString().Trim(),
+                            dataReader["HomeRoom"].ToString().Trim(),
+                            DateTime.Parse(dataReader["InDate"].ToString()),
+                            DateTime.Parse(dataReader["DateOfBirth"].ToString()),
+                            dataReader["TrackID"].ToString()
+                            ));
                 }
             }
 

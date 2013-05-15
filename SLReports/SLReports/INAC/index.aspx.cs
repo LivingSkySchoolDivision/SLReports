@@ -271,7 +271,8 @@ namespace SLReports.INAC
                                 dbDataReader["ReserveName"].ToString(),
                                 dbDataReader["ReserveHouse"].ToString(),
                                 dbDataReader["StatusNo"].ToString(),
-                                bool.Parse(dbDataReader["ResideOnReserve"].ToString())
+                                bool.Parse(dbDataReader["ResideOnReserve"].ToString()),
+                                dbDataReader["TrackID"].ToString()
                                 );
                             AllStudents.Add(newStudent);
                         }

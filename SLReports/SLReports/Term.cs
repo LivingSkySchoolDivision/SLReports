@@ -1,0 +1,99 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+
+namespace SLReports
+{
+    public class Term
+    {
+        public int ID { get; set; }
+        public int trackID { get; set; }
+        public DateTime startDate { get; set; }
+        public DateTime endDate { get; set; }
+        public string name { get; set; }
+        public int schoolID { get; set; }
+
+        public Term(int id, int trackid, DateTime start, DateTime end, string name, int schoolid)
+        {
+            this.ID = id;
+            this.trackID = trackid;
+            this.startDate = start;
+            this.endDate = end;
+            this.name = name;
+            this.schoolID = schoolid;
+        }
+
+        public string getName()
+        {
+            return this.name;
+        }
+
+        public override string ToString()
+        {
+            return this.name;
+        }
+
+        public static Term loadThisTerm(SqlConnection connection, int termID)
+        {
+            Term returnMe = null;
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM Term WHERE iTermID=" + termID + "";
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    returnMe = new Term(
+                            int.Parse(dataReader["iTermID"].ToString().Trim()),
+                            int.Parse(dataReader["iTrackID"].ToString().Trim()),
+                            DateTime.Parse(dataReader["dStartDate"].ToString()),
+                            DateTime.Parse(dataReader["dEndDate"].ToString()),
+                            dataReader["cName"].ToString().Trim(),
+                            int.Parse(dataReader["iSchoolID"].ToString().Trim())
+                            );
+                }
+            }
+
+            sqlCommand.Connection.Close();
+            return returnMe;
+        }
+
+        public static List<Term> loadTermsFromThisTrack(SqlConnection connection, int trackID)
+        {
+            List<Term> returnMe = new List<Term>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM Term WHERE iTrackID=" + trackID + "";
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    returnMe.Add(new Term(
+                            int.Parse(dataReader["iTermID"].ToString().Trim()),
+                            int.Parse(dataReader["iTrackID"].ToString().Trim()),
+                            DateTime.Parse(dataReader["dStartDate"].ToString()),
+                            DateTime.Parse(dataReader["dEndDate"].ToString()),
+                            dataReader["cName"].ToString().Trim(),
+                            int.Parse(dataReader["iSchoolID"].ToString().Trim())
+                            ));
+                }
+            }
+
+            sqlCommand.Connection.Close();
+            return returnMe;
+        }
+    }
+}

@@ -62,6 +62,7 @@
     <Content Include="Attendance\index.aspx" />
     <Content Include="EnrollmentByGrade\index.aspx" />
     <Content Include="FindStudent\index.aspx" />
+    <Content Include="GovXML\enrollment.aspx" />
     <Content Include="GovXML\index.aspx" />
     <Content Include="INAC\index.aspx" />
     <Content Include="index.aspx" />
@@ -106,6 +107,13 @@
     <Compile Include="FindStudent\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="GovXML\enrollment.aspx.cs">
+      <DependentUpon>enrollment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GovXML\enrollment.aspx.designer.cs">
+      <DependentUpon>enrollment.aspx</DependentUpon>
+    </Compile>
     <Compile Include="GovXML\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -142,6 +150,7 @@
     <Compile Include="Logs\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Mark.cs" />
     <Compile Include="Nav.aspx.cs">
       <DependentUpon>Nav.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -158,6 +167,7 @@
     <Compile Include="ReportCard\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ReportPeriod.cs" />
     <Compile Include="School.cs" />
     <Compile Include="session.cs" />
     <Compile Include="Student.cs" />
@@ -168,6 +178,8 @@
     <Compile Include="StudentList\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Term.cs" />
+    <Compile Include="Track.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="BasicTemplate.Master" />
