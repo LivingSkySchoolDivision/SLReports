@@ -32,7 +32,7 @@ namespace SLReports.Logs
                     {
                         sqlCommand.Connection = dbConnection;
                         sqlCommand.CommandType = CommandType.Text;
-                        sqlCommand.CommandText = "SELECT * FROM audit_loginAttempts WHERE eventTime < @EventTo AND eventTime > @EventFrom ORDER BY eventTime DESC;";
+                        sqlCommand.CommandText = "SELECT * FROM audit_loginAttempts WHERE eventTime < @EventTo AND eventTime > @EventFrom ORDER BY eventTime ASC;";
                         sqlCommand.Parameters.AddWithValue("@EventTo", to);
                         sqlCommand.Parameters.AddWithValue("@EventFrom", from);
 

@@ -121,7 +121,6 @@ namespace SLReports.ReportCard
                 foreach (Term term in DisplayedTerms)
                 {
                     ListItem newItem = new ListItem();
-                    newItem.Value = term.ID.ToString();
                     newItem.Text = term.name;
                     drpTermList.Items.Add(newItem);
                 }
