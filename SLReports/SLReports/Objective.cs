@@ -7,7 +7,7 @@ using System.Web;
 
 namespace SLReports
 {
-    public class Outcome
+    public class Objective
     {
         public int id { get; set; }
         public string subject { get; set; }
@@ -15,18 +15,20 @@ namespace SLReports
         public int courseid { get; set; }
         public int order { get; set; }
         public string studentvalue { get; set; }
+        public ObjectiveMark mark { get; set; }
 
-        public Outcome(int id, int courseid, string subject, string description)
+        public Objective(int id, int courseid, string subject, string description)
         {
+            this.mark = null;
             this.id = id;
             this.description = description;
             this.courseid = courseid;
             this.subject = subject;
         }
 
-        public static List<Outcome> loadOutcomesForThisCourse(SqlConnection connection, Course course)
+        public static List<Objective> loadObjectivesForThisCourse(SqlConnection connection, Course course)
         {
-            List<Outcome> returnMe = new List<Outcome>();
+            List<Objective> returnMe = new List<Objective>();
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = connection;
@@ -39,7 +41,7 @@ namespace SLReports
             {
                 while (dataReader.Read())
                 {
-                    returnMe.Add(new Outcome(
+                    returnMe.Add(new Objective(
                             int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
                             int.Parse(dataReader["iCourseID"].ToString().Trim()),
                             dataReader["cSubject"].ToString().Trim(),

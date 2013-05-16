@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Web;
 
 namespace SLReports
@@ -125,6 +128,52 @@ namespace SLReports
             {
                 throw new ArgumentException("Object is not a Student");
             }
+        }
+
+        public List<Absence> loadAbsencesForThisStudent(SqlConnection connection, Student student)
+        {
+
+            List<Absence> returnMe = new List<Absence>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            
+            StringBuilder SQL = new StringBuilder();
+            /*
+            SQL.Append("SELECT * FROM LSKY_Attendance WHERE (dDate BETWEEN '" + startDate.ToShortDateString() + "' AND '" + endDate.ToShortDateString() + "') AND (");
+            foreach (Student student in AllStudents)
+            {
+                SQL.Append("(StudentNumber = '" + student.getStudentID() + "') OR ");
+            }
+             * */
+            SQL.Remove(SQL.Length - 4, 4);
+            SQL.Append(") ORDER BY dDate ASC, tStartTime ASC;");
+            sqlCommand.CommandText = SQL.ToString();
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    returnMe.Add(new Absence(
+                        DateTime.Parse(dataReader["dDate"].ToString()),
+                        dataReader["StudentNumber"].ToString().Trim(),
+                        dataReader["ClassName"].ToString().Trim(),
+                        dataReader["ClassID"].ToString().Trim(),
+                        dataReader["Status"].ToString().Trim(),
+                        dataReader["Reason"].ToString().Trim(),
+                        dataReader["Comment"].ToString().Trim(),
+                        int.Parse(dataReader["Block"].ToString()),
+                        DateTime.Parse(dataReader["tStartTime"].ToString()),
+                        DateTime.Parse(dataReader["tEndTime"].ToString()),
+                        int.Parse(dataReader["Minutes"].ToString())
+                        ));
+                }
+            }
+            sqlCommand.Connection.Close();
+            return returnMe;
         }
 
     }

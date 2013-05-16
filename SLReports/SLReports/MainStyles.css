@@ -1,4 +1,16 @@
-﻿body {
+﻿@media print 
+{
+    .noPrint 
+    {
+        display:none;
+    }
+
+    .header_container {
+        display: none;
+    }
+}
+
+body {
     font-size: 10pt;
     font-family: Arial;
     padding: 0;

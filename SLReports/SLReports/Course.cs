@@ -15,7 +15,7 @@ namespace SLReports
         public string teacherLastName { get; set; }
         public string teacherTitle { get; set; }
         public List<Mark> Marks { get; set; }
-        public List<Outcome> Outcomes { get; set; }
+        public List<Objective> Objectives { get; set; }
 
         public string teacherName
         {
@@ -40,7 +40,7 @@ namespace SLReports
 
         public Course(string name, int classid, int courseid, string teacherFirst, string teacherLast, string teacherTitle)
         {
-            Outcomes = new List<Outcome>();
+            Objectives = new List<Objective>();
             Marks = new List<Mark>();
             this.name = name;
             this.classid = classid;

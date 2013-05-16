@@ -40,7 +40,7 @@ namespace SLReports
         }
 
         public string getMark()
-        {            
+        {   
             if (((int)Double.Parse(this.numberMark) == 0) && (string.IsNullOrEmpty(outcomeMark)))
             {
                 return string.Empty;

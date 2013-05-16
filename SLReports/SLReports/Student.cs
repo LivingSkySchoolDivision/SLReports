@@ -399,6 +399,25 @@ namespace SLReports
             {
                 while (dataReader.Read())
                 {
+                    string HomeRoom = dataReader["HomeRoom"].ToString().Trim();
+                    string HRT_Title = dataReader["HomeRoomTeacherTitle"].ToString().Trim();
+                    string HRT_First = dataReader["HomeRoomTeacherFirstName"].ToString().Trim();
+                    string HRT_Last = dataReader["HomeRoomTeacherLastName"].ToString().Trim();
+                    if ((!string.IsNullOrEmpty(HRT_First)) && (!string.IsNullOrEmpty(HRT_Last)))
+                    {
+                        HomeRoom = HomeRoom + " (";
+                        if ((!string.IsNullOrEmpty(HRT_Title)))
+                        {
+                            HomeRoom = HomeRoom + HRT_Title;
+                        }
+                        else
+                        {
+                            HomeRoom = HomeRoom + HRT_First;
+                        }
+
+                        HomeRoom = HomeRoom + " " + HRT_Last + ")";
+                    }
+                    
                     returnMe = new Student(
                             dataReader["LegalFirstName"].ToString().Trim(),
                             dataReader["LegalLastName"].ToString().Trim(),
@@ -416,12 +435,14 @@ namespace SLReports
                             dataReader["PostalCode"].ToString().Trim(),
                             dataReader["Phone"].ToString().Trim(),
                             dataReader["Gender"].ToString().Trim(),
-                            dataReader["InStatus"].ToString().Trim(),
-                            dataReader["HomeRoom"].ToString().Trim(),
+                            dataReader["InStatus"].ToString() + " (" + dataReader["InStatusCode"].ToString() + ")",
+                            HomeRoom,
                             DateTime.Parse(dataReader["InDate"].ToString()),
                             DateTime.Parse(dataReader["DateOfBirth"].ToString()),
                             dataReader["TrackID"].ToString()
                             );
+
+                    
 
                     returnMe.setTrack(DateTime.Parse(dataReader["CurrentTrackStart"].ToString()), DateTime.Parse(dataReader["CurrentTrackEnd"].ToString()));
                 }
@@ -482,6 +503,25 @@ namespace SLReports
             {
                 while (dataReader.Read())
                 {
+                    string HomeRoom = dataReader["HomeRoom"].ToString().Trim();
+                    string HRT_Title = dataReader["HomeRoomTeacherTitle"].ToString().Trim();
+                    string HRT_First = dataReader["HomeRoomTeacherFirstName"].ToString().Trim();
+                    string HRT_Last = dataReader["HomeRoomTeacherLastName"].ToString().Trim();
+                    if ((!string.IsNullOrEmpty(HRT_First)) && (!string.IsNullOrEmpty(HRT_Last)))
+                    {
+                        HomeRoom = HomeRoom + " (";
+                        if ((!string.IsNullOrEmpty(HRT_Title)))
+                        {
+                            HomeRoom = HomeRoom + HRT_Title;
+                        }
+                        else
+                        {
+                            HomeRoom = HomeRoom + HRT_First;
+                        }
+
+                        HomeRoom = HomeRoom + " " + HRT_Last + ")";
+                    }
+
                     returnMe.Add(new Student(
                             dataReader["LegalFirstName"].ToString().Trim(),
                             dataReader["LegalLastName"].ToString().Trim(),
@@ -499,8 +539,8 @@ namespace SLReports
                             dataReader["PostalCode"].ToString().Trim(),
                             dataReader["Phone"].ToString().Trim(),
                             dataReader["Gender"].ToString().Trim(),
-                            dataReader["InStatus"].ToString().Trim(),
-                            dataReader["HomeRoom"].ToString().Trim(),
+                            dataReader["InStatus"].ToString() + " (" + dataReader["InStatusCode"].ToString() + ")",
+                            HomeRoom,
                             DateTime.Parse(dataReader["InDate"].ToString()),
                             DateTime.Parse(dataReader["DateOfBirth"].ToString()),
                             dataReader["TrackID"].ToString()

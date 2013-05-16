@@ -2,6 +2,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Main" runat="server">
+    <div class="noPrint">
     <h3>Report Card (Work In Progress)</h3>
     <form runat="server">
         <asp:Table ID="Table1" runat="server">
@@ -18,7 +19,9 @@
                 <asp:TableCell><asp:Button ID="Button3" runat="server" Text="Select Term" width="150" OnClick="Button3_Click"/></asp:TableCell>
             </asp:TableRow>
         </asp:Table>
-
+        <br />
+        <br />
+        </div>
         <asp:Literal ID="litNamePlate" runat="server"></asp:Literal>
         <asp:Literal ID="litMarks" runat="server"></asp:Literal>
         <asp:Literal ID="litAttendance" runat="server"></asp:Literal>

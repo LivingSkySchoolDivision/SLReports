@@ -55,9 +55,9 @@ namespace SLReports.StudentList
             Response.Write("<td>" + student.getGovernmentID() + "</td>");
             Response.Write("<td>" + student.getGrade() + "</td>");
             Response.Write("<td>" + student.getGender() + "</td>");
-            Response.Write("<td>" + student.getSchoolName() + "</td>");
+            Response.Write("<td>" + student.getDateOfBirth().ToShortDateString() + "</td>");
             Response.Write("<td>" + student.getHomeRoom()+ "</td>");
-            //Response.Write("<td>" + student.getInStatus() + "</td>");
+            Response.Write("<td>" + student.getInStatus() + "</td>");
             Response.Write("<td>" + student.getEnrollDate().ToShortDateString() + "</td>");
             Response.Write("<td><a href=\"/SLReports/Attendance/?studentid=" + student.getStudentID() + "\">Attendance</a></td>");
             Response.Write("</tr>\n");
@@ -79,9 +79,9 @@ namespace SLReports.StudentList
                 Response.Write("<th width=\"150\"><b>Government ID</b></th>");
                 Response.Write("<th width=\"100\"><b>Grade</b></th>");
                 Response.Write("<th width=\"100\"><b>Gender</b></th>");
-                Response.Write("<th width=\"300\"><b>School</b></th>");
+                Response.Write("<th width=\"300\"><b>Date of Birth</b></th>");
                 Response.Write("<th width=\"300\"><b>Home Room</b></th>");
-                //Response.Write("<th width=\"200\"><b>InStatus</b></th>");
+                Response.Write("<th width=\"200\"><b>InStatus</b></th>");
                 Response.Write("<th width=\"100\"><b>InDate</b></th>");
                 Response.Write("<th width=\"200\"><b>Reports</b></th>");
                 Response.Write("</tr>\n");
@@ -238,54 +238,17 @@ namespace SLReports.StudentList
 
             #endregion
 
+            
+
             /* Load all students */
             #region Load all students
             try
             {
-                SqlConnection dbConnection = new SqlConnection(dbConnectionString);
-                SqlCommand sqlCommand = new SqlCommand();
 
-                sqlCommand.Connection = dbConnection;
-                sqlCommand.CommandType = CommandType.Text;
-                sqlCommand.CommandText = "SELECT * FROM LSKY_ActiveStudents;";
-                sqlCommand.Connection.Open();
-
-                SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
-
-                if (dbDataReader.HasRows)
+                using (SqlConnection dbConnection = new SqlConnection(dbConnectionString)) 
                 {
-
-                    AllStudents.Clear();
-                    while (dbDataReader.Read())
-                    {
-                        //dbDataReader["LegalFirstName"].ToString() + " " + dbDataReader["LegalLastName"].ToString()
-                        AllStudents.Add(new Student(
-                            dbDataReader["LegalFirstName"].ToString(),
-                            dbDataReader["LegalLastName"].ToString(),
-                            dbDataReader["LegalMiddleName"].ToString(),
-                            dbDataReader["StudentNumber"].ToString(),
-                            dbDataReader["GovernmentIDNumber"].ToString(),
-                            dbDataReader["School"].ToString(),
-                            dbDataReader["SchoolID"].ToString(),
-                            dbDataReader["Grade"].ToString(),
-                            dbDataReader["Region"].ToString(),
-                            dbDataReader["City"].ToString(),
-                            dbDataReader["Street"].ToString(),
-                            dbDataReader["HouseNo"].ToString(),
-                            dbDataReader["ApartmentNo"].ToString(),
-                            dbDataReader["PostalCode"].ToString(),
-                            dbDataReader["Phone"].ToString(),
-                            dbDataReader["Gender"].ToString(),
-                            dbDataReader["InStatus"].ToString(),
-                            dbDataReader["HomeRoom"].ToString(),
-                            DateTime.Parse(dbDataReader["InDate"].ToString()),
-                            DateTime.Parse(dbDataReader["DateOfBirth"].ToString()),
-                            dbDataReader["TrackID"].ToString()
-                            ));
-                    }
+                    AllStudents = Student.loadStudentsFromThisSchool(dbConnection, int.Parse(filterSchoolID));
                 }
-
-                sqlCommand.Connection.Close();
             }
             catch (Exception ex)
             {
@@ -296,7 +259,7 @@ namespace SLReports.StudentList
                 }
             }
             #endregion
-
+                
             AllStudents.Sort();
             if (!string.IsNullOrEmpty(filterSchoolID))
             {
