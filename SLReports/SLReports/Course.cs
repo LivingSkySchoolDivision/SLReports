@@ -9,10 +9,13 @@ namespace SLReports
     public class Course
     {
         public string name { get; set; }
-        public string id { get; set; }
+        public int courseid { get; set; }
+        public int classid { get; set; }
         public string teacherFirstName { get; set; }
         public string teacherLastName { get; set; }
         public string teacherTitle { get; set; }
+        public List<Mark> Marks { get; set; }
+        public List<Outcome> Outcomes { get; set; }
 
         public string teacherName
         {
@@ -33,15 +36,15 @@ namespace SLReports
             }
 
             set {}
-        }
+        }        
 
-        public  List<Mark> Marks { get; set; }
-
-        public Course(string name, string id, string teacherFirst, string teacherLast, string teacherTitle)
+        public Course(string name, int classid, int courseid, string teacherFirst, string teacherLast, string teacherTitle)
         {
+            Outcomes = new List<Outcome>();
             Marks = new List<Mark>();
             this.name = name;
-            this.id = id;
+            this.classid = classid;
+            this.courseid = courseid;
             this.teacherFirstName = teacherFirst;
             this.teacherLastName = teacherLast;
             this.teacherTitle = teacherTitle;

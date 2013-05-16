@@ -69,6 +69,13 @@ h1 {
     font-size: 10pt;
 }
 
+.datatable_sub_header {
+    border: 1px solid black;
+    background-color: #DDDDDD; 
+    color: black;
+    font-size: 10pt;
+}
+
 .datatable tr.row:hover td, .datatable tr.altrow:hover td {
     color: #000;
     background-color: #FFFACD;

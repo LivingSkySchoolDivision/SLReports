@@ -14,7 +14,8 @@ namespace SLReports
         public string numberMark { get; set; }
         public string outcomeMark { get; set; }
         public string className { get; set; }
-        public string classID { get; set; }
+        public int classID { get; set; }
+        public int courseID { get; set; }
         public string teacherFirst { get; set; }
         public string teacherLast { get; set; }
         public string teacherTitle { get; set; }
@@ -22,7 +23,7 @@ namespace SLReports
 
         public ReportPeriod reportPeriod { get; set; }
 
-        public Mark(int id, int reportPeriodID, string numberMark, string outcomeMark, string classname, string classid, string comment, string teacherFirst, string teacherLast, string teacherTitle, ReportPeriod rperiod)
+        public Mark(int id, int reportPeriodID, string numberMark, string outcomeMark, string classname, int classid, int courseid, string comment, string teacherFirst, string teacherLast, string teacherTitle, ReportPeriod rperiod)
         {
             this.ID = id;
             this.reportPeriodID = reportPeriodID;
@@ -32,22 +33,25 @@ namespace SLReports
             this.comment = comment;
             this.reportPeriod = rperiod;
             this.classID = classid;
+            this.courseID = courseid;
             this.teacherFirst = teacherFirst;
             this.teacherLast = teacherLast;
             this.teacherTitle = teacherTitle;
         }
 
         public string getMark()
-        {
-            if (((int)Double.Parse(this.numberMark) == 0) && (true))
+        {            
+            if (((int)Double.Parse(this.numberMark) == 0) && (string.IsNullOrEmpty(outcomeMark)))
             {
-                return "(Not Available)";
+                return string.Empty;
             }
             else
             {
                 if (string.IsNullOrEmpty(outcomeMark))
                 {
-                    return this.numberMark + "%";
+                    int markVal = (int)double.Parse(this.numberMark);
+
+                    return markVal + "%";
                 }
                 else
                 {
@@ -82,7 +86,8 @@ namespace SLReports
                             dataReader["MarkPercent"].ToString().Trim(),
                             dataReader["MarkOutcome"].ToString().Trim(),
                             dataReader["Class"].ToString().Trim(),
-                            dataReader["iClassID"].ToString().Trim(),
+                            int.Parse(dataReader["iClassID"].ToString().Trim()),
+                            int.Parse(dataReader["iCourseID"].ToString().Trim()),
                             dataReader["mComment"].ToString().Trim(),
                             dataReader["TeacherFirstName"].ToString().Trim(),
                             dataReader["TeacherLastName"].ToString().Trim(),
@@ -121,7 +126,8 @@ namespace SLReports
                                 dataReader["MarkPercent"].ToString().Trim(),
                                 dataReader["MarkOutcome"].ToString().Trim(),
                                 dataReader["Class"].ToString().Trim(),
-                                dataReader["iClassID"].ToString().Trim(),
+                                int.Parse(dataReader["iClassID"].ToString().Trim()),
+                                int.Parse(dataReader["iCourseID"].ToString().Trim()),
                                 dataReader["mComment"].ToString().Trim(),
                                 dataReader["TeacherFirstName"].ToString().Trim(),
                                 dataReader["TeacherLastName"].ToString().Trim(),

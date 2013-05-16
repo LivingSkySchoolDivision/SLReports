@@ -160,6 +160,7 @@
       <DependentUpon>Nav.aspx</DependentUpon>
     </Compile>
     <Compile Include="NavMenuItem.cs" />
+    <Compile Include="Outcome.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportCard\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>

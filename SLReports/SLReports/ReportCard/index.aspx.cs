@@ -24,11 +24,8 @@ namespace SLReports.ReportCard
         List<Mark> DisplayedMarks;
 
         Student SelectedStudent;
-        School SelectedSchool;
         int SelectedSchoolID;
         Term SelectedTerm;
-        Track SelectedTrack;
-        ReportPeriod SelectedReportPeriod;
 
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -153,61 +150,86 @@ namespace SLReports.ReportCard
 
             StringBuilder returnMe = new StringBuilder();                                   
 
-            /* Headings */
-            returnMe.Append("<table>");
-            returnMe.Append("<tr class=\"datatable_header\">");
-            returnMe.Append("<th>Class</th>");
-            foreach (ReportPeriod rp in validReportPeriods)
-            {
-                returnMe.Append("<th>"+rp.name+"</th>");
-            }
-            returnMe.Append("</tr>");
+            returnMe.Append("<table width=\"100%\">");
+            
 
             
             /* Content */
             foreach (Course course in courses)
             {
-                returnMe.Append("<tr>");
+                bool courseHasComments = false;
+
+                returnMe.Append("<tr class=\"datatable_header\">");
+                returnMe.Append("<th>Class</th>");
+                foreach (ReportPeriod rp in validReportPeriods)
+                {
+                    returnMe.Append("<th>" + rp.name + "</th>");
+                }
+                returnMe.Append("</tr>");
+                returnMe.Append("<tr class=\"datatable_sub_header\">");
                 returnMe.Append("<td><b style=\"font-size: 125%\">" + course.name + "</b> - " + course.teacherName + "</td>");
                 foreach (ReportPeriod rp in validReportPeriods)
                 {
                     returnMe.Append("<td align=\"center\" width=\"150\">");
                     foreach (Mark mark in course.Marks)
-                    {
+                    {   
                         if (mark.reportPeriod.ID == rp.ID)
                         {
                             returnMe.Append(mark.getMark());
                         }
+
+                        /* While we are iterating marks, check to see if any have comments */
+                        if (!string.IsNullOrEmpty(mark.comment))
+                        {
+                            courseHasComments = true;
+                        }
+
                     } 
                     returnMe.Append("</td>");
                 }
                 returnMe.Append("</tr>");
-                returnMe.Append("<tr>");
-                returnMe.Append("<td colspan=\"" + (validReportPeriods.Count + 1) + "\">");
-                returnMe.Append("<b>Comments:</b><br/>");
 
-                foreach (Mark mark in course.Marks)
+                if (courseHasComments)
                 {
-                    if (mark.classID == course.id)
+                    returnMe.Append("<tr>");
+                    returnMe.Append("<td colspan=\"" + (validReportPeriods.Count + 1) + "\">");
+                    returnMe.Append("<b>Comments:</b><br/>");
+
+                    foreach (Mark mark in course.Marks)
                     {
-                        if (!string.IsNullOrEmpty(mark.comment))
+                        if (mark.classID == course.classid)
                         {
-                            returnMe.Append("<div style=\"padding-left: 15px;\">" + mark.reportPeriod.name + ": " + mark.comment + "</div>");
+                            if (!string.IsNullOrEmpty(mark.comment))
+                            {
+                                returnMe.Append("<div style=\"padding-left: 15px;\"><b>" + mark.reportPeriod.name + "</b>: " + mark.comment + "</div>");
+                            }
                         }
                     }
-                }                
 
-                returnMe.Append("<br/><br/>");
-                returnMe.Append("</td>");
-                returnMe.Append("</tr>");
+                    returnMe.Append("<br/>");
+                    returnMe.Append("</td>");
+                    returnMe.Append("</tr>");
+                }
+                else
+                {
+                    returnMe.Append("<tr><td colspan=\"" + (validReportPeriods.Count + 1) + "\">&nbsp;</td></tr>");
+                }
 
-                returnMe.Append("<tr>");
-                returnMe.Append("<td colspan=\"" + (validReportPeriods.Count + 1) + "\">");
-                returnMe.Append("<b>Outcomes:</b><br/>");
-                
-                returnMe.Append("<br/><br/>");
-                returnMe.Append("</td>");
-                returnMe.Append("</tr>");            
+                if (course.Outcomes.Count > 0)
+                {
+                    returnMe.Append("<tr>");
+                    returnMe.Append("<td colspan=\"" + (validReportPeriods.Count + 1) + "\">");
+                    returnMe.Append("<b>Outcomes:</b><br/>");
+                    returnMe.Append("<table style=\"padding-left: 15px;\" cellpadding=3>");
+                    foreach (Outcome outcome in course.Outcomes)
+                    {
+                        returnMe.Append("<tr><td>" + outcome.description + "</td><td width=\"75\" align=\"center\">X</td></tr>");
+                    }
+                    returnMe.Append("</table>");
+                    returnMe.Append("<br/>");
+                    returnMe.Append("</td>");
+                    returnMe.Append("</tr>");
+                }
             }
             returnMe.Append("</table>");
             return returnMe.ToString();
@@ -252,22 +274,24 @@ namespace SLReports.ReportCard
                     bool courseExists = false;
                     foreach (Course c in DisplayedMarksInCourses)
                     {
-                        if (c.id == m.classID)
+                        if (c.classid == m.classID)
                         {
                             courseExists = true;
                         }
                     }
                     if (!courseExists)
                     {
-                        DisplayedMarksInCourses.Add(new Course(m.className, m.classID, m.teacherFirst, m.teacherLast, m.teacherTitle));
+                        DisplayedMarksInCourses.Add(new Course(m.className, m.classID, m.courseID, m.teacherFirst, m.teacherLast, m.teacherTitle));
                     }
                 }
 
                 foreach (Course c in DisplayedMarksInCourses)
-                {   
+                {
+                    c.Outcomes = Outcome.loadOutcomesForThisCourse(connection, c);
+                    
                     foreach (Mark m in DisplayedMarks)
                     {
-                        if (m.classID == c.id)
+                        if (m.classID == c.classid)
                         {
                             c.Marks.Add(m);
                         }
