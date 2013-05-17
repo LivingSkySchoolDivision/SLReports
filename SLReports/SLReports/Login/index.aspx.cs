@@ -157,6 +157,7 @@ namespace SLReports.Login
         
         protected void Page_Load(object sender, EventArgs e)
         {
+            txtUsername.Focus();
         }
 
         /* This doesn't do anything yet - It was a hair-brained scheme that may or may not make it into the final version */
