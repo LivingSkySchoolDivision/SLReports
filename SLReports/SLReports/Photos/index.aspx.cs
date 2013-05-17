@@ -71,7 +71,10 @@ namespace SLReports.Photos
             TableCell newTD_PhotoLink = new TableCell();
             if (s.hasPhoto())
             {
-                newTD_PhotoLink.Text = "<a onMouseOut=\"document.photo_preview.src='#'\" onMouseOver=\"document.photo_preview.src='/SLReports/Photos/GetPhoto.aspx?studentnumber=" + s.getStudentID() + "'\" href=\"#\">Click</a>";
+                /* jkpopimage('food1.jpg', 325, 445, 'Breakfast is served.'); return false*/
+                //newTD_PhotoLink.Text = "<a onMouseOut=\"document.photo_preview.src='#'\" onMouseOver=\"document.photo_preview.src='/SLReports/Photos/GetPhoto.aspx?studentnumber=" + s.getStudentID() + "'\" href=\"#\">Mouse Over</a>";
+                newTD_PhotoLink.Text = "<a onClick=\"jkpopimage('/SLReports/Photos/GetPhoto.aspx?studentnumber=" + s.getStudentID() + "', 350, 450, '" + s.getDisplayName() + " ("+s.getStudentID()+")'); return false;\" href=\"#\">Click</a>";
+                newTD_PhotoLink.CssClass = "noPrint";
                 newTR.Cells.Add(newTD_PhotoLink);
             } 
 
