@@ -26,6 +26,7 @@ namespace SLReports
         private string phone;
         private string gender;
         private string InStatus;
+        private string InStatusCode;
         private DateTime enrollmentDate;
         private DateTime trackStartDate;
         private DateTime trackEndDate;
@@ -40,6 +41,23 @@ namespace SLReports
         private string treatyStatusNo;
         private bool resideOnReserve;
         private string trackID;
+        private bool bHasPhoto;
+        private object photo;
+
+        public object getPhoto()
+        {
+            return this.photo;
+        }
+
+        public void setPhoto(object photoData)
+        {
+            this.photo = photoData;
+        }
+
+        public bool hasPhoto()
+        {
+            return bHasPhoto;
+        }
 
         public string getTrackID()
         {
@@ -154,6 +172,16 @@ namespace SLReports
             return this.InStatus;
         }
 
+        public string getInStatusCode()
+        {
+            return this.InStatusCode;
+        }
+
+        public string getInStatusWithCode()
+        {
+            return this.InStatusCode + ":" + this.InStatus;
+        }
+
         public DateTime getEnrollDate()
         {
             return this.enrollmentDate;
@@ -238,7 +266,8 @@ namespace SLReports
 
         public Student(string givenName, string sn, string middleName, string id, string govID, string schoolName, string schoolID,
             string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
-            string phone, string gender, string instat, string homeRm, DateTime inDate, DateTime dateOfBirth, string trackid)
+            string phone, string gender, string instat, string instatcode, string homeRm, DateTime inDate, DateTime dateOfBirth, 
+            string trackid, bool hasPhoto)
         {
             absences = new List<Absence>();
             contacts = new List<Contact>();
@@ -264,13 +293,16 @@ namespace SLReports
             this.dateOfBirth = dateOfBirth;
             this.HomeRoom = homeRm;
             this.trackID = trackid;
+            this.InStatusCode = instatcode;
+            this.bHasPhoto = hasPhoto;
 
         }
         
         public Student(string givenName, string sn, string middleName, string id, string govID, string schoolName, string schoolID,
             string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
-            string phone, string gender, string instat, string homeRm, DateTime inDate, DateTime dateOfBirth, string bandNo, string bandName,
-            string reserveName, string reserveHouse, string treatyStatus, bool resideonreserve, string trackid)
+            string phone, string gender, string instat, string instatcode, string homeRm, DateTime inDate, DateTime dateOfBirth, 
+            string bandNo, string bandName, string reserveName, string reserveHouse, string treatyStatus, bool resideonreserve,
+            string trackid, bool hasPhoto)
         {
             absences = new List<Absence>();
             contacts = new List<Contact>();
@@ -302,6 +334,8 @@ namespace SLReports
             this.resideOnReserve = resideonreserve;
             this.HomeRoom = homeRm;
             this.trackID = trackid;
+            this.InStatusCode = instatcode;
+            this.bHasPhoto = hasPhoto;
         }
 
         public string getBandNo()
@@ -417,7 +451,13 @@ namespace SLReports
 
                         HomeRoom = HomeRoom + " " + HRT_Last + ")";
                     }
-                    
+
+                    bool hasPhoto = false;
+                    if (!string.IsNullOrEmpty(dataReader["PhotoType"].ToString()))
+                    {
+                        hasPhoto = true;
+                    }
+
                     returnMe = new Student(
                             dataReader["LegalFirstName"].ToString().Trim(),
                             dataReader["LegalLastName"].ToString().Trim(),
@@ -435,14 +475,14 @@ namespace SLReports
                             dataReader["PostalCode"].ToString().Trim(),
                             dataReader["Phone"].ToString().Trim(),
                             dataReader["Gender"].ToString().Trim(),
-                            dataReader["InStatus"].ToString() + " (" + dataReader["InStatusCode"].ToString() + ")",
+                            dataReader["InStatus"].ToString(),
+                            dataReader["InStatusCode"].ToString(),
                             HomeRoom,
                             DateTime.Parse(dataReader["InDate"].ToString()),
                             DateTime.Parse(dataReader["DateOfBirth"].ToString()),
-                            dataReader["TrackID"].ToString()
+                            dataReader["TrackID"].ToString(),
+                            hasPhoto
                             );
-
-                    
 
                     returnMe.setTrack(DateTime.Parse(dataReader["CurrentTrackStart"].ToString()), DateTime.Parse(dataReader["CurrentTrackEnd"].ToString()));
                 }
@@ -522,6 +562,12 @@ namespace SLReports
                         HomeRoom = HomeRoom + " " + HRT_Last + ")";
                     }
 
+                    bool hasPhoto = false;
+                    if (!string.IsNullOrEmpty(dataReader["PhotoType"].ToString()))
+                    {
+                        hasPhoto = true;
+                    }
+
                     returnMe.Add(new Student(
                             dataReader["LegalFirstName"].ToString().Trim(),
                             dataReader["LegalLastName"].ToString().Trim(),
@@ -539,11 +585,83 @@ namespace SLReports
                             dataReader["PostalCode"].ToString().Trim(),
                             dataReader["Phone"].ToString().Trim(),
                             dataReader["Gender"].ToString().Trim(),
-                            dataReader["InStatus"].ToString() + " (" + dataReader["InStatusCode"].ToString() + ")",
+                            dataReader["InStatus"].ToString(),
+                            dataReader["InStatusCode"].ToString(),
                             HomeRoom,
                             DateTime.Parse(dataReader["InDate"].ToString()),
                             DateTime.Parse(dataReader["DateOfBirth"].ToString()),
-                            dataReader["TrackID"].ToString()
+                            dataReader["TrackID"].ToString(),
+                            hasPhoto
+                            ));
+                }
+            }
+
+            sqlCommand.Connection.Close();
+            return returnMe;
+        }
+
+        public static List<Student> loadAllStudents(SqlConnection connection)
+        {
+            List<Student> returnMe = new List<Student>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM LSKY_ActiveStudents ORDER BY SchoolID ASC, Grade ASC;";
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    string HomeRoom = dataReader["HomeRoom"].ToString().Trim();
+                    string HRT_Title = dataReader["HomeRoomTeacherTitle"].ToString().Trim();
+                    string HRT_First = dataReader["HomeRoomTeacherFirstName"].ToString().Trim();
+                    string HRT_Last = dataReader["HomeRoomTeacherLastName"].ToString().Trim();
+                    if ((!string.IsNullOrEmpty(HRT_First)) && (!string.IsNullOrEmpty(HRT_Last)))
+                    {
+                        HomeRoom = HomeRoom + " (";
+                        if ((!string.IsNullOrEmpty(HRT_Title)))
+                        {
+                            HomeRoom = HomeRoom + HRT_Title;
+                        }
+                        else
+                        {
+                            HomeRoom = HomeRoom + HRT_First;
+                        }
+
+                        HomeRoom = HomeRoom + " " + HRT_Last + ")";
+                    }
+                    bool hasPhoto = false;
+                    if (!string.IsNullOrEmpty(dataReader["PhotoType"].ToString()))
+                    {
+                        hasPhoto = true;
+                    }
+                    returnMe.Add(new Student(
+                            dataReader["LegalFirstName"].ToString().Trim(),
+                            dataReader["LegalLastName"].ToString().Trim(),
+                            dataReader["LegalMiddleName"].ToString().Trim(),
+                            dataReader["StudentNumber"].ToString().Trim(),
+                            dataReader["GovernmentIDNumber"].ToString().Trim(),
+                            dataReader["School"].ToString().Trim(),
+                            dataReader["SchoolID"].ToString().Trim(),
+                            dataReader["Grade"].ToString().Trim(),
+                            dataReader["Region"].ToString().Trim(),
+                            dataReader["City"].ToString().Trim(),
+                            dataReader["Street"].ToString().Trim(),
+                            dataReader["HouseNo"].ToString().Trim(),
+                            dataReader["ApartmentNo"].ToString().Trim(),
+                            dataReader["PostalCode"].ToString().Trim(),
+                            dataReader["Phone"].ToString().Trim(),
+                            dataReader["Gender"].ToString().Trim(),
+                            dataReader["InStatus"].ToString(),
+                            dataReader["InStatusCode"].ToString(),
+                            HomeRoom,
+                            DateTime.Parse(dataReader["InDate"].ToString()),
+                            DateTime.Parse(dataReader["DateOfBirth"].ToString()),
+                            dataReader["TrackID"].ToString(),
+                            hasPhoto
                             ));
                 }
             }

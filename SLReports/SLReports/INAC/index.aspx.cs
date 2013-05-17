@@ -245,6 +245,12 @@ namespace SLReports.INAC
                         AllStudents.Clear();
                         while (dbDataReader.Read())
                         {
+                            bool hasPhoto = false;
+                            if (!string.IsNullOrEmpty(dbDataReader["PhotoType"].ToString()))
+                            {
+                                hasPhoto = true;
+                            }
+
                             Student newStudent = new Student(
                                 dbDataReader["LegalFirstName"].ToString(),
                                 dbDataReader["LegalLastName"].ToString(),
@@ -263,6 +269,7 @@ namespace SLReports.INAC
                                 dbDataReader["Phone"].ToString(),
                                 dbDataReader["Gender"].ToString(),
                                 dbDataReader["InStatus"].ToString(),
+                                dbDataReader["InStatusCode"].ToString(),
                                 dbDataReader["HomeRoom"].ToString(),
                                 DateTime.Parse(dbDataReader["InDate"].ToString()),
                                 DateTime.Parse(dbDataReader["DateOfBirth"].ToString()),
@@ -272,7 +279,8 @@ namespace SLReports.INAC
                                 dbDataReader["ReserveHouse"].ToString(),
                                 dbDataReader["StatusNo"].ToString(),
                                 bool.Parse(dbDataReader["ResideOnReserve"].ToString()),
-                                dbDataReader["TrackID"].ToString()
+                                dbDataReader["TrackID"].ToString(),
+                                hasPhoto
                                 );
                             AllStudents.Add(newStudent);
                         }

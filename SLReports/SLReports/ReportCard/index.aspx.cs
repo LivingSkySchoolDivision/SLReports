@@ -251,7 +251,12 @@ namespace SLReports.ReportCard
         {
             StringBuilder returnMe = new StringBuilder();
 
-            returnMe.Append("<div style=\"width: 300px;margin-left: auto; margin-right: auto;\">");
+            
+
+            returnMe.Append("<div style=\"width: 500px;margin-left: auto; margin-right: auto;\">");if (student.hasPhoto())
+            {
+                returnMe.Append("<div style=\"float: left;\"><img width=\"156\" height=\"200\" src=\"/SLReports/Photos/GetPhoto.aspx?studentnumber="+student.getStudentID()+"\"></div>");
+            }
             returnMe.Append("<div style=\"text-align: center; border: 0; border-bottom: 1px solid black; font-size: 150%;font-weight: bold;\">" + student.getDisplayName() + "</div>");
             returnMe.Append("<table width=\"300\">");
 

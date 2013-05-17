@@ -265,6 +265,12 @@ namespace SLReports.DivisionStats
                     AllStudents.Clear();
                     while (dbDataReader.Read())
                     {
+                        bool hasPhoto = false;
+                        if (!string.IsNullOrEmpty(dbDataReader["PhotoType"].ToString()))
+                        {
+                            hasPhoto = true;
+                        }
+
                         //dbDataReader["LegalFirstName"].ToString() + " " + dbDataReader["LegalLastName"].ToString()
                         AllStudents.Add(new Student(
                             dbDataReader["LegalFirstName"].ToString(),
@@ -284,10 +290,12 @@ namespace SLReports.DivisionStats
                             dbDataReader["Phone"].ToString(),
                             dbDataReader["Gender"].ToString(),
                             dbDataReader["InStatus"].ToString(),
+                            dbDataReader["InStatusCode"].ToString(),
                             dbDataReader["HomeRoom"].ToString(),
                             DateTime.Parse(dbDataReader["InDate"].ToString()),
                             DateTime.Parse(dbDataReader["DateOfBirth"].ToString()),
-                            dbDataReader["TrackID"].ToString()
+                            dbDataReader["TrackID"].ToString(),
+                            hasPhoto
                             ));
                     }
                 }

@@ -57,8 +57,8 @@ namespace SLReports.StudentList
             Response.Write("<td>" + student.getGender() + "</td>");
             Response.Write("<td>" + student.getDateOfBirth().ToShortDateString() + "</td>");
             Response.Write("<td>" + student.getHomeRoom()+ "</td>");
-            Response.Write("<td>" + student.getInStatus() + "</td>");
-            Response.Write("<td>" + student.getEnrollDate().ToShortDateString() + "</td>");
+            Response.Write("<td>" + student.getInStatusWithCode() + "</td>");
+            Response.Write("<td>" + student.getEnrollDate().ToShortDateString() + "</td>");            
             Response.Write("<td><a href=\"/SLReports/Attendance/?studentid=" + student.getStudentID() + "\">Attendance</a></td>");
             Response.Write("</tr>\n");
         }
@@ -79,7 +79,7 @@ namespace SLReports.StudentList
                 Response.Write("<th width=\"150\"><b>Government ID</b></th>");
                 Response.Write("<th width=\"100\"><b>Grade</b></th>");
                 Response.Write("<th width=\"100\"><b>Gender</b></th>");
-                Response.Write("<th width=\"300\"><b>Date of Birth</b></th>");
+                Response.Write("<th width=\"150\"><b>Date of Birth</b></th>");
                 Response.Write("<th width=\"300\"><b>Home Room</b></th>");
                 Response.Write("<th width=\"200\"><b>InStatus</b></th>");
                 Response.Write("<th width=\"100\"><b>InDate</b></th>");
@@ -202,6 +202,7 @@ namespace SLReports.StudentList
             }
 
             /* Load Schools */
+            
             #region Load all schools
             try
             {
@@ -235,31 +236,34 @@ namespace SLReports.StudentList
                     Response.Write("Exception: " + ex.InnerException.Message);
                 }
             }
-
+           
             #endregion
 
             
 
-            /* Load all students */
-            #region Load all students
-            try
+            /* Load students */
+            if (filterSchoolID != null)
             {
+                #region Load all students
+                try
+                {
 
-                using (SqlConnection dbConnection = new SqlConnection(dbConnectionString)) 
-                {
-                    AllStudents = Student.loadStudentsFromThisSchool(dbConnection, int.Parse(filterSchoolID));
+                    using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
+                    {
+                        AllStudents = Student.loadStudentsFromThisSchool(dbConnection, int.Parse(filterSchoolID));
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                Response.Write("Exception: " + ex.Message);
-                if (ex.InnerException != null)
+                catch (Exception ex)
                 {
-                    Response.Write("Exception: " + ex.InnerException.Message);
+                    Response.Write("Exception: " + ex.Message);
+                    if (ex.InnerException != null)
+                    {
+                        Response.Write("Exception: " + ex.InnerException.Message);
+                    }
                 }
+                #endregion
+
             }
-            #endregion
-                
             AllStudents.Sort();
             if (!string.IsNullOrEmpty(filterSchoolID))
             {

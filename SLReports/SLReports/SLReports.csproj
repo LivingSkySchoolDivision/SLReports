@@ -72,6 +72,9 @@
     <Content Include="Logs\index.aspx" />
     <Content Include="MainStyles.css" />
     <Content Include="Nav.aspx" />
+    <Content Include="E15\index.aspx" />
+    <Content Include="Photos\GetPhoto.aspx" />
+    <Content Include="Photos\index.aspx" />
     <Content Include="ReportCard\index.aspx" />
     <Content Include="StudentList\index.aspx" />
     <Content Include="Web.config" />
@@ -162,6 +165,27 @@
     <Compile Include="NavMenuItem.cs" />
     <Compile Include="Objective.cs" />
     <Compile Include="ObjectiveMark.cs" />
+    <Compile Include="E15\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="E15\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Photos\GetPhoto.aspx.cs">
+      <DependentUpon>GetPhoto.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Photos\GetPhoto.aspx.designer.cs">
+      <DependentUpon>GetPhoto.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Photos\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Photos\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportCard\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
