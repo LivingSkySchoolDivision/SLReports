@@ -11,81 +11,131 @@ namespace SLReports.Attendance
 {
     public partial class index : System.Web.UI.Page
     {
+
+        private List<School> AllSchools;
         public static string selectedStudentID;
         public static Student selectedStudent;
         public static List<Absence> selectedStudentAbsences;
 
         public static DateTime selectedStartDate;
-        public static DateTime selectedEndDate;
+        public static DateTime selectedEndDate; 
+        
+        String dbUser = @"sql_readonly";
+        String dbPassword = @"XTXVDUNHlrdbefjTBgY4";
+        String dbHost = "dcsql.lskysd.ca";
+        String dbDatabase = "SchoolLogicDB";
+
+        protected string getMonthName(int monthNum)
+        {
+            string returnMe = "Smarch";
+            if (monthNum == 1) { returnMe = "January"; }
+            if (monthNum == 2) { returnMe = "February"; }
+            if (monthNum == 3) { returnMe = "March"; }
+            if (monthNum == 4) { returnMe = "April"; }
+            if (monthNum == 5) { returnMe = "May"; }
+            if (monthNum == 6) { returnMe = "June"; }
+            if (monthNum == 7) { returnMe = "July"; }
+            if (monthNum == 8) { returnMe = "August"; }
+            if (monthNum == 9) { returnMe = "September"; }
+            if (monthNum == 10) { returnMe = "October"; }
+            if (monthNum == 11) { returnMe = "November"; }
+            if (monthNum == 12) { returnMe = "December"; }
+
+            return returnMe;
+        }
 
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            /* Initialize some variables */
-            NameValueCollection post = Request.Form;
+            #region Set up date picker values
+            if (!IsPostBack)
+            {
+                for (int x = DateTime.Now.Year - 10; x <= DateTime.Now.Year + 10; x++)
+                {
+                    ListItem liTo = new ListItem();
+                    liTo.Value = x.ToString();
+                    liTo.Text = x.ToString();
 
-            /* Set up an SQL connection */
-            String dbUser = @"sql_readonly";
-            String dbPassword = @"XTXVDUNHlrdbefjTBgY4";
-            String dbHost = "dcsql.lskysd.ca";
-            String dbDatabase = "SchoolLogicDB";
+                    if (x == DateTime.Now.Year)
+                    {
+                        liTo.Selected = true;
+                    }
+
+
+                    ListItem liFrom = new ListItem();
+                    liFrom.Value = x.ToString();
+                    liFrom.Text = x.ToString();
+
+                    if (x == DateTime.Now.Year)
+                    {
+                        liFrom.Selected = true;
+                    }
+
+                    drpTo_year.Items.Add(liTo);
+                    drpFrom_year.Items.Add(liFrom);
+                }
+
+                for (int x = 1; x <= 12; x++)
+                {
+                    ListItem liTo = new ListItem();
+                    liTo.Value = x.ToString();
+                    liTo.Text = getMonthName(x);
+
+                    if (x == DateTime.Now.Month)
+                        liTo.Selected = true;
+
+
+                    drpTo_month.Items.Add(liTo);
+
+                    ListItem liFrom = new ListItem();
+                    liFrom.Value = x.ToString();
+                    liFrom.Text = getMonthName(x);
+
+                    if (x == DateTime.Now.Month)
+                        liFrom.Selected = true;
+
+                    drpFrom_month.Items.Add(liFrom);
+                }
+
+                for (int x = 1; x <= 31; x++)
+                {
+                    ListItem liTo = new ListItem();
+                    liTo.Value = x.ToString();
+                    liTo.Text = x.ToString();
+
+                    if (x == 31)
+                        liTo.Selected = true;
+
+                    drpTo_day.Items.Add(liTo);
+
+
+                    ListItem liFrom = new ListItem();
+                    liFrom.Value = x.ToString();
+                    liFrom.Text = x.ToString();
+
+                    if (x == 1)
+                        liFrom.Selected = true;
+
+                    drpFrom_day.Items.Add(liFrom);
+                }
+            }
+            #endregion            
+
             String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
-
-            //NameValueCollection get = Request.QueryString;
-            if (!string.IsNullOrEmpty(Request["studentid"]))
-            {
-                selectedStudentID = Request["studentid"];
-            }
-            else
-            {
-                selectedStudentID = null;
-            }
-
-            selectedStartDate = new DateTime(1900, 1, 1);
-            if (!string.IsNullOrEmpty(Request["from_year"]))
-            {
-                string year = Request["from_year"];
-                if (!string.IsNullOrEmpty(Request["from_month"]))
-                {
-                    string month = Request["from_month"];
-                    if (!string.IsNullOrEmpty(Request["from_day"]))
-                    {
-                        string day = Request["from_day"];
-                        selectedStartDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day));
-                    }
-                }
-            }
-
-
-            selectedEndDate = DateTime.Now;
-            if (!string.IsNullOrEmpty(Request["to_year"]))
-            {
-                string year = Request["to_year"];
-                if (!string.IsNullOrEmpty(Request["to_month"]))
-                {
-                    string month = Request["to_month"];
-                    if (!string.IsNullOrEmpty(Request["to_day"]))
-                    {
-                        string day = Request["to_day"];
-                        selectedEndDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day));
-                    }
-                }
-            }
-
-            /* Load configuration information from a config file */
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
-                if (selectedStudentID != null)
+                if (!IsPostBack)
                 {
-                    selectedStudent = Student.loadThisStudent(connection, selectedStudentID);
-                }
-
-                if (selectedStudent != null)
-                {
-                    selectedStudentAbsences = Student.loadAbsencesFromStudent(connection, selectedStudent.getStudentID(), selectedStartDate, selectedEndDate);
+                    AllSchools = School.loadAllSchools(connection);
+                    foreach (School school in AllSchools)
+                    {
+                        ListItem newItem = new ListItem();
+                        newItem.Text = school.getName();
+                        newItem.Value = school.getGovID();
+                        drpSchoolList.Items.Add(newItem);
+                    }
                 }
             }
-
         }
 
         public void displayStudentNameplate(Student student)
@@ -153,9 +203,7 @@ namespace SLReports.Attendance
             }
             return absencesByDate;
         }
-
-
-
+        
         public void displayAbsenceStatistics(List<Absence> absences)
         {
             Response.Write("<br><br><h3>Absence Statistics: " + selectedStartDate.ToShortDateString() + " to " + selectedEndDate.ToShortDateString() + "</h3>");
@@ -289,6 +337,29 @@ namespace SLReports.Attendance
                 }
             }
             Response.Write("</table>");
+        }
+
+        protected void btnFilterDate_Click(object sender, EventArgs e)
+        {
+            selectedStartDate = new DateTime(int.Parse(drpFrom_year.SelectedValue), int.Parse(drpFrom_month.SelectedValue), int.Parse(drpFrom_day.SelectedValue));
+            selectedEndDate = new DateTime(int.Parse(drpTo_year.SelectedValue), int.Parse(drpTo_month.SelectedValue), int.Parse(drpTo_day.SelectedValue));
+
+
+            String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+            using (SqlConnection connection = new SqlConnection(dbConnectionString))
+            {
+                if (selectedStudentID != null)
+                {
+                    selectedStudent = Student.loadThisStudent(connection, selectedStudentID);
+                }
+
+                if (selectedStudent != null)
+                {
+                    selectedStudentAbsences = Student.loadAbsencesFromStudent(connection, selectedStudent.getStudentID(), selectedStartDate, selectedEndDate);
+                }
+            }
+
+
         }
 
 

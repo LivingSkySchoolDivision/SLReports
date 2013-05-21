@@ -264,7 +264,7 @@ namespace SLReports.StudentList
                 #endregion
 
             }
-            AllStudents.Sort();
+            //AllStudents.Sort();
             if (!string.IsNullOrEmpty(filterSchoolID))
             {
                 DisplayedStudents = Student.GetStudentsFromSchool(AllStudents, filterSchoolID);
