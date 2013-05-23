@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -59,6 +60,11 @@ namespace SLReports.ReportCard
             return returnMe.ToString();
         }
 
+        private string escapeXMLSpecialChars(string haystack)
+        {            
+            return Regex.Replace(haystack, "&", "&amp;");
+        }
+
         private string XMLCourseSection(Student student)
         {
             StringBuilder returnMe = new StringBuilder();
@@ -101,8 +107,8 @@ namespace SLReports.ReportCard
                         foreach (Objective objective in course.Objectives)
                         {
                             returnMe.Append("<Objective ID=\"" + objective.id + "\">");
-                            returnMe.Append("<Subject>" + @objective.subject + "</Subject>");
-                            returnMe.Append("<Description>" + @objective.description + "</Description>");
+                            returnMe.Append("<Subject>" + escapeXMLSpecialChars(objective.subject) + "</Subject>");
+                            returnMe.Append("<Description>" + escapeXMLSpecialChars(objective.description) + "</Description>");
                             returnMe.Append("<Order>" + objective.order + "</Order>");
                             returnMe.Append("</Objective>");
                         }
@@ -116,32 +122,7 @@ namespace SLReports.ReportCard
 
                     returnMe.Append("</ReportingPeriod>");
                 }
-
-                /*
-                returnMe.Append("<Course>");
-                returnMe.Append("<Name>" + course.name + "</Name>");
-                returnMe.Append("<CourseID>" + course.courseid + "</CourseID>");
-                returnMe.Append("<ClassID>" + course.classid + "</ClassID>");
-                returnMe.Append("<HasOutcomes>" + course.hasObjectives() + "</HasOutcomes>");
-                returnMe.Append("<Teacher>");
-                returnMe.Append("<GivenName>" + course.teacherFirstName + "</GivenName>");
-                returnMe.Append("<Surname>" + course.teacherLastName + "</Surname>");
-                returnMe.Append("<Title>" + course.teacherTitle + "</Title>");
-                returnMe.Append("</Teacher>");
-                returnMe.Append("</Course>");
-
                 
-                
-                returnMe.Append("<AlphaMark>");
-                returnMe.Append("</AlphaMark>");
-                returnMe.Append("<PercentMark>");
-                returnMe.Append("</PercentMark>");
-                returnMe.Append("<Outcomes>");
-                returnMe.Append("</Outcomes>");
-                returnMe.Append("<LifeSkills>");
-                returnMe.Append("</LifeSkills>");
-                returnMe.Append("</ReportingPeriod>");
-                */
                 returnMe.Append("</Term>"); 
                 
             }
