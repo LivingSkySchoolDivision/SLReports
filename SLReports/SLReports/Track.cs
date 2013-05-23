@@ -9,21 +9,23 @@ namespace SLReports
 {
     public class Track
     {
-        int ID;
-        string name;
-        string code;
-        DateTime startDate;
-        DateTime endDate;
-        bool daily;
-        int schoolID;
-        int blocksPerDay;
-        int daysInCycle;
-        int dailyBlocksPerDay;
-        int effordLegendID;
-        School school;
+        public int ID { get; set; }
+        public string name { get; set; }
+        public string code { get; set; }
+        public DateTime startDate { get; set; }
+        public DateTime endDate { get; set; }
+        public bool daily { get; set; }
+        public int schoolID { get; set; }
+        public int blocksPerDay { get; set; }
+        public int daysInCycle { get; set; }
+        public int dailyBlocksPerDay { get; set; }
+        public int effordLegendID { get; set; }
+        public School school { get; set; }
+        public List<Term> terms { get; set; }
 
         public Track(int id, string name, DateTime start, DateTime end, int schoolid)
         {
+            this.terms = new List<Term>();
             this.ID = id;
             this.name = name;
             this.startDate = start;
@@ -49,6 +51,35 @@ namespace SLReports
             sqlCommand.Connection = connection;
             sqlCommand.CommandType = CommandType.Text;
             sqlCommand.CommandText = "SELECT * FROM Track WHERE iTrackID=" + trackID + "";
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    returnMe = new Track(
+                            int.Parse(dataReader["iTrackID"].ToString().Trim()),
+                            dataReader["cName"].ToString().Trim(),
+                            DateTime.Parse(dataReader["dStartDate"].ToString()),
+                            DateTime.Parse(dataReader["dEndDate"].ToString()),
+                            int.Parse(dataReader["iSchoolID"].ToString().Trim())
+                            );
+                }
+            }
+
+            sqlCommand.Connection.Close();
+            return returnMe;
+        }
+
+        public static Track loadThisTrack(SqlConnection connection, Track track)
+        {
+            Track returnMe = null;
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM Track WHERE iTrackID=" + track.ID + "";
             sqlCommand.Connection.Open();
             SqlDataReader dataReader = sqlCommand.ExecuteReader();
 

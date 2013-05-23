@@ -15,6 +15,7 @@ namespace SLReports
         public DateTime endDate { get; set; }
         public string name { get; set; }
         public int schoolID { get; set; }
+        public List<ReportPeriod> ReportPeriods { get; set;}
 
         public Term(int id, int trackid, DateTime start, DateTime end, string name, int schoolid)
         {
@@ -74,6 +75,36 @@ namespace SLReports
             sqlCommand.Connection = connection;
             sqlCommand.CommandType = CommandType.Text;
             sqlCommand.CommandText = "SELECT * FROM Term WHERE iTrackID=" + trackID + "";
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    returnMe.Add(new Term(
+                            int.Parse(dataReader["iTermID"].ToString().Trim()),
+                            int.Parse(dataReader["iTrackID"].ToString().Trim()),
+                            DateTime.Parse(dataReader["dStartDate"].ToString()),
+                            DateTime.Parse(dataReader["dEndDate"].ToString()),
+                            dataReader["cName"].ToString().Trim(),
+                            int.Parse(dataReader["iSchoolID"].ToString().Trim())
+                            ));
+                }
+            }
+
+            sqlCommand.Connection.Close();
+            return returnMe;
+        }
+
+        public static List<Term> loadTermsFromThisTrack(SqlConnection connection, Track track)
+        {
+            List<Term> returnMe = new List<Term>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM Term WHERE iTrackID=" + track.ID + "";
             sqlCommand.Connection.Open();
             SqlDataReader dataReader = sqlCommand.ExecuteReader();
 

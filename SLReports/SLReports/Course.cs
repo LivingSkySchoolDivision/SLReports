@@ -14,8 +14,21 @@ namespace SLReports
         public string teacherFirstName { get; set; }
         public string teacherLastName { get; set; }
         public string teacherTitle { get; set; }
+        public string mark { get; set; } 
         public List<Mark> Marks { get; set; }
         public List<Objective> Objectives { get; set; }
+
+        public bool hasObjectives()
+        {
+            if (this.Objectives.Count > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         public string teacherName
         {
@@ -36,7 +49,7 @@ namespace SLReports
             }
 
             set {}
-        }        
+        }
 
         public Course(string name, int classid, int courseid, string teacherFirst, string teacherLast, string teacherTitle)
         {

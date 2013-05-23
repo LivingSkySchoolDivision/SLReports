@@ -75,6 +75,7 @@
     <Content Include="E15\index.aspx" />
     <Content Include="Photos\GetPhoto.aspx" />
     <Content Include="Photos\index.aspx" />
+    <Content Include="ReportCard\getXML.aspx" />
     <Content Include="ReportCard\index.aspx" />
     <Content Include="StudentList\index.aspx" />
     <Content Include="Web.config" />
@@ -187,6 +188,13 @@
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportCard\getXML.aspx.cs">
+      <DependentUpon>getXML.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportCard\getXML.aspx.designer.cs">
+      <DependentUpon>getXML.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ReportCard\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

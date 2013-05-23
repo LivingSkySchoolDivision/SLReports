@@ -43,6 +43,7 @@ namespace SLReports
         private string trackID;
         private bool bHasPhoto;
         private object photo;
+        public Track track;
 
         public object getPhoto()
         {

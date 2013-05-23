@@ -20,11 +20,12 @@ namespace SLReports
         public string teacherLast { get; set; }
         public string teacherTitle { get; set; }
         public string comment { get; set; }
+        public Course course { get; set; }
 
         public ReportPeriod reportPeriod { get; set; }
 
         public Mark(int id, int reportPeriodID, string numberMark, string outcomeMark, string classname, int classid, int courseid, string comment, string teacherFirst, string teacherLast, string teacherTitle, ReportPeriod rperiod)
-        {
+        {            
             this.ID = id;
             this.reportPeriodID = reportPeriodID;
             this.numberMark = numberMark;
@@ -37,6 +38,7 @@ namespace SLReports
             this.teacherFirst = teacherFirst;
             this.teacherLast = teacherLast;
             this.teacherTitle = teacherTitle;
+            this.course = new Course(this.className, this.classID, this.courseID, this.teacherFirst, this.teacherLast, this.teacherTitle);
         }
 
         public string getMark()

@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="getXML.aspx.cs" Inherits="SLReports.ReportCard.getXML" %>

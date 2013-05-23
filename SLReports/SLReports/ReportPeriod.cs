@@ -16,6 +16,7 @@ namespace SLReports
         public string name { get; set; }
         public int schoolID { get; set; }
         public List<Mark> marks { get; set; }
+        public List<Course> courses { get; set; }
 
         public ReportPeriod(int id, string name, DateTime start, DateTime end, int schoolid, int termid)
         {
@@ -25,11 +26,44 @@ namespace SLReports
             this.endDate = end;
             this.schoolID = schoolid;
             this.termID = termid;
+            this.marks = new List<Mark>();
+            this.courses = new List<Course>();
         }
 
         public override string ToString()
         {
             return this.name;
+        }
+
+        public static ReportPeriod loadThisReportPeriod(SqlConnection connection, int reportPeriodID)
+        {
+            ReportPeriod returnMe = null;
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM ReportPeriod WHERE iReportPeriodID=" + reportPeriodID + "";
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    returnMe = new ReportPeriod(
+                            int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
+                            dataReader["cName"].ToString().Trim(),
+                            DateTime.Parse(dataReader["dStartDate"].ToString()),
+                            DateTime.Parse(dataReader["dEndDate"].ToString()),
+                            int.Parse(dataReader["iSchoolID"].ToString().Trim()),
+                            int.Parse(dataReader["iTermID"].ToString().Trim())
+                            );
+                }
+            }
+
+            sqlCommand.Connection.Close();
+            return returnMe;
+
         }
 
         public static List<ReportPeriod> loadReportPeriodsFromThisTerm(SqlConnection connection, int termID)
@@ -51,7 +85,37 @@ namespace SLReports
                             int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
                             dataReader["cName"].ToString().Trim(),
                             DateTime.Parse(dataReader["dStartDate"].ToString()),
-                            DateTime.Parse(dataReader["dEndDate"].ToString()),                            
+                            DateTime.Parse(dataReader["dEndDate"].ToString()),
+                            int.Parse(dataReader["iSchoolID"].ToString().Trim()),
+                            int.Parse(dataReader["iTermID"].ToString().Trim())
+                            ));
+                }
+            }
+
+            sqlCommand.Connection.Close();
+            return returnMe;
+        }
+
+        public static List<ReportPeriod> loadReportPeriodsFromThisTerm(SqlConnection connection, Term term)
+        {
+            List<ReportPeriod> returnMe = new List<ReportPeriod>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM ReportPeriod WHERE iTermID=" + term.ID + "";
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    returnMe.Add(new ReportPeriod(
+                            int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
+                            dataReader["cName"].ToString().Trim(),
+                            DateTime.Parse(dataReader["dStartDate"].ToString()),
+                            DateTime.Parse(dataReader["dEndDate"].ToString()),
                             int.Parse(dataReader["iSchoolID"].ToString().Trim()),
                             int.Parse(dataReader["iTermID"].ToString().Trim())
                             ));
