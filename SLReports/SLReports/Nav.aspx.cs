@@ -17,7 +17,7 @@ namespace SLReports
         {
             List<NavMenuItem> returnMe = new List<NavMenuItem>();
 
-            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString;
             using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
             {
                 using (SqlCommand sqlCommand = new SqlCommand())

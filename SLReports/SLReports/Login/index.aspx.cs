@@ -74,7 +74,7 @@ namespace SLReports.Login
         {
             try
             {
-                String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString; 
+                String dbConnectionString = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString; 
                 using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand())
@@ -106,7 +106,7 @@ namespace SLReports.Login
 
             /* Create a session in the database */
 
-            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString;
 
             /* Set a limit on how long this login session will last, based on time of day */
             /*  If logging in during the work day, make a session last 7 hours */

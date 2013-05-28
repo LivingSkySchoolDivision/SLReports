@@ -30,7 +30,7 @@ namespace SLReports
             /* Search for the session hash in the database */
             try
             {
-                String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+                String dbConnectionString = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString;
                 
                 using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
                 {
