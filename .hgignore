@@ -112,6 +112,3 @@ UpgradeLog*.XML
 # SQL Server files
 App_Data/*.mdf
 App_Data/*.ldf
-
-# Web.config file(s) that may contain database connection strings
-web.config
