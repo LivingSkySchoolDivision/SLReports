@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -14,10 +15,6 @@ namespace SLReports
     public partial class BasicTemplate : System.Web.UI.MasterPage
     {
         /* TODO: Don't store this in the code - figure out how I should be storing this information */
-        string dbUser = @"data_explorer";
-        string dbPassword = @"YKy08UJBBbwOoktJ";
-        string dbHost = "localhost";
-        string dbDatabase = "DataExplorer";
                 
         string loginURL = "/SLReports/Login/index.aspx";
 
@@ -33,7 +30,8 @@ namespace SLReports
             /* Search for the session hash in the database */
             try
             {
-                String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+                String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+                
                 using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand())
@@ -102,7 +100,7 @@ namespace SLReports
         public void expireSession()
         {
             /* Remove the session from the server */
-            String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
             using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
             {
                 using (SqlCommand sqlCommand = new SqlCommand())

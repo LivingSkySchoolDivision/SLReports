@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.DirectoryServices;
@@ -16,12 +17,6 @@ namespace SLReports.Login
 {
     public partial class index : System.Web.UI.Page
     {
-        /* TODO: Don't store this in the code - figure out how I should be storing this information */
-        String dbUser = @"data_explorer";
-        String dbPassword = @"YKy08UJBBbwOoktJ";
-        String dbHost = "localhost";
-        String dbDatabase = "DataExplorer";
-
         public List<String> getGroupMembers(string domain, string groupName)
         {
             List<string> returnMe = new List<string>();
@@ -79,7 +74,7 @@ namespace SLReports.Login
         {
             try
             {
-                String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+                String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString; 
                 using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand())
@@ -111,8 +106,7 @@ namespace SLReports.Login
 
             /* Create a session in the database */
 
-            String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
-
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
 
             /* Set a limit on how long this login session will last, based on time of day */
             /*  If logging in during the work day, make a session last 7 hours */

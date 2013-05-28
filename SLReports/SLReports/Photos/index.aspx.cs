@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -14,16 +15,10 @@ namespace SLReports.Photos
         List<Student> AllStudents;
         List<Student> StudentsWithPhoto;
         List<Student> StudentsWithoutPhoto;
-
-        String dbUser = @"sql_readonly";
-        String dbPassword = @"XTXVDUNHlrdbefjTBgY4";
-        String dbHost = "dcsql.lskysd.ca";
-        String dbDatabase = "SchoolLogicDB";
-
+        
         protected void Page_Load(object sender, EventArgs e)
         {
-            String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
-
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {                
                 AllSchools = School.loadAllSchools(connection);
@@ -84,7 +79,7 @@ namespace SLReports.Photos
 
         protected void btnFilter_Click(object sender, EventArgs e)
         {
-            String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString; 
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
                 int schoolID = -1;

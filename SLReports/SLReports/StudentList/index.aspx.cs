@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -182,12 +183,7 @@ namespace SLReports.StudentList
             DisplayedStudents = new List<Student>();
             Schools = new List<School>();
 
-            String dbUser = @"sql_readonly";
-            String dbPassword = @"XTXVDUNHlrdbefjTBgY4";
-            String dbHost = "dcsql.lskysd.ca";
-            String dbDatabase = "SchoolLogicDB";
-            //String dbDatabase = "SchoolLogicDB";
-            String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
 
             //DisplayedStudents = AllStudents;
 

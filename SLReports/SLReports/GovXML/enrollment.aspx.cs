@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -11,11 +12,6 @@ namespace SLReports.GovXML
 {
     public partial class enrollment : System.Web.UI.Page
     {
-        String dbUser = @"sql_readonly";
-        String dbPassword = @"XTXVDUNHlrdbefjTBgY4";
-        String dbHost = "dcsql.lskysd.ca";
-        String dbDatabase = "SchoolLogicDB";
-
 
         public void create_student_node(Student thisStudent)
         {
@@ -109,7 +105,7 @@ namespace SLReports.GovXML
             Response.ContentEncoding = Encoding.UTF8;
             Response.ContentType = "text/xml; charset=utf-8";
 
-            String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
             Response.Write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             Response.Write("<SL_Message xmlns=\"http://www.k12.gov.sk.ca/xsd/sl/1.x/SLMessage.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.k12.gov.sk.ca/xsd/sl/1.x/SLMessage.xsd http://www.k12.gov.sk.ca/xsd/sl/1.x/SLMessage.xsd\"><SL_Event>");
 

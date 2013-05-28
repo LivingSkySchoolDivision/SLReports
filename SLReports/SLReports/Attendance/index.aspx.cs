@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -20,11 +21,6 @@ namespace SLReports.Attendance
         public static DateTime selectedStartDate;
         public static DateTime selectedEndDate; 
         
-        String dbUser = @"sql_readonly";
-        String dbPassword = @"XTXVDUNHlrdbefjTBgY4";
-        String dbHost = "dcsql.lskysd.ca";
-        String dbDatabase = "SchoolLogicDB";
-
         protected string getMonthName(int monthNum)
         {
             string returnMe = "Smarch";
@@ -121,7 +117,7 @@ namespace SLReports.Attendance
             }
             #endregion            
 
-            String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
                 if (!IsPostBack)
@@ -345,7 +341,7 @@ namespace SLReports.Attendance
             selectedEndDate = new DateTime(int.Parse(drpTo_year.SelectedValue), int.Parse(drpTo_month.SelectedValue), int.Parse(drpTo_day.SelectedValue));
 
 
-            String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
                 if (selectedStudentID != null)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -74,12 +75,7 @@ namespace SLReports.INAC
             AllAbsences = new List<Absence>();
             AllContacts = new List<Contact>();
 
-            String dbUser = @"sql_readonly";
-            String dbPassword = @"XTXVDUNHlrdbefjTBgY4";
-            String dbHost = "dcsql.lskysd.ca";
-            String dbDatabase = "SchoolLogicDB";
-            //String dbDatabase = "SchoolLogicDB";
-            String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
 
             if (!IsPostBack)
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -11,18 +12,12 @@ namespace SLReports
 {
     public partial class Nav : System.Web.UI.Page
     {
-        /* TODO: Don't store this in the code - figure out how I should be storing this information */
-        static string dbUser = @"data_explorer";
-        static string dbPassword = @"YKy08UJBBbwOoktJ";
-        static string dbHost = "localhost";
-        static string dbDatabase = "DataExplorer";
-
 
         public static List<NavMenuItem> getMainMenu()
         {
             List<NavMenuItem> returnMe = new List<NavMenuItem>();
 
-            String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
             using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
             {
                 using (SqlCommand sqlCommand = new SqlCommand())
@@ -52,8 +47,7 @@ namespace SLReports
 
             return returnMe;
         }
-
-        
+               
 
 
         protected void Page_PreInit(object sender, EventArgs e)

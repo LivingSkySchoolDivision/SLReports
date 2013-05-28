@@ -1,0 +1,23 @@
+﻿<?xml version="1.0"?>
+
+<!--
+  For more information on how to configure your ASP.NET application, please visit
+  http://go.microsoft.com/fwlink/?LinkId=169433
+  -->
+
+<configuration>
+    <system.web>
+      <customErrors mode="Off"/> <!-- If this is Off, errors are displayed - you probably want to turn this On for a production server -->
+      <compilation debug="true" targetFramework="4.5" />
+      <httpRuntime targetFramework="4.5" />
+    </system.web>
+
+  <connectionStrings>
+    <add
+      name="CONNECTIONNAME"
+      connectionString="data source=HOSTNAME;initial catalog=DATABASE;user id=USERNAME;password=PASSWORD;Trusted_Connection=false"
+      providerName="System.Data.SqlClient"
+      />
+  </connectionStrings>
+
+</configuration>

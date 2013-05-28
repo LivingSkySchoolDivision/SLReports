@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -11,11 +12,6 @@ namespace SLReports.Photos
 {
     public partial class GetPhoto : System.Web.UI.Page
     {
-        String dbUser = @"sql_readonly";
-        String dbPassword = @"XTXVDUNHlrdbefjTBgY4";
-        String dbHost = "dcsql.lskysd.ca";
-        String dbDatabase = "SchoolLogicDB";
-
         protected void Page_Load(object sender, EventArgs e)
         {
             string StudNum = Request.QueryString["studentnumber"];
@@ -23,7 +19,7 @@ namespace SLReports.Photos
             if (!string.IsNullOrEmpty(StudNum))
             {
 
-                String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+                String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString; 
                 SqlConnection dbConnection = new SqlConnection(dbConnectionString);
                 SqlCommand sqlCommand = new SqlCommand();
                 sqlCommand.Connection = dbConnection;

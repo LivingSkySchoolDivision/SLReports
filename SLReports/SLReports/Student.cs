@@ -43,7 +43,10 @@ namespace SLReports
         private string trackID;
         private bool bHasPhoto;
         private object photo;
-        public Track track;
+
+        public Track track { get; set; }
+
+        
 
         public object getPhoto()
         {
@@ -272,6 +275,8 @@ namespace SLReports
         {
             absences = new List<Absence>();
             contacts = new List<Contact>();
+            
+            this.track = null;
 
             this.givenName = givenName;
             this.sn = sn;

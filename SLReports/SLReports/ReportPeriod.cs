@@ -17,6 +17,7 @@ namespace SLReports
         public int schoolID { get; set; }
         public List<Mark> marks { get; set; }
         public List<Course> courses { get; set; }
+        public List<Objective> objectives { get; set; }
 
         public ReportPeriod(int id, string name, DateTime start, DateTime end, int schoolid, int termid)
         {
@@ -28,6 +29,7 @@ namespace SLReports
             this.termID = termid;
             this.marks = new List<Mark>();
             this.courses = new List<Course>();
+            this.objectives = new List<Objective>();
         }
 
         public override string ToString()

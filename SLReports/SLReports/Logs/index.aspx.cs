@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -11,11 +12,6 @@ namespace SLReports.Logs
 {
     public partial class index : System.Web.UI.Page
     {
-        string dbUser = @"data_explorer";
-        string dbPassword = @"YKy08UJBBbwOoktJ";
-        string dbHost = "localhost";
-        string dbDatabase = "DataExplorer";
-
         List<session> AllSessions = null;
         List<LoginAttempt> AllLoginAttempts = null;
 
@@ -25,7 +21,7 @@ namespace SLReports.Logs
 
             try
             {
-                String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+                String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString; 
                 using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand())
@@ -68,7 +64,7 @@ namespace SLReports.Logs
 
             try
             {
-                String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+                String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString; 
                 using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand())
@@ -109,7 +105,7 @@ namespace SLReports.Logs
             /* Search for the session hash in the database */
             try
             {
-                String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+                String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString; 
                 using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand())

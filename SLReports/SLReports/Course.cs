@@ -17,6 +17,9 @@ namespace SLReports
         public string mark { get; set; } 
         public List<Mark> Marks { get; set; }
         public List<Objective> Objectives { get; set; }
+        public List<ObjectiveMark> ObjectiveMarks { get; set; }
+
+        public List<ReportPeriod> ReportPeriods { get; set; }
 
         public bool hasObjectives()
         {
@@ -55,6 +58,9 @@ namespace SLReports
         {
             Objectives = new List<Objective>();
             Marks = new List<Mark>();
+            ReportPeriods = new List<ReportPeriod>();
+            ObjectiveMarks = new List<ObjectiveMark>();
+
             this.name = name;
             this.classid = classid;
             this.courseid = courseid;

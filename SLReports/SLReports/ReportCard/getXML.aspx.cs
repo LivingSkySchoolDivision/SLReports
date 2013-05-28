@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -12,15 +14,11 @@ namespace SLReports.ReportCard
 {
     public partial class getXML : System.Web.UI.Page
     {
-        String dbUser = @"sql_readonly";
-        String dbPassword = @"XTXVDUNHlrdbefjTBgY4";
-        String dbHost = "dcsql.lskysd.ca";
-        String dbDatabase = "SchoolLogicDB";
-
-        Student selectedStudent;
-        ReportPeriod selectedReportPeriod;
+        Student selectedStudent;        
         School selectedSchool;
-        List<Term> studentMarks;
+
+        Stopwatch stopWatch;
+        
 
         private string XMLNameSection(Student student)
         {
@@ -75,52 +73,62 @@ namespace SLReports.ReportCard
             {
                 returnMe.Append("<Term ID=\"" + term.ID + "\" Name=\"" + term.name + "\">");
 
-                foreach (ReportPeriod reportPeriod in term.ReportPeriods)
+                foreach (Course course in term.Courses)
                 {
-                    returnMe.Append("<ReportingPeriod ID=\"" + reportPeriod.ID + "\" Name=\"" + reportPeriod.name + "\">");
-
-                    foreach (Course course in reportPeriod.courses)
-                    {
-                        returnMe.Append("<Course>");
-                        returnMe.Append("<Name>" + course.name + "</Name>");
-                        returnMe.Append("<CourseID>" + course.courseid + "</CourseID>");
-                        returnMe.Append("<ClassID>" + course.classid + "</ClassID>");
-                        returnMe.Append("<HasOutcomes>" + course.hasObjectives() + "</HasOutcomes>");
-                        returnMe.Append("<Teacher>");
-                        returnMe.Append("<GivenName>" + course.teacherFirstName + "</GivenName>");
-                        returnMe.Append("<Surname>" + course.teacherLastName + "</Surname>");
-                        returnMe.Append("<Title>" + course.teacherTitle + "</Title>");
-                        returnMe.Append("</Teacher>");
-
-                        returnMe.Append("<Marks>");
+                    returnMe.Append("<Course Name=\"" + course.name + "\">");
+                    returnMe.Append("<Name>" + course.name + "</Name>");
+                    returnMe.Append("<CourseID>" + course.courseid + "</CourseID>");
+                    returnMe.Append("<ClassID>" + course.classid + "</ClassID>");
+                    returnMe.Append("<HasObjectives>" + course.hasObjectives() + "</HasObjectives>");
+                    returnMe.Append("<Teacher>");
+                    returnMe.Append("<GivenName>" + course.teacherFirstName + "</GivenName>");
+                    returnMe.Append("<Surname>" + course.teacherLastName + "</Surname>");
+                    returnMe.Append("<Title>" + course.teacherTitle + "</Title>");
+                    returnMe.Append("</Teacher>");
+                    
+                    returnMe.Append("<Marks>");
+                    foreach (ReportPeriod reportPeriod in course.ReportPeriods)
+                    {                        
+                        returnMe.Append("<ReportPeriod ID=\"" + reportPeriod.ID + "\" Name=\"" + reportPeriod.name + "\">");                        
                         foreach (Mark mark in course.Marks)
                         {
-                            returnMe.Append("<Mark>");
-                            returnMe.Append("<AlphaMark>" + mark.outcomeMark + "</AlphaMark>");
-                            returnMe.Append("<PercentMark>" + mark.numberMark + "</PercentMark>");
-                            returnMe.Append("<Comment>" + mark.comment + "</Comment>");
-                            returnMe.Append("</Mark>");                            
+                            
+                            if (mark.reportPeriod.ID == reportPeriod.ID)
+                            {
+                                returnMe.Append("<Mark>");
+                                returnMe.Append("<AlphaMark>" + mark.outcomeMark + "</AlphaMark>");
+                                returnMe.Append("<PercentMark>" + mark.numberMark + "</PercentMark>");
+                                returnMe.Append("<Comment>" + mark.comment + "</Comment>");
+                                returnMe.Append("</Mark>");
+                            }
                         }
-
-                        returnMe.Append("</Marks>");
-                        returnMe.Append("<Objectives>");
-                        foreach (Objective objective in course.Objectives)
-                        {
-                            returnMe.Append("<Objective ID=\"" + objective.id + "\">");
-                            returnMe.Append("<Subject>" + escapeXMLSpecialChars(objective.subject) + "</Subject>");
-                            returnMe.Append("<Description>" + escapeXMLSpecialChars(objective.description) + "</Description>");
-                            returnMe.Append("<Order>" + objective.order + "</Order>");
-                            returnMe.Append("</Objective>");
-                        }
-                        returnMe.Append("</Objectives>");
-                        
-                        
-                        
-
-                        returnMe.Append("</Course>");
+                        returnMe.Append("</ReportPeriod>");
                     }
+                    returnMe.Append("</Marks>");
+                    returnMe.Append("<Objectives>");
+                    foreach (ReportPeriod reportPeriod in course.ReportPeriods)
+                    {
+                        returnMe.Append("<ReportPeriod ID=\"" + reportPeriod.ID + "\" Name=\"" + reportPeriod.name + "\">");
+                        foreach (ObjectiveMark objectivem in course.ObjectiveMarks)
+                        {
+                            if (objectivem.reportPeriodID == reportPeriod.ID)
+                            {
 
-                    returnMe.Append("</ReportingPeriod>");
+                                returnMe.Append("<Objective ID=\"" + objectivem.objective.id + "\">");
+                                returnMe.Append("<Subject>" + escapeXMLSpecialChars(objectivem.objective.subject) + "</Subject>");
+                                returnMe.Append("<Description>" + escapeXMLSpecialChars(objectivem.objective.description) + "</Description>");
+                                returnMe.Append("<Mark>" + objectivem.mark + "</Mark>");
+                                returnMe.Append("</Objective>");
+                            }
+                        }
+                        returnMe.Append("</ReportPeriod>");
+                    }
+                    returnMe.Append("</Objectives>");
+
+                    returnMe.Append("<LifeSkills>");
+                    returnMe.Append("</LifeSkills>");
+
+                    returnMe.Append("</Course>");
                 }
                 
                 returnMe.Append("</Term>"); 
@@ -136,93 +144,143 @@ namespace SLReports.ReportCard
             return returnMe.ToString();
         }
 
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            stopWatch = new Stopwatch();
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
-            
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+
             selectedStudent = null;
             selectedSchool = null;
-            selectedReportPeriod = null;
-            studentMarks = null;
 
-            if (!String.IsNullOrEmpty(Request.QueryString["studentid"]))
+            try
             {
-                int studentID = -1;
-                if (int.TryParse(Request.QueryString["studentid"], out studentID))
+                if (!String.IsNullOrEmpty(Request.QueryString["studentid"]))
                 {
-                    using (SqlConnection connection = new SqlConnection(dbConnectionString))
+                    int studentID = -1;
+                    if (int.TryParse(Request.QueryString["studentid"], out studentID))
                     {
-                        selectedStudent = Student.loadThisStudent(connection, studentID.ToString());
-                        selectedSchool = School.loadThisSchool(connection, int.Parse(selectedStudent.getSchoolID()));
-
-                        /* Get student track, and determine the terms and report periods */                        
-                        selectedStudent.track = Track.loadThisTrack(connection, int.Parse(selectedStudent.getTrackID()));
-
-                        /* Populate the track with terms */
-                        selectedStudent.track.terms = Term.loadTermsFromThisTrack(connection, selectedStudent.track);
-
-                        /* Populate the terms with report periods */
-                        foreach (Term t in selectedStudent.track.terms)
+                        using (SqlConnection connection = new SqlConnection(dbConnectionString))
                         {
-                            List<ObjectiveMark> TermObjectiveMarks = ObjectiveMark.loadObjectiveMarksForThisStudent(connection, t, selectedStudent);
+                            selectedStudent = Student.loadThisStudent(connection, studentID.ToString());
 
-                            t.ReportPeriods = ReportPeriod.loadReportPeriodsFromThisTerm(connection,t);
-                            
-                            /* Load marks into the report period */
-                            foreach (ReportPeriod r in t.ReportPeriods)
-                            {                                
-                                r.marks = Mark.loadMarksFromThisReportPeriod(connection, r, selectedStudent);
-                                /* Translate the loaded marks into courses and marks */
-                                 
-                               
-                                /* Collect a list of courses */                                
-                                Dictionary<int, Course> allcourses = new Dictionary<int, Course>();
-                                foreach (Mark m in r.marks)
+                            if (selectedStudent != null)
+                            {
+                                selectedSchool = School.loadThisSchool(connection, int.Parse(selectedStudent.getSchoolID()));
+
+
+                                /* Get student track, and determine the terms and report periods */
+                                selectedStudent.track = Track.loadThisTrack(connection, int.Parse(selectedStudent.getTrackID()));
+
+                                /* Populate the track with terms */
+                                selectedStudent.track.terms = Term.loadTermsFromThisTrack(connection, selectedStudent.track);
+
+                                /* Populate the terms with report periods */
+                                foreach (Term t in selectedStudent.track.terms)
                                 {
-                                    if (!allcourses.ContainsKey(m.courseID))
+                                    List<ObjectiveMark> TermObjectiveMarks = ObjectiveMark.loadObjectiveMarksForThisStudent(connection, t, selectedStudent);
+
+                                    t.ReportPeriods = ReportPeriod.loadReportPeriodsFromThisTerm(connection, t);
+
+                                    Dictionary<int, Course> termCourses = new Dictionary<int, Course>();
+                                    termCourses.Clear();
+
+                                    /* Load marks into the report period */
+                                    foreach (ReportPeriod r in t.ReportPeriods)
                                     {
-                                        allcourses.Add(m.courseID, new Course(m.className, m.classID, m.courseID, m.teacherFirst, m.teacherLast, m.teacherTitle));
-                                    }
-                                }
-                                
-                                
-                                foreach (KeyValuePair<int, Course> kvp in allcourses)
-                                {
-                                    r.courses.Add(kvp.Value);
-                                }
+                                        r.marks = Mark.loadMarksFromThisReportPeriod(connection, r, selectedStudent);
 
-                                
-                                foreach (Course c in r.courses)
-                                {
-                                    foreach (Mark m in r.marks)
-                                    {                                
-                                        if (m.courseID == c.courseid)
+                                        Dictionary<int, Course> allcourses = new Dictionary<int, Course>();
+                                        foreach (Mark m in r.marks)
                                         {
-                                            c.Marks.Add(m);
+                                            if (!allcourses.ContainsKey(m.courseID))
+                                            {
+                                                allcourses.Add(m.courseID, new Course(m.className, m.classID, m.courseID, m.teacherFirst, m.teacherLast, m.teacherTitle));
+                                            }
+
+                                            if (!termCourses.ContainsKey(m.courseID))
+                                            {
+                                                termCourses.Add(m.courseID, new Course(m.className, m.classID, m.courseID, m.teacherFirst, m.teacherLast, m.teacherTitle));
+                                            }
+                                        }
+
+
+                                        foreach (KeyValuePair<int, Course> kvp in termCourses)
+                                        {
+                                            Course c = kvp.Value;
+                                            Dictionary<int, ReportPeriod> detectedReportPeriods = new Dictionary<int, ReportPeriod>();
+
+                                            foreach (Mark m in r.marks)
+                                            {
+                                                if (!detectedReportPeriods.ContainsKey(m.reportPeriodID))
+                                                {
+                                                    detectedReportPeriods.Add(m.reportPeriodID, m.reportPeriod);
+                                                }
+                                            }
+
+                                            foreach (KeyValuePair<int, ReportPeriod> drp in detectedReportPeriods)
+                                            {
+                                                c.ReportPeriods.Add(drp.Value);
+
+
+                                            }
+
+                                            foreach (Mark m in r.marks)
+                                            {
+                                                if (m.courseID == c.courseid)
+                                                {
+                                                    c.Marks.Add(m);
+                                                }
+                                            }
+
+
+                                            c.ObjectiveMarks = ObjectiveMark.loadObjectiveMarksForThisCourse(connection, t, selectedStudent, c);
+                                            foreach (ObjectiveMark om in c.ObjectiveMarks)
+                                            {
+                                                foreach (Objective o in c.Objectives)
+                                                {
+                                                    if (om.objectiveID == o.id)
+                                                    {
+                                                        om.objective = o;
+                                                    }
+                                                }
+                                            }
+
+                                            c.Objectives = Objective.loadObjectivesForThisCourse(connection, c);
+                                            foreach (Objective o in c.Objectives)
+                                            {
+                                                foreach (ObjectiveMark om in TermObjectiveMarks)
+                                                {
+                                                    if (om.objectiveID == o.id)
+                                                    {
+                                                        o.mark = om;
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
 
-                                    c.Objectives = Objective.loadObjectivesForThisCourse(connection, c);
-                                    foreach (Objective o in c.Objectives)
+                                    foreach (KeyValuePair<int, Course> kvp in termCourses)
                                     {
-                                        foreach (ObjectiveMark om in TermObjectiveMarks)
-                                        {
-                                            if (om.objectiveID == o.id)
-                                            {
-                                                o.mark = om;
-                                            }
-                                        }                                        
+                                        t.Courses.Add(kvp.Value);
                                     }
                                 }
-                            }                            
+                            }
                         }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                Response.Write(ex.Message);
+            }
 
             if (selectedStudent != null)
             {
-                //Response.Clear();                
+                Response.Clear();                
                 Response.ContentEncoding = Encoding.UTF8;
                 Response.ContentType = "text/xml; charset=utf-8";
                 Response.Write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");

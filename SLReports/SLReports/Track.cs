@@ -22,7 +22,7 @@ namespace SLReports
         public int effordLegendID { get; set; }
         public School school { get; set; }
         public List<Term> terms { get; set; }
-
+        
         public Track(int id, string name, DateTime start, DateTime end, int schoolid)
         {
             this.terms = new List<Term>();

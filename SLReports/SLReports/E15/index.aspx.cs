@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -15,12 +16,7 @@ namespace SLReports.PotentialProblems
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            String dbUser = @"sql_readonly";
-            String dbPassword = @"XTXVDUNHlrdbefjTBgY4";
-            String dbHost = "dcsql.lskysd.ca";
-            String dbDatabase = "SchoolLogicDB";
-            //String dbDatabase = "SchoolLogicDB";
-            String dbConnectionString = "data source=" + dbHost + ";initial catalog=" + dbDatabase + ";user id=" + dbUser + ";password=" + dbPassword + ";Trusted_Connection=false";
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
 
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {

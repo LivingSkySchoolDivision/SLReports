@@ -15,6 +15,7 @@ namespace SLReports
         public int reportPeriodID { get; set; }
         public int courseID { get; set; }
         public string mark { get; set; }
+        public Objective objective { get; set; }
 
         public ObjectiveMark(int objectiveMarkID, int studentID, int objectiveID, int reportPeriodID, int courseID, string mark)
         {
