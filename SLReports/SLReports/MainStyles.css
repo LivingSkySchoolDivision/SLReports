@@ -17,6 +17,26 @@ body {
     margin: 0;
 }
 
+.rc_studentname {
+    font-size: 14pt;
+    font-family: Arial;
+    font-weight: bold;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    border: 0;
+    border-bottom: 1px solid #C0C0C0;
+}
+
+.rc_objectivetext {
+    font-size: 9pt;
+}
+
+.course_name {
+    font-size: 14pt;
+    font-family: Arial;
+}
+
 #loggedInUserBanner {        
     font-size: 8pt;
     text-align: right;

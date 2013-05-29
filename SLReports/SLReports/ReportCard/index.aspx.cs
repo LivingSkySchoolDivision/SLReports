@@ -43,40 +43,7 @@ namespace SLReports.ReportCard
         }
 
         protected void Page_Load(object sender, EventArgs e)
-        {
-            /* Load a specific student, for testing */
-            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString; 
-                
-            using (SqlConnection connection = new SqlConnection(dbConnectionString))
-            {
-
-                SelectedStudent = Student.loadThisStudent(connection, "12511");
-
-                if (!String.IsNullOrEmpty(SelectedStudent.getTrackID()))
-                {
-                    Track selectedTrack = Track.loadThisTrack(connection, int.Parse(SelectedStudent.getTrackID()));
-                    List<Term> validTerms = Term.loadTermsFromThisTrack(connection, selectedTrack.getID());
-
-                    if (selectedTrack != null)
-                    {                        
-                        foreach (Term term in validTerms)
-                        {                            
-                            List<ReportPeriod> reportPeriods = ReportPeriod.loadReportPeriodsFromThisTerm(connection,term.ID);
-                            foreach (ReportPeriod period in reportPeriods)
-                            {                                
-                                List<Mark> marks = Mark.loadMarksFromThisReportPeriod(connection, period, SelectedStudent);                                
-                                foreach (Mark mark in marks)
-                                {                                    
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Response.Write("No Track");
-                    }
-                }
-            }
+        {           
         }
 
         protected void Button1_Click(object sender, EventArgs e)
@@ -115,6 +82,7 @@ namespace SLReports.ReportCard
                 DisplayedStudents = Student.loadStudentsFromThisSchool(connection, SelectedSchoolID);
                 DisplayedTerms = Term.loadTermsFromThisTrack(connection, int.Parse(SelectedStudent.getTrackID()));
                 drpTermList.Items.Clear();
+
                 foreach (Term term in DisplayedTerms)
                 {
                     ListItem newItem = new ListItem();
@@ -122,6 +90,7 @@ namespace SLReports.ReportCard
                     newItem.Value = term.ID.ToString();
                     drpTermList.Items.Add(newItem);
                 }
+
                 TableRow_Term.Visible = true;
                 litAttendance.Visible = false;
                 litMarks.Visible = false;
@@ -287,9 +256,13 @@ namespace SLReports.ReportCard
                     DisplayedStudents = Student.loadStudentsFromThisSchool(connection, SelectedSchoolID);
                     DisplayedTerms = Term.loadTermsFromThisTrack(connection, int.Parse(SelectedStudent.getTrackID()));
                     SelectedTerm = Term.loadThisTerm(connection, int.Parse(drpTermList.SelectedValue));
+                                        
 
                     DisplayedReportPeriods = ReportPeriod.loadReportPeriodsFromThisTerm(connection, SelectedTerm.ID);
                     DisplayedMarks = Mark.loadMarksFromTheseReportPeriods(connection, DisplayedReportPeriods, SelectedStudent);
+
+
+
 
                     StudentObjectiveMarks = ObjectiveMark.loadObjectiveMarksForThisStudent(connection, SelectedTerm, SelectedStudent);
 

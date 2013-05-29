@@ -73,10 +73,13 @@
     <Content Include="MainStyles.css" />
     <Content Include="Nav.aspx" />
     <Content Include="E15\index.aspx" />
+    <Content Include="outcomeBar.js" />
     <Content Include="Photos\GetPhoto.aspx" />
     <Content Include="Photos\index.aspx" />
+    <Content Include="ReportCard\EntireTerm.aspx" />
     <Content Include="ReportCard\getXML.aspx" />
     <Content Include="ReportCard\index.aspx" />
+    <Content Include="ReportCard\SingleReportPeriod.aspx" />
     <Content Include="StudentList\index.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -188,6 +191,13 @@
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportCard\EntireTerm.aspx.cs">
+      <DependentUpon>EntireTerm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportCard\EntireTerm.aspx.designer.cs">
+      <DependentUpon>EntireTerm.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ReportCard\getXML.aspx.cs">
       <DependentUpon>getXML.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -201,6 +211,13 @@
     </Compile>
     <Compile Include="ReportCard\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ReportCard\SingleReportPeriod.aspx.cs">
+      <DependentUpon>SingleReportPeriod.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportCard\SingleReportPeriod.aspx.designer.cs">
+      <DependentUpon>SingleReportPeriod.aspx</DependentUpon>
     </Compile>
     <Compile Include="ReportPeriod.cs" />
     <Compile Include="School.cs" />

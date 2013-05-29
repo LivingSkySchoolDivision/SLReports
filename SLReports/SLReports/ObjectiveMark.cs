@@ -16,6 +16,24 @@ namespace SLReports
         public int courseID { get; set; }
         public string mark { get; set; }
         public Objective objective { get; set; }
+        public string description 
+        {
+            get
+            {
+                if (this.objective != null)
+                {
+                    return this.objective.description;
+                } else {
+                    return "Objective ID " + this.objectiveID;
+                }
+            }
+
+            set
+            {
+                // Do nothing beacuse this should never be set directly
+            }
+        }
+
 
         public ObjectiveMark(int objectiveMarkID, int studentID, int objectiveID, int reportPeriodID, int courseID, string mark)
         {

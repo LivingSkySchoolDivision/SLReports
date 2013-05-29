@@ -32,7 +32,7 @@ namespace SLReports
         private DateTime trackEndDate;
         private List<Absence> absences;
         private List<Contact> contacts;
-        private DateTime dateOfBirth;
+        private DateTime dateOfBirth;        
         private string HomeRoom;
         private string bandNo;
         private string bandName;
@@ -45,7 +45,7 @@ namespace SLReports
         private object photo;
 
         public Track track { get; set; }
-
+        public School school { get; set; }
         
 
         public object getPhoto()
