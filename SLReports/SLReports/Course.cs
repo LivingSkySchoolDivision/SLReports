@@ -18,6 +18,7 @@ namespace SLReports
         public List<Mark> Marks { get; set; }
         public List<Objective> Objectives { get; set; }
         public List<ObjectiveMark> ObjectiveMarks { get; set; }
+        public List<Student> EnrolledStudents { get; set; }
 
         public List<ReportPeriod> ReportPeriods { get; set; }
 

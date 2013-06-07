@@ -46,7 +46,6 @@ namespace SLReports
 
         public Track track { get; set; }
         public School school { get; set; }
-        
 
         public object getPhoto()
         {

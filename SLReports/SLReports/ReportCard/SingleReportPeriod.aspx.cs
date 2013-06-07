@@ -196,38 +196,84 @@ namespace SLReports.ReportCard
         }
 
         protected string generateStudentNameplate(Student student)
-        {
+        {            
             StringBuilder returnMe = new StringBuilder();
-            
+
             returnMe.Append("<div style=\"width: 500px;margin-left: auto; margin-right: auto;\">"); 
 
             returnMe.Append("<table width=\"500\">");
-            returnMe.Append("<tr><td colspan=2 class=\"rc_studentname\">" + student.getDisplayName() + "</td></tr>"); 
             returnMe.Append("<tr><td>");           
             if (student.hasPhoto())
             {
-                returnMe.Append("<img width=\"156\" height=\"200\" src=\"/SLReports/Photos/GetPhoto.aspx?studentnumber=" + student.getStudentID() + "\">");
+                returnMe.Append("<img width=\"137\" height=\"175\" style=\"border: 1px solid black;\" src=\"/SLReports/Photos/GetPhoto.aspx?studentnumber=" + student.getStudentID() + "\">");
             }
 
             returnMe.Append("</td><td valign=\"top\">");
 
             returnMe.Append("<table width=\"500\">");
             returnMe.Append("<tr>");
-            returnMe.Append("<td valign=\"top\" width=\"125\"><b>School</b></td><td valign=\"top\">" + student.getSchoolName() + "</td></tr>");
+            returnMe.Append("<td valign=\"top\" width=\"125\"><b>Student</b></td><td valign=\"top\"><div class=\"rc_studentname\">" + student.getDisplayName() + "</div></td></tr>");
             returnMe.Append("<tr><td valign=\"top\"><b>Student Number</b></td><td valign=\"top\">" + student.getStudentID() + "</tr></td>");
+            returnMe.Append("<td valign=\"top\" width=\"125\"><b>School</b></td><td valign=\"top\">" + student.getSchoolName() + "</td></tr>");
             if (!string.IsNullOrEmpty(student.getHomeRoom()))
             {
                 returnMe.Append("<tr><td><b>Homeroom</b></td><td valign=\"top\">" + student.getHomeRoom() + "</tr></td>");
             }
-            returnMe.Append("<tr><td valign=\"top\"><b>Grade</b></td><td valign=\"top\">" + student.getGradeFormatted() + "</tr></td>");
-            returnMe.Append("<tr><td valign=\"top\"><b>Date of Birth</b></td><td valign=\"top\">" + student.getDateOfBirth().ToString("MMMM dd,yyyy") + "</tr></td>");
-            returnMe.Append("<tr><td valign=\"top\"><b>Home Phone</b></td><td valign=\"top\">" + student.getTelephoneFormatted() + "</tr></td>");
-
+            returnMe.Append("<tr><td valign=\"top\"><b>Report Period</b></td><td valign=\"top\">" + selectedReportPeriod.name + " <i>(" + selectedReportPeriod.startDate.ToLongDateString() + " to " + selectedReportPeriod.endDate.ToLongDateString() + ")</i></tr></td>");            
             returnMe.Append("</table>");
             
+
+            
+
+
             returnMe.Append("</td></tr>"); 
             returnMe.Append("</table>");
             returnMe.Append("</div><br/>");
+
+
+            return returnMe.ToString();
+        }
+        protected string generateStudentNameplate_Dummy(Student student)
+        {
+            StringBuilder returnMe = new StringBuilder();
+
+            
+
+            returnMe.Append("<table width=\"100%\">");
+            returnMe.Append("<tr><td width=64><img src=\"/SLReports/Logo_Circle_Notext_Trans.png\" style=\"width: 64px; height: 64px;\">");
+            returnMe.Append("</td><td><div style=\"font-size: 20pt;font-weight: bold;\">Living Sky School Division No. 202</div><div style=\"font-weight: bold; font-size: 16pt;\">"+student.getSchoolName()+"</div>");
+            returnMe.Append("</td></tr>");
+            returnMe.Append("</table><br/><br/><br/><br/><br/>");
+
+            returnMe.Append("<div style=\"width: 500px;margin-left: auto; margin-right: auto;\">");
+            returnMe.Append("<table width=\"500\">");
+            returnMe.Append("<tr><td>");
+            if (student.hasPhoto())
+            {
+                returnMe.Append("<img width=\"137\" height=\"175\" style=\"border: 1px solid black;\" src=\"/SLReports/student_dummy_photo.jpg\">");
+            }
+
+            returnMe.Append("</td><td valign=\"top\">");
+
+            returnMe.Append("<table width=\"500\">");
+            returnMe.Append("<tr>");
+            returnMe.Append("<td valign=\"top\" width=\"125\"><b>Student</b></td><td valign=\"top\"><div class=\"rc_studentname\">Bill Gates</div></td></tr>");
+            returnMe.Append("<tr><td valign=\"top\"><b>Student Number</b></td><td valign=\"top\">000000000</tr></td>");
+            returnMe.Append("<td valign=\"top\" width=\"125\"><b>School</b></td><td valign=\"top\"><b>Example report card - First draft - Work in progress - Multi report period example</b></td></tr>");
+            if (!string.IsNullOrEmpty(student.getHomeRoom()))
+            {
+                returnMe.Append("<tr><td><b>Homeroom</b></td><td valign=\"top\">" + student.getHomeRoom() + "</tr></td>");
+            }
+            returnMe.Append("<tr><td valign=\"top\"><b>Report Period</b></td><td valign=\"top\">" + selectedReportPeriod.name + " <i>(" + selectedReportPeriod.startDate.ToLongDateString() + " to " + selectedReportPeriod.endDate.ToLongDateString() + ")</i></tr></td>");            
+            returnMe.Append("</table>");
+
+
+
+
+
+            returnMe.Append("</td></tr>");
+            returnMe.Append("</table>");
+            returnMe.Append("</div><br/><br/><br/><br/><br/><br/>");
 
 
             return returnMe.ToString();
@@ -258,7 +304,7 @@ namespace SLReports.ReportCard
         {
             StringBuilder returnMe = new StringBuilder();
 
-            returnMe.Append("<table cellpadding=3 style=\"margin-left: auto; margin-right: auto;\">");
+            returnMe.Append("<br/><br/><table cellpadding=3 style=\"margin-left: auto; margin-right: auto;\">");
             returnMe.Append("<tr><td>" + generateOutcomeProgressBar("4") + "</td><td><b>4: Master</b> Insightful understanding of the outcome</td></tr>");
             returnMe.Append("<tr><td>" + generateOutcomeProgressBar("3") + "</td><td><b>3: Proficient</b> A well developed understanding</td></tr>");
             returnMe.Append("<tr><td>" + generateOutcomeProgressBar("2") + "</td><td><b>2: Approaching</b> A basic understanding</td></tr>");
@@ -277,7 +323,7 @@ namespace SLReports.ReportCard
             String barID = "outcomeBar_" + canvasCounter + "_" + getMD5(DateTime.Now.Millisecond.ToString());
 
             StringBuilder returnMe = new StringBuilder();
-            returnMe.Append("<canvas id=\"" + barID + "\" width=\"" + barWidth + "\" height=\"" + barHeight + "\">Number Bar</canvas>");
+            returnMe.Append("<canvas style=\"width: "+barWidth+"px;height: "+barHeight+"px;\" id=\"" + barID + "\" width=\"" + barWidth + "\" height=\"" + barHeight + "\">Number Bar</canvas>");
 
             double parsedValue = -1;
             returnMe.Append("<script>createNumberBar('" + barID + "');</script>");
@@ -437,7 +483,9 @@ namespace SLReports.ReportCard
                     {
                         if (!string.IsNullOrEmpty(mark.comment))
                         {
-                            returnMe.Append("<div><b>Comments:</b><br><div style=\"padding-left: 10px;\"> " + mark.comment + "</div></div>");
+                            //returnMe.Append("<div><b>Comments:</b><br><div style=\"padding-left: 10px;\"> " + mark.comment + "</div></div>");
+                            returnMe.Append("<div><b>Comments:</b><br><div style=\"padding-left: 10px;\">Cras dictum lacinia tellus, sed rhoncus nulla lacinia in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus diam elit, vehicula vitae placerat et, malesuada quis ante.</div></div>");
+                        
                         }
                     }
                     returnMe.Append("</td></tr>");
@@ -448,12 +496,9 @@ namespace SLReports.ReportCard
             }
             return returnMe.ToString();
         }
-        protected string generateMarkTable(Student student) 
+        protected string generateMarkTable(Student student)
         {
             StringBuilder returnMe = new StringBuilder();
-
-
-            returnMe.Append("<div><b>Report Period:</b> "+selectedReportPeriod.name+" (" + selectedReportPeriod.startDate.ToShortDateString() + " to " + selectedReportPeriod.endDate.ToShortDateString() + ")</div><br/><br/>");
 
             foreach (Term term in student.track.terms)
             {
@@ -476,7 +521,7 @@ namespace SLReports.ReportCard
                     }
                     returnMe.Append("</b></div></td>");
 
-                    
+
                     returnMe.Append("</tr>");
 
 
@@ -484,8 +529,8 @@ namespace SLReports.ReportCard
                     if (course.hasObjectives())
                     {
                         returnMe.Append("<tr>");
-                        returnMe.Append("<td colspan=2 width=\"75%\" valign=\"top\">"); 
-                    
+                        returnMe.Append("<td colspan=2 width=\"75%\" valign=\"top\">");
+
                         returnMe.Append("<div><b>Outcomes:</b></div>");
                         returnMe.Append("<table border=0 cellspacing=5 width=\"100%\">");
 
@@ -504,7 +549,7 @@ namespace SLReports.ReportCard
                         }
                         returnMe.Append("</table>");
 
-                        
+
 
                         returnMe.Append("</td>");
                         returnMe.Append("</tr>");
@@ -519,14 +564,14 @@ namespace SLReports.ReportCard
                         returnMe.Append("<td align=\"center\" valign=\"top\"><b>Engagement</b></td>");
                         returnMe.Append("<td align=\"center\" valign=\"top\"><b>Citizenship</b></td>");
                         returnMe.Append("<td align=\"center\" valign=\"top\"><b>Collaboration</b></td>");
-                        returnMe.Append("<td align=\"v\" valign=\"top\"><b>Leadership</b></td>");
+                        returnMe.Append("<td align=\"center\" valign=\"top\"><b>Leadership</b></td>");
                         returnMe.Append("<td align=\"center\" valign=\"top\"><b>Self-Direction</b></td>");
-                        returnMe.Append("</tr>"); 
-                        
-                        
+                        returnMe.Append("</tr>");
+
+
                         /*
                         returnMe.Append("<tr>");
-                        //returnMe.Append("<td align=\"Left\" valign=\"top\"></td>");
+                        returnMe.Append("<td align=\"Left\" valign=\"top\"></td>");
                         returnMe.Append("<td align=\"center\" valign=\"top\">" + generateOutcomeNumberBar() + "</td>");
                         returnMe.Append("<td align=\"center\" valign=\"top\">" + generateOutcomeNumberBar() + "</td>");
                         returnMe.Append("<td align=\"center\" valign=\"top\">" + generateOutcomeNumberBar() + "</td>");
@@ -534,19 +579,20 @@ namespace SLReports.ReportCard
                         returnMe.Append("<td align=\"center\" valign=\"top\">" + generateOutcomeNumberBar() + "</td>"); 
                         returnMe.Append("</tr>");
                         */
-                        
+
                         /* Additional rows for additional report periods */
-                        
+
                         returnMe.Append("<tr>");
-                        
+
                         //returnMe.Append("<td align=\"Left\" valign=\"top\"><div style=\"font-size: 8pt;\">R1</div></td>");
-                        
+
                         returnMe.Append("<td align=\"center\" valign=\"top\">" + generateOutcomeProgressBar(GetRandomDouble(0, 4).ToString()) + "</td>");
                         returnMe.Append("<td align=\"center\" valign=\"top\">" + generateOutcomeProgressBar(GetRandomDouble(0, 4).ToString()) + "</td>");
                         returnMe.Append("<td align=\"center\" valign=\"top\">" + generateOutcomeProgressBar(GetRandomDouble(0, 4).ToString()) + "</td>");
                         returnMe.Append("<td align=\"center\" valign=\"top\">" + generateOutcomeProgressBar(GetRandomDouble(0, 4).ToString()) + "</td>");
                         returnMe.Append("<td align=\"center\" valign=\"top\">" + generateOutcomeProgressBar(GetRandomDouble(0, 4).ToString()) + "</td>");
                         returnMe.Append("</tr>");
+
                         /*
                         returnMe.Append("<tr>"); 
                         returnMe.Append("<td align=\"Left\" valign=\"top\"><div style=\"font-size: 8pt;\">R2</div></td>");
@@ -570,7 +616,7 @@ namespace SLReports.ReportCard
                         returnMe.Append("</table>");
 
 
-                        
+
                         returnMe.Append("</td></tr>");
 
 
@@ -581,14 +627,15 @@ namespace SLReports.ReportCard
                         if (!string.IsNullOrEmpty(mark.comment))
                         {
                             returnMe.Append("<div><b>Comments:</b><br><div style=\"padding-left: 10px;\"> " + mark.comment + "</div></div>");
+                            //returnMe.Append("<div><b>Comments:</b><br><div style=\"padding-left: 10px;\">Cras dictum lacinia tellus, sed rhoncus nulla lacinia in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus diam elit, vehicula vitae placerat et, malesuada quis ante.</div></div>");
                         }
-                    }                    
+                    }
                     returnMe.Append("</td></tr>");
 
 
                     returnMe.Append("</table><br/><br/><br/>");
                 }
-            }            
+            }
             return returnMe.ToString();
         }
 
