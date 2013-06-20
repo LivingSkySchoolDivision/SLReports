@@ -14,10 +14,6 @@ namespace SLReports.XPSExperiments
 {
     public partial class index : System.Web.UI.Page
     {
-
-        Student selectedStudent = null;
-        ReportPeriod selectedReportPeriod = null;
-
         Font font_body = FontFactory.GetFont("Verdana", 12, BaseColor.BLACK);
         Font font_body_bold = FontFactory.GetFont("Verdana", 12, Font.BOLD, BaseColor.BLACK);
         Font font_body_italic = FontFactory.GetFont("Verdana", 12, Font.ITALIC, BaseColor.BLACK);
@@ -25,11 +21,13 @@ namespace SLReports.XPSExperiments
         Font font_small = FontFactory.GetFont("Verdana", 10, BaseColor.BLACK);
         Font font_small_bold = FontFactory.GetFont("Verdana", 10, Font.BOLD, BaseColor.BLACK);
 
+        Student selectedStudent = null;
+        ReportPeriod selectedReportPeriod = null;
+
+
         protected void Page_Init(object sender, EventArgs e)
         {
         }
-
-
 
         protected iTextSharp.text.Image outcomeBar(PdfContentByte content, String value)
         {

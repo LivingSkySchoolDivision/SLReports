@@ -330,7 +330,6 @@ namespace SLReports.ReportCard
 
             return returnMe.ToString();
         }
-        
 
         protected string generateOutcomeProgressBar(string value)
         {

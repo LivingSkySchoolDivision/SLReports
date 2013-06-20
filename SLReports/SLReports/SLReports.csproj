@@ -83,6 +83,7 @@
     <Content Include="Photos\GetPhoto.aspx" />
     <Content Include="Photos\index.aspx" />
     <Content Include="ReportCard\EntireTerm.aspx" />
+    <Content Include="ReportCard\GetPDF.aspx" />
     <Content Include="ReportCard\getXML.aspx" />
     <Content Include="ReportCard\index.aspx" />
     <Content Include="ReportCard\SingleReportPeriod.aspx" />
@@ -204,6 +205,13 @@
     </Compile>
     <Compile Include="ReportCard\EntireTerm.aspx.designer.cs">
       <DependentUpon>EntireTerm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ReportCard\GetPDF.aspx.cs">
+      <DependentUpon>GetPDF.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportCard\GetPDF.aspx.designer.cs">
+      <DependentUpon>GetPDF.aspx</DependentUpon>
     </Compile>
     <Compile Include="ReportCard\getXML.aspx.cs">
       <DependentUpon>getXML.aspx</DependentUpon>
