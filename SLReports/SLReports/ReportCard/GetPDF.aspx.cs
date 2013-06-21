@@ -1,9 +1,11 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
+using SLReports.XPSExperiments;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -14,9 +16,9 @@ namespace SLReports.ReportCard
 {
     public partial class GetPDF : System.Web.UI.Page
     {
-        Font font_large = FontFactory.GetFont("Verdana", 12, BaseColor.BLACK);
-        Font font_large_bold = FontFactory.GetFont("Verdana", 12, Font.BOLD, BaseColor.BLACK);
-        Font font_large_italic = FontFactory.GetFont("Verdana", 12, Font.ITALIC, BaseColor.BLACK);
+        Font font_large = FontFactory.GetFont("Verdana", 15, BaseColor.BLACK);
+        Font font_large_bold = FontFactory.GetFont("Verdana", 15, Font.BOLD, BaseColor.BLACK);
+        Font font_large_italic = FontFactory.GetFont("Verdana", 15, Font.ITALIC, BaseColor.BLACK);
 
         Font font_body = FontFactory.GetFont("Verdana", 10, BaseColor.BLACK);
         Font font_body_bold = FontFactory.GetFont("Verdana", 10, Font.BOLD, BaseColor.BLACK);
@@ -28,7 +30,6 @@ namespace SLReports.ReportCard
 
         Student selectedStudent = null;
         ReportPeriod selectedReportPeriod = null;
-
 
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -146,9 +147,44 @@ namespace SLReports.ReportCard
 
             return iTextSharp.text.Image.GetInstance(canvas); ;
         }
+
+        protected PdfPTable schoolNamePlate(School school)
+        {
+            int cellpadding = 3;
+            int border = Rectangle.NO_BORDER;
+
+            PdfPTable schoolNamePlateTable = new PdfPTable(1);
+            schoolNamePlateTable.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+            schoolNamePlateTable.TotalWidth = 425;
+            schoolNamePlateTable.LockedWidth = true;
+            schoolNamePlateTable.SpacingAfter = 50;
+
+            //float[] widths = new float[] { 100f, 125f, 225f };
+            //schoolNamePlateTable.SetWidths(widths);
+            PdfPCell newCell = null;
+            newCell = new PdfPCell(new Phrase(school.getName(), font_large_bold));
+            newCell.VerticalAlignment = 0;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            newCell.Padding = cellpadding;
+            newCell.Border = border;
+            schoolNamePlateTable.AddCell(newCell);
+            
+            newCell = new PdfPCell(new Phrase(school.address, font_body));
+            newCell.VerticalAlignment = 0;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            newCell.Padding = cellpadding;
+            newCell.Border = border;
+            schoolNamePlateTable.AddCell(newCell);
+
+
+            return schoolNamePlateTable;
+
+        }
+
         protected PdfPTable namePlateTable(Student student, ReportPeriod period)
         {
             int cellpadding = 3;
+            int border = Rectangle.NO_BORDER;
 
             if (student == null)
             {
@@ -157,19 +193,16 @@ namespace SLReports.ReportCard
 
             PdfPTable nameplateTable = new PdfPTable(3);
             nameplateTable.HorizontalAlignment = 1;
-            nameplateTable.TotalWidth = 400f;
+            nameplateTable.TotalWidth = 425;
             nameplateTable.LockedWidth = true;
-            nameplateTable.SpacingAfter = 25f;
+            nameplateTable.SpacingAfter = 50;
 
-            float[] widths = new float[] { 1f, 1.25f, 3f };
+            float[] widths = new float[] { 100f, 125f, 225f };
             nameplateTable.SetWidths(widths);
-
 
             PdfPCell photoCell = new PdfPCell(new Phrase("(No Photo)", font_large_italic));
 
-
-
-            if (student.hasPhoto())
+            if (student.hasPhoto() && true)
             {
                 try
                 {
@@ -186,70 +219,113 @@ namespace SLReports.ReportCard
                 };
             }
 
-            photoCell.Border = 0;
+            photoCell.Border = border;
             photoCell.MinimumHeight = 300f;
             photoCell.Rowspan = 10;
             photoCell.VerticalAlignment = 1;
             photoCell.HorizontalAlignment = 1;
             nameplateTable.AddCell(photoCell);
 
-
+            /*
             PdfPCell StudentNameCell_Header = new PdfPCell(new Phrase("Student", font_body_bold));
-            StudentNameCell_Header.VerticalAlignment = 0;
+            StudentNameCell_Header.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+            StudentNameCell_Header.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
             StudentNameCell_Header.Padding = cellpadding;
-
-            StudentNameCell_Header.Border = 0;
+            StudentNameCell_Header.Border = border;
             nameplateTable.AddCell(StudentNameCell_Header);
-            PdfPCell StudentNameCell = new PdfPCell(new Phrase(student.getDisplayName(), font_large_bold));
-            StudentNameCell.Border = 0;
-            StudentNameCell.Padding = cellpadding;
-            nameplateTable.AddCell(StudentNameCell);
+            */
 
-            PdfPCell StudentNumberCell_Header = new PdfPCell(new Phrase("Student Number", font_body_bold));
-            StudentNumberCell_Header.Border = 0;
-            StudentNumberCell_Header.Padding = cellpadding;
-            nameplateTable.AddCell(StudentNumberCell_Header);
-            PdfPCell StudentNumberCell = new PdfPCell(new Phrase(student.getStudentID(), font_body));
-            StudentNumberCell.Border = 0;
-            StudentNumberCell.Padding = cellpadding;
-            nameplateTable.AddCell(StudentNumberCell);
+            PdfPCell newCell = null;
 
-            PdfPCell SchoolNameCell_Header = new PdfPCell(new Phrase("School", font_body_bold));
-            SchoolNameCell_Header.Border = 0;
-            SchoolNameCell_Header.Padding = cellpadding;
-            nameplateTable.AddCell(SchoolNameCell_Header);
-            PdfPCell SchoolNameCell = new PdfPCell(new Phrase(student.getSchoolName(), font_body));
-            SchoolNameCell.Border = 0;
-            SchoolNameCell.Padding = cellpadding;
-            nameplateTable.AddCell(SchoolNameCell);
+            newCell = new PdfPCell(new Phrase(student.getDisplayName(), font_large_bold));
+            newCell.Border = border;
+            newCell.Colspan = 2;
+            newCell.Padding = cellpadding;
+            newCell.PaddingBottom = 10;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            nameplateTable.AddCell(newCell);
 
-            PdfPCell HomeroomCell_Header = new PdfPCell(new Phrase("Home Room", font_body_bold));
-            HomeroomCell_Header.Border = 0;
-            HomeroomCell_Header.Padding = cellpadding;
-            nameplateTable.AddCell(HomeroomCell_Header);
-            PdfPCell HomeroomCell = new PdfPCell(new Phrase(student.getHomeRoom(), font_body));
-            HomeroomCell.Border = 0;
-            HomeroomCell.Padding = cellpadding;
-            nameplateTable.AddCell(HomeroomCell);
+            newCell = new PdfPCell(new Phrase("Student Number", font_body_bold));
+            newCell.Border = border;
+            newCell.Padding = cellpadding;
+            newCell.PaddingLeft = 10;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            nameplateTable.AddCell(newCell);
+            newCell = new PdfPCell(new Phrase(student.getStudentID(), font_body));
+            newCell.Border = border;
+            newCell.Padding = cellpadding;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            nameplateTable.AddCell(newCell);
 
-            PdfPCell ReportPeriodDateCell_Header = new PdfPCell(new Phrase("Report Period", font_body_bold));
-            ReportPeriodDateCell_Header.Border = 0;
-            ReportPeriodDateCell_Header.Padding = cellpadding;
-            nameplateTable.AddCell(ReportPeriodDateCell_Header);
+            newCell = new PdfPCell(new Phrase("School", font_body_bold));
+            newCell.Border = border;
+            newCell.Padding = cellpadding;
+            newCell.PaddingLeft = 10;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            nameplateTable.AddCell(newCell);
+            newCell = new PdfPCell(new Phrase(student.getSchoolName(), font_body));
+            newCell.Border = border;
+            newCell.Padding = cellpadding;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            nameplateTable.AddCell(newCell);
+
+            newCell = new PdfPCell(new Phrase("Grade", font_body_bold));
+            newCell.Border = border;
+            newCell.Padding = cellpadding;
+            newCell.PaddingLeft = 10;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            nameplateTable.AddCell(newCell);
+            newCell = new PdfPCell(new Phrase(student.getGrade(), font_body));
+            newCell.Border = border;
+            newCell.Padding = cellpadding;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            nameplateTable.AddCell(newCell);
+
+            newCell = new PdfPCell(new Phrase("Home Room", font_body_bold));
+            newCell.Border = border;
+            newCell.Padding = cellpadding;
+            newCell.PaddingLeft = 10;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            nameplateTable.AddCell(newCell);
+            newCell = new PdfPCell(new Phrase(student.getHomeRoom(), font_body));
+            newCell.Border = border;
+            newCell.Padding = cellpadding;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            nameplateTable.AddCell(newCell);
+
+            newCell = new PdfPCell(new Phrase("Report Period", font_body_bold));
+            newCell.Border = border;
+            newCell.Padding = cellpadding;
+            newCell.PaddingLeft = 10;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            nameplateTable.AddCell(newCell);
             Paragraph description = new Paragraph();
 
             description.Add(new Phrase(period.name, font_body));
             description.Add(new Phrase(" (" + period.startDate.ToLongDateString() + " to " + period.endDate.ToLongDateString() + ")", font_body_italic));
 
-            PdfPCell ReportPeriodDateCell = new PdfPCell(description);
-            ReportPeriodDateCell.Border = 0;
-            ReportPeriodDateCell.Padding = cellpadding;
-            nameplateTable.AddCell(ReportPeriodDateCell);
+            newCell = new PdfPCell(description);
+            newCell.Border = border;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            newCell.Padding = cellpadding;
+            nameplateTable.AddCell(newCell);
 
 
             return nameplateTable;
 
         }
+
         protected PdfPTable outcomeLegend(PdfContentByte content)
         {
             PdfPTable outcomeLegendTable = new PdfPTable(2);
@@ -263,6 +339,14 @@ namespace SLReports.ReportCard
 
             PdfPCell newCell = null;
             Paragraph description = null;
+
+            newCell = new PdfPCell(new Phrase("Outcome Legend",font_large_bold));
+            newCell.Border = 0;
+            newCell.Colspan = 2;
+            newCell.Padding = 2;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+            outcomeLegendTable.AddCell(newCell);
 
             newCell = new PdfPCell(outcomeBar(content, "4"));
             newCell.Border = 0;
@@ -351,7 +435,7 @@ namespace SLReports.ReportCard
             description = new Paragraph();
             description.SpacingBefore = 0;
             description.SpacingAfter = 6;
-            description.Add(new Phrase("IE:", font_body_bold));
+            description.Add(new Phrase("IE: ", font_body_bold));
             description.Add(new Phrase("Insufficient Evidence", font_body));
             newCell.PaddingTop = 0;
             newCell.AddElement(description);
@@ -361,7 +445,116 @@ namespace SLReports.ReportCard
 
             return outcomeLegendTable;
         }
+        protected PdfPTable lifeSkillsLegend(PdfContentByte content)
+        {
+            PdfPTable outcomeLegendTable = new PdfPTable(2);
+            outcomeLegendTable.SpacingAfter = 25f;
+            outcomeLegendTable.HorizontalAlignment = 1;
+            outcomeLegendTable.TotalWidth = 450f;
+            outcomeLegendTable.LockedWidth = true;
+
+            float[] widths = new float[] { 1f, 2f };
+            outcomeLegendTable.SetWidths(widths);
+
+            PdfPCell newCell = null;
+            Paragraph description = null;
+
+            newCell = new PdfPCell(new Phrase("Life Skills Legend", font_large_bold));
+            newCell.Border = 0;
+            newCell.Colspan = 2;
+            newCell.Padding = 2;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+            outcomeLegendTable.AddCell(newCell);
+
+            newCell = new PdfPCell(outcomeBar(content, "4"));
+            newCell.Border = 0;
+            newCell.Padding = 2;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+            outcomeLegendTable.AddCell(newCell);
+
+            newCell = new PdfPCell();
+            description = new Paragraph();
+            description.SpacingBefore = 0;
+            description.SpacingAfter = 6;
+            description.Add(new Phrase("4: ", font_body_bold));
+            description.Add(new Phrase("Consistently exhibits", font_body));
+            newCell.PaddingTop = 0;
+            newCell.AddElement(description);
+            newCell.Border = 0;
+            newCell.VerticalAlignment = 1;
+            outcomeLegendTable.AddCell(newCell);
+
+            newCell = new PdfPCell(outcomeBar(content, "3"));
+            newCell.Border = 0;
+            newCell.Padding = 2;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+            outcomeLegendTable.AddCell(newCell);
+
+            newCell = new PdfPCell();
+            description = new Paragraph();
+            description.SpacingBefore = 0;
+            description.SpacingAfter = 6;
+            description.Add(new Phrase("3: ", font_body_bold));
+            description.Add(new Phrase("Usually exhibits", font_body));
+            newCell.PaddingTop = 0;
+            newCell.AddElement(description);
+            newCell.Border = 0;
+            newCell.VerticalAlignment = 1;
+            outcomeLegendTable.AddCell(newCell);
+
+            newCell = new PdfPCell(outcomeBar(content, "2"));
+            newCell.Border = 0;
+            newCell.Padding = 2;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+            outcomeLegendTable.AddCell(newCell);
+
+            newCell = new PdfPCell();
+            description = new Paragraph();
+            description.SpacingBefore = 0;
+            description.SpacingAfter = 6;
+            description.Add(new Phrase("2: ", font_body_bold));
+            description.Add(new Phrase("Occasionally exhibits", font_body));
+            newCell.PaddingTop = 0;
+            newCell.AddElement(description);
+            newCell.Border = 0;
+            newCell.VerticalAlignment = 1;
+            outcomeLegendTable.AddCell(newCell);
+
+            newCell = new PdfPCell(outcomeBar(content, "1"));
+            newCell.Border = 0;
+            newCell.Padding = 2;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+            outcomeLegendTable.AddCell(newCell);
+
+            newCell = new PdfPCell();
+            description = new Paragraph();
+            description.SpacingBefore = 0;
+            description.SpacingAfter = 6;
+            description.Add(new Phrase("1: ", font_body_bold));
+            description.Add(new Phrase("Beginning to exhibit", font_body));
+            newCell.PaddingTop = 0;
+            newCell.AddElement(description);
+            newCell.Border = 0;
+            newCell.VerticalAlignment = 1;
+            outcomeLegendTable.AddCell(newCell);
+
+            newCell = new PdfPCell(outcomeBar(content, "IE"));
+            newCell.Border = 0;
+            newCell.Padding = 2;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+            outcomeLegendTable.AddCell(newCell);
+           
+
+            return outcomeLegendTable;
+        }
        
+
         protected PdfPTable classWithMarks(Course course, PdfContentByte content)
         {
             PdfPTable classTable = new PdfPTable(3);
@@ -369,6 +562,8 @@ namespace SLReports.ReportCard
             classTable.TotalWidth = 500f;
             classTable.LockedWidth = true;
             classTable.SpacingAfter = 35;
+            classTable.KeepTogether = true;
+
             float[] widths = new float[] { 2f, 4f, 1f};
             classTable.SetWidths(widths);
 
@@ -407,16 +602,18 @@ namespace SLReports.ReportCard
             classTable.AddCell(newCell);
 
             /* Marks and Outcomes Heading */
-            newP = new Paragraph();
-            newP.Add(new Phrase("Outcomes:", font_body_bold));
-            newCell = new PdfPCell(newP);
-            newCell.Border = 0;
-            newCell.Padding = 5;
-            newCell.Colspan = 3;
-            classTable.AddCell(newCell);
+            if (course.hasObjectives())
+            {
+                newP = new Paragraph();
+                newP.Add(new Phrase("Outcomes:", font_body_bold));
+                newCell = new PdfPCell(newP);
+                newCell.Border = 0;
+                newCell.Padding = 5;
+                newCell.Colspan = 3;
+                classTable.AddCell(newCell);
+            }
 
             /* Outcome marks */
-
             foreach (ReportPeriod reportPeriod in course.ReportPeriods)
             {
                 foreach (ObjectiveMark objectivem in course.ObjectiveMarks)
@@ -443,15 +640,15 @@ namespace SLReports.ReportCard
             
             /* Life Skills */
 
-            /* Comments */
+            /* Comments */            
             newP = new Paragraph();
-            newP.Add(new Phrase("Comments:", font_body_bold));
+            newP.Add(new Phrase("Comments:\n", font_body_bold));
             newP.Add(Chunk.NEWLINE);
             foreach (Mark mark in course.Marks)
             {
                 if (!string.IsNullOrEmpty(mark.comment))
                 {
-                    newP.Add(new Phrase(mark.comment, font_body));
+                    newP.Add(new Phrase(mark.comment, font_small));
                     newP.Add(Chunk.NEWLINE);
                 }
             }
@@ -465,34 +662,59 @@ namespace SLReports.ReportCard
             return classTable;
         }
 
-        
-
-        
-        protected void GeneratePDF(Student student, ReportPeriod period)
+        protected void sendPDF(System.IO.MemoryStream PDFData)
         {
+            Response.Clear();
+            Response.ClearContent();
+            Response.ClearHeaders();
             Response.ContentEncoding = Encoding.UTF8;
             Response.ContentType = "application/pdf";
-            Response.AddHeader("Content-Disposition", "attachment; filename=test.pdf");
+            Response.AddHeader("Content-Disposition", "attachment; filename=ReportCard.pdf");
+            
+            Response.OutputStream.Write(PDFData.GetBuffer(), 0, PDFData.GetBuffer().Length);
+            Response.OutputStream.Flush();
+            Response.OutputStream.Close();
+            Response.End();
 
-            using (Document ReportCard = new Document(PageSize.LETTER)){
+        }
+        
+        protected MemoryStream GeneratePDF(Student student, ReportPeriod period)
+        {
+            MemoryStream memstream = new MemoryStream();
+            Document ReportCard = new Document(PageSize.LETTER);
+            PdfWriter writer = PdfWriter.GetInstance(ReportCard, memstream);
 
-                PdfWriter writer = PdfWriter.GetInstance(ReportCard, Response.OutputStream);
-                ReportCard.Open();
-                PdfContentByte content = writer.DirectContent;
-                ReportCard.Add(namePlateTable(student, period));
-                ReportCard.Add(outcomeLegend(content));
+            //writer.ViewerPreferences = PdfWriter.PageModeUseOutlines;
 
-                foreach (Term term in student.track.terms)
+            ReportCard.Open();
+            PdfContentByte content = writer.DirectContent;
+
+            PdfPageEventHandler PageEventHandler = new PdfPageEventHandler();
+            writer.PageEvent = PageEventHandler;
+            PageEventHandler.student = student;
+            PageEventHandler.reportperiod = period;
+
+            ReportCard.Add(schoolNamePlate(student.school));
+            ReportCard.Add(namePlateTable(student, period));
+            ReportCard.Add(outcomeLegend(content));
+            ReportCard.Add(lifeSkillsLegend(content));
+            
+            ReportCard.NewPage();
+
+            ReportCard.Add(new Phrase(string.Empty));
+
+            foreach (Term term in student.track.terms)
+            {
+                foreach (Course course in term.Courses)
                 {
-                    foreach (Course course in term.Courses)
-                    {
-                        ReportCard.Add(classWithMarks(course, content));
-                    }
+                    ReportCard.Add(classWithMarks(course, content));
                 }
-                
-                ReportCard.Close();
-                Response.End();
             }
+                
+            ReportCard.Close();
+
+            return memstream;
+            
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -628,7 +850,7 @@ namespace SLReports.ReportCard
                                     #endregion
 
                                     #region Generate the PDF
-                                    GeneratePDF(selectedStudent, selectedReportPeriod);
+                                    sendPDF(GeneratePDF(selectedStudent, selectedReportPeriod));
                                     #endregion
                                 }
                             }

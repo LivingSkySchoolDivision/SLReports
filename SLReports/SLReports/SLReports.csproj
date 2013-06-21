@@ -254,6 +254,7 @@
     <Compile Include="XPSExperiments\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="XPSExperiments\PdfPageEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="BasicTemplate.Master" />

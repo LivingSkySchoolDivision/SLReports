@@ -13,20 +13,44 @@ namespace SLReports
         private string schoolLogicID;
         private string govID;
 
+        public string telephone { get; set; }
+        public string email { get; set; }
+        public string website { get; set; }
+        public string address { get; set; }
+
         public string getName()
         {
             return this.name;
         }
+
         public string getSchoolLogicID()
         {
             return this.schoolLogicID;
         }
+
         public string getGovID()
         {
             return this.govID;
         }
 
+        /*
         public School(string name, string slid, string govid)
+        {
+            this.name = name;
+            this.schoolLogicID = slid;
+            this.govID = govid;
+        }
+        */
+
+        public School(string name, string slid, string govid, string address)
+        {
+            this.name = name;
+            this.schoolLogicID = slid;
+            this.govID = govid;
+            this.address = address;
+        }
+
+        public School(string name, string slid, string govid, string phone, string email, string website)
         {
             this.name = name;
             this.schoolLogicID = slid;
@@ -40,7 +64,6 @@ namespace SLReports
 
             try
             {
-
                 SqlCommand sqlCommand = new SqlCommand();
                 sqlCommand.Connection = connection;
                 sqlCommand.CommandType = CommandType.Text;
@@ -52,7 +75,7 @@ namespace SLReports
                 {
                     while (dbDataReader.Read())
                     {
-                        returnMe = new School(dbDataReader["name"].ToString(), dbDataReader["internalID"].ToString(), dbDataReader["govID"].ToString());
+                        returnMe = new School(dbDataReader["name"].ToString(), dbDataReader["internalID"].ToString(), dbDataReader["govID"].ToString(), dbDataReader["address"].ToString());
                     }
                 }
 
@@ -81,7 +104,7 @@ namespace SLReports
                 {
                     while (dbDataReader.Read())
                     {
-                        returnMe.Add(new School(dbDataReader["name"].ToString(), dbDataReader["internalID"].ToString(), dbDataReader["govID"].ToString()));
+                        returnMe.Add(new School(dbDataReader["name"].ToString(), dbDataReader["internalID"].ToString(), dbDataReader["govID"].ToString(), dbDataReader["address"].ToString()));
                     }
                 }
 
