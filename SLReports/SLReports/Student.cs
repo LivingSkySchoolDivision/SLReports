@@ -30,8 +30,8 @@ namespace SLReports
         private DateTime enrollmentDate;
         private DateTime trackStartDate;
         private DateTime trackEndDate;
-        private List<Absence> absences;
-        private List<Contact> contacts;
+        public List<Absence> absences { get; set; }
+        public List<Contact> contacts { get; set; }
         private DateTime dateOfBirth;        
         private string HomeRoom;
         private string bandNo;
@@ -496,7 +496,7 @@ namespace SLReports
             sqlCommand.Connection.Close();
             return returnMe;
         }
-
+        /*
         public static List<Absence> loadAbsencesFromStudent(SqlConnection connection, string studentID, DateTime startDate, DateTime endDate)
         {
             List<Absence> returnMe = new List<Absence>();
@@ -532,7 +532,7 @@ namespace SLReports
             sqlCommand.Connection.Close();
             return returnMe;
         }
-
+        */
         public static List<Student> loadStudentsFromThisSchool(SqlConnection connection, int schoolID)
         {
             List<Student> returnMe = new List<Student>();

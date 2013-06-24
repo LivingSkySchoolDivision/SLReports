@@ -368,6 +368,7 @@ namespace SLReports.INAC
                         {
                             AllAbsences.Add(new Absence(
                                 DateTime.Parse(dataReader["dDate"].ToString()),
+                                int.Parse(dataReader["iTrackID"].ToString().Trim()),
                                 dataReader["StudentNumber"].ToString().Trim(),
                                 dataReader["ClassName"].ToString().Trim(),
                                 dataReader["ClassID"].ToString().Trim(),
@@ -375,8 +376,6 @@ namespace SLReports.INAC
                                 dataReader["Reason"].ToString().Trim(),
                                 dataReader["Comment"].ToString().Trim(),
                                 int.Parse(dataReader["Block"].ToString()),
-                                DateTime.Parse(dataReader["tStartTime"].ToString()),
-                                DateTime.Parse(dataReader["tEndTime"].ToString()),
                                 int.Parse(dataReader["Minutes"].ToString())
                                 ));
                         }

@@ -60,7 +60,7 @@ namespace SLReports.StudentList
             Response.Write("<td>" + student.getHomeRoom()+ "</td>");
             Response.Write("<td>" + student.getInStatusWithCode() + "</td>");
             Response.Write("<td>" + student.getEnrollDate().ToShortDateString() + "</td>");            
-            Response.Write("<td><a href=\"/SLReports/Attendance/?studentid=" + student.getStudentID() + "\">Attendance</a></td>");
+            //Response.Write("<td><a href=\"/SLReports/Attendance/?studentid=" + student.getStudentID() + "\">Attendance</a></td>");
             Response.Write("</tr>\n");
         }
 
@@ -84,7 +84,7 @@ namespace SLReports.StudentList
                 Response.Write("<th width=\"300\"><b>Home Room</b></th>");
                 Response.Write("<th width=\"200\"><b>InStatus</b></th>");
                 Response.Write("<th width=\"100\"><b>InDate</b></th>");
-                Response.Write("<th width=\"200\"><b>Reports</b></th>");
+                //Response.Write("<th width=\"200\"><b>Reports</b></th>");
                 Response.Write("</tr>\n");
 
                 displayedStudentCount = 0;

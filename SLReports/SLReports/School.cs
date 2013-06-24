@@ -33,6 +33,11 @@ namespace SLReports
             return this.govID;
         }
 
+        public override string ToString()
+        {
+            return this.name + "(" + govID + ")";
+        }
+
         /*
         public School(string name, string slid, string govid)
         {

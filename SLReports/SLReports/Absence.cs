@@ -10,6 +10,15 @@ namespace SLReports
 {
     public class Absence : IComparable
     {
+        public string period { get; set; }
+        public int track { get; set; }
+        public AttendanceBlock attendanceBlock { get; set; }
+        public DateTime blockStarttime { get; set; }
+        public DateTime blockEndTime { get; set; }
+
+
+
+        /* TODO: Turn these all into properties */
         private DateTime date;
         private string studentID;
         private string courseName;
@@ -19,11 +28,11 @@ namespace SLReports
         private string comment;
         private int minutes;
         private int block;
-        private DateTime blockStarttime;
-        private DateTime blockEndTime;
+        
 
-        public Absence(DateTime date, string studentid, string courseName, string courseID, string status, string reason, string comment, int block, DateTime bStarttime, DateTime bEndTime, int minutes)
+        public Absence(DateTime date, int track, string studentid, string courseName, string courseID, string status, string reason, string comment, int block, int minutes)
         {
+            this.track = track;
             this.date = date;
             this.studentID = studentid;
             this.courseName = courseName;
@@ -32,11 +41,10 @@ namespace SLReports
             this.reason = reason;
             this.comment = comment;
             this.block = block;
-            this.blockStarttime = bStarttime;
-            this.blockEndTime = bEndTime;
             this.minutes = minutes;
+            this.period = period;
         }
-
+        /*
         public DateTime getStartTime()
         {
             return this.blockStarttime;
@@ -46,10 +54,15 @@ namespace SLReports
         {
             return this.blockEndTime;
         }
-
+        */
         public DateTime getDate()
         {
             return this.date;
+        }
+
+        public string getPeriod()
+        {
+            return this.period;
         }
 
         public string getStudentID()
@@ -130,7 +143,7 @@ namespace SLReports
             }
         }
 
-        public List<Absence> loadAbsencesForThisStudent(SqlConnection connection, Student student)
+        public static List<Absence> loadAbsencesForThisStudent(SqlConnection connection, Student student)
         {
 
             List<Absence> returnMe = new List<Absence>();
@@ -140,15 +153,14 @@ namespace SLReports
             sqlCommand.CommandType = CommandType.Text;
             
             StringBuilder SQL = new StringBuilder();
-            /*
-            SQL.Append("SELECT * FROM LSKY_Attendance WHERE (dDate BETWEEN '" + startDate.ToShortDateString() + "' AND '" + endDate.ToShortDateString() + "') AND (");
-            foreach (Student student in AllStudents)
-            {
-                SQL.Append("(StudentNumber = '" + student.getStudentID() + "') OR ");
-            }
-             * */
-            SQL.Remove(SQL.Length - 4, 4);
-            SQL.Append(") ORDER BY dDate ASC, tStartTime ASC;");
+
+            /* Load all attendance blocks, so we can reference them */
+            List<AttendanceBlock> blocks = AttendanceBlock.loadAllAttendanceBlocks(connection);
+
+
+
+            SQL.Append("SELECT * FROM LSKY_Attendance WHERE StudentNumber = '" + student.getStudentID() + "' ORDER BY dDate ASC, block ASC;");
+            
             sqlCommand.CommandText = SQL.ToString();
             sqlCommand.Connection.Open();
             SqlDataReader dataReader = sqlCommand.ExecuteReader();
@@ -157,8 +169,9 @@ namespace SLReports
             {
                 while (dataReader.Read())
                 {
-                    returnMe.Add(new Absence(
+                    Absence newAbsence = new Absence(
                         DateTime.Parse(dataReader["dDate"].ToString()),
+                        int.Parse(dataReader["iTrackID"].ToString().Trim()),
                         dataReader["StudentNumber"].ToString().Trim(),
                         dataReader["ClassName"].ToString().Trim(),
                         dataReader["ClassID"].ToString().Trim(),
@@ -166,13 +179,33 @@ namespace SLReports
                         dataReader["Reason"].ToString().Trim(),
                         dataReader["Comment"].ToString().Trim(),
                         int.Parse(dataReader["Block"].ToString()),
-                        DateTime.Parse(dataReader["tStartTime"].ToString()),
-                        DateTime.Parse(dataReader["tEndTime"].ToString()),
                         int.Parse(dataReader["Minutes"].ToString())
-                        ));
+                        );
+
+                    newAbsence.period = newAbsence.getBlock().ToString();
+                    
+                    foreach (AttendanceBlock atBlock in blocks)
+                    {
+                        if (atBlock.block == newAbsence.block)
+                        {
+                            if (atBlock.track == newAbsence.track)
+                            {
+                                newAbsence.period = atBlock.name;
+                                newAbsence.attendanceBlock = atBlock;
+                            }
+                        }
+                    }
+                    
+                    returnMe.Add(newAbsence);
                 }
             }
             sqlCommand.Connection.Close();
+
+            foreach (Absence abs in returnMe)
+            {
+
+            }
+
             return returnMe;
         }
 

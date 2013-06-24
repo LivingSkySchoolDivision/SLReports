@@ -246,7 +246,7 @@ namespace SLReports.Attendance
                 Response.Write("<div style=\"margin-left: 10px;font-size: 10pt;\">");
                 foreach (Absence abs in thisDatesAbsences)
                 {
-                    Response.Write("<B>" + abs.getStartTime().ToShortTimeString() + "-" + abs.getEndTime().ToShortTimeString() + "</b> ");
+                    //Response.Write("<B>" + abs.getStartTime().ToShortTimeString() + "-" + abs.getEndTime().ToShortTimeString() + "</b> ");
                     Response.Write(" - " + abs.getCourseName());
                     Response.Write(" - " + abs.getStatus());
                     if (!string.IsNullOrEmpty(abs.getReason()))
@@ -351,7 +351,7 @@ namespace SLReports.Attendance
 
                 if (selectedStudent != null)
                 {
-                    selectedStudentAbsences = Student.loadAbsencesFromStudent(connection, selectedStudent.getStudentID(), selectedStartDate, selectedEndDate);
+                    //selectedStudentAbsences = Absence.loadAbsencesFromStudent(connection, selectedStudent.getStudentID(), selectedStartDate, selectedEndDate);
                 }
             }
 

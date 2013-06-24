@@ -63,6 +63,8 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AttendanceByGrade\GetPDF.aspx" />
+    <Content Include="AttendanceByGrade\index.aspx" />
     <Content Include="Attendance\index.aspx" />
     <Content Include="EnrollmentByGrade\index.aspx" />
     <Content Include="FindStudent\index.aspx" />
@@ -93,6 +95,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Absence.cs" />
+    <Compile Include="AttendanceBlock.cs" />
+    <Compile Include="AttendanceByGrade\GetPDF.aspx.cs">
+      <DependentUpon>GetPDF.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AttendanceByGrade\GetPDF.aspx.designer.cs">
+      <DependentUpon>GetPDF.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AttendanceByGrade\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AttendanceByGrade\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Attendance\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -254,7 +271,7 @@
     <Compile Include="XPSExperiments\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
-    <Compile Include="XPSExperiments\PdfPageEventHandler.cs" />
+    <Compile Include="PdfPageEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="BasicTemplate.Master" />

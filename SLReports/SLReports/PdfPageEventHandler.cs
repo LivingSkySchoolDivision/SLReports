@@ -18,6 +18,13 @@ namespace SLReports.XPSExperiments
         public Student student { get; set; }
         public ReportPeriod reportperiod { get; set; }
 
+        public string topLeft { get; set; }
+        public string topRight { get; set; }
+        public string topCenter { get; set; }
+        public string bottomLeft { get; set; }
+        public string bottomRight { get; set; }
+        public string bottomCenter { get; set; }
+
         static int pageNumber = 1;
         
         public override void OnStartPage(PdfWriter writer, iTextSharp.text.Document document)
@@ -70,7 +77,7 @@ namespace SLReports.XPSExperiments
             if ((pageNumber % 2) == 0)
             {
                 document.NewPage();
-                document.Add(new Phrase("New page!"));
+                document.Add(new Phrase(""));
             }
 
             pageNumber = 1;
