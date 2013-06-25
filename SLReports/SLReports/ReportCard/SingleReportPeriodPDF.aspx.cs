@@ -34,12 +34,15 @@ namespace SLReports.ReportCard
         {
         }
 
-        protected iTextSharp.text.Image outcomeBar_Original(PdfContentByte content, String value)
+        protected iTextSharp.text.Image outcomeBar_Old(PdfContentByte content, String value)
         {
             int width = 125;
-            int height = 11;
+            int height = 10;
             int maxvalue = 4;
-            int rectancleCurveRadius = 4;
+            int rectancleCurveRadius = 2;
+
+            int CanvasPaddingX = 1;
+            int CanvasPaddingY = 1;
 
             /* Colors */
             BaseColor fillColor = new BaseColor(70, 70, 70);
@@ -47,7 +50,7 @@ namespace SLReports.ReportCard
 
             Single parsedValue = -1;
 
-            PdfTemplate canvas = content.CreateTemplate(width, height);
+            PdfTemplate canvas = content.CreateTemplate(width + (CanvasPaddingX * 2), height + (CanvasPaddingY * 2));
 
             if (Single.TryParse(value, out parsedValue))
             {
@@ -80,10 +83,10 @@ namespace SLReports.ReportCard
                 /* Fill */
                 if ((parsedValue > 0) && (parsedValue <= 4))
                 {
-                    canvas.RoundRectangle(0, 0, width * percentFill, height, rectancleCurveRadius);
+                    canvas.RoundRectangle(CanvasPaddingX, CanvasPaddingY, (width * percentFill) - CanvasPaddingX, height, rectancleCurveRadius);
                     if (parsedValue < 4)
                     {
-                        canvas.Rectangle(rectancleCurveRadius, 0, (width * percentFill) - rectancleCurveRadius, height);
+                        canvas.Rectangle(CanvasPaddingX + rectancleCurveRadius, CanvasPaddingY, (width * percentFill) - rectancleCurveRadius - CanvasPaddingX, height);
                     }
                     canvas.SetColorFill(fillColor);
                     canvas.Fill();
@@ -92,12 +95,12 @@ namespace SLReports.ReportCard
                 /* Overlay */
                 canvas.SetColorStroke(borderColor);
                 canvas.SetLineWidth(1);
-                canvas.MoveTo((float)(width * 0.25) * 1, (float)0);
-                canvas.LineTo((float)(width * 0.25) * 1, (float)height);
-                canvas.MoveTo((float)(width * 0.25) * 2, (float)0);
-                canvas.LineTo((float)(width * 0.25) * 2, (float)height);
-                canvas.MoveTo((float)(width * 0.25) * 3, (float)0);
-                canvas.LineTo((float)(width * 0.25) * 3, (float)height);
+                canvas.MoveTo((float)(width * 0.25) * 1, (float)CanvasPaddingY);
+                canvas.LineTo((float)(width * 0.25) * 1, (float)height + CanvasPaddingY);
+                canvas.MoveTo((float)(width * 0.25) * 2, (float)CanvasPaddingY);
+                canvas.LineTo((float)(width * 0.25) * 2, (float)height + CanvasPaddingY);
+                canvas.MoveTo((float)(width * 0.25) * 3, (float)CanvasPaddingY);
+                canvas.LineTo((float)(width * 0.25) * 3, (float)height + CanvasPaddingY);
                 canvas.Stroke();
 
                 BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
@@ -106,10 +109,10 @@ namespace SLReports.ReportCard
 
                 canvas.SetColorFill(borderColor);
 
-                canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "1", (float)((width * 0.25) / 2), (float)(height / 2) - 2, 0);
-                canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "2", (float)(((width * 0.25) / 2) + (width * 0.25)), (float)(height / 2) - 2, 0);
-                canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "3", (float)(((width * 0.25) / 2) + (width * 0.50)), (float)(height / 2) - 2, 0);
-                canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "4", (float)(((width * 0.25) / 2) + (width * 0.75)), (float)(height / 2) - 2, 0);
+                canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "1", (float)((width * 0.25) / 2), (float)((height + CanvasPaddingY) / 2) - 2, 0);
+                canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "2", (float)(((width * 0.25) / 2) + (width * 0.25)), (float)((height + CanvasPaddingY) / 2) - 2, 0);
+                canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "3", (float)(((width * 0.25) / 2) + (width * 0.50)), (float)((height + CanvasPaddingY) / 2) - 2, 0);
+                canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "4", (float)(((width * 0.25) / 2) + (width * 0.75)), (float)((height + CanvasPaddingY) / 2) - 2, 0);
 
                 canvas.EndText();
 
@@ -139,11 +142,9 @@ namespace SLReports.ReportCard
             }
 
             /* Border */
-
+            
             canvas.SetRGBColorStroke(255, 255, 255);
-            //canvas.Rectangle(0, 0, width, height);
-            //canvas.Stroke();
-            canvas.RoundRectangle(0, 0, width, height, rectancleCurveRadius);
+            canvas.RoundRectangle(CanvasPaddingX, CanvasPaddingY, width - CanvasPaddingX, height, rectancleCurveRadius);
             canvas.SetColorStroke(borderColor);
             canvas.Stroke();
 
@@ -154,7 +155,9 @@ namespace SLReports.ReportCard
         {
             int width = 125;
             int height = 6;
-            int barMargin = 0;
+
+            int CanvasPaddingX = 1;
+            int CanvasPaddingY = 1;
 
             int maxvalue = 4;
             int rectancleCurveRadius = 2;
@@ -165,7 +168,12 @@ namespace SLReports.ReportCard
 
             Single parsedValue = -1;
 
-            PdfTemplate canvas = content.CreateTemplate(width, height);
+            PdfTemplate canvas = content.CreateTemplate(width + (CanvasPaddingX * 2), height + (CanvasPaddingY * 2));
+
+            /* Background */
+            canvas.Rectangle(0, 0, width + (CanvasPaddingX * 2), height + (CanvasPaddingY * 2));
+            canvas.SetRGBColorFill(255, 255, 255);
+            canvas.Fill();
 
             if (Single.TryParse(value, out parsedValue))
             {
@@ -192,18 +200,29 @@ namespace SLReports.ReportCard
                 /* Fill */
                 if ((parsedValue > 0) && (parsedValue <= 4))
                 {
-                    canvas.RoundRectangle(0, barMargin, width * percentFill, height - (barMargin * 2), rectancleCurveRadius);
+                    canvas.RoundRectangle(CanvasPaddingX, CanvasPaddingY, width * percentFill, height, rectancleCurveRadius);
                     if (parsedValue < 4)
                     {
-                        canvas.Rectangle(rectancleCurveRadius, barMargin, (width * percentFill) - rectancleCurveRadius, height - (barMargin * 2));
+                        canvas.Rectangle(CanvasPaddingX + rectancleCurveRadius, CanvasPaddingY, (width * percentFill) - rectancleCurveRadius, height);
                     }
                     canvas.SetColorFill(fillColor);
                     canvas.Fill();
                 }
 
+                /* Tick marks */
+                canvas.SetColorStroke(borderColor);
+                canvas.SetLineWidth(1);
+                canvas.MoveTo((float)(width * 0.25) * 1, (float)CanvasPaddingY);
+                canvas.LineTo((float)(width * 0.25) * 1, (float)height + CanvasPaddingY);
+                canvas.MoveTo((float)(width * 0.25) * 2, (float)CanvasPaddingY);
+                canvas.LineTo((float)(width * 0.25) * 2, (float)height + CanvasPaddingY);
+                canvas.MoveTo((float)(width * 0.25) * 3, (float)CanvasPaddingY);
+                canvas.LineTo((float)(width * 0.25) * 3, (float)height + CanvasPaddingY);
+                canvas.Stroke();
+
                 /* Border */
                 canvas.SetRGBColorStroke(255, 255, 255);
-                canvas.RoundRectangle(0, barMargin, width, height - (barMargin * 2), rectancleCurveRadius);
+                canvas.RoundRectangle(CanvasPaddingX, CanvasPaddingY, width, height, rectancleCurveRadius);
                 canvas.SetColorStroke(borderColor);
                 canvas.Stroke();
 
@@ -239,8 +258,8 @@ namespace SLReports.ReportCard
             int height = 12;
             int barMargin = 3;
 
-            int CanvasStartX = 1;
-            int CanvasStartY = 1;
+            int CanvasPaddingX = 1;
+            int CanvasPaddingY = 1;
             
             int maxvalue = 4;
             int rectancleCurveRadius = 2;
@@ -284,10 +303,10 @@ namespace SLReports.ReportCard
                 /* Fill */                
                 if ((parsedValue > 0) && (parsedValue <= 4))
                 {
-                    canvas.RoundRectangle(CanvasStartX, barMargin, width * percentFill, height - (barMargin * 2), rectancleCurveRadius);
+                    canvas.RoundRectangle(CanvasPaddingX, barMargin, width * percentFill, height - (barMargin * 2), rectancleCurveRadius);
                     if (parsedValue < 4)
                     {
-                        canvas.Rectangle(CanvasStartX + rectancleCurveRadius, barMargin, (width * percentFill) - rectancleCurveRadius, height - (barMargin * 2));
+                        canvas.Rectangle(CanvasPaddingX + rectancleCurveRadius, barMargin, (width * percentFill) - rectancleCurveRadius, height - (barMargin * 2));
                     }
                     canvas.SetColorFill(fillColor);
                     canvas.Fill();
@@ -296,33 +315,33 @@ namespace SLReports.ReportCard
 
                 /* Border */
                 canvas.SetRGBColorStroke(255, 255, 255);
-                canvas.RoundRectangle(CanvasStartX, barMargin, width, height - (barMargin * 2), rectancleCurveRadius);
+                canvas.RoundRectangle(CanvasPaddingX, barMargin, width, height - (barMargin * 2), rectancleCurveRadius);
                 canvas.SetColorStroke(borderColor);
                 canvas.Stroke();
 
 
                 /* Number indicator / Overlay */
                 int indicatorWidth = 15;
-                float indicatorX = (width * percentFill) - (indicatorWidth / 2) + CanvasStartX;
-                float indicatorY = CanvasStartY;
+                float indicatorX = (width * percentFill) - (indicatorWidth / 2) + CanvasPaddingX;
+                float indicatorY = CanvasPaddingY;
 
-                if (indicatorX < (CanvasStartX))
+                if (indicatorX < (CanvasPaddingX))
                 {
-                    indicatorX = CanvasStartX;
+                    indicatorX = CanvasPaddingX;
                 }
 
                 if ((indicatorX + indicatorWidth) > width)
                 {
-                    indicatorX = width - indicatorWidth + CanvasStartX;
+                    indicatorX = width - indicatorWidth + CanvasPaddingX;
                 }
 
                 /* Indicator fill */
-                canvas.RoundRectangle(indicatorX, indicatorY, indicatorWidth, height - (CanvasStartY * 2), rectancleCurveRadius);
+                canvas.RoundRectangle(indicatorX, indicatorY, indicatorWidth, height - (CanvasPaddingY * 2), rectancleCurveRadius);
                 canvas.SetColorFill(fillColor);
                 canvas.Fill();
 
                 /* Indicator border */
-                canvas.RoundRectangle(indicatorX, indicatorY, indicatorWidth, height - (CanvasStartY * 2), rectancleCurveRadius);
+                canvas.RoundRectangle(indicatorX, indicatorY, indicatorWidth, height - (CanvasPaddingY * 2), rectancleCurveRadius);
                 canvas.SetColorStroke(borderColor);
                 canvas.Stroke();
 
@@ -330,7 +349,7 @@ namespace SLReports.ReportCard
                 canvas.SetColorFill(textColor);
                 BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
                 canvas.BeginText();
-                canvas.MoveText(indicatorX + (indicatorWidth/2) - (bf.GetWidthPoint(parsedValue.ToString(), 8) / 2), (height / 2) - (CanvasStartY * 2));
+                canvas.MoveText(indicatorX + (indicatorWidth / 2) - (bf.GetWidthPoint(parsedValue.ToString(), 8) / 2), (height / 2) - (CanvasPaddingY * 2));
                 canvas.SetFontAndSize(bf, 8);
                 canvas.ShowText(parsedValue.ToString());                
                 //canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "X", indicatorX + indicatorWidth, CanvasStartY, 0);
@@ -360,10 +379,90 @@ namespace SLReports.ReportCard
 
                 /* Border */
                 canvas.SetRGBColorStroke(255, 255, 255);
-                canvas.RoundRectangle(CanvasStartX, CanvasStartY, width, height, rectancleCurveRadius);
+                canvas.RoundRectangle(CanvasPaddingX, CanvasPaddingY, width, height, rectancleCurveRadius);
                 canvas.SetColorStroke(borderColor);
                 canvas.Stroke();
 
+            }
+
+            return iTextSharp.text.Image.GetInstance(canvas); ;
+        }
+        protected iTextSharp.text.Image outcomeBar_Minimalist(PdfContentByte content, String value)
+        {
+            int width = 125;
+            int height = 6;
+
+            int CanvasPaddingX = 1;
+            int CanvasPaddingY = 1;
+
+            int maxvalue = 4;
+            int rectancleCurveRadius = 2;
+
+            /* Colors */
+            BaseColor fillColor = new BaseColor(70, 70, 70);
+            BaseColor borderColor = new BaseColor(0, 0, 0);
+
+            Single parsedValue = -1;
+
+            PdfTemplate canvas = content.CreateTemplate(width + (CanvasPaddingX * 2), height + (CanvasPaddingY * 2));
+
+            /* Background */
+            canvas.Rectangle(0, 0, width + (CanvasPaddingX * 2), height + (CanvasPaddingY * 2));
+            canvas.SetRGBColorFill(255, 255, 255);
+            canvas.Fill();
+
+            if (Single.TryParse(value, out parsedValue))
+            {
+                Single percentFill = parsedValue / maxvalue;
+
+                /* Determine fill color  based on value */
+                if (parsedValue <= 1)
+                {
+                    fillColor = new BaseColor(255, 51, 0);
+                }
+                else if (parsedValue <= 2.25)
+                {
+                    fillColor = new BaseColor(255, 165, 0);
+                }
+                else if (parsedValue <= 3.5)
+                {
+                    fillColor = new BaseColor(0, 128, 0);
+                }
+                else if (parsedValue <= 4)
+                {
+                    fillColor = new BaseColor(0, 128, 0);
+                }
+
+                /* Fill */
+                if ((parsedValue > 0) && (parsedValue <= 4))
+                {
+                    canvas.Rectangle(CanvasPaddingX, CanvasPaddingY, (width * percentFill) - rectancleCurveRadius, height);                    
+                    canvas.SetColorFill(fillColor);
+                    canvas.Fill();
+                }
+
+            }
+            else
+            {
+                /* IE */
+                BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                canvas.SetRGBColorFill(0, 0, 0);
+                canvas.BeginText();
+                canvas.SetFontAndSize(bf, 6);
+
+                if (value.ToLower() == "ie")
+                {
+                    canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "INSUFFICIENT EVIDENCE", width / 2, (height / 2) - 2, 0);
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(value))
+                    {
+                        value = "INVALID VALUE";
+                    }
+                    canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, value, width / 2, (height / 2) - 2, 0);
+                }
+                canvas.EndText();
             }
 
             return iTextSharp.text.Image.GetInstance(canvas); ;
