@@ -143,41 +143,8 @@ namespace SLReports.INAC
             }
 
             /* Load Schools */
-            #region Load all schools
-            try
-            {
-                SqlConnection dbConnection = new SqlConnection(dbConnectionString);
-                SqlCommand sqlCommand = new SqlCommand();
-
-                sqlCommand.Connection = dbConnection;
-                sqlCommand.CommandType = CommandType.Text;
-                sqlCommand.CommandText = "SELECT * FROM LSKY_LSKYSchools;";
-                sqlCommand.Connection.Open();
-
-                SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
-
-                if (dbDataReader.HasRows)
-                {
-                    Schools.Clear();
-                    while (dbDataReader.Read())
-                    {
-                        //dbDataReader["LegalFirstName"].ToString() + " " + dbDataReader["LegalLastName"].ToString()
-                        Schools.Add(new School(dbDataReader["name"].ToString(), dbDataReader["internalID"].ToString(), dbDataReader["govID"].ToString(), dbDataReader["address"].ToString()));
-                    }
-                }
-
-                sqlCommand.Connection.Close();
-            }
-            catch (Exception ex)
-            {
-                Response.Write("Exception: " + ex.Message);
-                if (ex.InnerException != null)
-                {
-                    Response.Write("Exception: " + ex.InnerException.Message);
-                }
-            }
-
-            #endregion
+            SqlConnection connection = new SqlConnection(dbConnectionString);
+            Schools = School.loadAllSchools(connection);
 
             if (!IsPostBack)
             {

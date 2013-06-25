@@ -1003,8 +1003,6 @@ namespace SLReports.ReportCard
             Document ReportCard = new Document(PageSize.LETTER);
             PdfWriter writer = PdfWriter.GetInstance(ReportCard, memstream);
 
-            //writer.ViewerPreferences = PdfWriter.PageModeUseOutlines;
-
             ReportCard.Open();
             PdfContentByte content = writer.DirectContent;
 

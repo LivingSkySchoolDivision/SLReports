@@ -23,6 +23,7 @@ namespace SLReports.AttendanceByGrade
             {
                 /* Load all schools */
                 AllSchools = School.loadAllSchools(connection);
+                AllSchools.Sort();
             }
 
             foreach (School school in AllSchools)

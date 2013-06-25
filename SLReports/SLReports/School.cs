@@ -7,7 +7,7 @@ using System.Web;
 
 namespace SLReports
 {
-    public class School
+    public class School : IComparable
     {
         private string name;
         private string schoolLogicID;
@@ -116,9 +116,28 @@ namespace SLReports
                 sqlCommand.Connection.Close();
             }
             catch { }
-
+            returnMe.Sort();
             return returnMe;
         }
 
+
+        public int CompareTo(object obj)
+        {
+            if (obj == null)
+            {
+                return 1;
+            }
+
+            School obj2 = obj as School;
+
+            if (obj2 != null)
+            {
+                return this.name.CompareTo(obj2.name);
+            }
+            else
+            {
+                throw new ArgumentException("Object is not a School");
+            }
+        }
     }
 }

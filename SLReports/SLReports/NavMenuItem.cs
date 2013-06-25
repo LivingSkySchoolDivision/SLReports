@@ -5,7 +5,7 @@ using System.Web;
 
 namespace SLReports
 {
-    public class NavMenuItem
+    public class NavMenuItem : IComparable
     {
         public string url { get; set; }
         public string name { get; set; }        
@@ -25,6 +25,25 @@ namespace SLReports
         public override string ToString()
         {
             return this.name;
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (obj == null)
+            {
+                return 1;
+            }
+
+            NavMenuItem obj2 = obj as NavMenuItem;
+
+            if (obj2 != null)
+            {
+                return this.name.CompareTo(obj2.name);
+            }
+            else
+            {
+                throw new ArgumentException("Object is not a NavMenuItem");
+            }
         }
     }
 }
