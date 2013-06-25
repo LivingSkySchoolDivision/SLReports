@@ -94,7 +94,7 @@ namespace SLReports.AttendanceByGrade
 
                                     foreach (Absence abs in studentAbsences)
                                     {
-                                        if ((abs.getDate() < Date_To) && (abs.getDate() > Date_From))
+                                        if ((abs.getDate() <= Date_To) && (abs.getDate() >= Date_From))
                                         {
                                             student.addAbsence(abs);
                                         }
@@ -305,43 +305,194 @@ namespace SLReports.AttendanceByGrade
 
         protected PdfPTable attendanceSummary(Student student)
         {
-            PdfPTable summaryTable = new PdfPTable(2);
-            summaryTable.SpacingAfter = 25f;
-            summaryTable.HorizontalAlignment = 1;
-            summaryTable.TotalWidth = 500f;
-            summaryTable.LockedWidth = true;
+            if (student.absences.Count > 0)
+            {
+                PdfPTable summaryTable = new PdfPTable(4);
+                summaryTable.SpacingAfter = 25f;
+                summaryTable.HorizontalAlignment = 1;
+                summaryTable.TotalWidth = 500f;
+                summaryTable.LockedWidth = true;
 
-            PdfPCell newCell = null;
+                PdfPCell newCell = null;
 
-            /* This can be done 2 ways:
-             *  - A dynamic table, similar to the original attendance report
-             *  - A table of simple absences vs lates
-             *  
-             * 
-             *  Bonus: Figure out the total classroom minutes the student SHOULD have and calculate percentages of time missed / late
-             *  Bonus: total up late time minutes
-             
-             */
+                /* This can be done 2 ways:
+                 *  - A dynamic table, similar to the original attendance report
+                 *  - A table of simple absences vs lates
+                 *  
+                 * 
+                 *  Bonus: Figure out the total classroom minutes the student SHOULD have and calculate percentages of time missed / late
+                 *  Bonus: total up late time minutes             
+                 */
+
+                /* Figure out some statistics to display */
+                List<String> allCourses = new List<String>();
+
+                foreach (Absence abs in student.absences)
+                {
+                    if (!allCourses.Contains(abs.getCourseName()))
+                    {
+                        allCourses.Add(abs.getCourseName());
+                    }
+                }
+
+                /* Headings */
+                newCell = new PdfPCell(new Phrase("Attendance Summary", font_body_bold));
+                newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+                newCell.Border = Rectangle.NO_BORDER;
+                newCell.Colspan = 4;
+                newCell.PaddingBottom = 5;
+                summaryTable.AddCell(newCell);
+
+                newCell = new PdfPCell(new Phrase("Course", font_body_bold));
+                newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+                newCell.Border = Rectangle.BOTTOM_BORDER;
+                newCell.PaddingBottom = 5;
+                newCell.BorderWidth = 1;
+                summaryTable.AddCell(newCell);
+
+                newCell = new PdfPCell(new Phrase("Lates", font_body_bold));
+                newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+                newCell.Border = Rectangle.BOTTOM_BORDER;
+                newCell.PaddingBottom = 5;
+                newCell.BorderWidth = 1;
+                summaryTable.AddCell(newCell);
+
+                newCell = new PdfPCell(new Phrase("Absences", font_body_bold));
+                newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+                newCell.Border = Rectangle.BOTTOM_BORDER;
+                newCell.PaddingBottom = 5;
+                newCell.BorderWidth = 1;
+                summaryTable.AddCell(newCell);
+
+                newCell = new PdfPCell(new Phrase("Other", font_body_bold));
+                newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+                newCell.Border = Rectangle.BOTTOM_BORDER;
+                newCell.PaddingBottom = 5;
+                newCell.BorderWidth = 1;
+                summaryTable.AddCell(newCell);
+
+                int totalLates = 0;
+                int totalAbs = 0;
+                int totalOther = 0;
+                int totalMinutesLate = 0;
+
+                /* Values */
+                foreach (String courseName in allCourses)
+                {
+                    int numLates = 0;
+                    int numAbs = 0;
+                    int numOther = 0;
+                    int numMinutesLate = 0;
+
+                    foreach (Absence abs in student.absences)
+                    {
+                        if (abs.getCourseName() == courseName)
+                        {
+                            if (abs.getStatus().ToLower() == "late")
+                            {
+                                numLates++;
+                                totalLates++;
+                                numMinutesLate += abs.getMinutes();
+                                totalMinutesLate += abs.getMinutes();
+                            }
+                            else if (abs.getStatus().ToLower() == "absent")
+                            {
+                                numAbs++;
+                                totalAbs++;
+                            }
+                            else
+                            {
+                                numOther++;
+                                totalOther++;
+                            }
+                        }
+                    }
+
+                    newCell = new PdfPCell(new Phrase(courseName, font_body));
+                    newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                    newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+                    newCell.Border = Rectangle.NO_BORDER;
+                    summaryTable.AddCell(newCell);
+
+                    StringBuilder lateDisplay = new StringBuilder();
+                    lateDisplay.Append(numLates);
+
+                    if (numMinutesLate > 0)
+                    {
+                        lateDisplay.Append(" (" + numMinutesLate + " minutes)");
+                    }
+
+                    newCell = new PdfPCell(new Phrase(lateDisplay.ToString(), font_body));
+                    newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                    newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+                    newCell.Border = Rectangle.NO_BORDER;
+                    summaryTable.AddCell(newCell);
 
 
-            /* Figure out some statistics to display */
+                    newCell = new PdfPCell(new Phrase(numAbs.ToString(), font_body));
+                    newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                    newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+                    newCell.Border = Rectangle.NO_BORDER;
+                    summaryTable.AddCell(newCell);
 
-            /* Headings */
-            newCell = new PdfPCell(new Phrase("Class / Period", font_body_bold));
-            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
-            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
-            newCell.Border = Rectangle.BOTTOM_BORDER;
-            newCell.PaddingBottom = 5;
-            newCell.BorderWidth = 2;
-            summaryTable.AddCell(newCell);
+                    newCell = new PdfPCell(new Phrase(numOther.ToString(), font_body));
+                    newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                    newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+                    newCell.Border = Rectangle.NO_BORDER;
+                    summaryTable.AddCell(newCell);
 
-            
-            /* Values */
+                }
+
+                /* Totals */
+                newCell = new PdfPCell(new Phrase("Total", font_body_bold));
+                newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+                newCell.Border = Rectangle.TOP_BORDER;
+                newCell.BorderWidth = 1;
+                summaryTable.AddCell(newCell);
+
+                StringBuilder lateDisplay2 = new StringBuilder();
+                lateDisplay2.Append(totalLates);
+
+                if (totalMinutesLate > 0)
+                {
+                    lateDisplay2.Append(" (" + totalMinutesLate + "minutes)");
+                }
+
+                newCell = new PdfPCell(new Phrase(lateDisplay2.ToString(), font_body_bold));
+                newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+                newCell.Border = Rectangle.TOP_BORDER;
+                newCell.BorderWidth = 1;
+                summaryTable.AddCell(newCell);
 
 
+                newCell = new PdfPCell(new Phrase(totalAbs.ToString(), font_body_bold));
+                newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+                newCell.Border = Rectangle.TOP_BORDER;
+                newCell.BorderWidth = 1;
+                summaryTable.AddCell(newCell);
+
+                newCell = new PdfPCell(new Phrase(totalOther.ToString(), font_body_bold));
+                newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+                newCell.Border = Rectangle.TOP_BORDER;
+                newCell.BorderWidth = 1;
+                summaryTable.AddCell(newCell);
 
 
-            return summaryTable;
+                return summaryTable;
+            }
+            else
+            {
+                return new PdfPTable(1);
+            }
         }
 
         protected PdfPTable attendanceTable(Student student)
@@ -384,7 +535,7 @@ namespace SLReports.AttendanceByGrade
                 newCell.BorderWidth = 2;
                 attendanceTable.AddCell(newCell);
 
-                newCell = new PdfPCell(new Phrase("Period", font_body_bold));
+                newCell = new PdfPCell(new Phrase("Period / Class", font_body_bold));
                 newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
                 newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
                 newCell.Border = Rectangle.BOTTOM_BORDER;
@@ -529,23 +680,31 @@ namespace SLReports.AttendanceByGrade
         {
             MemoryStream memstream = new MemoryStream();
             Document Report = new Document(PageSize.LETTER);
+            Report.SetMargins(36, 36, 36, 60);
+
             PdfWriter writer = PdfWriter.GetInstance(Report, memstream);
             Report.Open();
             PdfContentByte content = writer.DirectContent;
-            /* Header and footer stuff - work to be done on this before it can be implemented
+
+            /* Header and footer stuff - work to be done on this before it can be implemented */
             PdfPageEventHandler PageEventHandler = new PdfPageEventHandler();
             writer.PageEvent = PageEventHandler;
-            PageEventHandler.student = student;
-            PageEventHandler.reportperiod = period;*/
+            
+            PageEventHandler.DoubleSidedMode = true; // Doesn't work so well with large multi-student documents...
 
             foreach (Student student in students)
             {
+                PageEventHandler.bottomCenter = "Printed " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString();
+                PageEventHandler.bottomLeft = student.getDisplayName();
+                PageEventHandler.ResetPageNumbers(Report);
+
                 Report.Add(pageTitle(content, from, to));
                 Report.Add(studentNamePlate(student));
                 Report.Add(attendanceTable(student));
                 Report.Add(attendanceSummary(student));
                 Report.NewPage();
                 Report.Add(new Phrase(String.Empty));
+
             }
 
             

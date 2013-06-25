@@ -66,19 +66,18 @@ namespace SLReports.AttendanceByGrade
                     
                 }
 
-                /* TODO: Figure out how to stop items from being duplicated */
+                /* Display the grades in a listbox */
+                drpGradeList.Items.Clear();
+                foreach (String thisGrade in availableGrades)
                 {
-                    /* Display the grades in a listbox */
-                    foreach (String thisGrade in availableGrades)
-                    {
-                        ListItem newItem = new ListItem();
-                        newItem.Text = thisGrade;
-                        newItem.Value = thisGrade;
-                        drpGradeList.Items.Add(newItem);
-                    }
+                    ListItem newItem = new ListItem();
+                    newItem.Text = thisGrade;
+                    newItem.Value = thisGrade;
+                    drpGradeList.Items.Add(newItem);
                 }
                 /* Make the listbox unhidden */
                 TableRow_Grade.Visible = true;
+                TableRow_Date.Visible = false;
             }            
 
         }
@@ -97,64 +96,69 @@ namespace SLReports.AttendanceByGrade
             /* Get the selected grade */
             selectedGrade = drpGradeList.SelectedValue;
 
-            /* TODO: More duplicated items */
+
+
+            /* Show the date picker */
+            from_Day.Items.Clear();
+            from_Month.Items.Clear();
+            from_Year.Items.Clear();
+            to_Day.Items.Clear();
+            to_Month.Items.Clear();
+            to_Year.Items.Clear();
+
+            for (int year = (DateTime.Now.Year - 5); year < (DateTime.Now.Year + 5); year++)
             {
-
-
-                /* Show the date picker */
-                for (int year = (DateTime.Now.Year - 5); year < (DateTime.Now.Year + 5); year++)
+                ListItem newItem = null;
+                newItem = new ListItem();
+                newItem.Text = year.ToString();
+                newItem.Value = year.ToString();
+                if (year == DateTime.Now.Year)
                 {
-                    ListItem newItem = null;
-                    newItem = new ListItem();
-                    newItem.Text = year.ToString();
-                    newItem.Value = year.ToString();
-                    if (year == DateTime.Now.Year)
-                    {
-                        newItem.Selected = true;
-                    }
-                    from_Year.Items.Add(newItem);
-
-
-                    newItem = new ListItem();
-                    newItem.Text = year.ToString();
-                    newItem.Value = year.ToString();
-                    if (year == DateTime.Now.Year)
-                    {
-                        newItem.Selected = true;
-                    }
-                    to_Year.Items.Add(newItem);
+                    newItem.Selected = true;
                 }
+                from_Year.Items.Add(newItem);
 
-                String[] Months = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-                for (int month = 1; month <= 12; month++)
+
+                newItem = new ListItem();
+                newItem.Text = year.ToString();
+                newItem.Value = year.ToString();
+                if (year == DateTime.Now.Year)
                 {
-                    ListItem newItem = null;
-                    newItem = new ListItem();
-                    newItem.Text = Months[month - 1];
-                    newItem.Value = month.ToString();
-                    from_Month.Items.Add(newItem);
-
-                    newItem = new ListItem();
-                    newItem.Text = Months[month - 1];
-                    newItem.Value = month.ToString();
-                    to_Month.Items.Add(newItem);
+                    newItem.Selected = true;
                 }
-
-                for (int day = 1; day <= 31; day++)
-                {
-                    ListItem newItem = null;
-                    newItem = new ListItem();
-                    newItem.Text = day.ToString();
-                    newItem.Value = day.ToString();
-                    to_Day.Items.Add(newItem);
-
-                    newItem = new ListItem();
-                    newItem.Text = day.ToString();
-                    newItem.Value = day.ToString();
-
-                    from_Day.Items.Add(newItem);
-                }
+                to_Year.Items.Add(newItem);
             }
+
+            String[] Months = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+            for (int month = 1; month <= 12; month++)
+            {
+                ListItem newItem = null;
+                newItem = new ListItem();
+                newItem.Text = Months[month - 1];
+                newItem.Value = month.ToString();
+                from_Month.Items.Add(newItem);
+
+                newItem = new ListItem();
+                newItem.Text = Months[month - 1];
+                newItem.Value = month.ToString();
+                to_Month.Items.Add(newItem);
+            }
+
+            for (int day = 1; day <= 31; day++)
+            {
+                ListItem newItem = null;
+                newItem = new ListItem();
+                newItem.Text = day.ToString();
+                newItem.Value = day.ToString();
+                to_Day.Items.Add(newItem);
+
+                newItem = new ListItem();
+                newItem.Text = day.ToString();
+                newItem.Value = day.ToString();
+
+                from_Day.Items.Add(newItem);
+            }
+            
             TableRow_Date.Visible = true;
 
         }

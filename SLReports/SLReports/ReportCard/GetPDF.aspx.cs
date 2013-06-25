@@ -1,6 +1,5 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
-using SLReports.XPSExperiments;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -691,8 +690,10 @@ namespace SLReports.ReportCard
 
             PdfPageEventHandler PageEventHandler = new PdfPageEventHandler();
             writer.PageEvent = PageEventHandler;
-            PageEventHandler.student = student;
-            PageEventHandler.reportperiod = period;
+            PageEventHandler.DoubleSidedMode = true;
+            PageEventHandler.ShowOnFirstPage = false;
+            PageEventHandler.bottomLeft = student.getDisplayName();
+            PageEventHandler.bottomCenter = period.name;
 
             ReportCard.Add(schoolNamePlate(student.school));
             ReportCard.Add(namePlateTable(student, period));

@@ -27,7 +27,7 @@
                     <asp:DropDownList ID="to_Year" runat="server"></asp:DropDownList>
 
                 </asp:TableCell>
-                <asp:TableCell><asp:Button ID="Button3" runat="server" Text="Select Date Range" width="150" OnClick="Button3_Click"/></asp:TableCell>
+                <asp:TableCell><asp:Button ID="Button3" runat="server" Text="Select Date Range and generate PDF" width="150" OnClick="Button3_Click"/></asp:TableCell>
             </asp:TableRow>
         </asp:Table>
         <br />
