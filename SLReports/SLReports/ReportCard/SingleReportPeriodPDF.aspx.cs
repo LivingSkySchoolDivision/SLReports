@@ -34,7 +34,7 @@ namespace SLReports.ReportCard
         {
         }
 
-        protected iTextSharp.text.Image outcomeBar(PdfContentByte content, String value)
+        protected iTextSharp.text.Image outcomeBar_Original(PdfContentByte content, String value)
         {
             int width = 125;
             int height = 11;
@@ -147,6 +147,224 @@ namespace SLReports.ReportCard
             canvas.SetColorStroke(borderColor);
             canvas.Stroke();
 
+
+            return iTextSharp.text.Image.GetInstance(canvas); ;
+        }
+        protected iTextSharp.text.Image outcomeBar_Thin(PdfContentByte content, String value)
+        {
+            int width = 125;
+            int height = 6;
+            int barMargin = 0;
+
+            int maxvalue = 4;
+            int rectancleCurveRadius = 2;
+
+            /* Colors */
+            BaseColor fillColor = new BaseColor(70, 70, 70);
+            BaseColor borderColor = new BaseColor(0, 0, 0);
+
+            Single parsedValue = -1;
+
+            PdfTemplate canvas = content.CreateTemplate(width, height);
+
+            if (Single.TryParse(value, out parsedValue))
+            {
+                Single percentFill = parsedValue / maxvalue;
+
+                /* Determine fill color  based on value */
+                if (parsedValue <= 1)
+                {
+                    fillColor = new BaseColor(255, 51, 0);
+                }
+                else if (parsedValue <= 2.25)
+                {
+                    fillColor = new BaseColor(255, 165, 0);
+                }
+                else if (parsedValue <= 3.5)
+                {
+                    fillColor = new BaseColor(0, 128, 0);
+                }
+                else if (parsedValue <= 4)
+                {
+                    fillColor = new BaseColor(0, 128, 0);
+                }
+
+                /* Fill */
+                if ((parsedValue > 0) && (parsedValue <= 4))
+                {
+                    canvas.RoundRectangle(0, barMargin, width * percentFill, height - (barMargin * 2), rectancleCurveRadius);
+                    if (parsedValue < 4)
+                    {
+                        canvas.Rectangle(rectancleCurveRadius, barMargin, (width * percentFill) - rectancleCurveRadius, height - (barMargin * 2));
+                    }
+                    canvas.SetColorFill(fillColor);
+                    canvas.Fill();
+                }
+
+                /* Border */
+                canvas.SetRGBColorStroke(255, 255, 255);
+                canvas.RoundRectangle(0, barMargin, width, height - (barMargin * 2), rectancleCurveRadius);
+                canvas.SetColorStroke(borderColor);
+                canvas.Stroke();
+
+            }
+            else
+            {
+                /* IE */
+                BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                canvas.SetRGBColorFill(0, 0, 0);
+                canvas.BeginText();
+                canvas.SetFontAndSize(bf, 6);
+
+                if (value.ToLower() == "ie")
+                {
+                    canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "INSUFFICIENT EVIDENCE", width / 2, (height / 2) - 2, 0);
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(value))
+                    {
+                        value = "INVALID VALUE";
+                    }
+                    canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, value, width / 2, (height / 2) - 2, 0);
+                }
+                canvas.EndText();
+            }
+
+            return iTextSharp.text.Image.GetInstance(canvas); ;
+        }
+        protected iTextSharp.text.Image outcomeBar(PdfContentByte content, String value)
+        {
+            int width = 125;
+            int height = 12;
+            int barMargin = 3;
+
+            int CanvasStartX = 1;
+            int CanvasStartY = 1;
+            
+            int maxvalue = 4;
+            int rectancleCurveRadius = 2;
+
+            /* Colors */
+            BaseColor fillColor = new BaseColor(70, 70, 70);
+            BaseColor borderColor = new BaseColor(0, 0, 0);
+            BaseColor textColor = new BaseColor(255, 255, 255);
+
+            Single parsedValue = -1;
+
+            PdfTemplate canvas = content.CreateTemplate(width + 2, height + 2);
+
+            if (Single.TryParse(value, out parsedValue))
+            {
+                if (parsedValue > maxvalue)
+                {
+                    parsedValue = maxvalue;
+                }
+
+                Single percentFill = parsedValue / maxvalue;                
+
+                /* Determine fill color  based on value */
+                if (parsedValue <= 1)
+                {
+                    fillColor = new BaseColor(255, 51, 0); // Red
+                }
+                else if (parsedValue <= 2.25)
+                {
+                    fillColor = new BaseColor(255, 119, 0); // Orange
+                }
+                else if (parsedValue <= 3.5)
+                {                    
+                    fillColor = new BaseColor(0, 128, 0); // green
+                }
+                else if (parsedValue <= 4)
+                {
+                    fillColor = new BaseColor(0, 128, 0); // Green
+                }
+
+                /* Fill */                
+                if ((parsedValue > 0) && (parsedValue <= 4))
+                {
+                    canvas.RoundRectangle(CanvasStartX, barMargin, width * percentFill, height - (barMargin * 2), rectancleCurveRadius);
+                    if (parsedValue < 4)
+                    {
+                        canvas.Rectangle(CanvasStartX + rectancleCurveRadius, barMargin, (width * percentFill) - rectancleCurveRadius, height - (barMargin * 2));
+                    }
+                    canvas.SetColorFill(fillColor);
+                    canvas.Fill();
+                }
+                
+
+                /* Border */
+                canvas.SetRGBColorStroke(255, 255, 255);
+                canvas.RoundRectangle(CanvasStartX, barMargin, width, height - (barMargin * 2), rectancleCurveRadius);
+                canvas.SetColorStroke(borderColor);
+                canvas.Stroke();
+
+
+                /* Number indicator / Overlay */
+                int indicatorWidth = 15;
+                float indicatorX = (width * percentFill) - (indicatorWidth / 2) + CanvasStartX;
+                float indicatorY = CanvasStartY;
+
+                if (indicatorX < (CanvasStartX))
+                {
+                    indicatorX = CanvasStartX;
+                }
+
+                if ((indicatorX + indicatorWidth) > width)
+                {
+                    indicatorX = width - indicatorWidth + CanvasStartX;
+                }
+
+                /* Indicator fill */
+                canvas.RoundRectangle(indicatorX, indicatorY, indicatorWidth, height - (CanvasStartY * 2), rectancleCurveRadius);
+                canvas.SetColorFill(fillColor);
+                canvas.Fill();
+
+                /* Indicator border */
+                canvas.RoundRectangle(indicatorX, indicatorY, indicatorWidth, height - (CanvasStartY * 2), rectancleCurveRadius);
+                canvas.SetColorStroke(borderColor);
+                canvas.Stroke();
+
+                /* Indicator text */
+                canvas.SetColorFill(textColor);
+                BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                canvas.BeginText();
+                canvas.MoveText(indicatorX + (indicatorWidth/2) - (bf.GetWidthPoint(parsedValue.ToString(), 8) / 2), (height / 2) - (CanvasStartY * 2));
+                canvas.SetFontAndSize(bf, 8);
+                canvas.ShowText(parsedValue.ToString());                
+                //canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "X", indicatorX + indicatorWidth, CanvasStartY, 0);
+                canvas.EndText();
+            }
+            else
+            {
+                /* IE */
+                BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                canvas.SetRGBColorFill(0, 0, 0);
+                canvas.BeginText();
+                canvas.SetFontAndSize(bf, 8);
+
+                if (value.ToLower() == "ie")
+                {
+                    canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "INSUFFICIENT EVIDENCE", width / 2, (height / 2) - 2, 0);
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(value))
+                    {
+                        value = "INVALID VALUE";
+                    }
+                    canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, value, width / 2, (height / 2) - 2, 0);
+                }
+                canvas.EndText();
+
+                /* Border */
+                canvas.SetRGBColorStroke(255, 255, 255);
+                canvas.RoundRectangle(CanvasStartX, CanvasStartY, width, height, rectancleCurveRadius);
+                canvas.SetColorStroke(borderColor);
+                canvas.Stroke();
+
+            }
 
             return iTextSharp.text.Image.GetInstance(canvas); ;
         }
@@ -444,7 +662,7 @@ namespace SLReports.ReportCard
             newCell.AddElement(description);
             newCell.Border = 0;
             newCell.VerticalAlignment = 1;
-            outcomeLegendTable.AddCell(newCell);            
+            outcomeLegendTable.AddCell(newCell);
 
             return outcomeLegendTable;
         }
