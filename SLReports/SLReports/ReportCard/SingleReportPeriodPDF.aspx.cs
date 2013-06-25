@@ -129,6 +129,10 @@ namespace SLReports.ReportCard
                 }
                 else
                 {
+                    if (string.IsNullOrEmpty(value))
+                    {
+                        value = "INVALID VALUE";
+                    }
                     canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, value, width / 2, (height / 2) - 2, 0);
                 }
                 canvas.EndText();
@@ -421,7 +425,7 @@ namespace SLReports.ReportCard
             newCell.AddElement(description);
             newCell.Border = 0;
             newCell.VerticalAlignment = 1;
-            outcomeLegendTable.AddCell(newCell);
+            outcomeLegendTable.AddCell(newCell);            
 
             newCell = new PdfPCell(outcomeBar(content, "IE"));
             newCell.Border = 0;
@@ -440,7 +444,7 @@ namespace SLReports.ReportCard
             newCell.AddElement(description);
             newCell.Border = 0;
             newCell.VerticalAlignment = 1;
-            outcomeLegendTable.AddCell(newCell);
+            outcomeLegendTable.AddCell(newCell);            
 
             return outcomeLegendTable;
         }

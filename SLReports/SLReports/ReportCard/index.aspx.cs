@@ -60,6 +60,7 @@ namespace SLReports.ReportCard
                 }
                 TableRow_Student.Visible = true;
                 TableRow_Term.Visible = false;
+                TableRow_ReportPeriod.Visible = false;
 
             }
         }
