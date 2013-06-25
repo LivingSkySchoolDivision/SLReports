@@ -11,7 +11,7 @@ using System.Web.UI.WebControls;
 
 namespace SLReports.ReportCard
 {
-    public partial class SingleReportPeriod : System.Web.UI.Page
+    public partial class SingleReportPeriodHTML : System.Web.UI.Page
     {
         Student selectedStudent = null;
         ReportPeriod selectedReportPeriod = null;

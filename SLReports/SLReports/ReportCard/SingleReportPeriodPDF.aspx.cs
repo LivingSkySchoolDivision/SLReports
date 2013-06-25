@@ -13,7 +13,7 @@ using System.Web.UI.WebControls;
 
 namespace SLReports.ReportCard
 {
-    public partial class GetPDF : System.Web.UI.Page
+    public partial class SingleReportPeriodPDF : System.Web.UI.Page
     {
         Font font_large = FontFactory.GetFont("Verdana", 15, BaseColor.BLACK);
         Font font_large_bold = FontFactory.GetFont("Verdana", 15, Font.BOLD, BaseColor.BLACK);

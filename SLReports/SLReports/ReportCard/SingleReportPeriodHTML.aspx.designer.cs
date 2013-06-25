@@ -10,7 +10,7 @@
 namespace SLReports.ReportCard {
     
     
-    public partial class SingleReportPeriod {
+    public partial class SingleReportPeriodHTML {
         
         /// <summary>
         /// litNamePlate control.

@@ -16,13 +16,9 @@ namespace SLReports.ReportCard
         List<School> AllSchools;
         List<Student> DisplayedStudents;
         List<Term> DisplayedTerms;
-        List<ReportPeriod> DisplayedReportPeriods;
-        List<Mark> DisplayedMarks;
-        List<ObjectiveMark> StudentObjectiveMarks;
-
+        List<ReportPeriod> DisplayedPeriods;
         Student SelectedStudent;
         int SelectedSchoolID;
-        Term SelectedTerm;
 
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -45,7 +41,7 @@ namespace SLReports.ReportCard
         protected void Page_Load(object sender, EventArgs e)
         {           
         }
-
+              
         protected void Button1_Click(object sender, EventArgs e)
         {
             SelectedSchoolID = int.Parse(drpSchoolList.SelectedValue);
@@ -64,11 +60,8 @@ namespace SLReports.ReportCard
                 }
                 TableRow_Student.Visible = true;
                 TableRow_Term.Visible = false;
-                litAttendance.Visible = false;
-                litMarks.Visible = false;
-                litNamePlate.Visible = false;
-                
-            }            
+
+            }
         }
 
         protected void Button2_Click(object sender, EventArgs e)
@@ -80,6 +73,9 @@ namespace SLReports.ReportCard
             {
                 SelectedStudent = Student.loadThisStudent(connection, drpStudentList.SelectedValue);
                 DisplayedStudents = Student.loadStudentsFromThisSchool(connection, SelectedSchoolID);
+                
+
+                /* Load some terms to fill the dropdown box */
                 DisplayedTerms = Term.loadTermsFromThisTrack(connection, int.Parse(SelectedStudent.getTrackID()));
                 drpTermList.Items.Clear();
 
@@ -91,237 +87,60 @@ namespace SLReports.ReportCard
                     drpTermList.Items.Add(newItem);
                 }
 
-                TableRow_Term.Visible = true;
-                litAttendance.Visible = false;
-                litMarks.Visible = false;
-                litNamePlate.Visible = false;
+                /* Load some report periods to fill the dropdown box */
 
-            }            
-            
-        }
+                DisplayedPeriods = new List<ReportPeriod>();
                 
-        protected string generateMarkTable(List<Course> courses)
-        {
-            List<ReportPeriod> validReportPeriods = new List<ReportPeriod>();
-            foreach (Course c in courses)
-            {
-                foreach (Mark m in c.Marks)
+                foreach (Term term in DisplayedTerms) 
                 {
-                    if (!validReportPeriods.Contains(m.reportPeriod))
+                    List<ReportPeriod> tempList = new List<ReportPeriod>();
+                    tempList.Clear();
+                    tempList = ReportPeriod.loadReportPeriodsFromThisTerm(connection, term);
+                    foreach (ReportPeriod rp in tempList)
                     {
-                        validReportPeriods.Add(m.reportPeriod);
+                        DisplayedPeriods.Add(rp);
                     }
                 }
-            }
 
-            StringBuilder returnMe = new StringBuilder();                                   
-
-            returnMe.Append("<table width=\"100%\">");
-            
-
-            
-            /* Content */
-            foreach (Course course in courses)
-            {
-                bool courseHasComments = false;
-
-                returnMe.Append("<tr class=\"datatable_header\">");
-                returnMe.Append("<th style=\"text-align: left;\"></th>");
-                foreach (ReportPeriod rp in validReportPeriods)
+                drpReportPeriodList.Items.Clear();
+                foreach (ReportPeriod rp in DisplayedPeriods)
                 {
-                    returnMe.Append("<th>" + rp.name + "</th>");
-                }
-                returnMe.Append("</tr>");
-                returnMe.Append("<tr class=\"datatable_sub_header\">");
-                returnMe.Append("<td><b style=\"font-size: 125%\">" + course.name + "</b> - " + course.teacherName + "</td>");
-                foreach (ReportPeriod rp in validReportPeriods)
-                {
-                    returnMe.Append("<td align=\"center\" width=\"150\">");
-                    foreach (Mark mark in course.Marks)
-                    {   
-                        if (mark.reportPeriod.ID == rp.ID)
-                        {
-                            returnMe.Append(mark.getMark());
-                        }
-
-                        /* While we are iterating marks, check to see if any have comments */
-                        if (!string.IsNullOrEmpty(mark.comment))
-                        {
-                            courseHasComments = true;
-                        }
-
-                    } 
-                    returnMe.Append("</td>");
-                }
-                returnMe.Append("</tr>");
-
-                if (courseHasComments)
-                {
-                    returnMe.Append("<tr>");
-                    returnMe.Append("<td colspan=\"" + (validReportPeriods.Count + 1) + "\">");
-
-                    foreach (Mark mark in course.Marks)
-                    {
-                        if (mark.classID == course.classid)
-                        {
-                            if (!string.IsNullOrEmpty(mark.comment))
-                            {
-                                returnMe.Append("<div style=\"padding-left: 15px;margin-bottom: 5px;\"><b>" + mark.reportPeriod.name + "</b>: " + mark.comment + "</div>");
-                            }
-                        }
-                    }
-                    returnMe.Append("</td>");
-                    returnMe.Append("</tr>");
+                    ListItem newItem = new ListItem();
+                    newItem.Text = rp.name;
+                    newItem.Value = rp.ID.ToString();
+                    drpReportPeriodList.Items.Add(newItem);
                 }
 
-                if (course.Objectives.Count > 0)
-                {
-                    returnMe.Append("<tr>");
-                    returnMe.Append("<td colspan=\"" + (validReportPeriods.Count + 1) + "\">");
-                    returnMe.Append("<table class=\"datatable\" width=\"100%\" style=\"padding-left: 15px;\" cellpadding=3>");
-                    foreach (Objective objective in course.Objectives)
-                    {
-                        if (objective.mark != null)
-                        {
-                            returnMe.Append("<tr class=\"row\"><td>" + objective.description + "</td><td width=\"75\" align=\"center\">");
-                            returnMe.Append(objective.mark.mark);
-                            returnMe.Append("</td></tr>");
-                        }
-                    }
-                    returnMe.Append("</table>");
-                    returnMe.Append("</td>");
-                    returnMe.Append("</tr>");
-                }
-                returnMe.Append("<tr><td colspan=\"" + (validReportPeriods.Count + 1) + "\">&nbsp;</td></tr>");
+                TableRow_Term.Visible = true;
+                TableRow_ReportPeriod.Visible = true;
             }
-            returnMe.Append("</table>");
-            return returnMe.ToString();
-        }
 
-        protected string generateAttendanceTable(Student student)
-        {
-            StringBuilder returnMe = new StringBuilder();
-
-
-
-
-            
-
-
-
-            return returnMe.ToString();
-        }
-
-        protected string generateStudentNameplate(Student student)
-        {
-            StringBuilder returnMe = new StringBuilder();
-
-            
-
-            returnMe.Append("<div style=\"width: 500px;margin-left: auto; margin-right: auto;\">");if (student.hasPhoto())
-            {
-                returnMe.Append("<div style=\"float: left;\"><img width=\"156\" height=\"200\" src=\"/SLReports/Photos/GetPhoto.aspx?studentnumber="+student.getStudentID()+"\"></div>");
-            }
-            returnMe.Append("<div style=\"text-align: center; border: 0; border-bottom: 1px solid black; font-size: 150%;font-weight: bold;\">" + student.getDisplayName() + "</div>");
-            returnMe.Append("<table width=\"300\">");
-
-
-            returnMe.Append("<tr><td valign=\"top\" width=\"100\"><b>School</b></td><td valign=\"top\">" + student.getSchoolName() + "</td></tr>");
-
-            if (!string.IsNullOrEmpty(student.getHomeRoom()))
-            {
-                returnMe.Append("<tr><td><b>Homeroom</b></td><td valign=\"top\">" + student.getHomeRoom() + "</tr></td>");
-            }
-            returnMe.Append("<tr><td valign=\"top\"><b>Grade</b></td><td valign=\"top\">" + student.getGrade() + "</tr></td>");
-            returnMe.Append("<tr><td valign=\"top\"><b>Date of Birth</b></td><td valign=\"top\">" + student.getDateOfBirth().ToString("MMMM dd,yyyy") + "</tr></td>");
-            returnMe.Append("<tr><td valign=\"top\"><b>Home Phone</b></td><td valign=\"top\">" + student.getTelephoneFormatted() + "</tr></td>");
-
-            returnMe.Append("</table>");
-            returnMe.Append("</div><br/>");
-
-
-            return returnMe.ToString();
         }
 
         protected void Button3_Click(object sender, EventArgs e)
         {
-            try
-            {
-                SelectedSchoolID = int.Parse(drpSchoolList.SelectedValue);
+            /* This would redirect to the multi term report card when finished */
 
-                String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
-                using (SqlConnection connection = new SqlConnection(dbConnectionString))
-                {
-                    SelectedStudent = Student.loadThisStudent(connection, drpStudentList.SelectedValue);
-                    DisplayedStudents = Student.loadStudentsFromThisSchool(connection, SelectedSchoolID);
-                    DisplayedTerms = Term.loadTermsFromThisTrack(connection, int.Parse(SelectedStudent.getTrackID()));
-                    SelectedTerm = Term.loadThisTerm(connection, int.Parse(drpTermList.SelectedValue));
-                                        
+        }
 
-                    DisplayedReportPeriods = ReportPeriod.loadReportPeriodsFromThisTerm(connection, SelectedTerm.ID);
-                    DisplayedMarks = Mark.loadMarksFromTheseReportPeriods(connection, DisplayedReportPeriods, SelectedStudent);
+        protected void btnRPGenPDF_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("/SLReports/ReportCard/SingleReportPeriodPDF.aspx?studentid=" + drpStudentList.SelectedValue + "&reportperiod=" + drpReportPeriodList.SelectedValue);
+        }
 
+        protected void btnTermGenPDF_Click(object sender, EventArgs e)
+        {
 
+        }
 
+        protected void btnTermGenHTML_Click(object sender, EventArgs e)
+        {
 
-                    StudentObjectiveMarks = ObjectiveMark.loadObjectiveMarksForThisStudent(connection, SelectedTerm, SelectedStudent);
+        }
 
-                    List<Course> DisplayedMarksInCourses = new List<Course>();
-                    foreach (Mark m in DisplayedMarks)
-                    {
-                        bool courseExists = false;
-                        foreach (Course c in DisplayedMarksInCourses)
-                        {
-                            if (c.classid == m.classID)
-                            {
-                                courseExists = true;
-                            }
-                        }
-                        if (!courseExists)
-                        {
-                            DisplayedMarksInCourses.Add(new Course(m.className, m.classID, m.courseID, m.teacherFirst, m.teacherLast, m.teacherTitle));
-                        }
-                    }
-
-                    foreach (Course c in DisplayedMarksInCourses)
-                    {
-                        c.Objectives = Objective.loadObjectivesForThisCourse(connection, c);
-                        foreach (Objective o in c.Objectives)
-                        {
-                            foreach (ObjectiveMark om in StudentObjectiveMarks)
-                            {
-                                if (o.id == om.objectiveID)
-                                {
-                                    o.mark = om;
-                                }
-                            }
-                        }
-
-
-                        foreach (Mark m in DisplayedMarks)
-                        {
-                            if (m.classID == c.classid)
-                            {
-                                c.Marks.Add(m);
-                            }
-                        }
-                    }
-
-                    litNamePlate.Text = generateStudentNameplate(SelectedStudent);
-                    litMarks.Text = generateMarkTable(DisplayedMarksInCourses);
-                    litAttendance.Text = generateAttendanceTable(SelectedStudent);
-                    
-                    litAttendance.Visible = true;
-                    litMarks.Visible = true;
-                    litNamePlate.Visible = true;
-
-                }
-            }
-            catch (Exception ex)
-            {
-                Response.Write(ex.Message + "<BR>");
-            }
-
+        protected void btnRPGenHTML_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("/SLReports/ReportCard/SingleReportPeriodHTML.aspx?studentid=" + drpStudentList.SelectedValue + "&reportperiod=" + drpReportPeriodList.SelectedValue);
         }
     }
 }

@@ -85,39 +85,57 @@ namespace SLReports.ReportCard {
         protected global::System.Web.UI.WebControls.DropDownList drpTermList;
         
         /// <summary>
-        /// Button3 control.
+        /// btnTermGenHTML control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button3;
+        protected global::System.Web.UI.WebControls.Button btnTermGenHTML;
         
         /// <summary>
-        /// litNamePlate control.
+        /// btnTermGenPDF control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litNamePlate;
+        protected global::System.Web.UI.WebControls.Button btnTermGenPDF;
         
         /// <summary>
-        /// litMarks control.
+        /// TableRow_ReportPeriod control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litMarks;
+        protected global::System.Web.UI.WebControls.TableRow TableRow_ReportPeriod;
         
         /// <summary>
-        /// litAttendance control.
+        /// drpReportPeriodList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litAttendance;
+        protected global::System.Web.UI.WebControls.DropDownList drpReportPeriodList;
+        
+        /// <summary>
+        /// btnRPGenHTML control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnRPGenHTML;
+        
+        /// <summary>
+        /// btnRPGenPDF control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnRPGenPDF;
     }
 }

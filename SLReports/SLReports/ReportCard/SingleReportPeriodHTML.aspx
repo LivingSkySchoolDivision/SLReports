@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/BasicTemplate.Master" AutoEventWireup="true" CodeBehind="SingleReportPeriod.aspx.cs" Inherits="SLReports.ReportCard.SingleReportPeriod" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/BasicTemplate.Master" AutoEventWireup="true" CodeBehind="SingleReportPeriodHTML.aspx.cs" Inherits="SLReports.ReportCard.SingleReportPeriodHTML" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <script src="../outcomeBar.js"></script>
 </asp:Content>

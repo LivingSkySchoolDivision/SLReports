@@ -84,11 +84,10 @@
     <Content Include="outcomeBar.js" />
     <Content Include="Photos\GetPhoto.aspx" />
     <Content Include="Photos\index.aspx" />
-    <Content Include="ReportCard\EntireTerm.aspx" />
-    <Content Include="ReportCard\GetPDF.aspx" />
+    <Content Include="ReportCard\SingleReportPeriodPDF.aspx" />
     <Content Include="ReportCard\getXML.aspx" />
     <Content Include="ReportCard\index.aspx" />
-    <Content Include="ReportCard\SingleReportPeriod.aspx" />
+    <Content Include="ReportCard\SingleReportPeriodHTML.aspx" />
     <Content Include="StudentList\index.aspx" />
     <Content Include="Web.config" />
     <Content Include="XPSExperiments\index.aspx" />
@@ -216,19 +215,12 @@
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReportCard\EntireTerm.aspx.cs">
-      <DependentUpon>EntireTerm.aspx</DependentUpon>
+    <Compile Include="ReportCard\SingleReportPeriodPDF.aspx.cs">
+      <DependentUpon>SingleReportPeriodPDF.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="ReportCard\EntireTerm.aspx.designer.cs">
-      <DependentUpon>EntireTerm.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="ReportCard\GetPDF.aspx.cs">
-      <DependentUpon>GetPDF.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ReportCard\GetPDF.aspx.designer.cs">
-      <DependentUpon>GetPDF.aspx</DependentUpon>
+    <Compile Include="ReportCard\SingleReportPeriodPDF.aspx.designer.cs">
+      <DependentUpon>SingleReportPeriodPDF.aspx</DependentUpon>
     </Compile>
     <Compile Include="ReportCard\getXML.aspx.cs">
       <DependentUpon>getXML.aspx</DependentUpon>
@@ -244,12 +236,12 @@
     <Compile Include="ReportCard\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ReportCard\SingleReportPeriod.aspx.cs">
-      <DependentUpon>SingleReportPeriod.aspx</DependentUpon>
+    <Compile Include="ReportCard\SingleReportPeriodHTML.aspx.cs">
+      <DependentUpon>SingleReportPeriodHTML.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="ReportCard\SingleReportPeriod.aspx.designer.cs">
-      <DependentUpon>SingleReportPeriod.aspx</DependentUpon>
+    <Compile Include="ReportCard\SingleReportPeriodHTML.aspx.designer.cs">
+      <DependentUpon>SingleReportPeriodHTML.aspx</DependentUpon>
     </Compile>
     <Compile Include="ReportPeriod.cs" />
     <Compile Include="School.cs" />
