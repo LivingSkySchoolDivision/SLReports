@@ -1014,12 +1014,7 @@ namespace SLReports.ReportCard
             PageEventHandler.ShowOnFirstPage = false;
             PageEventHandler.bottomLeft = student.getDisplayName();
             PageEventHandler.bottomCenter = period.name;
-
-            PageEventHandler.topLeft = "TopLeft";
-            PageEventHandler.topCenter = "TopCenter";
-            PageEventHandler.topRight = "TopRight";
-
-
+            
             ReportCard.Add(schoolNamePlate(student.school));
             ReportCard.Add(namePlateTable(student, period));
             ReportCard.Add(outcomeLegend(content));
