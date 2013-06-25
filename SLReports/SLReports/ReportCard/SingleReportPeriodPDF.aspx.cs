@@ -33,7 +33,6 @@ namespace SLReports.ReportCard
         protected void Page_Init(object sender, EventArgs e)
         {
         }
-
         protected iTextSharp.text.Image outcomeBar_Old(PdfContentByte content, String value)
         {
             int width = 125;

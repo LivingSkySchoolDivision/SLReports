@@ -73,7 +73,7 @@ namespace SLReports
             overlay.BeginText();
             BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
             overlay.SetFontAndSize(bf, 8);
-            overlay.SetRGBColorFill(160, 160, 160);
+            overlay.SetRGBColorFill(90, 90, 90);
 
             StringBuilder bottomRightFooterText = new StringBuilder();
 
