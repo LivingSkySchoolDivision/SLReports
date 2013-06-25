@@ -87,39 +87,42 @@ namespace SLReports
                 bottomRightFooterText.Append("Page " + pageNumber);
             }
 
+            int Adjustment = 15;
+
+
             /* Bottom Right */
-            overlay.ShowTextAligned(PdfContentByte.ALIGN_RIGHT, bottomRightFooterText.ToString(), document.PageSize.Width - document.RightMargin, document.BottomMargin - 15, 0);
+            overlay.ShowTextAligned(PdfContentByte.ALIGN_RIGHT, bottomRightFooterText.ToString(), document.PageSize.Width - document.RightMargin, document.BottomMargin - Adjustment, 0);
 
 
             /* Bottom Left */
             if (!string.IsNullOrEmpty(bottomLeft))
             {
-                overlay.ShowTextAligned(PdfContentByte.ALIGN_LEFT, bottomLeft, document.LeftMargin, document.BottomMargin - 15, 0);
+                overlay.ShowTextAligned(PdfContentByte.ALIGN_LEFT, bottomLeft, document.LeftMargin, document.BottomMargin - Adjustment, 0);
             }
 
             /* Bottom middle */
             if (!string.IsNullOrEmpty(bottomCenter))
             {
-                overlay.ShowTextAligned(PdfContentByte.ALIGN_CENTER, bottomCenter, document.PageSize.Width / 2, document.BottomMargin - 15, 0);
+                overlay.ShowTextAligned(PdfContentByte.ALIGN_CENTER, bottomCenter, document.PageSize.Width / 2, document.BottomMargin - Adjustment, 0);
             }
 
 
             /* Top left */
-            if (!string.IsNullOrEmpty(bottomRight))
+            if (!string.IsNullOrEmpty(topLeft))
             {
-                overlay.ShowTextAligned(PdfContentByte.ALIGN_RIGHT, bottomRight, width - document.LeftMargin, document.BottomMargin - 15, 0);
+                overlay.ShowTextAligned(PdfContentByte.ALIGN_LEFT, topLeft, document.LeftMargin, document.PageSize.Height - document.TopMargin + Adjustment, 0);
             }
 
             /* Top right */
             if (!string.IsNullOrEmpty(topRight))
             {
-                overlay.ShowTextAligned(PdfContentByte.ALIGN_RIGHT, topRight, width - document.LeftMargin, document.BottomMargin - 15, 0);
+                overlay.ShowTextAligned(PdfContentByte.ALIGN_RIGHT, topRight, document.PageSize.Width - document.RightMargin, document.PageSize.Height - document.TopMargin + Adjustment, 0);
             }
 
             /* Top middle */
             if (!string.IsNullOrEmpty(topCenter))
             {
-                overlay.ShowTextAligned(PdfContentByte.ALIGN_RIGHT, topCenter, width - document.LeftMargin, document.BottomMargin - 15, 0);
+                overlay.ShowTextAligned(PdfContentByte.ALIGN_CENTER, topCenter, document.PageSize.Width / 2, document.PageSize.Height - document.TopMargin + Adjustment, 0);
             }
 
             overlay.EndText();
