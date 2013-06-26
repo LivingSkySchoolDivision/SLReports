@@ -15,6 +15,8 @@ namespace SLReports.AttendanceByGrade
 {
     public partial class GetPDF : System.Web.UI.Page
     {
+        iTextSharp.text.Image lskyLogo = iTextSharp.text.Image.GetInstance(@"https://sldata.lskysd.ca/SLReports/Logo_Circle_Notext_Trans.png");
+
         Font font_large = FontFactory.GetFont("Verdana", 15, BaseColor.BLACK);
         Font font_large_bold = FontFactory.GetFont("Verdana", 15, Font.BOLD, BaseColor.BLACK);
         Font font_large_italic = FontFactory.GetFont("Verdana", 15, Font.ITALIC, BaseColor.BLACK);
@@ -150,6 +152,40 @@ namespace SLReports.AttendanceByGrade
 
             Response.End();
 
+        }
+
+
+        protected PdfPTable livingSkyHeading()
+        {
+            PdfPTable titleTable = new PdfPTable(2);
+            titleTable.SpacingAfter = 10f;
+            titleTable.HorizontalAlignment = 1;
+            titleTable.TotalWidth = 300f;
+            titleTable.LockedWidth = true;
+
+            
+            float[] widths = new float[] { 25f, 275f};
+            titleTable.SetWidths(widths);            
+            
+            lskyLogo.ScaleAbsolute(22f, 22f);
+                   
+
+            PdfPCell newCell = null;
+            newCell = new PdfPCell(lskyLogo);
+            newCell.Padding = 2;
+            newCell.Border = 0;            
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+            titleTable.AddCell(newCell);
+
+            newCell = new PdfPCell(new Phrase("Living Sky School Division No. 202", font_large_bold));
+            newCell.Padding = 2;
+            newCell.Border = 0;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+            titleTable.AddCell(newCell);
+
+            return titleTable;
         }
 
         protected PdfPTable pageTitle(PdfContentByte content, DateTime from, DateTime to)
@@ -312,6 +348,7 @@ namespace SLReports.AttendanceByGrade
                 summaryTable.HorizontalAlignment = 1;
                 summaryTable.TotalWidth = 500f;
                 summaryTable.LockedWidth = true;
+                summaryTable.KeepTogether = true;
 
                 PdfPCell newCell = null;
 
@@ -461,7 +498,7 @@ namespace SLReports.AttendanceByGrade
 
                 if (totalMinutesLate > 0)
                 {
-                    lateDisplay2.Append(" (" + totalMinutesLate + "minutes)");
+                    lateDisplay2.Append(" (" + totalMinutesLate + " minutes)");
                 }
 
                 newCell = new PdfPCell(new Phrase(lateDisplay2.ToString(), font_body_bold));
@@ -694,10 +731,12 @@ namespace SLReports.AttendanceByGrade
 
             foreach (Student student in students)
             {
-                PageEventHandler.bottomCenter = "Printed " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString();
+                //PageEventHandler.bottomCenter = "Printed " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString();
+                PageEventHandler.bottomCenter = "Living Sky School Division No. 202";
                 PageEventHandler.bottomLeft = student.getDisplayName();
                 PageEventHandler.ResetPageNumbers(Report);
 
+                Report.Add(livingSkyHeading());
                 Report.Add(pageTitle(content, from, to));
                 Report.Add(studentNamePlate(student));
                 Report.Add(attendanceTable(student));
