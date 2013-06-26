@@ -290,7 +290,7 @@ namespace SLReports.DivisionStats
                             dbDataReader["HomeRoom"].ToString(),
                             DateTime.Parse(dbDataReader["InDate"].ToString()),
                             DateTime.Parse(dbDataReader["DateOfBirth"].ToString()),
-                            dbDataReader["TrackID"].ToString(),
+                            int.Parse(dbDataReader["TrackID"].ToString()),
                             hasPhoto
                             ));
                     }

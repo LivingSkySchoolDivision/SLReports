@@ -173,7 +173,7 @@ namespace SLReports.ReportCard
 
 
                                 /* Get student track, and determine the terms and report periods */
-                                selectedStudent.track = Track.loadThisTrack(connection, int.Parse(selectedStudent.getTrackID()));
+                                selectedStudent.track = Track.loadThisTrack(connection, selectedStudent.getTrackID());
 
                                 /* Populate the track with terms */
                                 selectedStudent.track.terms = Term.loadTermsFromThisTrack(connection, selectedStudent.track);

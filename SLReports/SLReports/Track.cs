@@ -23,14 +23,15 @@ namespace SLReports
         public School school { get; set; }
         public List<Term> terms { get; set; }
         
-        public Track(int id, string name, DateTime start, DateTime end, int schoolid)
+        public Track(int id, string name, DateTime start, DateTime end, int schoolid, bool dailyAttendance)
         {
             this.terms = new List<Term>();
             this.ID = id;
             this.name = name;
             this.startDate = start;
             this.endDate = end;
-            this.schoolID = schoolid; 
+            this.schoolID = schoolid;
+            this.daily = dailyAttendance;
         }
 
         public override string ToString()
@@ -63,7 +64,8 @@ namespace SLReports
                             dataReader["cName"].ToString().Trim(),
                             DateTime.Parse(dataReader["dStartDate"].ToString()),
                             DateTime.Parse(dataReader["dEndDate"].ToString()),
-                            int.Parse(dataReader["iSchoolID"].ToString().Trim())
+                            int.Parse(dataReader["iSchoolID"].ToString().Trim()),
+                            bool.Parse(dataReader["lDaily"].ToString().Trim())
                             );
                 }
             }
@@ -92,7 +94,8 @@ namespace SLReports
                             dataReader["cName"].ToString().Trim(),
                             DateTime.Parse(dataReader["dStartDate"].ToString()),
                             DateTime.Parse(dataReader["dEndDate"].ToString()),
-                            int.Parse(dataReader["iSchoolID"].ToString().Trim())
+                            int.Parse(dataReader["iSchoolID"].ToString().Trim()),
+                            bool.Parse(dataReader["lDaily"].ToString().Trim())
                             );
                 }
             }

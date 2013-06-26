@@ -242,7 +242,7 @@ namespace SLReports.INAC
                                 dbDataReader["ReserveHouse"].ToString(),
                                 dbDataReader["StatusNo"].ToString(),
                                 bool.Parse(dbDataReader["ResideOnReserve"].ToString()),
-                                dbDataReader["TrackID"].ToString(),
+                                int.Parse(dbDataReader["TrackID"].ToString()),
                                 hasPhoto
                                 );
                             AllStudents.Add(newStudent);
@@ -343,7 +343,8 @@ namespace SLReports.INAC
                                 dataReader["Reason"].ToString().Trim(),
                                 dataReader["Comment"].ToString().Trim(),
                                 int.Parse(dataReader["Block"].ToString()),
-                                int.Parse(dataReader["Minutes"].ToString())
+                                int.Parse(dataReader["Minutes"].ToString()),
+                                bool.Parse(dataReader["lExcusable"].ToString())
                                 ));
                         }
                     }

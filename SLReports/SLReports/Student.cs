@@ -40,7 +40,7 @@ namespace SLReports
         private string reserveHouse;
         private string treatyStatusNo;
         private bool resideOnReserve;
-        private string trackID;
+        private int trackID;
         private bool bHasPhoto;
         private object photo;
 
@@ -62,7 +62,7 @@ namespace SLReports
             return bHasPhoto;
         }
 
-        public string getTrackID()
+        public int getTrackID()
         {
             return this.trackID;
         }
@@ -270,7 +270,7 @@ namespace SLReports
         public Student(string givenName, string sn, string middleName, string id, string govID, string schoolName, string schoolID,
             string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
             string phone, string gender, string instat, string instatcode, string homeRm, DateTime inDate, DateTime dateOfBirth, 
-            string trackid, bool hasPhoto)
+            int trackid, bool hasPhoto)
         {
             absences = new List<Absence>();
             contacts = new List<Contact>();
@@ -300,14 +300,13 @@ namespace SLReports
             this.trackID = trackid;
             this.InStatusCode = instatcode;
             this.bHasPhoto = hasPhoto;
-
         }
         
         public Student(string givenName, string sn, string middleName, string id, string govID, string schoolName, string schoolID,
             string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
             string phone, string gender, string instat, string instatcode, string homeRm, DateTime inDate, DateTime dateOfBirth, 
             string bandNo, string bandName, string reserveName, string reserveHouse, string treatyStatus, bool resideonreserve,
-            string trackid, bool hasPhoto)
+            int trackid, bool hasPhoto)
         {
             absences = new List<Absence>();
             contacts = new List<Contact>();
@@ -373,7 +372,7 @@ namespace SLReports
             return this.dateOfBirth;
         }
         
-        public void setTrack(DateTime start, DateTime end)
+        public void setTrackDates(DateTime start, DateTime end)
         {
             this.trackStartDate = start;
             this.trackEndDate = end;
@@ -485,54 +484,22 @@ namespace SLReports
                             HomeRoom,
                             DateTime.Parse(dataReader["InDate"].ToString()),
                             DateTime.Parse(dataReader["DateOfBirth"].ToString()),
-                            dataReader["TrackID"].ToString(),
+                            int.Parse(dataReader["TrackID"].ToString()),
                             hasPhoto
                             );
-
-                    returnMe.setTrack(DateTime.Parse(dataReader["CurrentTrackStart"].ToString()), DateTime.Parse(dataReader["CurrentTrackEnd"].ToString()));
+                    //returnMe.setTrack(DateTime.Parse(dataReader["CurrentTrackStart"].ToString()), DateTime.Parse(dataReader["CurrentTrackEnd"].ToString()));
                 }
             }
 
             sqlCommand.Connection.Close();
-            return returnMe;
-        }
-        /*
-        public static List<Absence> loadAbsencesFromStudent(SqlConnection connection, string studentID, DateTime startDate, DateTime endDate)
-        {
-            List<Absence> returnMe = new List<Absence>();
-
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.Connection = connection;
-            sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = "SELECT * FROM LSKY_Attendance WHERE StudentNumber='" + studentID + "' AND dDate BETWEEN '" + startDate.ToShortDateString() + "' AND '" + endDate.ToShortDateString() + "' ORDER BY dDate ASC, tStartTime ASC;";
-            sqlCommand.Connection.Open();
-            SqlDataReader dataReader = sqlCommand.ExecuteReader();
-
-            if (dataReader.HasRows)
+            if (returnMe != null)
             {
-                returnMe.Clear();
-                while (dataReader.Read())
-                {
-                    returnMe.Add(new Absence(
-                        DateTime.Parse(dataReader["dDate"].ToString()),
-                        dataReader["StudentNumber"].ToString(),
-                        dataReader["ClassName"].ToString(),
-                        dataReader["ClassID"].ToString(),
-                        dataReader["Status"].ToString(),
-                        dataReader["Reason"].ToString(),
-                        dataReader["Comment"].ToString(),
-                        int.Parse(dataReader["Block"].ToString()),
-                        DateTime.Parse(dataReader["tStartTime"].ToString()),
-                        DateTime.Parse(dataReader["tEndTime"].ToString()),
-                        int.Parse(dataReader["Minutes"].ToString())
-                        ));
-                }
+                returnMe.track = Track.loadThisTrack(connection, returnMe.getTrackID());
             }
 
-            sqlCommand.Connection.Close();
             return returnMe;
         }
-        */
+        
         public static List<Student> loadStudentsFromThisSchool(SqlConnection connection, int schoolID)
         {
             List<Student> returnMe = new List<Student>();
@@ -595,7 +562,7 @@ namespace SLReports
                             HomeRoom,
                             DateTime.Parse(dataReader["InDate"].ToString()),
                             DateTime.Parse(dataReader["DateOfBirth"].ToString()),
-                            dataReader["TrackID"].ToString(),
+                            int.Parse(dataReader["TrackID"].ToString()),
                             hasPhoto
                             ));
                 }
@@ -665,7 +632,7 @@ namespace SLReports
                             HomeRoom,
                             DateTime.Parse(dataReader["InDate"].ToString()),
                             DateTime.Parse(dataReader["DateOfBirth"].ToString()),
-                            dataReader["TrackID"].ToString(),
+                            int.Parse(dataReader["TrackID"].ToString()),
                             hasPhoto
                             ));
                 }

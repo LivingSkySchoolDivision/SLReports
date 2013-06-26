@@ -78,7 +78,7 @@ namespace SLReports.ReportCard
                 
 
                 /* Load some terms to fill the dropdown box */
-                DisplayedTerms = Term.loadTermsFromThisTrack(connection, int.Parse(SelectedStudent.getTrackID()));
+                DisplayedTerms = Term.loadTermsFromThisTrack(connection, SelectedStudent.getTrackID());
                 drpTermList.Items.Clear();
 
                 foreach (Term term in DisplayedTerms)

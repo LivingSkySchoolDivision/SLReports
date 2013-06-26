@@ -523,7 +523,7 @@ namespace SLReports.ReportCard
 
             if (student == null)
             {
-                student = new Student("John", "Smith", "J", "00000", "00000", "School Name", "00000", "Grade 15", "Saskatchewan", "North Battleford", "Fake St", "123", "", "H0H0H0", "3065551234", "Male", "Instatus", "Instatuscode", "Homeroom here", DateTime.Now.AddDays(-1), DateTime.Now, "00000", false);
+                student = new Student("John", "Smith", "J", "00000", "00000", "School Name", "00000", "Grade 15", "Saskatchewan", "North Battleford", "Fake St", "123", "", "H0H0H0", "3065551234", "Male", "Instatus", "Instatuscode", "Homeroom here", DateTime.Now.AddDays(-1), DateTime.Now, 00000, false);
             }
 
             PdfPTable nameplateTable = new PdfPTable(3);
@@ -658,6 +658,46 @@ namespace SLReports.ReportCard
 
 
             return nameplateTable;
+
+        }
+
+        protected PdfPTable attendanceSummary(Student student)
+        {
+            PdfPTable attendanceTable = new PdfPTable(1);
+            attendanceTable.HorizontalAlignment = 1;
+            attendanceTable.TotalWidth = 425;
+            attendanceTable.LockedWidth = true;
+            attendanceTable.SpacingAfter = 50;
+
+            PdfPCell newCell = null;
+            newCell = new PdfPCell(new Phrase("Main attendance table goes here", font_large_bold));
+            newCell.VerticalAlignment = 0;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            newCell.Padding = 2;
+            newCell.Border = Rectangle.BOX;
+            attendanceTable.AddCell(newCell);
+
+            return attendanceTable;
+
+        }
+
+        protected PdfPTable courseAttendanceSummary(Student student, Course course)
+        {
+            PdfPTable attendanceTable = new PdfPTable(1);
+            attendanceTable.HorizontalAlignment = 1;
+            attendanceTable.TotalWidth = 425;
+            attendanceTable.LockedWidth = true;
+            attendanceTable.SpacingAfter = 50;
+
+            PdfPCell newCell = null;
+            newCell = new PdfPCell(new Phrase("Attendance table goes here", font_large_bold));
+            newCell.VerticalAlignment = 0;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            newCell.Padding = 2;
+            newCell.Border = Rectangle.BOX;
+            attendanceTable.AddCell(newCell);
+
+            return attendanceTable;
 
         }
 
@@ -1043,9 +1083,15 @@ namespace SLReports.ReportCard
                 foreach (Course course in term.Courses)
                 {
                     ReportCard.Add(classWithMarks(course, content));
+                    if (!student.track.daily)
+                    {
+                        ReportCard.Add(courseAttendanceSummary(student, course));
+                    }
                 }
             }
-                
+
+            ReportCard.Add(attendanceSummary(student));
+
             ReportCard.Close();
 
             return memstream;
@@ -1077,8 +1123,11 @@ namespace SLReports.ReportCard
                                     {
                                         selectedStudent.school = School.loadThisSchool(connection, int.Parse(selectedStudent.getSchoolID()));
 
+                                        /* Get student attendance */
+                                        selectedStudent.absences = Absence.loadAbsencesForThisStudent(connection, selectedStudent);
+
                                         /* Get student track, and determine the terms and report periods */
-                                        selectedStudent.track = Track.loadThisTrack(connection, int.Parse(selectedStudent.getTrackID()));
+                                        selectedStudent.track = Track.loadThisTrack(connection, selectedStudent.getTrackID());
 
                                         /* Populate the track with terms */
                                         selectedStudent.track.terms = Term.loadTermsFromThisTrack(connection, selectedStudent.track);

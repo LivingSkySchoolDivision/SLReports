@@ -15,6 +15,7 @@ namespace SLReports
         public AttendanceBlock attendanceBlock { get; set; }
         public DateTime blockStarttime { get; set; }
         public DateTime blockEndTime { get; set; }
+        public bool excused { get; set; }
 
 
 
@@ -30,7 +31,7 @@ namespace SLReports
         private int block;
         
 
-        public Absence(DateTime date, int track, string studentid, string courseName, string courseID, string status, string reason, string comment, int block, int minutes)
+        public Absence(DateTime date, int track, string studentid, string courseName, string courseID, string status, string reason, string comment, int block, int minutes, bool? excused)
         {
             this.track = track;
             this.date = date;
@@ -43,6 +44,15 @@ namespace SLReports
             this.block = block;
             this.minutes = minutes;
             this.period = period;
+
+            if (excused == true)
+            {
+                this.excused = true;
+            }
+            else
+            {
+                this.excused = false;
+            }
         }
         /*
         public DateTime getStartTime()
@@ -143,6 +153,18 @@ namespace SLReports
             }
         }
 
+        private static bool parseExcused(string thisThing) {
+
+            if (String.IsNullOrEmpty(thisThing))
+            {
+                return false;
+            }
+            else
+            {
+                return bool.Parse(thisThing);
+            }            
+        }
+
         public static List<Absence> loadAbsencesForThisStudent(SqlConnection connection, Student student)
         {
 
@@ -179,7 +201,8 @@ namespace SLReports
                         dataReader["Reason"].ToString().Trim(),
                         dataReader["Comment"].ToString().Trim(),
                         int.Parse(dataReader["Block"].ToString()),
-                        int.Parse(dataReader["Minutes"].ToString())
+                        int.Parse(dataReader["Minutes"].ToString()),
+                        parseExcused(dataReader["lExcusable"].ToString())
                         );
 
                     newAbsence.period = newAbsence.getBlock().ToString();
