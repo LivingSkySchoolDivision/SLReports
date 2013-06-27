@@ -30,9 +30,8 @@ namespace SLReports.Photos
             stringformat.LineAlignment = StringAlignment.Center;
             stringformat.Alignment = StringAlignment.Center;
 
+            /* set a background color */
             graphics.Clear(Color.WhiteSmoke);
-            graphics.DrawRectangle(new Pen(Brushes.Black), 0, 0, imgWidth - 1, imgHeight - 1);
-
 
             Random random = new Random(DateTime.Now.Millisecond);
             int alpha = 50;
@@ -148,6 +147,9 @@ namespace SLReports.Photos
             graphics.FillRectangle(Brushes.Black, 0, (float)(imgHeight - (font.Height * 1.75)), imgWidth, imgHeight);
             graphics.DrawString(text, font, Brushes.White, new PointF((imgWidth / 2), (imgHeight) - font.Height),stringformat);
             #endregion
+
+            /* Draw a black border around the picture */
+            graphics.DrawRectangle(new Pen(Brushes.Black), 0, 0, imgWidth - 1, imgHeight - 1);
 
             bitmap.Save(memstream, ImageFormat.Png);
 
