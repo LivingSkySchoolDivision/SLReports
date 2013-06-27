@@ -154,6 +154,21 @@ namespace SLReports.AttendanceByGrade
 
         }
 
+        private string formatPhoneNumber(string unformatted)
+        {
+            if (unformatted.Length == 10)
+            {
+                string areaCode = unformatted.Substring(0, 3);
+                string exchange = unformatted.Substring(3, 3);
+                string number = unformatted.Substring(6, 4);
+
+                return "(" + areaCode + ") " + exchange + "-" + number;
+            }
+            else
+            {
+                return unformatted;
+            }
+        }
 
         protected PdfPTable livingSkyHeading()
         {
@@ -323,7 +338,7 @@ namespace SLReports.AttendanceByGrade
             StringBuilder contactList = new StringBuilder();
             foreach (Contact contact in student.getContacts())
             {
-                contactList.Append(contact.firstName + " " + contact.lastName + " " + contact.telephone + " (" + contact.relation + ")\n");
+                contactList.Append(contact.firstName + " " + contact.lastName + " " + formatPhoneNumber(contact.telephone) + " (" + contact.relation + ")\n");
             }
 
             newCell = new PdfPCell(new Phrase(contactList.ToString(), font_body));
@@ -371,6 +386,7 @@ namespace SLReports.AttendanceByGrade
                         allPeriods.Add(abs.period);
                     }
                 }
+                allPeriods.Sort();
 
                 /* Headings */
                 newCell = new PdfPCell(new Phrase("Attendance Summary", font_body_bold));

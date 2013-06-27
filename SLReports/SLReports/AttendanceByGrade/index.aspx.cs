@@ -67,6 +67,8 @@ namespace SLReports.AttendanceByGrade
                     
                 }
 
+                availableGrades.Sort();
+
                 /* Display the grades in a listbox */
                 drpGradeList.Items.Clear();
                 foreach (String thisGrade in availableGrades)
