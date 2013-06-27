@@ -238,7 +238,7 @@ namespace SLReports
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = connection;
             sqlCommand.CommandType = CommandType.Text;
-            
+
             StringBuilder SQL = new StringBuilder();
 
             /* Load all attendance blocks, so we can reference them */
@@ -247,7 +247,7 @@ namespace SLReports
 
 
             SQL.Append("SELECT * FROM LSKY_Attendance WHERE StudentNumber = '" + student.getStudentID() + "' ORDER BY dDate ASC, block ASC;");
-            
+
             sqlCommand.CommandText = SQL.ToString();
             sqlCommand.Connection.Open();
             SqlDataReader dataReader = sqlCommand.ExecuteReader();
@@ -271,7 +271,7 @@ namespace SLReports
                         );
 
                     newAbsence.period = newAbsence.getBlock().ToString();
-                    
+
                     foreach (AttendanceBlock atBlock in blocks)
                     {
                         if (atBlock.block == newAbsence.block)
@@ -283,7 +283,74 @@ namespace SLReports
                             }
                         }
                     }
-                    
+
+                    returnMe.Add(newAbsence);
+                }
+            }
+            sqlCommand.Connection.Close();
+
+            foreach (Absence abs in returnMe)
+            {
+
+            }
+
+            return returnMe;
+        }
+
+        public static List<Absence> loadAbsencesForThisDate(SqlConnection connection, DateTime date)
+        {
+
+            List<Absence> returnMe = new List<Absence>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+
+            StringBuilder SQL = new StringBuilder();
+
+            /* Load all attendance blocks, so we can reference them */
+            List<AttendanceBlock> blocks = AttendanceBlock.loadAllAttendanceBlocks(connection);
+
+
+
+            SQL.Append("SELECT * FROM LSKY_Attendance WHERE dDate='" + date.Year + "-" + date.Month + "-" + date.Day + " 00:00:00' ORDER BY dDate ASC, block ASC;");
+
+            sqlCommand.CommandText = SQL.ToString();
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    Absence newAbsence = new Absence(
+                        DateTime.Parse(dataReader["dDate"].ToString()),
+                        int.Parse(dataReader["iTrackID"].ToString().Trim()),
+                        dataReader["StudentNumber"].ToString().Trim(),
+                        dataReader["ClassName"].ToString().Trim(),
+                        dataReader["ClassID"].ToString().Trim(),
+                        dataReader["Status"].ToString().Trim(),
+                        dataReader["Reason"].ToString().Trim(),
+                        dataReader["Comment"].ToString().Trim(),
+                        int.Parse(dataReader["Block"].ToString()),
+                        int.Parse(dataReader["Minutes"].ToString()),
+                        parseExcused(dataReader["lExcusable"].ToString())
+                        );
+
+                    newAbsence.period = newAbsence.getBlock().ToString();
+
+                    foreach (AttendanceBlock atBlock in blocks)
+                    {
+                        if (atBlock.block == newAbsence.block)
+                        {
+                            if (atBlock.track == newAbsence.track)
+                            {
+                                newAbsence.period = atBlock.name;
+                                newAbsence.attendanceBlock = atBlock;
+                            }
+                        }
+                    }
+
                     returnMe.Add(newAbsence);
                 }
             }

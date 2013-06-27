@@ -15,7 +15,7 @@
     <p>
         There are currently <b><asp:Label ID="lblActiveStudentCount" runat="server" Text="" CssClass="small_infobox"></asp:Label></b> active students in the database, in <b><asp:Label ID="lblSchoolCount" runat="server" Text="" CssClass="small_infobox"></asp:Label></b> schools. 
         <b><asp:Label ID="lblMaleCount" runat="server" Text="" CssClass="small_infobox"></asp:Label></b> are male, <b><asp:Label ID="lblFemaleCount" runat="server" Text="" CssClass="small_infobox"></asp:Label></b> are female, and <b><asp:Label ID="lblBirthdayCount" runat="server" Text="" CssClass="small_infobox"></asp:Label></b> have a birthday today. Students travel from <b><asp:Label ID="lblCities" runat="server" Text="" CssClass="small_infobox"></asp:Label></b> communities to go to our schools.
-    </p>
+    </p>    
     <p>
         If you experience a problem with this site, or would like to request a feature, please create a <a href="https://helpdesk.lskysd.ca">Help Desk</a> ticket.
     </p>
