@@ -538,7 +538,7 @@ namespace SLReports.ReportCard
 
             PdfPCell photoCell = new PdfPCell(new Phrase("(No Photo)", font_large_italic));
 
-            if (student.hasPhoto() && true)
+            //if (student.hasPhoto())
             {
                 try
                 {
