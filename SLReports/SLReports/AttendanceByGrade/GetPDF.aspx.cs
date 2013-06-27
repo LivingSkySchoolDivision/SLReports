@@ -550,8 +550,6 @@ namespace SLReports.AttendanceByGrade
             }
         }
 
-
-
         private String excusedToEnglish(bool thisBool)
         {
             if (thisBool)
@@ -745,7 +743,6 @@ namespace SLReports.AttendanceByGrade
             }
 
         }
-
 
         protected MemoryStream GeneratePDF(DateTime from, DateTime to, List<Student> students)
         {

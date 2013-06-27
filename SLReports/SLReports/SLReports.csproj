@@ -70,6 +70,19 @@
     <Content Include="FindStudent\index.aspx" />
     <Content Include="GovXML\enrollment.aspx" />
     <Content Include="GovXML\index.aspx" />
+    <Content Include="icon_3d.gif" />
+    <Content Include="icon_doc.gif" />
+    <Content Include="icon_file_locked.gif" />
+    <Content Include="icon_file_warning.gif" />
+    <Content Include="icon_generic.gif" />
+    <Content Include="icon_html.gif" />
+    <Content Include="icon_link.gif" />
+    <Content Include="icon_markup.gif" />
+    <Content Include="icon_pdf.gif" />
+    <Content Include="icon_txt.gif" />
+    <Content Include="icon_xls.gif" />
+    <Content Include="icon_xml.gif" />
+    <Content Include="icon_zip.gif" />
     <Content Include="INAC\index.aspx" />
     <Content Include="index.aspx" />
     <Content Include="lock.png" />
@@ -88,6 +101,7 @@
     <Content Include="ReportCard\getXML.aspx" />
     <Content Include="ReportCard\index.aspx" />
     <Content Include="ReportCard\SingleReportPeriodHTML.aspx" />
+    <Content Include="StudentList\getCSV.aspx" />
     <Content Include="StudentList\index.aspx" />
     <Content Include="Web.config" />
     <Content Include="XPSExperiments\index.aspx" />
@@ -247,6 +261,13 @@
     <Compile Include="School.cs" />
     <Compile Include="session.cs" />
     <Compile Include="Student.cs" />
+    <Compile Include="StudentList\getCSV.aspx.cs">
+      <DependentUpon>getCSV.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="StudentList\getCSV.aspx.designer.cs">
+      <DependentUpon>getCSV.aspx</DependentUpon>
+    </Compile>
     <Compile Include="StudentList\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

@@ -70,9 +70,14 @@ namespace SLReports.StudentList
             {
                 int displayedStudentCount = 0;
                 Table table = new Table();
+                
                 /* Create the table header */
-
                 Response.Write("<table border=0 class=\"datatable\" cellpadding=3>");
+
+                Response.Write("<TR style=\"border: 0;\"><TD style=\"border: 0;\" colspan=10 align=\"right\"><div>");
+                Response.Write("<a href=\"getCSV.aspx?schoolid=" + filterSchoolID + "\"><img src=\"/SLReports/icon_xls.gif\">Download CSV</a>");
+                Response.Write("</div></TD></TR>");
+
                 Response.Write("<tr class=\"datatable_header\">");
                 Response.Write("<th width=\"150\"><b>Student ID</b></th>");
                 Response.Write("<th width=\"150\"><b>Given Name</b></th>");
