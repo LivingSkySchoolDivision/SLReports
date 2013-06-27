@@ -184,8 +184,30 @@ h1 {
 
 }
 
+.large_infobox_important {    
+    padding: 20px;
+    font-size: 12pt;
+    border: 1px solid #dbb936;
+    background-color: #fadf88;
+}
+
+.nav_link {
+    font-weight: bold;
+    color: #ff7d00;
+    font-size: 12pt;
+}
+
 .large_infobox {
     padding: 20px;
     font-size: 12pt;
     border: 1px solid #C0C0C0;
+}
+
+.footer {
+    font-size: 10pt;
+    text-align: center;
+    border: 0;
+    border-top: 1px solid #C0C0C0;
+    margin: 25px;
+    padding: 5px;
 }

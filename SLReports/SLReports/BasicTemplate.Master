@@ -15,11 +15,9 @@
         <div class="header_centeredcontent">
             <table cellpadding="0" cellspacing="0">
                 <tr>
-                    <td style="border: 0;"><img src="/SLReports/Logo_Circle_Notext_Trans.png" width="70" height="70" valign="bottom" border="0"/></td>
+                    <td style="border: 0;" valign="top"><img src="/SLReports/Logo_Circle_Notext_Trans.png" width="70" height="70" valign="bottom" border="0"/></td>
                     <td style="border: 0;">
-                        <span style="border: 0; padding-top: 10px; margin-left: 10px; font-size: 20pt;font-family: Arial;border: 0; border-bottom: 1px solid white;">SchoolLogic Data Explorer</span><br/>            
-                        <div class="navbar">
-                            <% if (loggedInUser != null) { %>
+                        <span style="border: 0; padding-top: 10px; margin-left: 10px; font-size: 20pt;font-family: Arial;border: 0; border-bottom: 1px solid white;">SchoolLogic Data Explorer</span><div class="navbar"><% if (loggedInUser != null) { %>
                                 <% displayNavDropdown(); %>                            
                             <% } else { Response.Write("&nbsp;"); /* So the empty space doesn't change the formatting as much */} %>
                         </div>          
@@ -35,5 +33,7 @@
         
         </asp:ContentPlaceHolder>
     </div>
+    
+<div class="footer">If you experience a problem with this site, or would like to request a feature, please create a <a href="https://helpdesk.lskysd.ca">Help Desk</a> ticket, or send an email to <a href="mailto:mark.strendin@lskysd.ca">mark.strendin@lskysd.ca</a></div>
 </body>
 </html>

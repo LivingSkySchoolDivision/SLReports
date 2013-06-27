@@ -103,6 +103,7 @@
     <Content Include="ReportCard\SingleReportPeriodHTML.aspx" />
     <Content Include="StudentList\getCSV.aspx" />
     <Content Include="StudentList\index.aspx" />
+    <Content Include="up_arrow.png" />
     <Content Include="Web.config" />
     <Content Include="XPSExperiments\index.aspx" />
   </ItemGroup>

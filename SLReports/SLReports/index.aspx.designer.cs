@@ -31,6 +31,15 @@ namespace SLReports {
         protected global::System.Web.UI.WebControls.Label lblSchoolCount;
         
         /// <summary>
+        /// lblMalePercent control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMalePercent;
+        
+        /// <summary>
         /// lblMaleCount control.
         /// </summary>
         /// <remarks>
@@ -38,6 +47,15 @@ namespace SLReports {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblMaleCount;
+        
+        /// <summary>
+        /// lblFemalePercent control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFemalePercent;
         
         /// <summary>
         /// lblFemaleCount control.
@@ -65,5 +83,14 @@ namespace SLReports {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblCities;
+        
+        /// <summary>
+        /// lblRegions control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblRegions;
     }
 }

@@ -163,7 +163,8 @@ namespace SLReports
         {
             /* Load the menu items */
             MainMenu = Nav.getMainMenu();
-            Response.Write("<form method=\"post\" action=\"/SLReports/Nav.aspx\">");
+            Response.Write("<form method=\"post\" action=\"/SLReports/Nav.aspx\" style=\"margin: 0; padding: 0;\">");
+            Response.Write("<span class=\"nav_link\">Navigation:</span> ");
             Response.Write("<select name=\"selectedMenuItem\">");
             MainMenu.Sort();
             foreach (NavMenuItem mi in MainMenu)
