@@ -362,13 +362,13 @@ namespace SLReports.AttendanceByGrade
                  */
 
                 /* Figure out some statistics to display */
-                List<String> allCourses = new List<String>();
+                List<String> allPeriods = new List<String>();
 
                 foreach (Absence abs in student.absences)
                 {
-                    if (!allCourses.Contains(abs.getCourseName()))
+                    if (!allPeriods.Contains(abs.period))
                     {
-                        allCourses.Add(abs.getCourseName());
+                        allPeriods.Add(abs.period);
                     }
                 }
 
@@ -381,7 +381,7 @@ namespace SLReports.AttendanceByGrade
                 newCell.PaddingBottom = 5;
                 summaryTable.AddCell(newCell);
 
-                newCell = new PdfPCell(new Phrase("Course", font_body_bold));
+                newCell = new PdfPCell(new Phrase("Period", font_body_bold));
                 newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
                 newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
                 newCell.Border = Rectangle.BOTTOM_BORDER;
@@ -420,7 +420,7 @@ namespace SLReports.AttendanceByGrade
                 int totalMinutesLate = 0;
 
                 /* Values */
-                foreach (String courseName in allCourses)
+                foreach (String periodName in allPeriods)
                 {
                     int numLates = 0;
                     int numAbsExc = 0;
@@ -429,7 +429,7 @@ namespace SLReports.AttendanceByGrade
 
                     foreach (Absence abs in student.absences)
                     {
-                        if (abs.getCourseName() == courseName)
+                        if (abs.period == periodName)
                         {
                             if (abs.getStatus().ToLower() == "late")
                             {
@@ -454,7 +454,7 @@ namespace SLReports.AttendanceByGrade
                         }
                     }
 
-                    newCell = new PdfPCell(new Phrase(courseName, font_body));
+                    newCell = new PdfPCell(new Phrase(periodName, font_body));
                     newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
                     newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
                     newCell.Border = Rectangle.NO_BORDER;
@@ -512,7 +512,6 @@ namespace SLReports.AttendanceByGrade
                 newCell.BorderWidth = 1;
                 summaryTable.AddCell(newCell);
 
-
                 newCell = new PdfPCell(new Phrase(totalAbsExc.ToString(), font_body_bold));
                 newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
                 newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
@@ -526,7 +525,6 @@ namespace SLReports.AttendanceByGrade
                 newCell.Border = Rectangle.TOP_BORDER;
                 newCell.BorderWidth = 1;
                 summaryTable.AddCell(newCell);
-
 
                 return summaryTable;
             }
