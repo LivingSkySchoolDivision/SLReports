@@ -14,12 +14,9 @@ namespace SLReports
 {
     public partial class BasicTemplate : System.Web.UI.MasterPage
     {
-        /* TODO: Don't store this in the code - figure out how I should be storing this information */
-                
-        string loginURL = "/SLReports/Login/index.aspx";
 
-
-        List<NavMenuItem> MainMenu;
+        private string loginURL = "/SLReports/Login/index.aspx";
+        private List<NavMenuItem> MainMenu;
 
         public session loggedInUser = null;
 
@@ -100,7 +97,8 @@ namespace SLReports
         public void expireSession()
         {
             /* Remove the session from the server */
-            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString;
+            
             using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
             {
                 using (SqlCommand sqlCommand = new SqlCommand())
@@ -124,7 +122,6 @@ namespace SLReports
                 newCookie.Domain = "sldata.lskysd.ca";
                 newCookie.Secure = true;
                 //Response.SetCookie(Response.Cookies["lskyDataExplorer"]);
-
                 Response.Cookies.Add(newCookie);
             }
 
@@ -132,14 +129,33 @@ namespace SLReports
             loggedInUser = null;
 
             /* Redirect to the login page */
-            Response.Redirect(loginURL);            
+            redirectToLogin();           
         }
-        
+
+        public void redirectToLogin()
+        {
+            Response.Clear();
+            Response.ClearContent();
+            Response.ClearHeaders();
+            Response.Redirect(loginURL); 
+            Response.OutputStream.Flush();
+            Response.OutputStream.Close();
+            Response.End();
+        }
+
         protected void Page_Init(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(getSessionIDFromCookies()))
             {
                 loggedInUser = getSession(getSessionIDFromCookies(), Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"]);
+            }
+
+            if (loggedInUser == null)
+            {
+                if (!Request.ServerVariables["SCRIPT_NAME"].Equals(loginURL))
+                {
+                    redirectToLogin();
+                }
             }
         }
 
@@ -169,7 +185,7 @@ namespace SLReports
             {
                 if (!Request.ServerVariables["SCRIPT_NAME"].Equals(loginURL))
                 {
-                    Response.Redirect(loginURL);
+                    redirectToLogin();
                 }
             }
         }       
@@ -181,9 +197,6 @@ namespace SLReports
             {                
                 expireSession();                
             }
-                           
-        
-
         }        
     }
 }
