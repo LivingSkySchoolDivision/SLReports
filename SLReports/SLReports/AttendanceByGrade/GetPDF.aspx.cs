@@ -762,8 +762,7 @@ namespace SLReports.AttendanceByGrade
 
             foreach (Student student in students)
             {
-                //PageEventHandler.bottomCenter = "Printed " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString();
-                PageEventHandler.bottomCenter = "Living Sky School Division No. 202";
+                PageEventHandler.bottomCenter = "Printed " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString();
                 PageEventHandler.bottomLeft = student.getDisplayName();
                 PageEventHandler.ResetPageNumbers(Report);
 
