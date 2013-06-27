@@ -13,8 +13,6 @@ namespace SLReports.StudentList
 {
     public partial class index : System.Web.UI.Page
     {
-
-        private static List<Student> AllStudents;
         public static List<Student> DisplayedStudents;
         public static List<School> Schools;
         public static string filterSchoolID = null;
@@ -59,8 +57,9 @@ namespace SLReports.StudentList
             Response.Write("<td>" + student.getDateOfBirth().ToShortDateString() + "</td>");
             Response.Write("<td>" + student.getHomeRoom()+ "</td>");
             Response.Write("<td>" + student.getInStatusWithCode() + "</td>");
-            Response.Write("<td>" + student.getEnrollDate().ToShortDateString() + "</td>");            
-            //Response.Write("<td><a href=\"/SLReports/Attendance/?studentid=" + student.getStudentID() + "\">Attendance</a></td>");
+            Response.Write("<td>" + student.getEnrollDate().ToShortDateString() + "</td>");
+            Response.Write("<td>" + student.getCity() + "</td>");
+            Response.Write("<td>" + student.getRegion() + "</td>");            
             Response.Write("</tr>\n");
         }
 
@@ -74,7 +73,7 @@ namespace SLReports.StudentList
                 /* Create the table header */
                 Response.Write("<table border=0 class=\"datatable\" cellpadding=3>");
 
-                Response.Write("<TR style=\"border: 0;\"><TD style=\"border: 0;\" colspan=10 align=\"right\"><div>");
+                Response.Write("<TR style=\"border: 0;\"><TD style=\"border: 0;\" colspan=10 align=\"left\"><div>");
                 Response.Write("<a href=\"getCSV.aspx?schoolid=" + filterSchoolID + "\"><img src=\"/SLReports/icon_xls.gif\">Download CSV</a>");
                 Response.Write("</div></TD></TR>");
 
@@ -89,7 +88,8 @@ namespace SLReports.StudentList
                 Response.Write("<th width=\"300\"><b>Home Room</b></th>");
                 Response.Write("<th width=\"200\"><b>InStatus</b></th>");
                 Response.Write("<th width=\"100\"><b>InDate</b></th>");
-                //Response.Write("<th width=\"200\"><b>Reports</b></th>");
+                Response.Write("<th width=\"100\"><b>City</b></th>");
+                Response.Write("<th width=\"100\"><b>Region</b></th>");
                 Response.Write("</tr>\n");
 
                 displayedStudentCount = 0;
@@ -184,13 +184,10 @@ namespace SLReports.StudentList
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            AllStudents = new List<Student>();
             DisplayedStudents = new List<Student>();
             Schools = new List<School>();
 
             String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
-
-            //DisplayedStudents = AllStudents;
 
             NameValueCollection post = Request.Form;
             if (!string.IsNullOrEmpty(post["schoolid"]))
@@ -202,79 +199,17 @@ namespace SLReports.StudentList
                 filterSchoolID = null;
             }
 
-            /* Load Schools */
-            
-            #region Load all schools
-            try
+            using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
-                SqlConnection dbConnection = new SqlConnection(dbConnectionString);
-                SqlCommand sqlCommand = new SqlCommand();
+                /* Load all schools */
+                Schools = School.loadAllSchools(connection);
 
-                sqlCommand.Connection = dbConnection;
-                sqlCommand.CommandType = CommandType.Text;
-                sqlCommand.CommandText = "SELECT * FROM LSKY_LSKYSchools;";
-                sqlCommand.Connection.Open();
-
-                SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
-
-                if (dbDataReader.HasRows)
+                /* Load students if a school is specified */
+                if (filterSchoolID != null)
                 {
-                    Schools.Clear();
-                    while (dbDataReader.Read())
-                    {
-                        //dbDataReader["LegalFirstName"].ToString() + " " + dbDataReader["LegalLastName"].ToString()
-                        Schools.Add(new School(dbDataReader["name"].ToString(), dbDataReader["internalID"].ToString(), dbDataReader["govID"].ToString(), dbDataReader["address"].ToString()));
-                    }
-                }
-
-                sqlCommand.Connection.Close();
-            }
-            catch (Exception ex)
-            {
-                Response.Write("Exception: " + ex.Message);
-                if (ex.InnerException != null)
-                {
-                    Response.Write("Exception: " + ex.InnerException.Message);
+                    DisplayedStudents = Student.loadStudentsFromThisSchool(connection, int.Parse(filterSchoolID));
                 }
             }
-           
-            #endregion
-
-            
-
-            /* Load students */
-            if (filterSchoolID != null)
-            {
-                #region Load all students
-                try
-                {
-
-                    using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
-                    {
-                        AllStudents = Student.loadStudentsFromThisSchool(dbConnection, int.Parse(filterSchoolID));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Response.Write("Exception: " + ex.Message);
-                    if (ex.InnerException != null)
-                    {
-                        Response.Write("Exception: " + ex.InnerException.Message);
-                    }
-                }
-                #endregion
-
-            }
-            //AllStudents.Sort();
-            if (!string.IsNullOrEmpty(filterSchoolID))
-            {
-                DisplayedStudents = Student.GetStudentsFromSchool(AllStudents, filterSchoolID);
-            }
-            else
-            {
-                //DisplayedStudents = AllStudents;
-            }
-
         }
     }
 }
