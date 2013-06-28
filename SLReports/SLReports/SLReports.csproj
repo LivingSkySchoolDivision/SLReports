@@ -261,6 +261,7 @@
     <Compile Include="ReportPeriod.cs" />
     <Compile Include="School.cs" />
     <Compile Include="session.cs" />
+    <Compile Include="StaffMember.cs" />
     <Compile Include="Student.cs" />
     <Compile Include="StudentList\getCSV.aspx.cs">
       <DependentUpon>getCSV.aspx</DependentUpon>

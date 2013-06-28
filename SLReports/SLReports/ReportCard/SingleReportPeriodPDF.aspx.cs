@@ -551,7 +551,7 @@ namespace SLReports.ReportCard
                 }
                 catch (Exception ex)
                 {
-                    photoCell = new PdfPCell(new Phrase(ex.Message, font_large_italic));
+                    photoCell = new PdfPCell(new Phrase(ex.Message, font_small));
                 };
             }
 

@@ -153,7 +153,7 @@ namespace SLReports
             if (loggedInUser == null)
             {
                 if (!Request.ServerVariables["SCRIPT_NAME"].Equals(loginURL))
-                {
+                {                    
                     redirectToLogin();
                 }
             }

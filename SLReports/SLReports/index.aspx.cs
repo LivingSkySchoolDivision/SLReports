@@ -17,12 +17,14 @@ namespace SLReports
         {
             List<Student> allStudents = new List<Student>();
             List<School> allSchools = new List<School>();
+            List<StaffMember> allStaff = new List<StaffMember>();
 
             String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
                 allStudents = Student.loadAllStudents(connection);
                 allSchools = School.loadAllSchools(connection);
+                allStaff = StaffMember.loadAllStaff(connection);
             }
 
             float numStudents = allStudents.Count;
@@ -68,6 +70,7 @@ namespace SLReports
 
             lblActiveStudentCount.Text = numStudents.ToString();
             lblSchoolCount.Text = allSchools.Count.ToString();
+            lblStaffCount.Text = allStaff.Count.ToString();
 
             lblMaleCount.Text = numMales.ToString();
             lblFemaleCount.Text = numFemales.ToString();
