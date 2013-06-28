@@ -65,7 +65,6 @@ namespace SLReports
                     allRegions.Add(student.getRegion());
                 }
 
-
             }
 
             lblActiveStudentCount.Text = numStudents.ToString();
