@@ -9,6 +9,9 @@
     <p>
         All data on this site is live, and updated in real time.
     </p>    
+    <p>
+        All data here is <b style="color: red;">read only</b> - it is not possible to edit student data anywhere on this site.
+    </p>    
 </div>
     <br />
 <div class="large_infobox">

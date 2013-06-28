@@ -1,1 +1,1 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="getXML.aspx.cs" Inherits="SLReports.ReportCard.getXML" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/BasicTemplate.Master" AutoEventWireup="true" CodeBehind="getXML.aspx.cs" Inherits="SLReports.ReportCard.getXML" %>
