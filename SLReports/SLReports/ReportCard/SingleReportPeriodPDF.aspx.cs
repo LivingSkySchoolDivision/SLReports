@@ -542,7 +542,7 @@ namespace SLReports.ReportCard
             {
                 try
                 {
-                    iTextSharp.text.Image photo = iTextSharp.text.Image.GetInstance(@"https://sldata.lskysd.ca/SLReports/photos/GetPhoto.aspx?studentnumber=" + student.getStudentID());
+                    iTextSharp.text.Image photo = iTextSharp.text.Image.GetInstance(@"https://sldata.lskysd.ca/SLReports/photos/GetPhoto.aspx?studentnumber=" + student.getStudentID() + "&apikey=6b05cb5705c07a4ca23a6bba779263ab983a5ae2");
                     photo.Border = Rectangle.BOX;
                     photo.BorderWidth = 1;
                     photoCell.PaddingRight = 10f;

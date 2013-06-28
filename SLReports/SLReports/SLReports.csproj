@@ -63,6 +63,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="APIKeys\index.aspx" />
     <Content Include="AttendanceByGrade\GetPDF.aspx" />
     <Content Include="AttendanceByGrade\index.aspx" />
     <Content Include="Attendance\index.aspx" />
@@ -111,6 +112,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Absence.cs" />
+    <Compile Include="APIKey.cs" />
+    <Compile Include="APIKeys\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="APIKeys\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
     <Compile Include="AttendanceBlock.cs" />
     <Compile Include="AttendanceByGrade\GetPDF.aspx.cs">
       <DependentUpon>GetPDF.aspx</DependentUpon>

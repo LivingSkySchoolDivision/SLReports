@@ -19,69 +19,7 @@ namespace SLReports
         private List<NavMenuItem> MainMenu;
 
         public session loggedInUser = null;
-
-        private session getSession(string hash, string ip, string useragent)
-        {
-            session returnme = null;
-
-            /* Search for the session hash in the database */
-            try
-            {
-                String dbConnectionString = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString;
                 
-                using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand())
-                    {
-                        sqlCommand.Connection = dbConnection;
-                        sqlCommand.CommandType = CommandType.Text;
-                        sqlCommand.CommandText = "SELECT * FROM sessions WHERE id_hash=@Hash AND ip=@IP AND useragent=@UA;";
-                        sqlCommand.Parameters.AddWithValue("@Hash", hash);
-                        sqlCommand.Parameters.AddWithValue("@IP", ip);
-                        sqlCommand.Parameters.AddWithValue("@UA", useragent);
-
-                        sqlCommand.Connection.Open();
-                        SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
-
-                        if (dbDataReader.HasRows)
-                        {
-                            while (dbDataReader.Read())
-                            {
-                                returnme = new session(
-                                    dbDataReader["username"].ToString(),
-                                    dbDataReader["ip"].ToString(),
-                                    dbDataReader["id_hash"].ToString(),
-                                    dbDataReader["useragent"].ToString(),
-                                    DateTime.Parse(dbDataReader["sessionstarts"].ToString()),
-                                    DateTime.Parse(dbDataReader["sessionends"].ToString())
-                                    );
-                            }
-                        }
-                        sqlCommand.Connection.Close();
-                    }
-                }
-            }
-            catch { }
-
-            if (returnme != null)
-            {
-                if (returnme.getIP().Equals(ip))
-                {
-                    if (returnme.getUserAgent().Equals(useragent))
-                    {
-                        if (returnme.getStart() < DateTime.Now)
-                        {
-                            if (returnme.getEnd() > DateTime.Now)
-                            {
-                                return returnme;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return null;
-        }
         private string getSessionIDFromCookies()
         {
             HttpCookie sessionCookie = Request.Cookies["lskyDataExplorer"];
@@ -94,22 +32,16 @@ namespace SLReports
                 return null;
             }
         }
+
         public void expireSession()
         {
             /* Remove the session from the server */
-            String dbConnectionString = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString;
-            
-            using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand())
+            if (loggedInUser != null)
+            {                
+                String dbConnectionString = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString;
+                using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
                 {
-                    sqlCommand.Connection = dbConnection;
-                    sqlCommand.CommandType = CommandType.Text;
-                    sqlCommand.CommandText = "DELETE FROM sessions WHERE id_hash=@Hash;";                    
-                    sqlCommand.Parameters.AddWithValue("@Hash", loggedInUser.getHash());
-                    sqlCommand.Connection.Open();
-                    sqlCommand.ExecuteNonQuery();
-                    sqlCommand.Connection.Close();
+                    session.expireSession(dbConnection, loggedInUser.getHash());
                 }
             }
 
@@ -145,18 +77,34 @@ namespace SLReports
 
         protected void Page_Init(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(getSessionIDFromCookies()))
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString;
+            APIKey apiKey = null;
+
+            /* Check for an API key */
+            if (!string.IsNullOrEmpty(Request.QueryString["apikey"]))
             {
-                loggedInUser = getSession(getSessionIDFromCookies(), Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"]);
+                using (SqlConnection connection = new SqlConnection(dbConnectionString))
+                {
+                    apiKey = APIKey.loadThisAPIKey(connection,Request.QueryString["apikey"]);
+                }
             }
 
-            if (loggedInUser == null)
+            /* Check for a username */
+            if (!string.IsNullOrEmpty(getSessionIDFromCookies()))
+            {
+                 using (SqlConnection connection = new SqlConnection(dbConnectionString))
+                 {
+                     loggedInUser = session.loadThisSession(connection, getSessionIDFromCookies(), Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"]);
+                 }
+            }
+
+            if ((loggedInUser == null) && (apiKey == null))
             {
                 if (!Request.ServerVariables["SCRIPT_NAME"].Equals(loginURL))
                 {                    
                     redirectToLogin();
                 }
-            }
+            }            
         }
 
         public void displayNavDropdown()
