@@ -66,6 +66,7 @@
     <Content Include="AttendanceByGrade\GetPDF.aspx" />
     <Content Include="AttendanceByGrade\index.aspx" />
     <Content Include="Attendance\index.aspx" />
+    <Content Include="Birthdays\index.aspx" />
     <Content Include="EnrollmentByGrade\index.aspx" />
     <Content Include="FindStudent\index.aspx" />
     <Content Include="GovXML\enrollment.aspx" />
@@ -97,6 +98,7 @@
     <Content Include="outcomeBar.js" />
     <Content Include="Photos\GetPhoto.aspx" />
     <Content Include="Photos\index.aspx" />
+    <Content Include="Public\generalXML.aspx" />
     <Content Include="ReportCard\SingleReportPeriodPDF.aspx" />
     <Content Include="ReportCard\getXML.aspx" />
     <Content Include="ReportCard\index.aspx" />
@@ -137,6 +139,13 @@
     </Compile>
     <Compile Include="BasicTemplate.Master.designer.cs">
       <DependentUpon>BasicTemplate.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Birthdays\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Birthdays\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
     </Compile>
     <Compile Include="Contact.cs" />
     <Compile Include="Course.cs" />
@@ -230,6 +239,13 @@
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Public\generalXML.aspx.cs">
+      <DependentUpon>generalXML.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Public\generalXML.aspx.designer.cs">
+      <DependentUpon>generalXML.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ReportCard\SingleReportPeriodPDF.aspx.cs">
       <DependentUpon>SingleReportPeriodPDF.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

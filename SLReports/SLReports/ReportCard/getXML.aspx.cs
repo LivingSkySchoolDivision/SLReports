@@ -18,7 +18,6 @@ namespace SLReports.ReportCard
         School selectedSchool;
 
         Stopwatch stopWatch;
-        
 
         private string XMLNameSection(Student student)
         {

@@ -47,6 +47,18 @@ namespace SLReports
         public Track track { get; set; }
         public School school { get; set; }
 
+        public int getAge()
+        {
+            int age = DateTime.Today.Year - this.dateOfBirth.Year;
+            if (this.dateOfBirth > DateTime.Today.AddYears(-age)) age--;
+            return age;
+        }
+
+        public int getAgeAsOf(DateTime thisDate)
+        {
+            return -1;
+        }
+
         public object getPhoto()
         {
             return this.photo;
