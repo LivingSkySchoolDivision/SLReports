@@ -89,6 +89,7 @@ namespace SLReports
             return returnMe;
 
         }
+
         public static APIKey loadThisAPIKey(SqlConnection connection, string key)
         {
             APIKey returnMe = null;
@@ -139,6 +140,7 @@ namespace SLReports
             return returnMe;
 
         }
+
         public static bool deleteAPIKey(SqlConnection connection, string key)
         {
             try
@@ -156,7 +158,7 @@ namespace SLReports
             catch
             {
                 return false;
-            }        
+            }
         }
 
         public static string generateNewKeyString(string noise)
@@ -191,5 +193,29 @@ namespace SLReports
             }
         }
 
+        public static bool logAPIKeyUse(SqlConnection connection, APIKey key, string url, string useragent, string ip)
+        {
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand();
+                sqlCommand.Connection = connection;
+                sqlCommand.CommandType = CommandType.Text;
+                sqlCommand.CommandText = "INSERT INTO key_access_log(dDate, api_key, url_accessed, user_agent, remote_ip, key_user) VALUES(@DATE, @KEY, @URL, @USERAGENT, @IP, @USER)";
+                sqlCommand.Parameters.AddWithValue("@DATE", DateTime.Now);
+                sqlCommand.Parameters.AddWithValue("@KEY", key.key);
+                sqlCommand.Parameters.AddWithValue("@URL", url);
+                sqlCommand.Parameters.AddWithValue("@USERAGENT", useragent);
+                sqlCommand.Parameters.AddWithValue("@IP", ip);
+                sqlCommand.Parameters.AddWithValue("@USER", key.username);
+                sqlCommand.Connection.Open();
+                sqlCommand.ExecuteNonQuery();
+                sqlCommand.Connection.Close();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

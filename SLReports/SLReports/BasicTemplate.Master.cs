@@ -104,6 +104,15 @@ namespace SLReports
                         }
                     }
                 }
+
+                /* If they key is used, log it */
+                if (apiKey != null)
+                {
+                    using (SqlConnection connection = new SqlConnection(dbConnectionString))
+                    {
+                        APIKey.logAPIKeyUse(connection, apiKey, Request.ServerVariables["UNENCODED_URL"], Request.ServerVariables["HTTP_USER_AGENT"], Request.ServerVariables["REMOTE_ADDR"]);
+                    }
+                }
             }
 
             /* Check for a username */
