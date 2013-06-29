@@ -83,9 +83,26 @@ namespace SLReports
             /* Check for an API key */
             if (!string.IsNullOrEmpty(Request.QueryString["apikey"]))
             {
+                Response.Write("Derp");
                 using (SqlConnection connection = new SqlConnection(dbConnectionString))
                 {
                     apiKey = APIKey.loadThisAPIKey(connection,Request.QueryString["apikey"]);
+                }
+
+                if (apiKey != null)
+                {
+                    if (apiKey.internalOnly)
+                    {                                                
+                        if (
+                            !(
+                                (Request.ServerVariables["REMOTE_ADDR"].Contains("127.0.0.1")) ||
+                                (Request.ServerVariables["REMOTE_ADDR"].Contains("::1"))
+                             )
+                           )
+                        {
+                            apiKey = null;
+                        }
+                    }
                 }
             }
 

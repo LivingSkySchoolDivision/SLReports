@@ -25,7 +25,7 @@ namespace SLReports
             this.username = username;
             this.issueDate = issuedate;
             this.expires = expires;
-            this.internalOnly = internalOnly;
+            this.internalOnly = internalonly;
             this.description = description;
         }
         public static List<APIKey> loadAllAPIKeys(SqlConnection connection)
@@ -43,19 +43,13 @@ namespace SLReports
             {
                 while (dataReader.Read())
                 {
-                    bool internalOnly = false;
-                    if (!string.IsNullOrEmpty(dataReader["is_internal_only"].ToString().Trim()))
-                    {
-                        internalOnly = bool.Parse(dataReader["is_internal_only"].ToString().Trim());
-                    }
-
-                    returnMe.Add(new APIKey(
+                                        returnMe.Add(new APIKey(
                             dataReader["api_key"].ToString().Trim(),
                             dataReader["username"].ToString().Trim(),
                             dataReader["description"].ToString().Trim(),
                             DateTime.Parse(dataReader["date_issued"].ToString().Trim()),
                             DateTime.Parse(dataReader["date_expires"].ToString().Trim()),
-                            internalOnly
+                            bool.Parse(dataReader["is_internal_only"].ToString().Trim())
                             ));
                 }
             }
@@ -80,19 +74,13 @@ namespace SLReports
             {
                 while (dataReader.Read())
                 {
-                    bool internalOnly = false;
-                    if (!string.IsNullOrEmpty(dataReader["is_internal_only"].ToString().Trim()))
-                    {
-                        internalOnly = bool.Parse(dataReader["is_internal_only"].ToString().Trim());
-                    }
-
                     returnMe.Add(new APIKey(
                             dataReader["api_key"].ToString().Trim(),
                             dataReader["username"].ToString().Trim(),
                             dataReader["description"].ToString().Trim(),
                             DateTime.Parse(dataReader["date_issued"].ToString().Trim()),
                             DateTime.Parse(dataReader["date_expires"].ToString().Trim()),
-                            internalOnly
+                            bool.Parse(dataReader["is_internal_only"].ToString().Trim())
                             ));
                 }
             }
@@ -135,20 +123,15 @@ namespace SLReports
             {
                 while (dataReader.Read())
                 {
-                    bool internalOnly = false;
-                    if (!string.IsNullOrEmpty(dataReader["is_internal_only"].ToString().Trim()))
-                    {
-                        internalOnly = bool.Parse(dataReader["is_internal_only"].ToString().Trim());
-                    }
-
                     returnMe = new APIKey(
                             dataReader["api_key"].ToString().Trim(),
                             dataReader["username"].ToString().Trim(),
                             dataReader["description"].ToString().Trim(),
                             DateTime.Parse(dataReader["date_issued"].ToString().Trim()),
                             DateTime.Parse(dataReader["date_expires"].ToString().Trim()),
-                            internalOnly
+                            bool.Parse(dataReader["is_internal_only"].ToString().Trim())
                             );
+
                 }
             }
 

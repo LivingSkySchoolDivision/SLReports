@@ -27,6 +27,4 @@
         </ul>
     </p>    
 </div>
-
-
 </asp:Content>
