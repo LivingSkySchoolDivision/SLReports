@@ -116,16 +116,17 @@ namespace SLReports.APIKeys
                 tblAllKeys.Rows.Add(keyTableRow(anonymizeKey(key)));
             }
 
-            txtDescription.Text = "New API Key #" + (userKeys.Count() + 1);
+            if (!IsPostBack)
+            {
+                txtDescription.Text = "Enter a description here";
+            }
 
             /* Limit a user to 3 api keys */
             if (userKeys.Count >= 3)
             {
                 btnKey.Enabled = false;
                 txtDescription.Enabled = false;
-            }
-
-            
+            }            
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -150,6 +151,7 @@ namespace SLReports.APIKeys
                     if (loggedInUser != null) {
                         APIKey.createAPIKey(connection, loggedInUser.getUsername(), false, newDescription, Request.ServerVariables["ALL_RAW"] + DateTime.Now + loggedInUser.getUsername() + loggedInUser.getIP());
                         refreshKeyList();
+                        txtDescription.Text = "Enter a description here";
                     }
                 }
             }

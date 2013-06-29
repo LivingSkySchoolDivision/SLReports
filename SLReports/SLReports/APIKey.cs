@@ -28,6 +28,7 @@ namespace SLReports
             this.internalOnly = internalonly;
             this.description = description;
         }
+
         public static List<APIKey> loadAllAPIKeys(SqlConnection connection)
         {
             List<APIKey> returnMe = new List<APIKey>();
@@ -35,7 +36,7 @@ namespace SLReports
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = connection;
             sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = "SELECT * FROM api_keys;";
+            sqlCommand.CommandText = "SELECT * FROM api_keys WHERE active=1;";
             sqlCommand.Connection.Open();
             SqlDataReader dataReader = sqlCommand.ExecuteReader();
 
@@ -65,7 +66,7 @@ namespace SLReports
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = connection;
             sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = "SELECT * FROM api_keys WHERE username=@USERNAME;";
+            sqlCommand.CommandText = "SELECT * FROM api_keys WHERE username=@USERNAME AND active=1;";
             sqlCommand.Parameters.AddWithValue("@USERNAME", username);
             sqlCommand.Connection.Open();
             SqlDataReader dataReader = sqlCommand.ExecuteReader();
@@ -115,7 +116,7 @@ namespace SLReports
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = connection;
             sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = "SELECT * FROM api_keys WHERE api_key=@APIKEY;";
+            sqlCommand.CommandText = "SELECT * FROM api_keys WHERE api_key=@APIKEY AND active=1;";
             sqlCommand.Parameters.AddWithValue("@APIKEY", key);
             sqlCommand.Connection.Open();
             SqlDataReader dataReader = sqlCommand.ExecuteReader();
@@ -148,7 +149,8 @@ namespace SLReports
                 SqlCommand sqlCommand = new SqlCommand();
                 sqlCommand.Connection = connection;
                 sqlCommand.CommandType = CommandType.Text;
-                sqlCommand.CommandText = "DELETE FROM api_keys WHERE api_key=@APIKEY;";
+                //sqlCommand.CommandText = "DELETE FROM api_keys WHERE api_key=@APIKEY;";
+                sqlCommand.CommandText = "UPDATE api_keys SET active=0 WHERE api_key=@APIKEY;";
                 sqlCommand.Parameters.AddWithValue("@APIKEY", key);
                 sqlCommand.Connection.Open();
                 sqlCommand.ExecuteNonQuery();
@@ -179,7 +181,7 @@ namespace SLReports
             {
                 sqlCommand.Connection = connection;
                 sqlCommand.CommandType = CommandType.Text;
-                sqlCommand.CommandText = "INSERT INTO api_keys(api_key,username,date_issued, date_expires, is_internal_only, description) VALUES(@APIKEY, @USERNAME, @ISSUEDATE, @EXPIRYDATE, @INTERNALONLY, @DESCRIPTION);";
+                sqlCommand.CommandText = "INSERT INTO api_keys(api_key,username,date_issued, date_expires, is_internal_only, description, active) VALUES(@APIKEY, @USERNAME, @ISSUEDATE, @EXPIRYDATE, @INTERNALONLY, @DESCRIPTION, 1);";
                 sqlCommand.Parameters.AddWithValue("@APIKEY", generateNewKeyString(description + DateTime.Now + username + noise));
                 sqlCommand.Parameters.AddWithValue("@USERNAME", username);
                 sqlCommand.Parameters.AddWithValue("@ISSUEDATE", DateTime.Today);
