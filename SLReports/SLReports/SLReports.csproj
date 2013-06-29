@@ -67,6 +67,7 @@
     <Content Include="AttendanceByGrade\GetPDF.aspx" />
     <Content Include="AttendanceByGrade\index.aspx" />
     <Content Include="Attendance\index.aspx" />
+    <Content Include="Birthdays\birthdayStats.aspx" />
     <Content Include="Birthdays\index.aspx" />
     <Content Include="EnrollmentByGrade\index.aspx" />
     <Content Include="FindStudent\index.aspx" />
@@ -149,6 +150,13 @@
     </Compile>
     <Compile Include="BasicTemplate.Master.designer.cs">
       <DependentUpon>BasicTemplate.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Birthdays\birthdayStats.aspx.cs">
+      <DependentUpon>birthdayStats.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Birthdays\birthdayStats.aspx.designer.cs">
+      <DependentUpon>birthdayStats.aspx</DependentUpon>
     </Compile>
     <Compile Include="Birthdays\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
