@@ -88,7 +88,7 @@ namespace SLReports.APIKeys
             return new APIKey("- NOT AVAILABLE-", thisKey.username, thisKey.description, thisKey.issueDate, thisKey.expires, thisKey.internalOnly);
         }
 
-        protected void Page_Load(object sender, EventArgs e)
+        protected void refreshKeyList()
         {
             session loggedInUser = null;
             List<APIKey> userKeys = new List<APIKey>();
@@ -102,21 +102,57 @@ namespace SLReports.APIKeys
                 allKeys = APIKey.loadAllAPIKeys(connection);
             }
 
+            tblKeys.Rows.Clear();
             tblKeys.Rows.Add(keyTableHeaders());
             foreach (APIKey key in userKeys)
             {
                 tblKeys.Rows.Add(keyTableRow(key));
             }
 
+            tblAllKeys.Rows.Clear();
             tblAllKeys.Rows.Add(keyTableHeaders());
             foreach (APIKey key in allKeys)
             {
                 tblAllKeys.Rows.Add(keyTableRow(anonymizeKey(key)));
             }
 
+            txtDescription.Text = "New API Key #" + (userKeys.Count() + 1);
 
+            /* Limit a user to 3 api keys */
+            if (userKeys.Count >= 3)
+            {
+                btnKey.Enabled = false;
+                txtDescription.Enabled = false;
+            }
 
             
+        }
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            refreshKeyList();
+        }
+
+        protected void btnKey_Click(object sender, EventArgs e)
+        {
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString;
+            session loggedInUser = null;
+
+            /* Validate the description */
+            string newDescription = txtDescription.Text;
+
+            if (newDescription.Length > 0)
+            {
+                using (SqlConnection connection = new SqlConnection(dbConnectionString))
+                {
+                    loggedInUser = session.loadThisSession(connection, getSessionIDFromCookies(), Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"]);
+
+                    if (loggedInUser != null) {
+                        APIKey.createAPIKey(connection, loggedInUser.getUsername(), false, newDescription, Request.ServerVariables["ALL_RAW"] + DateTime.Now + loggedInUser.getUsername() + loggedInUser.getIP());
+                        refreshKeyList();
+                    }
+                }
+            }
         }
     }
 }
