@@ -326,7 +326,6 @@ namespace SLReports.ReportCard
             StringBuilder returnMe = new StringBuilder();
             returnMe.Append("<canvas style=\"width: "+barWidth+"px;height: "+barHeight+"px;\" id=\"" + barID + "\" width=\"" + barWidth + "\" height=\"" + barHeight + "\">Number Bar</canvas>");
 
-            double parsedValue = -1;
             returnMe.Append("<script>createNumberBar('" + barID + "');</script>");
 
             return returnMe.ToString();

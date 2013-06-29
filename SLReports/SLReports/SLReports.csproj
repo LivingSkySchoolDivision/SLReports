@@ -110,7 +110,6 @@
     <Content Include="StudentList\index.aspx" />
     <Content Include="up_arrow.png" />
     <Content Include="Web.config" />
-    <Content Include="XPSExperiments\index.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Absence.cs" />
@@ -320,13 +319,6 @@
     </Compile>
     <Compile Include="Term.cs" />
     <Compile Include="Track.cs" />
-    <Compile Include="XPSExperiments\index.aspx.cs">
-      <DependentUpon>index.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="XPSExperiments\index.aspx.designer.cs">
-      <DependentUpon>index.aspx</DependentUpon>
-    </Compile>
     <Compile Include="PdfPageEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>

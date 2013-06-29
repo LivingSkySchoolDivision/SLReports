@@ -10,9 +10,6 @@ namespace SLReports
 {
     public class PdfPageEventHandler : PdfPageEventHelper
     {
-        PdfContentByte content;
-        PdfTemplate template;
-        BaseFont font = null;
         DateTime PrintTime = DateTime.Now;
 
         public string topLeft { get; set; }
@@ -65,7 +62,6 @@ namespace SLReports
                 }
             }
 
-            float width = 200;
             float height = document.PageSize.Height;
 
             PdfContentByte overlay = writer.DirectContent;

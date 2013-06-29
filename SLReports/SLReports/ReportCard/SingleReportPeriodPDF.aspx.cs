@@ -674,7 +674,6 @@ namespace SLReports.ReportCard
             PdfPCell newCell = null;
 
             /* Gather stats */
-            int totalAbs = 0;
             int totalExcused = 0;
             int totalUnexcused = 0;
             int totalLates = 0;
