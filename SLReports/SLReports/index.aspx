@@ -1,6 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/BasicTemplate.Master" AutoEventWireup="true" CodeBehind="index.aspx.cs" Inherits="SLReports.index" %>
 <asp:Content  ContentPlaceHolderID="Main" runat="server">
-
 <div class="large_infobox">
     <h3>About the Data Explorer</h3>
     <p>
