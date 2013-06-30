@@ -64,6 +64,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="APIKeys\index.aspx" />
+    <Content Include="APIKeys\logs.aspx" />
+    <Content Include="APIKeys\lookup.aspx" />
     <Content Include="AttendanceByGrade\GetPDF.aspx" />
     <Content Include="AttendanceByGrade\index.aspx" />
     <Content Include="Attendance\index.aspx" />
@@ -121,6 +123,20 @@
     </Compile>
     <Compile Include="APIKeys\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="APIKeys\logs.aspx.cs">
+      <DependentUpon>logs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="APIKeys\logs.aspx.designer.cs">
+      <DependentUpon>logs.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="APIKeys\lookup.aspx.cs">
+      <DependentUpon>lookup.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="APIKeys\lookup.aspx.designer.cs">
+      <DependentUpon>lookup.aspx</DependentUpon>
     </Compile>
     <Compile Include="AttendanceBlock.cs" />
     <Compile Include="AttendanceByGrade\GetPDF.aspx.cs">

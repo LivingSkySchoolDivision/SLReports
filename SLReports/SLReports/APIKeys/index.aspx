@@ -23,6 +23,8 @@
     </div>
     </div>
     <br /><br />
+    <a href="lookup.aspx">Key lookup</a>
+    <br /><br />
     <h3>All API Keys</h3>
     <div style="padding-left: 10px;">
         <asp:Table ID="tblAllKeys" CssClass="datatable" runat="server"></asp:Table>
