@@ -9,6 +9,8 @@ namespace SLReports
 {
     public class Student : IComparable
     {
+        public string LDAPUserName { get; set; }
+
         private string givenName;
         private string sn;
         private string studentID;
@@ -42,7 +44,7 @@ namespace SLReports
         private bool resideOnReserve;
         private int trackID;
         private bool bHasPhoto;
-        private object photo;
+        private object photo;        
 
         public Track track { get; set; }
         public School school { get; set; }
@@ -282,7 +284,7 @@ namespace SLReports
         public Student(string givenName, string sn, string middleName, string id, string govID, string schoolName, string schoolID,
             string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
             string phone, string gender, string instat, string instatcode, string homeRm, DateTime inDate, DateTime dateOfBirth, 
-            int trackid, bool hasPhoto)
+            int trackid, bool hasPhoto, string ldapusername)
         {
             absences = new List<Absence>();
             contacts = new List<Contact>();
@@ -312,13 +314,14 @@ namespace SLReports
             this.trackID = trackid;
             this.InStatusCode = instatcode;
             this.bHasPhoto = hasPhoto;
+            this.LDAPUserName = ldapusername;
         }
         
         public Student(string givenName, string sn, string middleName, string id, string govID, string schoolName, string schoolID,
             string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
             string phone, string gender, string instat, string instatcode, string homeRm, DateTime inDate, DateTime dateOfBirth, 
             string bandNo, string bandName, string reserveName, string reserveHouse, string treatyStatus, bool resideonreserve,
-            int trackid, bool hasPhoto)
+            int trackid, bool hasPhoto, string ldapusername)
         {
             absences = new List<Absence>();
             contacts = new List<Contact>();
@@ -352,6 +355,7 @@ namespace SLReports
             this.trackID = trackid;
             this.InStatusCode = instatcode;
             this.bHasPhoto = hasPhoto;
+            this.LDAPUserName = ldapusername;
         }
 
         public string getBandNo()
@@ -497,7 +501,8 @@ namespace SLReports
                             DateTime.Parse(dataReader["InDate"].ToString()),
                             DateTime.Parse(dataReader["DateOfBirth"].ToString()),
                             int.Parse(dataReader["TrackID"].ToString()),
-                            hasPhoto
+                            hasPhoto,
+                            dataReader["cUserName"].ToString().Trim()
                             );
                     //returnMe.setTrack(DateTime.Parse(dataReader["CurrentTrackStart"].ToString()), DateTime.Parse(dataReader["CurrentTrackEnd"].ToString()));
                 }
@@ -577,7 +582,8 @@ namespace SLReports
                             DateTime.Parse(dataReader["InDate"].ToString()),
                             DateTime.Parse(dataReader["DateOfBirth"].ToString()),
                             int.Parse(dataReader["TrackID"].ToString()),
-                            hasPhoto
+                            hasPhoto,
+                            dataReader["cUserName"].ToString().Trim()
                             ));
                 }
             }
@@ -647,7 +653,8 @@ namespace SLReports
                             DateTime.Parse(dataReader["InDate"].ToString()),
                             DateTime.Parse(dataReader["DateOfBirth"].ToString()),
                             int.Parse(dataReader["TrackID"].ToString()),
-                            hasPhoto
+                            hasPhoto,
+                            dataReader["cUserName"].ToString().Trim()
                             ));
                 }
             }

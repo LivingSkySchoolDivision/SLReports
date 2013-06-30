@@ -36,7 +36,7 @@ namespace SLReports.StudentList
 
             /* Headings */
             StringBuilder headingLine = new StringBuilder();
-            headingLine.Append("StudentID, GivenName, MiddleName, Surname, GovernmentID, Grade, Gender, DateOfBirth, HomeRoom, InStatus, InStatusCode, InDate, ResidesInProvince, ResidesInCity");
+            headingLine.Append("StudentID, GivenName, MiddleName, Surname, GovernmentID, Grade, Gender, DateOfBirth, HomeRoom, InStatus, InStatusCode, InDate, ResidesInProvince, ResidesInCity, LDAPUserName");
             writer.WriteLine(headingLine.ToString());
 
             /* Data */
@@ -70,7 +70,9 @@ namespace SLReports.StudentList
                 studentLine.Append(",");
                 studentLine.Append(student.getRegion());
                 studentLine.Append(",");
-                studentLine.Append(student.getCity());               
+                studentLine.Append(student.getCity());
+                studentLine.Append(",");
+                studentLine.Append(student.LDAPUserName);
                 writer.WriteLine(studentLine.ToString());
                 
             }

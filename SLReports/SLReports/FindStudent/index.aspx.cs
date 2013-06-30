@@ -90,6 +90,11 @@ namespace SLReports.FindStudent
             cell_homeroom.Text = "Homeroom";
             newRow.Cells.Add(cell_homeroom);
 
+            TableCell cell_ldap = new TableCell();
+            cell_ldap.Width = 250;
+            cell_ldap.Text = "LDAP Username";
+            newRow.Cells.Add(cell_ldap);
+
             return newRow;
         }
 
@@ -138,6 +143,10 @@ namespace SLReports.FindStudent
             cell_homeroom.Text = student.getHomeRoom();
             newRow.Cells.Add(cell_homeroom);
 
+            TableCell cell_ldap = new TableCell();
+            cell_ldap.Text = highLightSeachString(student.LDAPUserName, searchString);
+            newRow.Cells.Add(cell_ldap);
+
             return newRow;
         }
 
@@ -161,6 +170,7 @@ namespace SLReports.FindStudent
                     (student.getGivenName().ToLower().Contains(searchQuery.ToLower())) ||
                     (student.getSN().ToLower().Contains(searchQuery.ToLower())) ||
                     (student.getGovernmentID().ToLower().Contains(searchQuery.ToLower())) ||
+                    (student.LDAPUserName.ToLower().Contains(searchQuery.ToLower())) ||
                     (student.getMiddleName().ToLower().Contains(searchQuery.ToLower()))
                     )
                 {

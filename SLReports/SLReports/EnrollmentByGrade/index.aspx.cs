@@ -243,68 +243,9 @@ namespace SLReports.DivisionStats
             String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
 
             #region Load all students
-            try
+            using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
-                SqlConnection dbConnection = new SqlConnection(dbConnectionString);
-                SqlCommand sqlCommand = new SqlCommand();
-
-                sqlCommand.Connection = dbConnection;
-                sqlCommand.CommandType = CommandType.Text;
-                sqlCommand.CommandText = "SELECT * FROM LSKY_ActiveStudents;";
-                sqlCommand.Connection.Open();
-
-                SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
-
-                if (dbDataReader.HasRows)
-                {
-
-                    AllStudents.Clear();
-                    while (dbDataReader.Read())
-                    {
-                        bool hasPhoto = false;
-                        if (!string.IsNullOrEmpty(dbDataReader["PhotoType"].ToString()))
-                        {
-                            hasPhoto = true;
-                        }
-
-                        //dbDataReader["LegalFirstName"].ToString() + " " + dbDataReader["LegalLastName"].ToString()
-                        AllStudents.Add(new Student(
-                            dbDataReader["LegalFirstName"].ToString(),
-                            dbDataReader["LegalLastName"].ToString(),
-                            dbDataReader["LegalMiddleName"].ToString(),
-                            dbDataReader["StudentNumber"].ToString(),
-                            dbDataReader["GovernmentIDNumber"].ToString(),
-                            dbDataReader["School"].ToString(),
-                            dbDataReader["SchoolID"].ToString(),
-                            dbDataReader["Grade"].ToString(),
-                            dbDataReader["Region"].ToString(),
-                            dbDataReader["City"].ToString(),
-                            dbDataReader["Street"].ToString(),
-                            dbDataReader["HouseNo"].ToString(),
-                            dbDataReader["ApartmentNo"].ToString(),
-                            dbDataReader["PostalCode"].ToString(),
-                            dbDataReader["Phone"].ToString(),
-                            dbDataReader["Gender"].ToString(),
-                            dbDataReader["InStatus"].ToString(),
-                            dbDataReader["InStatusCode"].ToString(),
-                            dbDataReader["HomeRoom"].ToString(),
-                            DateTime.Parse(dbDataReader["InDate"].ToString()),
-                            DateTime.Parse(dbDataReader["DateOfBirth"].ToString()),
-                            int.Parse(dbDataReader["TrackID"].ToString()),
-                            hasPhoto
-                            ));
-                    }
-                }
-
-                sqlCommand.Connection.Close();
-            }
-            catch (Exception ex)
-            {
-                Response.Write("Exception: " + ex.Message);
-                if (ex.InnerException != null)
-                {
-                    Response.Write("Exception: " + ex.InnerException.Message);
-                }
+                AllStudents = Student.loadAllStudents(connection);
             }
             #endregion
 

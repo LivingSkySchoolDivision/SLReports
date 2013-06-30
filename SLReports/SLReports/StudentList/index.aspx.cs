@@ -59,7 +59,8 @@ namespace SLReports.StudentList
             Response.Write("<td>" + student.getInStatusWithCode() + "</td>");
             Response.Write("<td>" + student.getEnrollDate().ToShortDateString() + "</td>");
             Response.Write("<td>" + student.getCity() + "</td>");
-            Response.Write("<td>" + student.getRegion() + "</td>");            
+            Response.Write("<td>" + student.getRegion() + "</td>");
+            Response.Write("<td>" + student.LDAPUserName + "</td>");            
             Response.Write("</tr>\n");
         }
 
@@ -90,6 +91,7 @@ namespace SLReports.StudentList
                 Response.Write("<th width=\"100\"><b>InDate</b></th>");
                 Response.Write("<th width=\"100\"><b>City</b></th>");
                 Response.Write("<th width=\"100\"><b>Region</b></th>");
+                Response.Write("<th width=\"100\"><b>LDAP Username</b></th>");
                 Response.Write("</tr>\n");
 
                 displayedStudentCount = 0;

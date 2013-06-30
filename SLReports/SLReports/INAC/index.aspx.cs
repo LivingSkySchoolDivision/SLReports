@@ -243,7 +243,8 @@ namespace SLReports.INAC
                                 dbDataReader["StatusNo"].ToString(),
                                 bool.Parse(dbDataReader["ResideOnReserve"].ToString()),
                                 int.Parse(dbDataReader["TrackID"].ToString()),
-                                hasPhoto
+                                hasPhoto,
+                                dbDataReader["cUserName"].ToString().Trim()
                                 );
                             AllStudents.Add(newStudent);
                         }
