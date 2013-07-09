@@ -72,7 +72,7 @@ namespace SLReports
                 SqlCommand sqlCommand = new SqlCommand();
                 sqlCommand.Connection = connection;
                 sqlCommand.CommandType = CommandType.Text;
-                sqlCommand.CommandText = "SELECT * FROM LSKY_LSKYSchools WHERE govID="+schoolID+";";
+                sqlCommand.CommandText = "SELECT * FROM LSKY_LSKYSchools WHERE govID=" + schoolID + ";";
                 sqlCommand.Connection.Open();
                 SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
 
@@ -87,6 +87,30 @@ namespace SLReports
                 sqlCommand.Connection.Close();
             }
             catch { }
+
+            return returnMe;
+        }
+
+        public static School loadThisSchoolByDatabaseID(SqlConnection connection, int schoolID)
+        {
+            School returnMe = null;
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM LSKY_LSKYSchools WHERE internalID=" + schoolID + ";";
+            sqlCommand.Connection.Open();
+            SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
+
+            if (dbDataReader.HasRows)
+            {
+                while (dbDataReader.Read())
+                {
+                    returnMe = new School(dbDataReader["name"].ToString(), dbDataReader["internalID"].ToString(), dbDataReader["govID"].ToString(), dbDataReader["address"].ToString());
+                }
+            }
+
+            sqlCommand.Connection.Close();
 
             return returnMe;
         }

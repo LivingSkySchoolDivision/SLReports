@@ -67,7 +67,7 @@ namespace SLReports.ReportCard
 
                                             t.ReportPeriods = ReportPeriod.loadReportPeriodsFromThisTerm(connection, t);
 
-                                            Dictionary<int, Course> termCourses = new Dictionary<int, Course>();
+                                            Dictionary<int, SchoolClass> termCourses = new Dictionary<int, SchoolClass>();
                                             termCourses.Clear();
 
                                             /* Load marks into the report period */
@@ -78,24 +78,24 @@ namespace SLReports.ReportCard
                                                     r.marks = Mark.loadMarksFromThisReportPeriod(connection, r, selectedStudent);
                                                     selectedReportPeriod = r;
 
-                                                    Dictionary<int, Course> allcourses = new Dictionary<int, Course>();
+                                                    Dictionary<int, SchoolClass> allcourses = new Dictionary<int, SchoolClass>();
                                                     foreach (Mark m in r.marks)
                                                     {
                                                         if (!allcourses.ContainsKey(m.courseID))
                                                         {
-                                                            allcourses.Add(m.courseID, new Course(m.className, m.classID, m.courseID, m.teacherFirst, m.teacherLast, m.teacherTitle));
+                                                            allcourses.Add(m.courseID, new SchoolClass(m.className, m.classID, m.courseID, m.teacherFirst, m.teacherLast, m.teacherTitle));
                                                         }
 
                                                         if (!termCourses.ContainsKey(m.courseID))
                                                         {
-                                                            termCourses.Add(m.courseID, new Course(m.className, m.classID, m.courseID, m.teacherFirst, m.teacherLast, m.teacherTitle));
+                                                            termCourses.Add(m.courseID, new SchoolClass(m.className, m.classID, m.courseID, m.teacherFirst, m.teacherLast, m.teacherTitle));
                                                         }
                                                     }
 
 
-                                                    foreach (KeyValuePair<int, Course> kvp in termCourses)
+                                                    foreach (KeyValuePair<int, SchoolClass> kvp in termCourses)
                                                     {
-                                                        Course c = kvp.Value;
+                                                        SchoolClass c = kvp.Value;
                                                         Dictionary<int, ReportPeriod> detectedReportPeriods = new Dictionary<int, ReportPeriod>();
 
                                                         foreach (Mark m in r.marks)
@@ -151,7 +151,7 @@ namespace SLReports.ReportCard
                                                         }
                                                     }
 
-                                                    foreach (KeyValuePair<int, Course> kvp in termCourses)
+                                                    foreach (KeyValuePair<int, SchoolClass> kvp in termCourses)
                                                     {
                                                         t.Courses.Add(kvp.Value);
                                                     }
@@ -396,7 +396,7 @@ namespace SLReports.ReportCard
 
             foreach (Term term in student.track.terms)
             {
-                foreach (Course course in term.Courses)
+                foreach (SchoolClass course in term.Courses)
                 {
                     returnMe.Append("<table border=0 width=\"100%\">");
                     returnMe.Append("<tr>");
@@ -501,7 +501,7 @@ namespace SLReports.ReportCard
 
             foreach (Term term in student.track.terms)
             {
-                foreach (Course course in term.Courses)
+                foreach (SchoolClass course in term.Courses)
                 {
                     returnMe.Append("<table border=0 cellpadding=5 width=\"100%\">");
                     returnMe.Append("<tr>");

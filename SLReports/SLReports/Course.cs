@@ -1,73 +1,99 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 using System.Web;
 
 namespace SLReports
 {
-    public class Course
+    public class Course : IComparable
     {
+        public int id { get;set; }
+        public int governmentCourseID { get; set; }
+
         public string name { get; set; }
-        public int courseid { get; set; }
-        public int classid { get; set; }
-        public string teacherFirstName { get; set; }
-        public string teacherLastName { get; set; }
-        public string teacherTitle { get; set; }
-        public string mark { get; set; } 
-        public List<Mark> Marks { get; set; }
-        public List<Objective> Objectives { get; set; }
-        public List<ObjectiveMark> ObjectiveMarks { get; set; }
-        public List<Student> EnrolledStudents { get; set; }
+        public string courseCode { get; set; }
+        public string school { get; set; }
+        public string governmentCode { get; set; }
+        
+        public bool offeredInSchool { get; set; }
+        public bool schoolExam { get; set; }
 
-        public List<ReportPeriod> ReportPeriods { get; set; }
-
-        public bool hasObjectives()
+        public Course(int id, int govID, string name, string courseCode, string school, string govCode, bool offeredInSchool, bool schoolExam)
         {
-            if (this.Objectives.Count > 0)
+            this.id = id;
+            this.governmentCode = govCode;
+            this.governmentCourseID = govID;
+            this.name = name;
+            this.courseCode = courseCode;
+            this.school = school;
+            this.offeredInSchool = offeredInSchool;
+            this.schoolExam = schoolExam;
+        }
+
+        public static List<Course> loadAllCourses(SqlConnection connection)
+        {
+            List<Course> returnMe = new List<Course>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM LSKY_Courses;";
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
             {
-                return true;
+                while (dataReader.Read())
+                {
+                    bool offered = false;
+                    if (!string.IsNullOrEmpty(dataReader["lOfferedInSchool"].ToString().Trim())) {
+                        offered = bool.Parse(dataReader["lOfferedInSchool"].ToString().Trim());
+                    }
+
+                    bool exam = false;
+                    if (!string.IsNullOrEmpty(dataReader["lSchoolExam"].ToString().Trim())) {
+                        exam = bool.Parse(dataReader["lSchoolExam"].ToString().Trim());
+                    }
+
+                    returnMe.Add(new Course(
+                            int.Parse(dataReader["iCourseID"].ToString().Trim()),
+                            int.Parse(dataReader["iGovCourseID"].ToString().Trim()),
+                            dataReader["cName"].ToString().Trim(),
+                            dataReader["cCourseCode"].ToString().Trim(),
+                            dataReader["SchoolName"].ToString().Trim(),
+                            dataReader["cGovernmentCode"].ToString().Trim(),
+                            offered,
+                            exam
+                            ));
+                }
+            }
+
+            sqlCommand.Connection.Close();
+
+            returnMe.Sort();
+            return returnMe;
+        }
+
+
+        public int CompareTo(object obj)
+        {
+            if (obj == null)
+            {
+                return 1;
+            }
+
+            Course obj2 = obj as Course;
+
+            if (obj2 != null)
+            {
+                return this.name.CompareTo(obj2.name);
             }
             else
             {
-                return false;
+                throw new ArgumentException("Object is not a Course");
             }
-        }
-
-        public string teacherName
-        {
-            get
-            {
-                StringBuilder returnMe = new StringBuilder();
-                if (!string.IsNullOrEmpty(teacherTitle))
-                {
-                    returnMe.Append(teacherTitle + " ");
-                }
-                else
-                {
-                    returnMe.Append(teacherFirstName + " ");
-                }
-
-                returnMe.Append(teacherLastName);
-                return returnMe.ToString();
-            }
-
-            set {}
-        }
-
-        public Course(string name, int classid, int courseid, string teacherFirst, string teacherLast, string teacherTitle)
-        {
-            Objectives = new List<Objective>();
-            Marks = new List<Mark>();
-            ReportPeriods = new List<ReportPeriod>();
-            ObjectiveMarks = new List<ObjectiveMark>();
-
-            this.name = name;
-            this.classid = classid;
-            this.courseid = courseid;
-            this.teacherFirstName = teacherFirst;
-            this.teacherLastName = teacherLast;
-            this.teacherTitle = teacherTitle;
         }
     }
 }

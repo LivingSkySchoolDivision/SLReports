@@ -50,7 +50,7 @@ namespace SLReports
             return this.objectiveMarkID + " " + this.mark;
         }
 
-        public static List<ObjectiveMark> loadObjectiveMarksForThisCourse(SqlConnection connection, Term term, Student student, Course course)
+        public static List<ObjectiveMark> loadObjectiveMarksForThisCourse(SqlConnection connection, Term term, Student student, SchoolClass course)
         {
             List<ObjectiveMark> returnMe = new List<ObjectiveMark>();
 

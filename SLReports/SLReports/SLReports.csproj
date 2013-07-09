@@ -71,6 +71,7 @@
     <Content Include="Attendance\index.aspx" />
     <Content Include="Birthdays\birthdayStats.aspx" />
     <Content Include="Birthdays\index.aspx" />
+    <Content Include="Courses\index.aspx" />
     <Content Include="EnrollmentByGrade\index.aspx" />
     <Content Include="FindStudent\index.aspx" />
     <Content Include="GovXML\enrollment.aspx" />
@@ -111,6 +112,7 @@
     <Content Include="Staff\index.aspx" />
     <Content Include="StudentList\getCSV.aspx" />
     <Content Include="StudentList\index.aspx" />
+    <Content Include="Tracks\index.aspx" />
     <Content Include="up_arrow.png" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -183,6 +185,14 @@
     </Compile>
     <Compile Include="Contact.cs" />
     <Compile Include="Course.cs" />
+    <Compile Include="SchoolClass.cs" />
+    <Compile Include="Courses\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Courses\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
     <Compile Include="EnrollmentByGrade\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -344,6 +354,13 @@
     <Compile Include="Term.cs" />
     <Compile Include="Track.cs" />
     <Compile Include="PdfPageEventHandler.cs" />
+    <Compile Include="Tracks\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tracks\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="BasicTemplate.Master" />

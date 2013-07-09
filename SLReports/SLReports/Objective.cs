@@ -26,7 +26,7 @@ namespace SLReports
             this.subject = subject;
         }
 
-        public static List<Objective> loadObjectivesForThisCourse(SqlConnection connection, Course course)
+        public static List<Objective> loadObjectivesForThisCourse(SqlConnection connection, SchoolClass course)
         {
             List<Objective> returnMe = new List<Objective>();
 

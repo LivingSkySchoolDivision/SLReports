@@ -17,12 +17,12 @@ namespace SLReports
         public int schoolID { get; set; }
         public List<ReportPeriod> ReportPeriods { get; set;}
 
-        public List<Course> Courses { get; set; }
+        public List<SchoolClass> Courses { get; set; }
 
         public Term(int id, int trackid, DateTime start, DateTime end, string name, int schoolid)
         {
             this.ReportPeriods = new List<ReportPeriod>();
-            this.Courses = new List<Course>();
+            this.Courses = new List<SchoolClass>();
 
             this.ID = id;
             this.trackID = trackid;
