@@ -53,7 +53,7 @@ namespace SLReports
 
         public override string ToString()
         {
-            return this.name;
+            return this.name + " ("+this.startDate.ToShortDateString()+" to "+this.endDate.ToShortDateString()+")";
         }
 
         public int getID()

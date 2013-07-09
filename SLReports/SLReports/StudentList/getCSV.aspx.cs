@@ -23,7 +23,7 @@ namespace SLReports.StudentList
             Response.ContentType = "text/plain";
             Response.AddHeader("Content-Disposition", "attachment; filename=" + filename + ".csv");
 
-            Response.OutputStream.Write(CSVData.GetBuffer(), 0, CSVData.GetBuffer().Length);
+            Response.OutputStream.Write(CSVData.GetBuffer(), 0, (int)CSVData.Length);
             Response.OutputStream.Flush();
             Response.OutputStream.Close();
             Response.End();
@@ -73,10 +73,11 @@ namespace SLReports.StudentList
                 studentLine.Append(student.getCity());
                 studentLine.Append(",");
                 studentLine.Append(student.LDAPUserName);
-                writer.WriteLine(studentLine.ToString());
-                
+                writer.WriteLine(studentLine.ToString());                
             }
 
+            writer.Flush();
+            csvFile.Flush();
             return csvFile;
 
         }
@@ -86,24 +87,7 @@ namespace SLReports.StudentList
             Response.Write(error);
         }
 
-
-        private string getDateTimeStamp()
-        {
-            return DateTime.Now.Year + "_" + DateTime.Now.Month + "_" + DateTime.Now.Day + "_" + DateTime.Now.Hour + "_" + DateTime.Now.Minute; 
-        }
-
-        private string removeSpaces(string working)
-        {
-            try
-            {
-                return Regex.Replace(working, @"[^\w]", "", RegexOptions.None, TimeSpan.FromSeconds(1.5));
-            }
-            catch (RegexMatchTimeoutException)
-            {
-                return string.Empty;
-            }
-        }
-
+        
         protected void Page_Load(object sender, EventArgs e)
         {
             String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;            
@@ -129,7 +113,7 @@ namespace SLReports.StudentList
                             /* Create the CSV */
                             if (displayedStudents.Count > 0)
                             {
-                                sendCSV(GenerateCSV(displayedStudents), "STUDENTS_" + removeSpaces(selectedSchool.getName()) + "_" + getDateTimeStamp());
+                                sendCSV(GenerateCSV(displayedStudents), "STUDENTS_" + LSKYCommon.removeSpaces(selectedSchool.getName()) + "_" + LSKYCommon.getCurrentTimeStampForFilename());
                             }
                             else
                             {

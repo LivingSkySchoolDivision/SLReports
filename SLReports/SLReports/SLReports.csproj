@@ -71,6 +71,8 @@
     <Content Include="Attendance\index.aspx" />
     <Content Include="Birthdays\birthdayStats.aspx" />
     <Content Include="Birthdays\index.aspx" />
+    <Content Include="Courses\CoursesWithClasses.aspx" />
+    <Content Include="Courses\GetCourseListCSV.aspx" />
     <Content Include="Courses\index.aspx" />
     <Content Include="EnrollmentByGrade\index.aspx" />
     <Content Include="FindStudent\index.aspx" />
@@ -185,6 +187,21 @@
     </Compile>
     <Compile Include="Contact.cs" />
     <Compile Include="Course.cs" />
+    <Compile Include="Courses\CoursesWithClasses.aspx.cs">
+      <DependentUpon>CoursesWithClasses.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Courses\CoursesWithClasses.aspx.designer.cs">
+      <DependentUpon>CoursesWithClasses.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Courses\GetCourseListCSV.aspx.cs">
+      <DependentUpon>GetCourseListCSV.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Courses\GetCourseListCSV.aspx.designer.cs">
+      <DependentUpon>GetCourseListCSV.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="LSKYCommon.cs" />
     <Compile Include="SchoolClass.cs" />
     <Compile Include="Courses\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
@@ -337,6 +354,7 @@
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
     <Compile Include="Student.cs" />
+    <Compile Include="StudentEnrollmentEntry.cs" />
     <Compile Include="StudentList\getCSV.aspx.cs">
       <DependentUpon>getCSV.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

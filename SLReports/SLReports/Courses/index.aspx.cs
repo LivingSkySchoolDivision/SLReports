@@ -12,18 +12,6 @@ namespace SLReports.Courses
     public partial class index : System.Web.UI.Page
     {
 
-        private string boolToYesOrNo(bool thisBool)
-        {
-            if (thisBool)
-            {
-                return "<span style=\"color: #007700;\">Yes</span>";
-            }
-            else
-            {
-                return "<span style=\"color: #770000;\">No</span>";
-            }
-        }
-
         private TableRow addCourseTableRow(Course course)
         {
             TableRow newRow = new TableRow();
@@ -56,11 +44,11 @@ namespace SLReports.Courses
             newRow.Cells.Add(newCell);
 
             newCell = new TableCell();
-            newCell.Text = boolToYesOrNo(course.offeredInSchool);
+            newCell.Text = LSKYCommon.boolToYesOrNo(course.offeredInSchool);
             newRow.Cells.Add(newCell);
 
             newCell = new TableCell();
-            newCell.Text = boolToYesOrNo(course.schoolExam);
+            newCell.Text = LSKYCommon.boolToYesOrNo(course.schoolExam);
             newRow.Cells.Add(newCell);
 
             return newRow;
