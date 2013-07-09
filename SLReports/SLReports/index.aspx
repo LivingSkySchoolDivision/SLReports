@@ -26,4 +26,17 @@
         </ul>
     </p>    
 </div>
+<br />
+<div class="large_infobox">
+    <p>        
+        <h3>Recent changes / additions</h3>
+        <ul>
+            <li><b>July 9th, 2013</b> - <a href="Courses/CoursesWithclasses.aspx">Classes by Course</a> - The list of courses, with each of it's child classes</li>
+            <li><b>July 9th, 2013</b> - <a href="Courses/">Course list</a> - A list of all courses in the system</li>            
+            <li><b>June 30th, 2013</b> - <a href="Staff/">Staff account list</a></li>
+            <li><b>June 29th, 2013</b> - Added a <a href="Birthdays/index.aspx">Birthday List</a>, which displays student birthday information for the current day, the next day, and the current month.</li>
+            
+        </ul>
+    </p>    
+</div>
 </asp:Content>
