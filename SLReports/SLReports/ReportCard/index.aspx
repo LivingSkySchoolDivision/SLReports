@@ -5,6 +5,7 @@
     <div class="noPrint">
     <h3>Report Card</h3>
     <p style="font-size: 14pt; color: red; font-weight: bold;">This is a work in progress and should not be used to replace an actual report card until it is finished</p>
+        <p style="font-size: 14pt; color: blue; font-weight: bold;">Data in this section is not live/current! In order to test, data used for report cards is data from the 2012/2013 school year. Once complete, the report card will be connected to live data.</p>
     <form runat="server">
         <asp:Table ID="Table1" runat="server">
             <asp:TableRow>

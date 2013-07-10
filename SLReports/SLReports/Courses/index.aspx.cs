@@ -44,11 +44,11 @@ namespace SLReports.Courses
             newRow.Cells.Add(newCell);
 
             newCell = new TableCell();
-            newCell.Text = LSKYCommon.boolToYesOrNo(course.offeredInSchool);
+            newCell.Text = LSKYCommon.boolToYesOrNoHTML(course.offeredInSchool);
             newRow.Cells.Add(newCell);
 
             newCell = new TableCell();
-            newCell.Text = LSKYCommon.boolToYesOrNo(course.schoolExam);
+            newCell.Text = LSKYCommon.boolToYesOrNoHTML(course.schoolExam);
             newRow.Cells.Add(newCell);
 
             return newRow;

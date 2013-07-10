@@ -22,7 +22,9 @@ namespace SLReports.ReportCard
 
         protected void Page_Init(object sender, EventArgs e)
         {
-            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogic2013"].ConnectionString;
+            //String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
                 /* Load all schools */
@@ -46,7 +48,8 @@ namespace SLReports.ReportCard
         protected void Button1_Click(object sender, EventArgs e)
         {
             SelectedSchoolID = int.Parse(drpSchoolList.SelectedValue);
-            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogic2013"].ConnectionString;
+            //String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
                 DisplayedStudents = Student.loadStudentsFromThisSchool(connection, SelectedSchoolID);
@@ -70,7 +73,8 @@ namespace SLReports.ReportCard
         {
             SelectedSchoolID = int.Parse(drpSchoolList.SelectedValue);
 
-            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogic2013"].ConnectionString;
+            //String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
                 SelectedStudent = Student.loadThisStudent(connection, drpStudentList.SelectedValue);

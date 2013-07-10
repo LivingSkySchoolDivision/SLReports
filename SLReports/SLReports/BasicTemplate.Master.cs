@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -17,9 +18,8 @@ namespace SLReports
 
         private string loginURL = "/SLReports/Login/index.aspx";
         private List<NavMenuItem> MainMenu;
-
         public session loggedInUser = null;
-                
+
         private string getSessionIDFromCookies()
         {
             HttpCookie sessionCookie = Request.Cookies["lskyDataExplorer"];
@@ -172,6 +172,6 @@ namespace SLReports
             {                
                 expireSession();                
             }
-        }        
+        }       
     }
 }

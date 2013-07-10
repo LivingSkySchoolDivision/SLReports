@@ -1363,7 +1363,7 @@ namespace SLReports.ReportCard
             }
 
             ReportCard.Add(attendanceSummary(student));
-
+            
             ReportCard.Close();
 
             return memstream;
@@ -1372,7 +1372,8 @@ namespace SLReports.ReportCard
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogic2013"].ConnectionString;
+            //String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
 
             try
             {
