@@ -112,6 +112,7 @@
     <Content Include="ReportCard\index.aspx" />
     <Content Include="ReportCard\SingleReportPeriodHTML.aspx" />
     <Content Include="Staff\index.aspx" />
+    <Content Include="StudentDiscrepancy\index.aspx" />
     <Content Include="StudentList\getCSV.aspx" />
     <Content Include="StudentList\index.aspx" />
     <Content Include="Tracks\index.aspx" />
@@ -354,6 +355,13 @@
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
     <Compile Include="Student.cs" />
+    <Compile Include="StudentDiscrepancy\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="StudentDiscrepancy\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
     <Compile Include="StudentEnrollmentEntry.cs" />
     <Compile Include="StudentList\getCSV.aspx.cs">
       <DependentUpon>getCSV.aspx</DependentUpon>
