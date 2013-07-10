@@ -2,6 +2,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Main" runat="server">
+    <p>See also: <a href="birthdayStats.aspx">Birthday stats</a></p>
     <h3>Students with a birthday today <asp:Label ID="lblTodayCount" runat="server" Text=""></asp:Label></h3>
     <asp:Table ID="tblToday" runat="server" CssClass="datatable" CellPadding="3" HorizontalAlign="Center"></asp:Table>
     <br /><br />

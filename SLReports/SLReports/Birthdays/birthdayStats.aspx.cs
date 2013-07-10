@@ -20,9 +20,23 @@ namespace SLReports.Birthdays
                 return months[monthNum-1];
             } else {
                 return "Invalid month";
-            }
-                
+            }                
         }
+
+        private string getDayName(int dayNum)
+        {
+            string[] days = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+
+            if ((dayNum <= 6) && (dayNum >= 0))
+            {
+                return days[dayNum];
+            }
+            else
+            {
+                return "Invalid day";
+            }
+        }
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -36,7 +50,7 @@ namespace SLReports.Birthdays
 
             float totalStudents = (float)allStudents.Count;
             
-
+            /* Birthdays by month */
             Dictionary<int, int> birthdaysByMonth = new Dictionary<int, int>();
 
             for (int x = 1; x <= 12; x++)
@@ -70,6 +84,42 @@ namespace SLReports.Birthdays
                 
                 tblMonths.Rows.Add(newRow);
             }
+
+            /* Birthdays by day of the week */
+            SortedDictionary<int, int> birthdaysByDayOfWeek = new SortedDictionary<int, int>();
+            foreach (Student student in allStudents)
+            {
+                if (!birthdaysByDayOfWeek.ContainsKey((int)student.getDateOfBirth().DayOfWeek))
+                {
+                    birthdaysByDayOfWeek.Add((int)student.getDateOfBirth().DayOfWeek, 0);
+                }
+                birthdaysByDayOfWeek[(int)student.getDateOfBirth().DayOfWeek]++;
+            }
+
+
+            for (int x = 0; x < 7; x++ )
+            {
+                TableRow newRow = new TableRow();
+
+                TableCell monthCell = new TableCell();
+                monthCell.Text = getDayName(x);
+                newRow.Cells.Add(monthCell);
+
+                TableCell countCell = new TableCell();
+                countCell.Text = birthdaysByDayOfWeek[x].ToString();
+                newRow.Cells.Add(countCell);
+
+                TableCell percentCell = new TableCell();
+                float count = (float)birthdaysByDayOfWeek[x];
+                float percent = (count / totalStudents) * 100;
+
+                percentCell.Text = (Math.Round(percent) + "%");
+                newRow.Cells.Add(percentCell);
+
+                tblDays.Rows.Add(newRow);
+            }
+                     
+
 
         }
     }

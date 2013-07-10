@@ -9,4 +9,13 @@
             <asp:TableCell Width="50">Percent</asp:TableCell>
         </asp:TableHeaderRow>
     </asp:Table>
+    
+    <h4>Birthday count by day of the week</h4>
+    <asp:Table ID="tblDays" runat="server" CssClass="datatable">
+        <asp:TableHeaderRow CssClass="datatable_header">
+            <asp:TableCell Width="150">Day</asp:TableCell>
+            <asp:TableCell width="50">Count</asp:TableCell>
+            <asp:TableCell Width="50">Percent</asp:TableCell>
+        </asp:TableHeaderRow>
+    </asp:Table>
 </asp:Content>
