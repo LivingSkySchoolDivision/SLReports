@@ -60,7 +60,7 @@ namespace SLReports
 
         public override string ToString()
         {
-            return "Mark: {Mark ID: "+this.ID+",CourseID: "+this.courseID+", ClassID: " + this.classID + ", ClassName: " + this.className + ", nMark: " + this.nMark + ", cMark: "+this.cMark+" , Period: " + this.reportPeriod + "}";
+            return "Mark: {Mark ID: "+this.ID+",CourseID: "+this.courseID+", ClassID: " + this.classID + ", ClassName: " + this.className + ", nMark: " + this.nMark + ", cMark: "+this.cMark+" , ReportPeriodID: " + this.reportPeriod.ID + "}";
         }
 
         public static List<Mark> loadMarksFromThisReportPeriod(SqlConnection connection, ReportPeriod reportPeriod, Student student)

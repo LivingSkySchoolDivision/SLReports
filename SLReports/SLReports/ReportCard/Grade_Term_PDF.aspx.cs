@@ -1304,14 +1304,14 @@ namespace SLReports.ReportCard
             return classTable;
         }
 
-        protected void sendPDF(System.IO.MemoryStream PDFData)
+        protected void sendPDF(System.IO.MemoryStream PDFData, string filename)
         {
             Response.Clear();
             Response.ClearContent();
             Response.ClearHeaders();
             Response.ContentEncoding = Encoding.UTF8;
             Response.ContentType = "application/pdf";
-            Response.AddHeader("Content-Disposition", "attachment; filename=ReportCard.pdf");
+            Response.AddHeader("Content-Disposition", "attachment; filename="+filename+"");
 
             Response.OutputStream.Write(PDFData.GetBuffer(), 0, PDFData.GetBuffer().Length);
             Response.OutputStream.Flush();
@@ -1527,10 +1527,9 @@ namespace SLReports.ReportCard
                 selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 257));
                 selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 256));
 
-                students.Add(Student.loadThisStudent(connection, "12511"));
-                //students.Add(Student.loadThisStudent(connection, "12252"));
-                //students.Add(Student.loadThisStudent(connection, "600000375"));
-                //students.Add(Student.loadThisStudent(connection, "600000234"));                                
+                //students.Add(Student.loadThisStudent(connection, "11871"));
+                //students.Add(Student.loadThisStudent(connection, "12349"));
+                students.Add(Student.loadThisStudent(connection, "11804"));
             }
 
 
@@ -1605,7 +1604,9 @@ namespace SLReports.ReportCard
             }
             else
             {
-                sendPDF(GeneratePDF(displayedStudents));
+                String selectedGrade = "TestGrade";
+                String fileName = "ReportCards_" + selectedGrade + "_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
+                sendPDF(GeneratePDF(displayedStudents), fileName);
             }
             
 
