@@ -15,15 +15,17 @@ namespace SLReports
         public int courseid { get; set; }
         public int order { get; set; }
         public string studentvalue { get; set; }
+        public string category { get; set; }        
         public ObjectiveMark mark { get; set; }
 
-        public Objective(int id, int courseid, string subject, string description)
+        public Objective(int id, int courseid, string subject, string description, string category)
         {
             this.mark = null;
             this.id = id;
             this.description = description;
             this.courseid = courseid;
             this.subject = subject;
+            this.category = category;
         }
 
         public static List<Objective> loadObjectivesForThisCourse(SqlConnection connection, SchoolClass course)
@@ -33,7 +35,7 @@ namespace SLReports
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = connection;
             sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = "SELECT * FROM CourseObjective WHERE iCourseID=" + course.courseid;
+            sqlCommand.CommandText = "SELECT * FROM LSKY_CourseObjectives WHERE iCourseID=" + course.courseid;
             sqlCommand.Connection.Open();
             SqlDataReader dataReader = sqlCommand.ExecuteReader();
 
@@ -45,13 +47,25 @@ namespace SLReports
                             int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
                             int.Parse(dataReader["iCourseID"].ToString().Trim()),
                             dataReader["cSubject"].ToString().Trim(),
-                            dataReader["mNotes"].ToString().Trim()
+                            dataReader["mNotes"].ToString().Trim(),
+                            dataReader["ObjectiveCategory"].ToString().Trim()
                             ));
                 }
             }
 
             sqlCommand.Connection.Close();
             return returnMe;
+        }
+
+        public override string ToString()
+        {
+            bool containsMark = false;
+            if (mark != null)
+            {
+                containsMark = true;
+            }
+
+            return "Objective: { ID: " + this.id + ", ContainsObjectiveMark: " + LSKYCommon.boolToYesOrNo(containsMark) + "}";
         }
     }
 }

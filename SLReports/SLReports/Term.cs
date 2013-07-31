@@ -16,7 +16,6 @@ namespace SLReports
         public string name { get; set; }
         public int schoolID { get; set; }
         public List<ReportPeriod> ReportPeriods { get; set;}
-
         public List<SchoolClass> Courses { get; set; }
 
         public Term(int id, int trackid, DateTime start, DateTime end, string name, int schoolid)
@@ -39,7 +38,7 @@ namespace SLReports
 
         public override string ToString()
         {
-            return this.name;
+            return "Term: { ID: "+this.ID+", TrackID: "+this.trackID+", Name: " + this.name + ", SchoolID: "+this.schoolID+", Starts: "+this.startDate.ToShortDateString()+", Ends: "+this.endDate.ToShortDateString()+"}";
         }
 
         public static Term loadThisTerm(SqlConnection connection, int termID)

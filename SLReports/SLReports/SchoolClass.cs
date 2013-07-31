@@ -15,16 +15,19 @@ namespace SLReports
         public int classid { get; set; }
         public int trackID { get; set; }
         public int enrollmentCount { get; set; }
-        public string teacherFirstName { get; set; }
-        public string teacherLastName { get; set; }
-        public string teacherTitle { get; set; }
+        public int blockNumber { get; set; }
+        public int dayNumber { get; set; }
         public string mark { get; set; }
         public string schoolName { get; set; }
+        public string lowestGrade { get; set; }
+        public string highestGrade { get; set; }
+
         public Track track { get; set; }
         public List<Mark> Marks { get; set; }
         public List<Objective> Objectives { get; set; }
         public List<ObjectiveMark> ObjectiveMarks { get; set; }
         public List<Student> EnrolledStudents { get; set; }
+        public List<Teacher> teachers { get; set; }
 
         public List<ReportPeriod> ReportPeriods { get; set; }
 
@@ -40,43 +43,46 @@ namespace SLReports
             }
         }
 
+        public bool isHighSchoolClass()
+        {
+            int gradeNum = -1;
+            if (int.TryParse(this.lowestGrade, out gradeNum))
+            {                
+                if (gradeNum >= 10)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public string teacherName
         {
             get
             {
                 StringBuilder returnMe = new StringBuilder();
-                if (!string.IsNullOrEmpty(teacherTitle))
+                for (int x = 0; x < teachers.Count; x++ )
                 {
-                    returnMe.Append(teacherTitle + " ");
+                    returnMe.Append(teachers[x].displayName);
+                    if (x < teachers.Count-1)
+                    {
+                        returnMe.Append(", ");
+                    }
                 }
-                else
-                {
-                    returnMe.Append(teacherFirstName + " ");
-                }
-
-                returnMe.Append(teacherLastName);
+                
                 return returnMe.ToString();
             }
 
             set {}
         }
 
-        public SchoolClass(string name, int classid, int courseid, string teacherFirst, string teacherLast, string teacherTitle)
+        public override string ToString()
         {
-            Objectives = new List<Objective>();
-            Marks = new List<Mark>();
-            ReportPeriods = new List<ReportPeriod>();
-            ObjectiveMarks = new List<ObjectiveMark>();
-
-            this.name = name;
-            this.classid = classid;
-            this.courseid = courseid;
-            this.teacherFirstName = teacherFirst;
-            this.teacherLastName = teacherLast;
-            this.teacherTitle = teacherTitle;
+            return "Class: { Name: " + this.name + ", ClassID: " + this.classid + ", CourseID: " + this.courseid + ", Block: " + this.blockNumber + ", Day: " + this.dayNumber + ", Has Objectives: " + this.Objectives.Count + ", IsHighSchool: " + LSKYCommon.boolToYesOrNo(this.isHighSchoolClass()) + "}";
         }
 
-        public SchoolClass(string name, int classid, int courseid, string teacherFirst, string teacherLast, string teacherTitle, string schoolName, Track track)
+        public SchoolClass(string name, int classid, int courseid)
         {
             Objectives = new List<Objective>();
             Marks = new List<Mark>();
@@ -86,14 +92,103 @@ namespace SLReports
             this.name = name;
             this.classid = classid;
             this.courseid = courseid;
-            this.teacherFirstName = teacherFirst;
-            this.teacherLastName = teacherLast;
-            this.teacherTitle = teacherTitle;
-            this.schoolName = schoolName;
+        }
 
+        public SchoolClass(string name, int classid, int courseid, string teacherFirst, string teacherLast, string teacherTitle, string schoolName, int blockNum, int dayNum, Track track, string lowestGrade, string highestGrade)
+        {
+            Objectives = new List<Objective>();
+            Marks = new List<Mark>();
+            ReportPeriods = new List<ReportPeriod>();
+            ObjectiveMarks = new List<ObjectiveMark>();
+
+            this.name = name;
+            this.classid = classid;
+            this.courseid = courseid;
+            this.schoolName = schoolName;
+            this.dayNumber = dayNum;
+            this.blockNumber = blockNum;
+            this.lowestGrade = lowestGrade;
+            this.highestGrade = highestGrade;
             this.track = track;
         }
 
+
+
+        public static List<SchoolClass> loadStudentEnrolledClasses(SqlConnection connection, Student student, Term term)
+        {
+            List<SchoolClass> returnMe = new List<SchoolClass>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM LSKY_StudentclassEnrollment WHERE cStudentNumber=@STUDENTNUM AND iTermID=@TERMID ORDER BY SchoolName ASC, cName ASC, iClassID ASC;";
+            sqlCommand.Parameters.AddWithValue("@STUDENTNUM", student.getStudentID());
+            sqlCommand.Parameters.AddWithValue("@TERMID", term.ID);
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+
+                    bool daily = false;
+                    if (!String.IsNullOrEmpty(dataReader["TrackDaily"].ToString().Trim()))
+                    {
+                        daily = bool.Parse(dataReader["TrackDaily"].ToString().Trim());
+                    }
+
+                    Track newTrack = new Track(
+                            int.Parse(dataReader["TrackID"].ToString().Trim()),
+                            dataReader["TrackName"].ToString().Trim(),
+                            DateTime.Parse(dataReader["TrackStart"].ToString().Trim()),
+                            DateTime.Parse(dataReader["TrackEnd"].ToString().Trim()),
+                            int.Parse(dataReader["SchoolID"].ToString().Trim()),
+                            daily);
+
+                    int blockNum = -1;
+                    if (!int.TryParse(dataReader["iblockNumber"].ToString().Trim(), out blockNum)) 
+                    {
+                        blockNum = -1;
+                    }
+
+                    int dayNum = -1;
+                    if (!int.TryParse(dataReader["iDayNumber"].ToString().Trim(), out dayNum)) 
+                    {
+                        dayNum = -1;
+                    }
+                    
+
+                    SchoolClass newSchoolClass = new SchoolClass(
+                            dataReader["cName"].ToString().Trim(),
+                            int.Parse(dataReader["iClassID"].ToString().Trim()),
+                            int.Parse(dataReader["iCourseID"].ToString().Trim()),
+                            dataReader["TeacherFirstName"].ToString().Trim(),
+                            dataReader["TeacherLastName"].ToString().Trim(),
+                            dataReader["TeacherTitle"].ToString().Trim(),
+                            dataReader["SchoolName"].ToString().Trim(),
+                            blockNum,
+                            dayNum,
+                            newTrack,
+                            dataReader["LowestGrade"].ToString().Trim(),
+                            dataReader["HighestGrade"].ToString().Trim()
+                        );
+                    returnMe.Add(newSchoolClass);
+                }
+            }
+
+            sqlCommand.Connection.Close();
+
+            returnMe.Sort();
+
+            foreach (SchoolClass sc in returnMe)
+            {
+                sc.teachers = Teacher.loadTeachersForThisClass(connection, sc.classid);
+            }
+
+            return returnMe;
+
+        }
 
         public static List<SchoolClass> loadAllClasses(SqlConnection connection)
         {
@@ -125,7 +220,7 @@ namespace SLReports
                             int.Parse(dataReader["SchoolID"].ToString().Trim()),
                             daily);
 
-                    returnMe.Add(new SchoolClass(
+                    SchoolClass newSchoolClass = new SchoolClass(
                             dataReader["cName"].ToString().Trim(),
                             int.Parse(dataReader["iClassID"].ToString().Trim()),
                             int.Parse(dataReader["iCourseID"].ToString().Trim()),
@@ -133,14 +228,27 @@ namespace SLReports
                             dataReader["TeacherLastName"].ToString().Trim(),
                             dataReader["TeacherTitle"].ToString().Trim(),
                             dataReader["SchoolName"].ToString().Trim(),
-                            newTrack
-                        ));
+                            int.Parse(dataReader["iblockNumber"].ToString().Trim()),
+                            int.Parse(dataReader["iDayNumber"].ToString().Trim()),
+                            newTrack,
+                            dataReader["LowestGrade"].ToString().Trim(),
+                            dataReader["HighestGrade"].ToString().Trim()
+                        );                   
+
+
+                    returnMe.Add(newSchoolClass);
                 }
             }
 
             sqlCommand.Connection.Close();
 
             returnMe.Sort();
+
+            foreach (SchoolClass sc in returnMe)
+            {
+                sc.teachers = Teacher.loadTeachersForThisClass(connection, sc.classid); 
+            }
+
             return returnMe;
         }
 
@@ -153,9 +261,14 @@ namespace SLReports
 
             SchoolClass obj2 = obj as SchoolClass;
 
+
             if (obj2 != null)
             {
-                return this.name.CompareTo(obj2.name);
+                if ((this.blockNumber != 0)  && (obj2.blockNumber != 0)) {
+                    return this.blockNumber.CompareTo(obj2.blockNumber);
+                } else {
+                    return this.name.CompareTo(obj2.name);
+                }
             }
             else
             {

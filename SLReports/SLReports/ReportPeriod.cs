@@ -7,7 +7,7 @@ using System.Web;
 
 namespace SLReports
 {
-    public class ReportPeriod
+    public class ReportPeriod :IComparable
     {
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }
@@ -34,7 +34,7 @@ namespace SLReports
 
         public override string ToString()
         {
-            return this.name;
+            return "ReportPeriod: { ID: "+this.ID+", Name: " + this.name + ", SchoolID: "+this.schoolID+" Starts: "+this.startDate.ToLongDateString()+", Ends: "+this.endDate.ToLongDateString()+"}";
         }
 
         public static ReportPeriod loadThisReportPeriod(SqlConnection connection, int reportPeriodID)
@@ -127,6 +127,25 @@ namespace SLReports
             sqlCommand.Connection.Close();
             return returnMe;
         }
-        
+
+
+        public int CompareTo(object obj)
+        {
+            if (obj == null)
+            {
+                return 1;
+            }
+
+            ReportPeriod obj2 = obj as ReportPeriod;
+
+            if (obj2 != null)
+            {
+                return this.startDate.CompareTo(obj2.startDate);
+            }
+            else
+            {
+                throw new ArgumentException("Object is not a ReportPeriod");
+            }
+        }
     }
 }

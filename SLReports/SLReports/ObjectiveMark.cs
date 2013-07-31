@@ -14,8 +14,30 @@ namespace SLReports
         public int objectiveID { get; set; }
         public int reportPeriodID { get; set; }
         public int courseID { get; set; }
-        public string mark { get; set; }
+        public string cMark { get; set; }
+        public float nMark { get; set; }
+        public string mark {
+            get
+            {
+                if (string.IsNullOrEmpty(cMark))
+                {
+                    return nMark.ToString();
+                }
+                else
+                {
+                    return cMark;
+                }
+            }
+
+            set
+            {
+                throw new Exception("This value cannot be modified");
+            }
+        }
+        
         public Objective objective { get; set; }
+        public ReportPeriod reportPeriod { get; set; }
+
         public string description 
         {
             get
@@ -35,19 +57,27 @@ namespace SLReports
         }
 
 
-        public ObjectiveMark(int objectiveMarkID, int studentID, int objectiveID, int reportPeriodID, int courseID, string mark)
+        public ObjectiveMark(int objectiveMarkID, int studentID, int objectiveID, int reportPeriodID, int courseID, string cmark, float nmark)
         {
             this.objectiveMarkID = objectiveMarkID;
             this.studentID = studentID;
             this.objectiveID = objectiveID;
             this.reportPeriodID = reportPeriodID;
             this.courseID = courseID;
-            this.mark = mark;
+            this.cMark = cmark;
+            this.nMark = nmark;
         }
 
         public override string ToString()
         {
-            return this.objectiveMarkID + " " + this.mark;
+            bool hasObjectiveAlso = false;
+
+            if (this.objective != null)
+            {
+                hasObjectiveAlso = true;
+            }
+
+            return "ObjectiveMark: { ID: " + this.objectiveMarkID + ", Objective ID: " + this.objectiveID + ", nMark: " + this.nMark + ", cMark: " + this.cMark + ", Translated Mark: "+this.mark+", Report Period: " + this.reportPeriodID + ", HasObjectiveInfo: " + LSKYCommon.boolToYesOrNo(hasObjectiveAlso) + " }";
         }
 
         public static List<ObjectiveMark> loadObjectiveMarksForThisCourse(SqlConnection connection, Term term, Student student, SchoolClass course)
@@ -68,13 +98,18 @@ namespace SLReports
             {
                 while (dataReader.Read())
                 {
+
+                    float nMark = -1;
+                    float.TryParse(dataReader["nMark"].ToString().Trim(), out nMark);
+
                     returnMe.Add(new ObjectiveMark(
                             int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
                             int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
                             int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
                             int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
                             int.Parse(dataReader["iCourseID"].ToString().Trim()),
-                            dataReader["cMark"].ToString().Trim()
+                            dataReader["cMark"].ToString().Trim(),
+                            nMark
                             ));
                 }
             }
@@ -100,13 +135,17 @@ namespace SLReports
             {
                 while (dataReader.Read())
                 {
+                    float nMark = -1;
+                    float.TryParse(dataReader["nMark"].ToString().Trim(), out nMark);
+
                     returnMe.Add(new ObjectiveMark(
                             int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
                             int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
                             int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
                             int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
                             int.Parse(dataReader["iCourseID"].ToString().Trim()),
-                            dataReader["cMark"].ToString().Trim()
+                            dataReader["cMark"].ToString().Trim(),
+                            nMark
                             ));
                 }
             }

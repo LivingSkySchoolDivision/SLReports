@@ -11,60 +11,56 @@ namespace SLReports
     {
         public int ID { get; set; }
         public int reportPeriodID { get; set; }
-        public string numberMark { get; set; }
-        public string outcomeMark { get; set; }
+        public string nMark { get; set; }
+        public string cMark { get; set; }
         public string className { get; set; }
         public int classID { get; set; }
         public int courseID { get; set; }
-        public string teacherFirst { get; set; }
-        public string teacherLast { get; set; }
-        public string teacherTitle { get; set; }
         public string comment { get; set; }
-        public SchoolClass course { get; set; }
+        public SchoolClass schoolclass { get; set; }
+        public List<Teacher> teachers { get; set; }
 
         public ReportPeriod reportPeriod { get; set; }
 
-        public Mark(int id, int reportPeriodID, string numberMark, string outcomeMark, string classname, int classid, int courseid, string comment, string teacherFirst, string teacherLast, string teacherTitle, ReportPeriod rperiod)
+        public Mark(int id, int reportPeriodID, string numberMark, string outcomeMark, string classname, int classid, int courseid, string comment, ReportPeriod rperiod)
         {            
             this.ID = id;
             this.reportPeriodID = reportPeriodID;
-            this.numberMark = numberMark;
-            this.outcomeMark = outcomeMark;
+            this.nMark = numberMark;
+            this.cMark = outcomeMark;
             this.className = classname;
             this.comment = comment;
             this.reportPeriod = rperiod;
             this.classID = classid;
             this.courseID = courseid;
-            this.teacherFirst = teacherFirst;
-            this.teacherLast = teacherLast;
-            this.teacherTitle = teacherTitle;
-            this.course = new SchoolClass(this.className, this.classID, this.courseID, this.teacherFirst, this.teacherLast, this.teacherTitle);
+            this.schoolclass = new SchoolClass(this.className, this.classID, this.courseID);            
         }
 
+       
         public string getMark()
         {   
-            if (((int)Double.Parse(this.numberMark) == 0) && (string.IsNullOrEmpty(outcomeMark)))
+            if (((int)Double.Parse(this.nMark) == 0) && (string.IsNullOrEmpty(cMark)))
             {
                 return string.Empty;
             }
             else
             {
-                if (string.IsNullOrEmpty(outcomeMark))
+                if (string.IsNullOrEmpty(cMark))
                 {
-                    int markVal = (int)double.Parse(this.numberMark);
+                    int markVal = (int)double.Parse(this.nMark);
 
                     return markVal + "%";
                 }
                 else
                 {
-                    return this.outcomeMark;
+                    return this.cMark;
                 }
             }
         }
 
         public override string ToString()
         {
-            return this.classID + ":" + this.className + " Mark: " + this.getMark() + ", Period: " + this.reportPeriod;
+            return "Mark: {Mark ID: "+this.ID+",CourseID: "+this.courseID+", ClassID: " + this.classID + ", ClassName: " + this.className + ", nMark: " + this.nMark + ", cMark: "+this.cMark+" , Period: " + this.reportPeriod + "}";
         }
 
         public static List<Mark> loadMarksFromThisReportPeriod(SqlConnection connection, ReportPeriod reportPeriod, Student student)
@@ -91,11 +87,12 @@ namespace SLReports
                             int.Parse(dataReader["iClassID"].ToString().Trim()),
                             int.Parse(dataReader["iCourseID"].ToString().Trim()),
                             dataReader["mComment"].ToString().Trim(),
-                            dataReader["TeacherFirstName"].ToString().Trim(),
-                            dataReader["TeacherLastName"].ToString().Trim(),
-                            dataReader["TeacherTitle"].ToString().Trim(),
                             reportPeriod
                             ));
+
+                    /* TODO: get teachers */
+
+
                 }
             }
 
@@ -131,19 +128,25 @@ namespace SLReports
                                 int.Parse(dataReader["iClassID"].ToString().Trim()),
                                 int.Parse(dataReader["iCourseID"].ToString().Trim()),
                                 dataReader["mComment"].ToString().Trim(),
-                                dataReader["TeacherFirstName"].ToString().Trim(),
-                                dataReader["TeacherLastName"].ToString().Trim(),
-                                dataReader["TeacherTitle"].ToString().Trim(),
                                 rp
                                 );
 
+
                         newMark.reportPeriod = rp;
+
+                        
                         returnMe.Add(newMark);
 
                     }
                 }
             sqlCommand.Connection.Close();
             }
+
+            foreach (Mark newMark in returnMe)
+            {
+                newMark.teachers = Teacher.loadTeachersForThisClass(connection, newMark.classID);
+            }
+
             return returnMe;
         }
     }

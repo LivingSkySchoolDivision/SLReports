@@ -13,8 +13,9 @@ using System.Web.UI.WebControls;
 
 namespace SLReports.ReportCard
 {
-    public partial class SingleReportPeriodPDF : System.Web.UI.Page
+    public partial class Grade_Term_PDF : System.Web.UI.Page
     {
+        private string api_key = "6b05cb5705c07a4ca23a6bba779263ab983a5ae2";
         private Font font_large = FontFactory.GetFont("Verdana", 15, BaseColor.BLACK);
         private Font font_large_bold = FontFactory.GetFont("Verdana", 15, Font.BOLD, BaseColor.BLACK);
         private Font font_large_italic = FontFactory.GetFont("Verdana", 15, Font.ITALIC, BaseColor.BLACK);
@@ -28,13 +29,11 @@ namespace SLReports.ReportCard
         private Font font_small_bold_white = FontFactory.GetFont("Verdana", 8, Font.BOLD, BaseColor.WHITE);
         private Font font_small_italic = FontFactory.GetFont("Verdana", 8, Font.ITALIC, BaseColor.BLACK);
 
-        private Student selectedStudent = null;
-        private ReportPeriod selectedReportPeriod = null;
 
         protected void Page_Init(object sender, EventArgs e)
         {
         }
-       
+
         /// <summary>
         /// Displays a graphical number bar for outcomes
         /// </summary>
@@ -267,6 +266,7 @@ namespace SLReports.ReportCard
 
             return iTextSharp.text.Image.GetInstance(canvas); ;
         }
+
         protected iTextSharp.text.Image outcomeBar_Slider(PdfContentByte content, String value)
         {
             int width = 125;
@@ -402,6 +402,7 @@ namespace SLReports.ReportCard
 
             return iTextSharp.text.Image.GetInstance(canvas); ;
         }
+
         protected iTextSharp.text.Image outcomeBar_Minimalist(PdfContentByte content, String value)
         {
             int width = 125;
@@ -504,7 +505,7 @@ namespace SLReports.ReportCard
             newCell.Padding = cellpadding;
             newCell.Border = border;
             schoolNamePlateTable.AddCell(newCell);
-            
+
             newCell = new PdfPCell(new Phrase(school.address, font_body));
             newCell.VerticalAlignment = 0;
             newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
@@ -517,7 +518,7 @@ namespace SLReports.ReportCard
 
         }
 
-        protected PdfPTable namePlateTable(Student student, ReportPeriod period)
+        protected PdfPTable namePlateTable(Student student)
         {
             int cellpadding = 3;
             int border = Rectangle.NO_BORDER;
@@ -542,7 +543,7 @@ namespace SLReports.ReportCard
             {
                 try
                 {
-                    iTextSharp.text.Image photo = iTextSharp.text.Image.GetInstance(@"https://sldata.lskysd.ca/SLReports/photos/GetPhoto.aspx?studentnumber=" + student.getStudentID() + "&apikey=6b05cb5705c07a4ca23a6bba779263ab983a5ae2");
+                    iTextSharp.text.Image photo = iTextSharp.text.Image.GetInstance(@"https://sldata.lskysd.ca/SLReports/photos/GetPhoto.aspx?studentnumber=" + student.getStudentID() + "&apikey=" + api_key);
                     photo.Border = Rectangle.BOX;
                     photo.BorderWidth = 1;
                     photoCell.PaddingRight = 10f;
@@ -647,8 +648,9 @@ namespace SLReports.ReportCard
             nameplateTable.AddCell(newCell);
             Paragraph description = new Paragraph();
 
-            description.Add(new Phrase(period.name, font_body));
-            description.Add(new Phrase(" (" + period.startDate.ToLongDateString() + " to " + period.endDate.ToLongDateString() + ")", font_body_italic));
+            /*
+            description.Add(new Phrase(term.name, font_body));
+            description.Add(new Phrase(" (" + term.startDate.ToLongDateString() + " to " + term.endDate.ToLongDateString() + ")", font_body_italic));
 
             newCell = new PdfPCell(description);
             newCell.Border = border;
@@ -656,7 +658,7 @@ namespace SLReports.ReportCard
             newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
             newCell.Padding = cellpadding;
             nameplateTable.AddCell(newCell);
-
+            */
 
             return nameplateTable;
 
@@ -840,10 +842,8 @@ namespace SLReports.ReportCard
             newCell.Border = Rectangle.TOP_BORDER;
             newCell.BorderWidth = 1;
             attendanceTable.AddCell(newCell);
-            
 
             return attendanceTable;
-
         }
 
         protected PdfPTable courseAttendanceSummary(Student student, SchoolClass course)
@@ -866,7 +866,7 @@ namespace SLReports.ReportCard
 
             foreach (Absence abs in student.absences)
             {
-                if (abs.getCourseName() == course.name) 
+                if (abs.getCourseName() == course.name)
                 {
                     if (abs.getStatus().ToLower() == "late")
                     {
@@ -964,7 +964,7 @@ namespace SLReports.ReportCard
             return attendanceTable;
 
         }
-
+        
         protected PdfPTable outcomeLegend(PdfContentByte content)
         {
             PdfPTable outcomeLegendTable = new PdfPTable(2);
@@ -979,7 +979,7 @@ namespace SLReports.ReportCard
             PdfPCell newCell = null;
             Paragraph description = null;
 
-            newCell = new PdfPCell(new Phrase("Outcome Legend",font_large_bold));
+            newCell = new PdfPCell(new Phrase("Outcome Legend", font_large_bold));
             newCell.Border = 0;
             newCell.Colspan = 2;
             newCell.Padding = 2;
@@ -1084,6 +1084,7 @@ namespace SLReports.ReportCard
 
             return outcomeLegendTable;
         }
+        
         protected PdfPTable lifeSkillsLegend(PdfContentByte content)
         {
             PdfPTable outcomeLegendTable = new PdfPTable(2);
@@ -1188,11 +1189,10 @@ namespace SLReports.ReportCard
             newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
             outcomeLegendTable.AddCell(newCell);
-           
+
 
             return outcomeLegendTable;
         }
-       
 
         protected PdfPTable classWithMarks(SchoolClass course, PdfContentByte content)
         {
@@ -1203,14 +1203,14 @@ namespace SLReports.ReportCard
             classTable.SpacingAfter = 35;
             classTable.KeepTogether = true;
 
-            float[] widths = new float[] { 2f, 4f, 1f};
+            float[] widths = new float[] { 2f, 4f, 1f };
             classTable.SetWidths(widths);
 
 
             PdfPCell newCell = null;  // Going to reuse this for each cell, because i'm lazy and don't want to create a billion extra objects...
             Paragraph newP = null; // Ditto (newP[aragraph])
-               
-            /* Course title and numeric mark */            
+
+            /* Course title and numeric mark */
             newP = new Paragraph();
             newP.Add(new Phrase(course.name, font_large_bold));
             newP.Add(new Phrase(" (" + course.teacherName + ")", font_body));
@@ -1224,20 +1224,20 @@ namespace SLReports.ReportCard
             newCell.Border = 0;
             newCell.Padding = 5;
 
-            //if (!course.hasObjectives())
+            if (!course.hasObjectives())
             {
                 foreach (Mark mark in course.Marks)
                 {
                     Paragraph markValueParagraph = new Paragraph();
-                    if (double.Parse(mark.numberMark) > 0)
+                    if (double.Parse(mark.nMark) > 0)
                     {
-                        markValueParagraph.Add(mark.numberMark.ToString() + "%");
+                        markValueParagraph.Add(mark.nMark.ToString() + "%");
                     }
 
                     newCell = new PdfPCell(markValueParagraph);
                     newCell.Border = 0;
                     newCell.Padding = 5;
-                    newCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;  
+                    newCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
                 }
             }
 
@@ -1260,33 +1260,27 @@ namespace SLReports.ReportCard
             {
                 foreach (ObjectiveMark objectivem in course.ObjectiveMarks)
                 {
-                    if ((objectivem.courseID == course.courseid) && (objectivem.reportPeriodID == reportPeriod.ID))
-                    {
-                        if (!string.IsNullOrEmpty(objectivem.mark))
-                        {
+                    newCell = new PdfPCell(displayOutcomeBar(content, objectivem.cMark));
+                    newCell.Padding = 5;
+                    //newCell.PaddingLeft = 0;
 
-                            newCell = new PdfPCell(displayOutcomeBar(content, objectivem.mark));
-                            newCell.Padding = 5;
-                            //newCell.PaddingLeft = 0;
+                    newCell.Border = 0;
+                    classTable.AddCell(newCell);
 
-                            newCell.Border = 0;
-                            classTable.AddCell(newCell);
-
-                            newP = new Paragraph();
-                            newP.Add(new Phrase(objectivem.description, font_small));
-                            newCell = new PdfPCell(newP);
-                            newCell.Border = 0;
-                            newCell.Padding = 5;
-                            newCell.Colspan = 2;
-                            classTable.AddCell(newCell);
-                        }
-                    }
-                }
+                    newP = new Paragraph();
+                    newP.Add(new Phrase(objectivem.description, font_small));
+                    newCell = new PdfPCell(newP);
+                    //newCell.Border = Rectangle.BOX;
+                    newCell.Border = 0;
+                    newCell.Padding = 5;
+                    newCell.Colspan = 2;
+                    classTable.AddCell(newCell);
+                 }
             }
-            
+
             /* Life Skills */
 
-            /* Comments */            
+            /* Comments */
             newP = new Paragraph();
             newP.Add(new Phrase("Comments:\n", font_body_bold));
             newP.Add(Chunk.NEWLINE);
@@ -1294,6 +1288,7 @@ namespace SLReports.ReportCard
             {
                 if (!string.IsNullOrEmpty(mark.comment))
                 {
+                    newP.Add(new Phrase(mark.reportPeriod.name + ": ", font_small_bold));
                     newP.Add(new Phrase(mark.comment, font_small));
                     newP.Add(Chunk.NEWLINE);
                     newP.Add(Chunk.NEWLINE);
@@ -1317,226 +1312,303 @@ namespace SLReports.ReportCard
             Response.ContentEncoding = Encoding.UTF8;
             Response.ContentType = "application/pdf";
             Response.AddHeader("Content-Disposition", "attachment; filename=ReportCard.pdf");
-            
+
             Response.OutputStream.Write(PDFData.GetBuffer(), 0, PDFData.GetBuffer().Length);
             Response.OutputStream.Flush();
             Response.OutputStream.Close();
             Response.End();
 
         }
-        
-        protected MemoryStream GeneratePDF(Student student, ReportPeriod period)
-        {
+
+        protected MemoryStream GeneratePDF(List<Student> students)
+        {           
             MemoryStream memstream = new MemoryStream();
             Document ReportCard = new Document(PageSize.LETTER);
-            PdfWriter writer = PdfWriter.GetInstance(ReportCard, memstream);
+            PdfWriter writer = PdfWriter.GetInstance(ReportCard, memstream);            
 
             ReportCard.Open();
             PdfContentByte content = writer.DirectContent;
 
             PdfPageEventHandler PageEventHandler = new PdfPageEventHandler();
-            writer.PageEvent = PageEventHandler;
+            writer.PageEvent = PageEventHandler;            
             PageEventHandler.DoubleSidedMode = true;
             PageEventHandler.ShowOnFirstPage = false;
-            PageEventHandler.bottomLeft = student.getDisplayName();
-            PageEventHandler.bottomCenter = period.name;
-            
-            ReportCard.Add(schoolNamePlate(student.school));
-            ReportCard.Add(namePlateTable(student, period));
-            ReportCard.Add(outcomeLegend(content));
-            ReportCard.Add(lifeSkillsLegend(content));
-            
-            ReportCard.NewPage();
+            PageEventHandler.bottomCenter = "Printed " + DateTime.Now.ToLongDateString();
 
-            ReportCard.Add(new Phrase(string.Empty));
-
-            foreach (Term term in student.track.terms)
+            foreach (Student student in students)
             {
-                foreach (SchoolClass course in term.Courses)
+                PageEventHandler.bottomLeft = student.getDisplayName();                
+                ReportCard.Add(schoolNamePlate(student.school));
+                ReportCard.Add(namePlateTable(student));
+                //ReportCard.Add(outcomeLegend(content));
+                //ReportCard.Add(lifeSkillsLegend(content));
+                //ReportCard.NewPage();
+                ReportCard.Add(new Phrase(string.Empty));
+
+                foreach (Term term in student.track.terms)
                 {
-                    ReportCard.Add(classWithMarks(course, content));
-                    if (!student.track.daily)
+                    foreach (SchoolClass course in term.Courses)
                     {
-                        ReportCard.Add(courseAttendanceSummary(student, course));
+                        ReportCard.Add(classWithMarks(course, content));
+                        if (!student.track.daily)
+                        {
+                            ReportCard.Add(courseAttendanceSummary(student, course));
+                        }
                     }
+                }
+
+                ReportCard.Add(attendanceSummary(student));
+
+                PageEventHandler.ResetPageNumbers(ReportCard);
+            }
+
+            ReportCard.Close();
+            return memstream;
+        }
+
+        private void displayError(string error)
+        {
+            Response.Write(error);
+        }
+
+        private Student loadStudentData(SqlConnection connection, Student thisStudent, List<ReportPeriod> reportPeriods)
+        {
+            /*
+             * Yes, this is really stupid and complicated, but it has to be beacuse of how data is organized in the schoollogic database.              
+             * This function attempts to translate the data into a structure that makes more sense
+             * */
+
+            /* Find the earliest report period and the last report period, for attendance dates */
+            DateTime earliestDate = DateTime.MaxValue;
+            DateTime lastDate = DateTime.MinValue;
+
+            List<int> detectedTermIDs = new List<int>();
+
+            foreach (ReportPeriod rp in reportPeriods)
+            {
+                /* Find the earliest report period and the last report period, for attendance dates */
+                if (rp.startDate < earliestDate)
+                {
+                    earliestDate = rp.startDate;
+                }
+
+                if (rp.endDate > lastDate)
+                {
+                    lastDate = rp.endDate;
+                }
+
+                /* Derive some terms from the given report periods while we are cycling through them */
+                if (!detectedTermIDs.Contains(rp.termID))
+                {
+                    detectedTermIDs.Add(rp.termID);
                 }
             }
 
-            ReportCard.Add(attendanceSummary(student));
+            /* Derive some terms from the given report periods while we are cycling through them */
+            List<Term> detectedTerms = new List<Term>();
+            foreach (int termid in detectedTermIDs)
+            {
+                detectedTerms.Add(Term.loadThisTerm(connection, termid));
+            }       
+     
+            /* Put report periods into their respective terms */
+            foreach (Term term in detectedTerms) 
+            {
+                foreach (ReportPeriod rp in reportPeriods)
+                {
+                    if (rp.termID == term.ID)
+                    {
+                        term.ReportPeriods.Add(rp);
+                    }
+                }
+            }
             
-            ReportCard.Close();
 
-            return memstream;
+
+            Student student = thisStudent;
+            if (student != null)
+            {
+                student.school = School.loadThisSchool(connection, thisStudent.getSchoolIDAsInt());
+                student.track = Track.loadThisTrack(connection, student.getTrackID());
+                student.track.terms = detectedTerms;
+                
+                /* Load attendance */
+                student.absences = Absence.loadAbsencesForThisStudentAndTimePeriod(connection, thisStudent, earliestDate, lastDate);
+                
+
+                                
+                foreach (Term thisTerm in student.track.terms)
+                {
+                    /* Load enrolled classes */
+                    thisTerm.Courses = SchoolClass.loadStudentEnrolledClasses(connection, student, thisTerm);
+
+                    foreach (SchoolClass thisClass in thisTerm.Courses)
+                    {
+
+                        /* Put list of report periods into each class so we can easily reference it later */
+                        thisClass.ReportPeriods = reportPeriods;
+
+                        /* Load objectives and objective marks */
+                        thisClass.Objectives = Objective.loadObjectivesForThisCourse(connection, thisClass);
+                        thisClass.ObjectiveMarks = ObjectiveMark.loadObjectiveMarksForThisCourse(connection, thisTerm, student, thisClass);
+
+                        /* Put objective marks in the corresonding objective */
+                        foreach (ObjectiveMark objectivemark in thisClass.ObjectiveMarks)
+                        {
+                            foreach (Objective objective in thisClass.Objectives)
+                            {
+                                if (objectivemark.objectiveID == objective.id)
+                                {
+                                    objectivemark.objective = objective;
+                                }
+                            }
+                        }
+
+                        foreach (Objective objective in thisClass.Objectives)
+                        {
+                            foreach (ObjectiveMark objectivemark in thisClass.ObjectiveMarks)
+                            {
+                                if (objective.id == objectivemark.objectiveID)
+                                {
+                                    objective.mark = objectivemark;
+                                }
+                            }
+                        }
+
+                    }
+
+                    /* Load class marks */
+                    
+                    List<Mark> allMarks = new List<Mark>();
+                    //thisTerm.ReportPeriods = ReportPeriod.loadReportPeriodsFromThisTerm(connection, thisTerm.ID);
+                    
+                    foreach (ReportPeriod thisReportPeriod in thisTerm.ReportPeriods)
+                    {
+                        thisReportPeriod.marks = Mark.loadMarksFromThisReportPeriod(connection, thisReportPeriod, student);
+                        foreach (Mark m in thisReportPeriod.marks)
+                        {
+                            allMarks.Add(m);
+                        }
+                    }
+
+                    foreach (Mark m in allMarks)
+                    {
+                        foreach (SchoolClass c in thisTerm.Courses)
+                        {
+                            if (m.classID == c.classid)
+                            {
+                                c.Marks.Add(m);
+                            }
+                        }
+                    }
+                     
+                }
+
+            }
             
+            return student;
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            List<Student> students = new List<Student>();
+            List<Student> displayedStudents = new List<Student>();
+
+            List<ReportPeriod> selectedReportPeriods = new List<ReportPeriod>();
+            
+
+
             String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogic2013"].ConnectionString;
-            //String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
-
-            try
+            using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
-                if (!String.IsNullOrEmpty(Request.QueryString["studentid"]))
+                /* Debugging info */
+                //selectedTerm = Term.loadThisTerm(connection, 20);
+                selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 258));
+                selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 257));
+                selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 256));
+
+                students.Add(Student.loadThisStudent(connection, "12511"));
+                //students.Add(Student.loadThisStudent(connection, "12252"));
+                //students.Add(Student.loadThisStudent(connection, "600000375"));
+                //students.Add(Student.loadThisStudent(connection, "600000234"));                                
+            }
+
+
+            selectedReportPeriods.Sort();
+            using (SqlConnection connection = new SqlConnection(dbConnectionString))
+            {
+                foreach (Student student in students)
+                {                
+                    displayedStudents.Add(loadStudentData(connection, student, selectedReportPeriods));
+                }
+                students.Clear();
+            }
+
+
+            if (Request.QueryString["debug"] == "true")
+            {
+
+                foreach (Student student in displayedStudents)
                 {
-                    int studentID = -1;
-                    if (int.TryParse(Request.QueryString["studentid"], out studentID))
+                    Response.Write("<BR><hr><BR><b>" + student + "</B>");
+                    Response.Write("<BR><b>Absense entries: </b>" + student.absences.Count);
+                    Response.Write("<BR>&nbsp;<b>Track:</b> " + student.track);
+                    foreach (Term term in student.track.terms)
                     {
-                        if (!String.IsNullOrEmpty(Request.QueryString["reportperiod"]))
+                        Response.Write("<BR>&nbsp;<b>Term:</b> " + term);
+                        foreach (ReportPeriod rp in term.ReportPeriods)
                         {
-                            int reportPeriodID = -1;
-                            if (int.TryParse(Request.QueryString["reportperiod"], out reportPeriodID))
+                            Response.Write("<BR>&nbsp;&nbsp;<b>Report Period:</b> " + rp);
+                            Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Marks: </b> " + rp.marks.Count);
+                            foreach (Mark mark in rp.marks)
                             {
-                                using (SqlConnection connection = new SqlConnection(dbConnectionString))
+                                Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>Mark: </b> " + mark);
+                            }
+                        }
+
+                        Response.Write("<BR><BR>&nbsp;&nbsp;<b>Classes:</b> " + term.Courses.Count);
+                        foreach (SchoolClass c in term.Courses)
+                        {
+                            Response.Write("<BR><BR>&nbsp;&nbsp;<b>Class:</b> " + c);
+                            Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Teacher:</b> " + c.teacherName);
+                            Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Marks:</b> " + c.Marks.Count);
+                            Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Objective Marks:</b> " + c.ObjectiveMarks.Count);
+                            foreach (ReportPeriod rp in term.ReportPeriods)
+                            {
+                                Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Report Period:</b> " + rp);
+                                foreach (Mark m in c.Marks)
                                 {
-                                    selectedStudent = Student.loadThisStudent(connection, studentID.ToString());
-
-                                    #region Load data for the student
-                                    if (selectedStudent != null)
+                                    if (m.reportPeriodID == rp.ID)
                                     {
-                                        selectedStudent.school = School.loadThisSchool(connection, int.Parse(selectedStudent.getSchoolID()));
-
-                                        /* Get student attendance */
-                                        ReportPeriod rp = ReportPeriod.loadThisReportPeriod(connection, reportPeriodID);
-                                        selectedStudent.absences = Absence.loadAbsencesForThisStudentAndTimePeriod(connection, selectedStudent, rp.startDate, rp.endDate);
-
-                                        /* Get student track, and determine the terms and report periods */
-                                        selectedStudent.track = Track.loadThisTrack(connection, selectedStudent.getTrackID());
-
-                                        /* Populate the track with terms */
-                                        selectedStudent.track.terms = Term.loadTermsFromThisTrack(connection, selectedStudent.track);
-
-                                        /* Populate the terms with report periods */
-                                        foreach (Term t in selectedStudent.track.terms)
-                                        {
-                                            List<ObjectiveMark> TermObjectiveMarks = ObjectiveMark.loadObjectiveMarksForThisStudent(connection, t, selectedStudent);
-
-                                            t.ReportPeriods = ReportPeriod.loadReportPeriodsFromThisTerm(connection, t);
-
-                                            Dictionary<int, SchoolClass> termCourses = new Dictionary<int, SchoolClass>();
-                                            termCourses.Clear();
-
-                                            /* Load marks into the report period */
-                                            foreach (ReportPeriod r in t.ReportPeriods)
-                                            {
-                                                if (r.ID == reportPeriodID)
-                                                {
-                                                    r.marks = Mark.loadMarksFromThisReportPeriod(connection, r, selectedStudent);
-                                                    selectedReportPeriod = r;
-
-                                                    Dictionary<int, SchoolClass> allcourses = new Dictionary<int, SchoolClass>();
-                                                    foreach (Mark m in r.marks)
-                                                    {
-                                                        if (!allcourses.ContainsKey(m.courseID))
-                                                        {
-                                                            allcourses.Add(m.courseID, new SchoolClass(m.className, m.classID, m.courseID, m.teacherFirst, m.teacherLast, m.teacherTitle));
-                                                        }
-
-                                                        if (!termCourses.ContainsKey(m.courseID))
-                                                        {
-                                                            termCourses.Add(m.courseID, new SchoolClass(m.className, m.classID, m.courseID, m.teacherFirst, m.teacherLast, m.teacherTitle));
-                                                        }
-                                                    }
-
-
-                                                    foreach (KeyValuePair<int, SchoolClass> kvp in termCourses)
-                                                    {
-                                                        SchoolClass c = kvp.Value;
-                                                        Dictionary<int, ReportPeriod> detectedReportPeriods = new Dictionary<int, ReportPeriod>();
-
-                                                        foreach (Mark m in r.marks)
-                                                        {
-                                                            if (!detectedReportPeriods.ContainsKey(m.reportPeriodID))
-                                                            {
-                                                                detectedReportPeriods.Add(m.reportPeriodID, m.reportPeriod);
-                                                            }
-                                                        }
-
-                                                        foreach (KeyValuePair<int, ReportPeriod> drp in detectedReportPeriods)
-                                                        {
-                                                            c.ReportPeriods.Add(drp.Value);
-
-
-                                                        }
-
-                                                        foreach (Mark m in r.marks)
-                                                        {
-                                                            if (m.courseID == c.courseid)
-                                                            {
-                                                                c.Marks.Add(m);
-                                                            }
-                                                        }
-
-
-
-
-                                                        c.ObjectiveMarks = ObjectiveMark.loadObjectiveMarksForThisCourse(connection, t, selectedStudent, c);
-                                                        c.Objectives = Objective.loadObjectivesForThisCourse(connection, c);
-
-                                                        foreach (ObjectiveMark om in c.ObjectiveMarks)
-                                                        {
-                                                            foreach (Objective o in c.Objectives)
-                                                            {
-                                                                if (om.objectiveID == o.id)
-                                                                {
-                                                                    om.objective = o;
-                                                                }
-                                                            }
-                                                        }
-
-
-                                                        foreach (Objective o in c.Objectives)
-                                                        {
-                                                            foreach (ObjectiveMark om in TermObjectiveMarks)
-                                                            {
-                                                                if (om.objectiveID == o.id)
-                                                                {
-                                                                    o.mark = om;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-
-                                                    foreach (KeyValuePair<int, SchoolClass> kvp in termCourses)
-                                                    {
-                                                        t.Courses.Add(kvp.Value);
-                                                    }
-                                                }
-                                            }
-                                        }
+                                        Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>Mark</b> " + m);
                                     }
-                                    #endregion
+                                }
 
-                                    #region Generate the PDF
-                                    sendPDF(GeneratePDF(selectedStudent, selectedReportPeriod));
-                                    #endregion
+                                foreach (ObjectiveMark om in c.ObjectiveMarks)
+                                {
+                                    if (om.reportPeriodID == rp.ID)
+                                    {
+                                        Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>ObjectiveMark:</b> " + om);
+                                    }
                                 }
                             }
-                            else
+                            Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Objectives:</b> " + c.Objectives.Count);
+                            foreach (Objective o in c.Objectives)
                             {
-                                Response.Write("Invalid or missing report period ID");
+                                Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>Objective:</b> " + o);
                             }
-                        }
-                        else
-                        {
-                            Response.Write("Invalid or missing report period ID");
-                        }
 
+                            
+                        }
                     }
-                    else
-                    {
-                        Response.Write("Invalid or missing student ID");
-                    }
-                }
-                else
-                {
-                    Response.Write("Invalid or missing student ID");
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Response.Write(ex.Message + "<BR>" + ex.StackTrace);
+                sendPDF(GeneratePDF(displayedStudents));
             }
+            
+
         }
     }
 }

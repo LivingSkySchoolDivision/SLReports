@@ -13,6 +13,24 @@ namespace SLReports.Duplicates {
     public partial class index {
         
         /// <summary>
+        /// lblAllCount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAllCount;
+        
+        /// <summary>
+        /// tblAllDuplicates control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Table tblAllDuplicates;
+        
+        /// <summary>
         /// lblIdsCount control.
         /// </summary>
         /// <remarks>

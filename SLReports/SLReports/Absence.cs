@@ -17,8 +17,7 @@ namespace SLReports
         public DateTime blockEndTime { get; set; }
         public bool excused { get; set; }
 
-
-
+        
         /* TODO: Turn these all into properties */
         private DateTime date;
         private string studentID;

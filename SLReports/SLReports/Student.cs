@@ -10,7 +10,6 @@ namespace SLReports
     public class Student : IComparable
     {
         public string LDAPUserName { get; set; }
-
         private string givenName;
         private string sn;
         private string studentID;
@@ -273,7 +272,7 @@ namespace SLReports
 
         public override string ToString()
         {
-            return getDisplayName() + " " + studentID;
+            return "Student: { DisplayName: " + getDisplayName() + ", ID: " + studentID + ", Grade: " + this.grade + "}";
         }
 
         public string getHomeRoom()

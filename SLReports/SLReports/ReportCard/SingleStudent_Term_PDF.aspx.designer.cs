@@ -11,7 +11,7 @@ namespace SLReports.ReportCard
 {
 
 
-    public partial class SingleReportPeriodPDF
+    public partial class SingleStudent_Term_PDF
     {
     }
 }

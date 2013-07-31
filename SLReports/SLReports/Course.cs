@@ -15,13 +15,14 @@ namespace SLReports
         public string name { get; set; }
         public string courseCode { get; set; }
         public string school { get; set; }
-        public string governmentCode { get; set; }
-        
+        public string governmentCode { get; set; }        
         public bool offeredInSchool { get; set; }
         public bool schoolExam { get; set; }
+        public List<Objective> Objectives { get; set; }
 
         public Course(int id, int govID, string name, string courseCode, string school, string govCode, bool offeredInSchool, bool schoolExam)
-        {
+        {            
+            this.Objectives = new List<Objective>();
             this.id = id;
             this.governmentCode = govCode;
             this.governmentCourseID = govID;

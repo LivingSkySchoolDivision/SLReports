@@ -34,6 +34,7 @@
     <p>        
         <h3>Recent changes / additions</h3>
         <ul>
+            <li><b>July 25th, 2013</b> - <a href="Duplicates/index.aspx">Duplicate student finder</a> - A list of potentially duplicate students or data entry errors in the database</li>
             <li><b>July 9th, 2013</b> - <a href="Courses/CoursesWithclasses.aspx">Classes by Course</a> - The list of courses, with each of it's child classes</li>
             <li><b>July 9th, 2013</b> - <a href="Courses/">Course list</a> - A list of all courses in the system</li>            
             <li><b>June 30th, 2013</b> - <a href="Staff/">Staff account list</a></li>

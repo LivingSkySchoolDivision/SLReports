@@ -74,6 +74,7 @@
     <Content Include="Courses\CoursesWithClasses.aspx" />
     <Content Include="Courses\GetCourseListCSV.aspx" />
     <Content Include="Courses\index.aspx" />
+    <Content Include="Duplicates\getDuplicatesCSV.aspx" />
     <Content Include="Duplicates\index.aspx" />
     <Content Include="EnrollmentByGrade\index.aspx" />
     <Content Include="FindStudent\index.aspx" />
@@ -108,10 +109,10 @@
     <Content Include="Photos\index.aspx" />
     <Content Include="Public\generalJSON.aspx" />
     <Content Include="Public\generalXML.aspx" />
-    <Content Include="ReportCard\SingleReportPeriodPDF.aspx" />
-    <Content Include="ReportCard\getXML.aspx" />
+    <Content Include="ReportCard\Grade_Term_PDF.aspx" />
+    <Content Include="ReportCard\SingleStudent_ReportPeriod_PDF.aspx" />
     <Content Include="ReportCard\index.aspx" />
-    <Content Include="ReportCard\SingleReportPeriodHTML.aspx" />
+    <Content Include="ReportCard\SingleStudent_Term_PDF.aspx" />
     <Content Include="Staff\index.aspx" />
     <Content Include="StudentDiscrepancy\index.aspx" />
     <Content Include="StudentList\getCSV.aspx" />
@@ -203,6 +204,13 @@
     <Compile Include="Courses\GetCourseListCSV.aspx.designer.cs">
       <DependentUpon>GetCourseListCSV.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Duplicates\getDuplicatesCSV.aspx.cs">
+      <DependentUpon>getDuplicatesCSV.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Duplicates\getDuplicatesCSV.aspx.designer.cs">
+      <DependentUpon>getDuplicatesCSV.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Duplicates\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -211,6 +219,20 @@
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
     <Compile Include="LSKYCommon.cs" />
+    <Compile Include="ReportCard\Grade_Term_PDF.aspx.cs">
+      <DependentUpon>Grade_Term_PDF.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportCard\Grade_Term_PDF.aspx.designer.cs">
+      <DependentUpon>Grade_Term_PDF.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ReportCard\SingleStudent_Term_PDF.aspx.cs">
+      <DependentUpon>SingleStudent_Term_PDF.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportCard\SingleStudent_Term_PDF.aspx.designer.cs">
+      <DependentUpon>SingleStudent_Term_PDF.aspx</DependentUpon>
+    </Compile>
     <Compile Include="SchoolClass.cs" />
     <Compile Include="Courses\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
@@ -323,19 +345,12 @@
     <Compile Include="Public\generalXML.aspx.designer.cs">
       <DependentUpon>generalXML.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ReportCard\SingleReportPeriodPDF.aspx.cs">
-      <DependentUpon>SingleReportPeriodPDF.aspx</DependentUpon>
+    <Compile Include="ReportCard\SingleStudent_ReportPeriod_PDF.aspx.cs">
+      <DependentUpon>SingleStudent_ReportPeriod_PDF.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="ReportCard\SingleReportPeriodPDF.aspx.designer.cs">
-      <DependentUpon>SingleReportPeriodPDF.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="ReportCard\getXML.aspx.cs">
-      <DependentUpon>getXML.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ReportCard\getXML.aspx.designer.cs">
-      <DependentUpon>getXML.aspx</DependentUpon>
+    <Compile Include="ReportCard\SingleStudent_ReportPeriod_PDF.aspx.designer.cs">
+      <DependentUpon>SingleStudent_ReportPeriod_PDF.aspx</DependentUpon>
     </Compile>
     <Compile Include="ReportCard\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
@@ -343,13 +358,6 @@
     </Compile>
     <Compile Include="ReportCard\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="ReportCard\SingleReportPeriodHTML.aspx.cs">
-      <DependentUpon>SingleReportPeriodHTML.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ReportCard\SingleReportPeriodHTML.aspx.designer.cs">
-      <DependentUpon>SingleReportPeriodHTML.aspx</DependentUpon>
     </Compile>
     <Compile Include="ReportPeriod.cs" />
     <Compile Include="School.cs" />
@@ -385,6 +393,7 @@
     <Compile Include="StudentList\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Teacher.cs" />
     <Compile Include="Term.cs" />
     <Compile Include="Track.cs" />
     <Compile Include="PdfPageEventHandler.cs" />

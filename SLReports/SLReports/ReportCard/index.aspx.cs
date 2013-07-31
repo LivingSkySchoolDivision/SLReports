@@ -44,8 +44,8 @@ namespace SLReports.ReportCard
         protected void Page_Load(object sender, EventArgs e)
         {           
         }
-              
-        protected void Button1_Click(object sender, EventArgs e)
+
+        protected void btnSchool_Click(object sender, EventArgs e)
         {
             SelectedSchoolID = int.Parse(drpSchoolList.SelectedValue);
             String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogic2013"].ConnectionString;
@@ -69,7 +69,7 @@ namespace SLReports.ReportCard
             }
         }
 
-        protected void Button2_Click(object sender, EventArgs e)
+        protected void btnStudent_Click(object sender, EventArgs e)
         {
             SelectedSchoolID = int.Parse(drpSchoolList.SelectedValue);
 
@@ -93,8 +93,8 @@ namespace SLReports.ReportCard
                     drpTermList.Items.Add(newItem);
                 }
 
-                /* Load some report periods to fill the dropdown box */
 
+                /* Load some report periods to fill the dropdown box */
                 DisplayedPeriods = new List<ReportPeriod>();
                 
                 foreach (Term term in DisplayedTerms) 
@@ -123,30 +123,16 @@ namespace SLReports.ReportCard
 
         }
 
-        protected void Button3_Click(object sender, EventArgs e)
-        {
-            /* This would redirect to the multi term report card when finished */
-
-        }
-
+        
         protected void btnRPGenPDF_Click(object sender, EventArgs e)
         {
-            Response.Redirect("/SLReports/ReportCard/SingleReportPeriodPDF.aspx?studentid=" + drpStudentList.SelectedValue + "&reportperiod=" + drpReportPeriodList.SelectedValue);
+            Response.Redirect("/SLReports/ReportCard/SingleStudent_ReportPeriod_PDF.aspx?studentid=" + drpStudentList.SelectedValue + "&reportperiod=" + drpReportPeriodList.SelectedValue);
         }
 
         protected void btnTermGenPDF_Click(object sender, EventArgs e)
         {
-
+            Response.Redirect("/SLReports/ReportCard/SingleStudent_Term_PDF.aspx?studentid=" + drpStudentList.SelectedValue + "&term=" + drpTermList.SelectedValue);
         }
 
-        protected void btnTermGenHTML_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void btnRPGenHTML_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("/SLReports/ReportCard/SingleReportPeriodHTML.aspx?studentid=" + drpStudentList.SelectedValue + "&reportperiod=" + drpReportPeriodList.SelectedValue);
-        }
     }
 }

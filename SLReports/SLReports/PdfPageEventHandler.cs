@@ -26,19 +26,23 @@ namespace SLReports
         public bool ShowOnFirstPage = true;
 
         public void ResetPageNumbers(iTextSharp.text.Document document)
-        {
+        {            
             /* Check for double sided mode here */
+
+            /* Page number represents the page number of the last page, not the potential new page that's coming. */
+            
             if ((pageNumber % 2) == 0)
             {
                 if (DoubleSidedMode)
-                {
+                {   
                     document.NewPage();
-                    document.Add(new Phrase(""));
+                    document.Add(new Chunk(""));                   
                 }
             }
 
-            pageNumber = 0;
+            document.NewPage();
 
+            pageNumber = 0;
         }
 
         static int pageNumber = 0;
@@ -139,12 +143,7 @@ namespace SLReports
                     document.Add(new Phrase(""));
                 }
             }
-
             pageNumber = 0;
-
-            
-
-
         }
 
     }

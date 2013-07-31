@@ -758,7 +758,7 @@ namespace SLReports.AttendanceByGrade
             PdfPageEventHandler PageEventHandler = new PdfPageEventHandler();
             writer.PageEvent = PageEventHandler;
             
-            PageEventHandler.DoubleSidedMode = true; // Doesn't work so well with large multi-student documents...
+            PageEventHandler.DoubleSidedMode = false; // Doesn't work so well with large multi-student documents...
 
             foreach (Student student in students)
             {
