@@ -110,9 +110,7 @@
     <Content Include="Public\generalJSON.aspx" />
     <Content Include="Public\generalXML.aspx" />
     <Content Include="ReportCard\Grade_Term_PDF.aspx" />
-    <Content Include="ReportCard\SingleStudent_ReportPeriod_PDF.aspx" />
     <Content Include="ReportCard\index.aspx" />
-    <Content Include="ReportCard\SingleStudent_Term_PDF.aspx" />
     <Content Include="Staff\index.aspx" />
     <Content Include="StudentDiscrepancy\index.aspx" />
     <Content Include="StudentList\getCSV.aspx" />
@@ -226,13 +224,6 @@
     <Compile Include="ReportCard\Grade_Term_PDF.aspx.designer.cs">
       <DependentUpon>Grade_Term_PDF.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ReportCard\SingleStudent_Term_PDF.aspx.cs">
-      <DependentUpon>SingleStudent_Term_PDF.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ReportCard\SingleStudent_Term_PDF.aspx.designer.cs">
-      <DependentUpon>SingleStudent_Term_PDF.aspx</DependentUpon>
-    </Compile>
     <Compile Include="SchoolClass.cs" />
     <Compile Include="Courses\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
@@ -344,13 +335,6 @@
     </Compile>
     <Compile Include="Public\generalXML.aspx.designer.cs">
       <DependentUpon>generalXML.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="ReportCard\SingleStudent_ReportPeriod_PDF.aspx.cs">
-      <DependentUpon>SingleStudent_ReportPeriod_PDF.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ReportCard\SingleStudent_ReportPeriod_PDF.aspx.designer.cs">
-      <DependentUpon>SingleStudent_ReportPeriod_PDF.aspx</DependentUpon>
     </Compile>
     <Compile Include="ReportCard\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>

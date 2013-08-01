@@ -44,7 +44,12 @@ namespace SLReports.ReportCard
         /// We are routing outcome bars through this routine so that we can change the style of the outcome bar in one place more easily
         private iTextSharp.text.Image displayOutcomeBar(PdfContentByte content, String value)
         {
-            return outcomeBar_Slider(content, value);
+
+
+            return outcomeBar_Slider(content, value);            
+            //return outcomeBar_Thin(content, value);
+            //return outcomeBar_Original(content, value);
+            //return outcomeBar_Minimalist(content, value);
         }
 
         #region Outcome Bar Styles
@@ -167,7 +172,7 @@ namespace SLReports.ReportCard
         }
         protected iTextSharp.text.Image outcomeBar_Thin(PdfContentByte content, String value)
         {
-            int width = 125;
+            int width = 75;
             int height = 6;
 
             int CanvasPaddingX = 1;
@@ -386,7 +391,7 @@ namespace SLReports.ReportCard
                 {
                     if (string.IsNullOrEmpty(value))
                     {
-                        value = "INVALID VALUE";
+                        value = "INVALID";
                     }
                     canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, value, width / 2, (height / 2) - 2, 0);
                 }
@@ -664,14 +669,50 @@ namespace SLReports.ReportCard
 
         }
 
+        protected string findClassNameForThisBlock(List<SchoolClass> classes, string block)
+        {            
+            /* Try to parse the block */
+
+            List<string> classNames = new List<string>();
+
+
+            int blockNum = -1;
+            if (int.TryParse(block, out blockNum))
+            {
+                foreach (SchoolClass thisclass in classes)
+                {
+                    if (thisclass.blockNumber == blockNum)
+                    {
+                        classNames.Add(thisclass.name);
+                    }
+                }
+            }
+
+
+            StringBuilder returnMe = new StringBuilder();
+            for (int x = 0; x < classNames.Count; x++)
+            {
+                returnMe.Append(classNames[x]);
+                if (x < classNames.Count - 1)
+                {
+                    returnMe.Append(", ");
+                }
+            }
+
+            return returnMe.ToString();
+        }
+
         protected PdfPTable attendanceSummary(Student student)
         {
-            PdfPTable attendanceTable = new PdfPTable(4);
+            PdfPTable attendanceTable = new PdfPTable(5);
             attendanceTable.HorizontalAlignment = 1;
             attendanceTable.TotalWidth = 500;
             attendanceTable.LockedWidth = true;
             attendanceTable.SpacingAfter = 50;
             attendanceTable.KeepTogether = true;
+
+            float[] tableWidths = new float[] { 1f, 6f, 2f, 2f, 2f };
+            attendanceTable.SetWidths(tableWidths);
 
             PdfPCell newCell = null;
 
@@ -681,19 +722,26 @@ namespace SLReports.ReportCard
             int totalLates = 0;
             int totalLateMinutes = 0;
 
-            List<String> allCourses = new List<String>();
 
-            allCourses.Clear();
+            List<SchoolClass> allClasses = new List<SchoolClass>();
+            foreach (Term term in student.track.terms)
+            {
+                allClasses.AddRange(term.Courses);
+            }
+
+            List<String> allCoursePeriods = new List<String>();            
+
+            allCoursePeriods.Clear();
             foreach (Absence abs in student.absences)
             {
                 // Collect a list of courses
-                if (!allCourses.Contains(abs.period))
+                if (!allCoursePeriods.Contains(abs.period))
                 {
-                    allCourses.Add(abs.period);
+                    allCoursePeriods.Add(abs.period);
                 }
             }
 
-            allCourses.Sort();
+            allCoursePeriods.Sort();
 
             newCell = new PdfPCell(new Paragraph("Attendance Summary\n\n", font_large_bold));
             newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
@@ -711,8 +759,16 @@ namespace SLReports.ReportCard
             newCell.BorderWidth = 1;
             attendanceTable.AddCell(newCell);
 
-            newCell = new PdfPCell(new Phrase("Lates", font_body_bold));
+            newCell = new PdfPCell(new Phrase("Class", font_body_bold));
             newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+            newCell.Border = Rectangle.BOTTOM_BORDER;
+            newCell.PaddingBottom = 5;
+            newCell.BorderWidth = 1;
+            attendanceTable.AddCell(newCell);
+
+            newCell = new PdfPCell(new Phrase("Lates", font_body_bold));
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
             newCell.Border = Rectangle.BOTTOM_BORDER;
             newCell.PaddingBottom = 5;
@@ -720,7 +776,7 @@ namespace SLReports.ReportCard
             attendanceTable.AddCell(newCell);
 
             newCell = new PdfPCell(new Phrase("Excused Absences", font_body_bold));
-            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
             newCell.Border = Rectangle.BOTTOM_BORDER;
             newCell.PaddingBottom = 5;
@@ -728,7 +784,7 @@ namespace SLReports.ReportCard
             attendanceTable.AddCell(newCell);
 
             newCell = new PdfPCell(new Phrase("Unexcused Absences", font_body_bold));
-            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
             newCell.Border = Rectangle.BOTTOM_BORDER;
             newCell.PaddingBottom = 5;
@@ -736,7 +792,7 @@ namespace SLReports.ReportCard
             attendanceTable.AddCell(newCell);
 
             /* Values */
-            foreach (String courseName in allCourses)
+            foreach (String courseName in allCoursePeriods)
             {
                 int numLates = 0;
                 int numAbsExc = 0;
@@ -776,6 +832,13 @@ namespace SLReports.ReportCard
                 newCell.Border = Rectangle.NO_BORDER;
                 attendanceTable.AddCell(newCell);
 
+
+                newCell = new PdfPCell(new Phrase(findClassNameForThisBlock(allClasses, courseName), font_body));
+                newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+                newCell.Border = Rectangle.NO_BORDER;
+                attendanceTable.AddCell(newCell);
+
                 StringBuilder lateDisplay = new StringBuilder();
                 lateDisplay.Append(numLates);
 
@@ -792,13 +855,13 @@ namespace SLReports.ReportCard
 
 
                 newCell = new PdfPCell(new Phrase(numAbsExc.ToString(), font_body));
-                newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
                 newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
                 newCell.Border = Rectangle.NO_BORDER;
                 attendanceTable.AddCell(newCell);
 
                 newCell = new PdfPCell(new Phrase(numAbsUnexc.ToString(), font_body));
-                newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
                 newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
                 newCell.Border = Rectangle.NO_BORDER;
                 attendanceTable.AddCell(newCell);
@@ -830,14 +893,14 @@ namespace SLReports.ReportCard
 
 
             newCell = new PdfPCell(new Phrase(totalExcused.ToString(), font_body_bold));
-            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
             newCell.Border = Rectangle.TOP_BORDER;
             newCell.BorderWidth = 1;
             attendanceTable.AddCell(newCell);
 
             newCell = new PdfPCell(new Phrase(totalUnexcused.ToString(), font_body_bold));
-            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
             newCell.Border = Rectangle.TOP_BORDER;
             newCell.BorderWidth = 1;
@@ -850,9 +913,10 @@ namespace SLReports.ReportCard
         {
             PdfPTable attendanceTable = new PdfPTable(4);
             attendanceTable.HorizontalAlignment = 1;
-            attendanceTable.TotalWidth = 475;
+            attendanceTable.TotalWidth = 500;
             attendanceTable.LockedWidth = true;
-            attendanceTable.SpacingAfter = 50;
+            attendanceTable.SpacingAfter = 35;
+            attendanceTable.SpacingBefore = 10;
             attendanceTable.KeepTogether = true;
 
             PdfPCell newCell = null;
@@ -1194,31 +1258,145 @@ namespace SLReports.ReportCard
             return outcomeLegendTable;
         }
 
+        protected PdfPCell objectiveChunk(Objective objective, PdfContentByte content)
+        {
+            /* Interesting note: If you add an element to a cell in the constructor it aligns differnetly than if you add it as an element */
+
+            int ObjectivesTableBorder = 0;
+            PdfPTable objectiveChunkTable = new PdfPTable(3);
+
+            PdfPCell bufferCell = new PdfPCell();
+            bufferCell.Border = ObjectivesTableBorder;
+
+            if (objective.hasMarks())
+            {
+
+                PdfPCell objectiveDescriptionCell = new PdfPCell();
+                PdfPCell objectiveMarksCell = new PdfPCell();
+
+                // Set up the description cell
+                Paragraph objectiveDescriptionParagraph = new Paragraph();
+                string objectiveDescriptionCondensed = objective.description;
+                /* Limit the size - this is temporary because the testing descriptions are much longer than the actual descriptions,
+                 * and I cannot change the test data.*/
+                if (objectiveDescriptionCondensed.Length > 100)
+                {
+                    objectiveDescriptionCondensed = objectiveDescriptionCondensed.Substring(0, 100);
+                }
+                objectiveDescriptionParagraph.Add(new Phrase(objectiveDescriptionCondensed, font_small));
+                objectiveDescriptionParagraph.Add(Chunk.NEWLINE);
+                objectiveDescriptionParagraph.Add(Chunk.NEWLINE);
+
+                objectiveDescriptionCell.Border = ObjectivesTableBorder;
+                objectiveDescriptionCell.Padding = 0;
+                objectiveDescriptionCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                objectiveDescriptionCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+                objectiveDescriptionCell.AddElement(objectiveDescriptionParagraph);
+                //objectiveDescriptionCell.Rowspan = objective.marks.Count;
+
+                
+                // Set up the marks cell
+                
+                PdfPTable marksTable = new PdfPTable(2);
+                marksTable.SpacingBefore = 5;
+                float[] marksTableWidths = new float[] { 2f, 1f };
+                marksTable.SetWidths(marksTableWidths);
+
+                foreach (ObjectiveMark objectivemark in objective.marks)
+                {
+                    PdfPCell markCell = new PdfPCell();                   
+
+                    // Attempt to figure out of the mark is an objective or a percent, and display an outcome bar if necessary
+                    if (!string.IsNullOrEmpty(objectivemark.cMark))
+                    {
+                        PdfPCell Temp_MarkCell = new PdfPCell();
+                        Temp_MarkCell.Border = ObjectivesTableBorder;
+                        Temp_MarkCell.Padding = 0;
+                        Temp_MarkCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
+                        Temp_MarkCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+                        Temp_MarkCell.AddElement((displayOutcomeBar(content, objectivemark.cMark)));
+                        markCell = Temp_MarkCell;
+
+                        //markCell.AddElement((displayOutcomeBar(content, objectivemark.cMark)));
+                    }
+                    else
+                    {
+                        PdfPCell Temp_ReportPeriodCell = new PdfPCell(new Phrase(Math.Round(objectivemark.nMark, 0) + "%", font_body_bold));
+                        Temp_ReportPeriodCell.Border = ObjectivesTableBorder;
+                        Temp_ReportPeriodCell.Padding = 0;
+                        Temp_ReportPeriodCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                        Temp_ReportPeriodCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+                        markCell = Temp_ReportPeriodCell;
+
+                        //markCell.AddElement(new Phrase(Math.Round(objectivemark.nMark, 1) + "%", font_body_bold));
+                    }
+
+                    // Display the report period
+                    PdfPCell reportPeriodCell = new PdfPCell(new Phrase(objectivemark.reportPeriod.name, font_small_italic));
+                    reportPeriodCell.Padding = 2;
+                    reportPeriodCell.PaddingLeft = 10;
+                    reportPeriodCell.Border = ObjectivesTableBorder;
+                    reportPeriodCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                    reportPeriodCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+
+                    marksTable.AddCell(markCell);
+                    marksTable.AddCell(reportPeriodCell);
+                }
+
+                objectiveMarksCell.Border = ObjectivesTableBorder;
+                objectiveMarksCell.Padding = 0;                
+                objectiveMarksCell.AddElement(marksTable);
+                
+
+
+                // Build the final table to return
+                objectiveChunkTable.KeepTogether = false;
+                float[] objectivesTableWidths = new float[] { 0.25f, 3.25f, 2.5f };
+
+                objectiveChunkTable.AddCell(bufferCell);
+                objectiveChunkTable.AddCell(objectiveDescriptionCell);
+                objectiveChunkTable.AddCell(objectiveMarksCell);
+                //objectiveChunkTable.AddCell(marksTable);
+
+
+                objectiveChunkTable.SetWidths(objectivesTableWidths);
+
+
+            }
+            // Encapsulate the table in a cell object and return it
+            PdfPCell objectiveChunkTableCell = new PdfPCell(objectiveChunkTable);
+            objectiveChunkTableCell.Colspan = 2;
+            objectiveChunkTableCell.Border = ObjectivesTableBorder;
+
+            return objectiveChunkTableCell;
+        }
+
         protected PdfPTable classWithMarks(SchoolClass course, PdfContentByte content)
         {
-
-            PdfPTable classTable = new PdfPTable(3);
+            PdfPTable classTable = new PdfPTable(2);
             classTable.HorizontalAlignment = 1;
             classTable.TotalWidth = 500f;
             classTable.LockedWidth = true;
-            classTable.SpacingAfter = 35;
+            //classTable.SpacingAfter = 35;
             classTable.KeepTogether = true;            
 
-            float[] widths = new float[] { 1.75f, 2f, 2f };
+            float[] widths = new float[] { 2f, 2f };
             classTable.SetWidths(widths);
-
-
+            
             PdfPCell newCell = null;  // Going to reuse this for each cell, because i'm lazy and don't want to create a billion extra objects...
             Paragraph newP = null; // Ditto (newP[aragraph])
-
+            
             /* Course title and numeric mark */
             newP = new Paragraph();
+
+            newP.Add(new Phrase("Period / Block: " + course.blockNumber, font_small));
+            newP.Add(Chunk.NEWLINE);
             newP.Add(new Phrase(course.name, font_large_bold));
-            newP.Add(new Phrase(" (" + course.teacherName + ")", font_body));
+            newP.Add(new Phrase(" (" + course.teacherName + ")", font_small));
+            
             newCell = new PdfPCell(newP);
-            newCell.Border = Rectangle.BOX;
+            newCell.Border = 0;
             newCell.Padding = 5;
-            newCell.Colspan = 2;
             classTable.AddCell(newCell);
 
             newCell = new PdfPCell();
@@ -1228,7 +1406,7 @@ namespace SLReports.ReportCard
             if (course.Marks.Count > 0)
             {
                 /* Create a nested table to put in the mark cell */
-                PdfPTable markTable = new PdfPTable(course.Marks.Count);
+                PdfPTable markTable = new PdfPTable(course.Marks.Count);                
 
                 foreach (Mark mark in course.Marks)
                 {                    
@@ -1259,10 +1437,18 @@ namespace SLReports.ReportCard
                         }
                         else
                         {
-                            markValueParagraph.Add(new Phrase("No Value", font_small_italic));
+                            if (!string.IsNullOrEmpty(mark.nMark))
+                            {
+                                double nMarkValue = -1;
+                                Double.TryParse(mark.nMark, out nMarkValue);
+                                markValueParagraph.Add(new Phrase(Math.Round(nMarkValue) + "%", font_body_bold));
+                            }
+                            else
+                            {
+                                markValueParagraph.Add(new Phrase("No Value", font_small_italic));
+                            }
                         }
                     }
-
 
                     newCell = new PdfPCell(markValueParagraph);
                     newCell.Border = Rectangle.BOX;
@@ -1282,7 +1468,9 @@ namespace SLReports.ReportCard
                     markTable.AddCell(newCell);                    
                 }
 
-                classTable.AddCell(new PdfPCell(markTable));
+                PdfPCell markTableCell = new PdfPCell(markTable);
+                markTableCell.Border = 0;
+                classTable.AddCell(markTableCell);
             }
             else
             {
@@ -1301,41 +1489,32 @@ namespace SLReports.ReportCard
                 newP = new Paragraph();
                 newP.Add(new Phrase("Outcomes:", font_body_bold));
                 newCell = new PdfPCell(newP);
-                newCell.Border = Rectangle.BOX;
+                newCell.Border = 0;
                 newCell.Padding = 5;
-                newCell.Colspan = 3;
+                newCell.Colspan = 2;
                 classTable.AddCell(newCell);
-            }
 
-            /* Outcome marks */
-            foreach (ReportPeriod reportPeriod in course.ReportPeriods)
-            {
-                foreach (ObjectiveMark objectivem in course.ObjectiveMarks)
+
+                /* Outcome marks */
+
+                foreach (Objective objective in course.Objectives)
                 {
-                    newCell = new PdfPCell(displayOutcomeBar(content, objectivem.cMark));
-                    newCell.Padding = 5;                    
-                    //newCell.PaddingLeft = 0;
+                    classTable.AddCell(objectiveChunk(objective, content));
+                }            
 
-                    newCell.Border = Rectangle.BOX;
-                    classTable.AddCell(newCell);
-
-                    newP = new Paragraph();
-                    newP.Add(new Phrase(objectivem.description, font_small));
-                    newCell = new PdfPCell(newP);
-                    //newCell.Border = Rectangle.BOX;
-                    newCell.Border = Rectangle.BOX;
-                    newCell.Padding = 5;
-                    newCell.Colspan = 2;
-                    classTable.AddCell(newCell);
-                 }
             }
-
             /* Life Skills */
 
             /* Comments */
             newP = new Paragraph();
             newP.Add(new Phrase("Comments:\n", font_body_bold));
-            newP.Add(Chunk.NEWLINE);
+            newCell = new PdfPCell(newP);
+            newCell.Border = 0;
+            newCell.Padding = 5;
+            newCell.Colspan = 2;
+            classTable.AddCell(newCell);
+
+            newP = new Paragraph();
             foreach (Mark mark in course.Marks)
             {
                 if (!string.IsNullOrEmpty(mark.comment))
@@ -1343,15 +1522,17 @@ namespace SLReports.ReportCard
                     newP.Add(new Phrase(mark.reportPeriod.name + ": ", font_small_bold));
                     newP.Add(new Phrase(mark.comment, font_small));
                     newP.Add(Chunk.NEWLINE);
-                    newP.Add(Chunk.NEWLINE);
                 }
             }
-
             newCell = new PdfPCell(newP);
-            newCell.Border = Rectangle.BOX;
+            newCell.Border = 0;
             newCell.Padding = 5;
-            newCell.Colspan = 3;
+            newCell.PaddingLeft = 10;
+            newCell.Colspan = 2;
             classTable.AddCell(newCell);
+
+
+
 
             return classTable;
         }
@@ -1385,7 +1566,7 @@ namespace SLReports.ReportCard
             writer.PageEvent = PageEventHandler;            
             PageEventHandler.DoubleSidedMode = true;
             PageEventHandler.ShowOnFirstPage = false;
-            PageEventHandler.bottomCenter = "Printed " + DateTime.Now.ToLongDateString();
+            //PageEventHandler.bottomCenter = "Printed " + DateTime.Now.ToLongDateString();
 
             foreach (Student student in students)
             {
@@ -1514,6 +1695,15 @@ namespace SLReports.ReportCard
                                     objectivemark.objective = objective;
                                 }
                             }
+
+                            foreach (ReportPeriod rp in reportPeriods)
+                            {
+                                if (rp.ID == objectivemark.reportPeriodID)
+                                {
+                                    objectivemark.reportPeriod = rp;
+                                }
+                            }
+
                         }
 
                         foreach (Objective objective in thisClass.Objectives)
@@ -1522,7 +1712,7 @@ namespace SLReports.ReportCard
                             {
                                 if (objective.id == objectivemark.objectiveID)
                                 {
-                                    objective.mark = objectivemark;
+                                    objective.marks.Add(objectivemark);
                                 }
                             }
                         }
@@ -1575,12 +1765,27 @@ namespace SLReports.ReportCard
             {
                 /* Debugging info */
                 //selectedTerm = Term.loadThisTerm(connection, 20);
+
+
+                /* McKitrick report periods for testing */
+                //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 266));
+                //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 267));
+                //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 268));
+
+                /* McKitrick students for testing */
+                //students.Add(Student.loadThisStudent(connection, "80451"));
+                //students.Add(Student.loadThisStudent(connection, "80891"));
+
+
+                /* NBCHS report periods for testing */
                 selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 258));
                 selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 257));
                 selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 256));
 
+
+                /* NBCHS students for testing */
                 //students.Add(Student.loadThisStudent(connection, "11871"));
-                students.Add(Student.loadThisStudent(connection, "11804"));
+                //students.Add(Student.loadThisStudent(connection, "11804"));
                 students.Add(Student.loadThisStudent(connection, "12511"));
             }
 

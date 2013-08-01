@@ -16,11 +16,11 @@ namespace SLReports
         public int order { get; set; }
         public string studentvalue { get; set; }
         public string category { get; set; }        
-        public ObjectiveMark mark { get; set; }
+        public List<ObjectiveMark> marks { get; set; }
 
         public Objective(int id, int courseid, string subject, string description, string category)
         {
-            this.mark = null;
+            this.marks = new List<ObjectiveMark>();
             this.id = id;
             this.description = description;
             this.courseid = courseid;
@@ -57,15 +57,18 @@ namespace SLReports
             return returnMe;
         }
 
+        public bool hasMarks()
+        {
+            if (marks.Count > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public override string ToString()
         {
-            bool containsMark = false;
-            if (mark != null)
-            {
-                containsMark = true;
-            }
-
-            return "Objective: { ID: " + this.id + ", ContainsObjectiveMark: " + LSKYCommon.boolToYesOrNo(containsMark) + "}";
+            return "Objective: { ID: " + this.id + ", ContainsObjectiveMarks: " + this.marks.Count + "}";
         }
     }
 }
