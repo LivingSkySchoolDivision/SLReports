@@ -296,5 +296,17 @@ namespace SLReports
             return student;
         }
 
+        public static int parseInt(string thisString)
+        {
+            int returnMe = -1;
+
+            if (int.TryParse(thisString, out returnMe))
+            {
+                return returnMe;
+            }
+
+            return -1;
+
+        }
     }
 }

@@ -43,6 +43,31 @@ namespace SLReports
             }
         }
 
+
+
+        // This won't be accurate if the class doesn't have outcomes loaded for it
+        public bool isOutcomeBased()
+        {
+            bool returnMe = false;
+
+            // This is a list so we can expand on this later if we need to
+            List<String> ignoreTheseCategories = new List<String>();
+            ignoreTheseCategories.Add("Successful Learner Behaviours".ToLower());
+            
+            if (Objectives.Count > 0)
+            {
+                foreach (Objective objective in Objectives)
+                {
+                    if (!ignoreTheseCategories.Contains(objective.category.ToLower()))
+                    {
+                        returnMe = true;
+                    }
+                    
+                }
+            }
+            return returnMe;
+        }
+
         public bool isHighSchoolClass()
         {
             int gradeNum = -1;
@@ -77,9 +102,21 @@ namespace SLReports
             set {}
         }
 
+        public int getGradeLevel()
+        {
+            int lowGradeNumber;
+
+            if (int.TryParse(this.lowestGrade, out lowGradeNumber))
+            {
+                return lowGradeNumber;
+            }
+
+            return 0;
+        }
+
         public override string ToString()
         {
-            return "Class: { Name: " + this.name + ", ClassID: " + this.classid + ", CourseID: " + this.courseid + ", Block: " + this.blockNumber + ", Day: " + this.dayNumber + ", Has Objectives: " + this.Objectives.Count + ", IsHighSchool: " + LSKYCommon.boolToYesOrNo(this.isHighSchoolClass()) + "}";
+            return "Class: { Name: " + this.name + ", ClassID: " + this.classid + ", CourseID: " + this.courseid + ", Block: " + this.blockNumber + ", Day: " + this.dayNumber + ", Has Objectives: " + this.Objectives.Count + ", IsHighSchool: " + LSKYCommon.boolToYesOrNo(this.isHighSchoolClass()) + ", LowGrade: " + this.lowestGrade + ", HighGrade: " + this.highestGrade + ", Translated grade: " + this.getGradeLevel() + "}";
         }
 
         public SchoolClass(string name, int classid, int courseid)
@@ -131,7 +168,6 @@ namespace SLReports
             {
                 while (dataReader.Read())
                 {
-
                     bool daily = false;
                     if (!String.IsNullOrEmpty(dataReader["TrackDaily"].ToString().Trim()))
                     {

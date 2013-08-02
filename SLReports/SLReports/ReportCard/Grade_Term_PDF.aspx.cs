@@ -51,9 +51,6 @@ namespace SLReports.ReportCard
                 PageEventHandler.bottomLeft = student.getDisplayName();
                 ReportCard.Add(PDFReportCardParts.schoolNamePlate(student.school));
                 ReportCard.Add(PDFReportCardParts.namePlateTable(student));
-                //ReportCard.Add(outcomeLegend(content));
-                ReportCard.Add(PDFReportCardParts.lifeSkillsLegend(content));
-                //ReportCard.NewPage();
                 ReportCard.Add(new Phrase(string.Empty));
 
                 foreach (Term term in student.track.terms)
@@ -69,6 +66,8 @@ namespace SLReports.ReportCard
                 }
 
                 ReportCard.Add(PDFReportCardParts.attendanceSummary(student));
+                ReportCard.Add(PDFReportCardParts.lifeSkillsLegend(content, LSKYCommon.parseInt(student.getGrade())));
+                ReportCard.Add(PDFReportCardParts.outcomeLegend(content));
 
                 PageEventHandler.ResetPageNumbers(ReportCard);
             }
@@ -115,8 +114,8 @@ namespace SLReports.ReportCard
 
 
                 /* NBCHS students for testing */
-                //students.Add(Student.loadThisStudent(connection, "11871"));
-                //students.Add(Student.loadThisStudent(connection, "11804"));
+                students.Add(Student.loadThisStudent(connection, "11871"));
+                students.Add(Student.loadThisStudent(connection, "11804"));
                 students.Add(Student.loadThisStudent(connection, "12511"));
             }
 

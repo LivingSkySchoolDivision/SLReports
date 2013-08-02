@@ -551,7 +551,7 @@ namespace SLReports.ReportCard
 
             PdfPTable schoolNamePlateTable = new PdfPTable(1);
             schoolNamePlateTable.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-            schoolNamePlateTable.TotalWidth = 425;
+            schoolNamePlateTable.TotalWidth = 500f;
             schoolNamePlateTable.LockedWidth = true;
             schoolNamePlateTable.SpacingAfter = 50;
 
@@ -589,7 +589,7 @@ namespace SLReports.ReportCard
 
             PdfPTable nameplateTable = new PdfPTable(3);
             nameplateTable.HorizontalAlignment = 1;
-            nameplateTable.TotalWidth = 425;
+            nameplateTable.TotalWidth = 500f;
             nameplateTable.LockedWidth = true;
             nameplateTable.SpacingAfter = 50;
 
@@ -848,7 +848,7 @@ namespace SLReports.ReportCard
                 }
 
                 newCell = new PdfPCell(new Phrase(courseName, font_body));
-                newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
                 newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
                 newCell.Border = Rectangle.NO_BORDER;
                 attendanceTable.AddCell(newCell);
@@ -1047,7 +1047,7 @@ namespace SLReports.ReportCard
             PdfPTable outcomeLegendTable = new PdfPTable(2);
             outcomeLegendTable.SpacingAfter = 25f;
             outcomeLegendTable.HorizontalAlignment = 1;
-            outcomeLegendTable.TotalWidth = 450f;
+            outcomeLegendTable.TotalWidth = 500;
             outcomeLegendTable.LockedWidth = true;
 
             float[] widths = new float[] { 1f, 2f };
@@ -1056,7 +1056,7 @@ namespace SLReports.ReportCard
             PdfPCell newCell = null;
             Paragraph description = null;
 
-            newCell = new PdfPCell(new Phrase("Outcome Legend", font_large_bold));
+            newCell = new PdfPCell(new Phrase("Outcome value legend", font_large_bold));
             newCell.Border = 0;
             newCell.Colspan = 2;
             newCell.Padding = 2;
@@ -1159,24 +1159,77 @@ namespace SLReports.ReportCard
             newCell.VerticalAlignment = 1;
             outcomeLegendTable.AddCell(newCell);
 
+            newCell = new PdfPCell(displayOutcomeBar(content, "NYM"));
+            newCell.Border = 0;
+            newCell.Padding = 2;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+            outcomeLegendTable.AddCell(newCell);
+
+            newCell = new PdfPCell();
+            description = new Paragraph();
+            description.SpacingBefore = 0;
+            description.SpacingAfter = 6;
+            description.Add(new Phrase("NYM: ", font_body_bold));
+            description.Add(new Phrase("Not Yet Meeting", font_body));
+            newCell.PaddingTop = 0;
+            newCell.AddElement(description);
+            newCell.Border = 0;
+            newCell.VerticalAlignment = 1;
+            outcomeLegendTable.AddCell(newCell);
+
             return outcomeLegendTable;
         }
 
-        public static PdfPTable lifeSkillsLegend(PdfContentByte content)
+        public static PdfPTable lifeSkillsLegend(PdfContentByte content, int gradeLevel)
         {
+            SortedDictionary<int, string> potentialMarks = new SortedDictionary<int, string>();
+            potentialMarks.Add(1, "Beginning to demonstrate these characteristics");
+            potentialMarks.Add(2, "Occasionally demonstrates these characteristics");
+            potentialMarks.Add(3, "Usually demonstrates these characteristics");
+            potentialMarks.Add(4, "Consistently demonstrates these characteristics");
+
+            SortedDictionary<string, string> lifeSkills = new SortedDictionary<string, string>();
+            if (gradeLevel >= 10)
+            {
+                lifeSkills.Add("Engagement",    "Invested in learning, diligent in completing work.");
+                lifeSkills.Add("Citizenship",   "Respectful, responsible, academically honest.");
+                lifeSkills.Add("Collaborative", "Willing to work with all classmates, cooperative, willing to resolve conflict.");
+                lifeSkills.Add("Leadership",    "Independent, takes initiative.");
+                lifeSkills.Add("Self-Directed", "Arrives on time, prepared to advance learning, strong work habits.");
+            }
+            else if (gradeLevel >= 7)
+            {
+                lifeSkills.Add("Engagement",    "Active in learning, faces new challenges confidently, completes work.");
+                lifeSkills.Add("Citizenship",   "Respectful to others and property, takes responsibility for actions and decisions.");
+                lifeSkills.Add("Collaborative", "Willing to work with all classmates, encourages and includes others.");
+                lifeSkills.Add("Leadership",    "Takes initiative, does the right thing.");
+                lifeSkills.Add("Self-Directed", "Prepared for class, organized, and uses class time well.");
+
+            }
+            else
+            {
+                lifeSkills.Add("Engagement",    "Completes assignments, keeps trying when the work gets hard.");
+                lifeSkills.Add("Citizenship",   "Shows caring, follows class and school rules, takes responsibility for actions.");
+                lifeSkills.Add("Collaborative", "Listens and works well with others, includes classmates at recess and in classroom.");
+                lifeSkills.Add("Leadership",    "Wants to learn and help others, good role model.");
+                lifeSkills.Add("Self-Directed", "Stay son task, organized.");
+            }
+
+
             PdfPTable outcomeLegendTable = new PdfPTable(2);
             outcomeLegendTable.SpacingAfter = 25f;
             outcomeLegendTable.HorizontalAlignment = 1;
-            outcomeLegendTable.TotalWidth = 450f;
+            outcomeLegendTable.TotalWidth = 500;
             outcomeLegendTable.LockedWidth = true;
 
-            float[] widths = new float[] { 1f, 2f };
+            float[] widths = new float[] { 1f, 5f };
             outcomeLegendTable.SetWidths(widths);
 
             PdfPCell newCell = null;
             Paragraph description = null;
 
-            newCell = new PdfPCell(new Phrase("Life Skills Legend", font_large_bold));
+            newCell = new PdfPCell(new Phrase("Characteristics of Successful Learning Behaviors", font_large_bold));
             newCell.Border = 0;
             newCell.Colspan = 2;
             newCell.Padding = 2;
@@ -1184,90 +1237,57 @@ namespace SLReports.ReportCard
             newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
             outcomeLegendTable.AddCell(newCell);
 
-            newCell = new PdfPCell(displayOutcomeBar(content, "4"));
+            foreach (KeyValuePair<string, string> legendItem in lifeSkills)
+            {
+                newCell = new PdfPCell(new Phrase(legendItem.Key, font_body_bold));
+                newCell.Border = 0;
+                newCell.Padding = 5;
+                newCell.PaddingLeft = 10;
+                newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+                outcomeLegendTable.AddCell(newCell);
+
+                newCell = new PdfPCell(new Phrase(legendItem.Value, font_body));
+                newCell.PaddingTop = 0;
+                newCell.Padding = 5;
+                newCell.AddElement(description);
+                newCell.Border = 0;
+                newCell.VerticalAlignment = 1;
+                outcomeLegendTable.AddCell(newCell);
+            }
+
+            /*
+            newCell = new PdfPCell(new Phrase("Successful Learning Behaviors Characteristics", font_large_bold));
             newCell.Border = 0;
+            newCell.Colspan = 2;
             newCell.Padding = 2;
-            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-            newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
-            outcomeLegendTable.AddCell(newCell);
-
-            newCell = new PdfPCell();
-            description = new Paragraph();
-            description.SpacingBefore = 0;
-            description.SpacingAfter = 6;
-            description.Add(new Phrase("4: ", font_body_bold));
-            description.Add(new Phrase("Consistently exhibits", font_body));
-            newCell.PaddingTop = 0;
-            newCell.AddElement(description);
-            newCell.Border = 0;
-            newCell.VerticalAlignment = 1;
-            outcomeLegendTable.AddCell(newCell);
-
-            newCell = new PdfPCell(displayOutcomeBar(content, "3"));
-            newCell.Border = 0;
-            newCell.Padding = 2;
-            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-            newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
-            outcomeLegendTable.AddCell(newCell);
-
-            newCell = new PdfPCell();
-            description = new Paragraph();
-            description.SpacingBefore = 0;
-            description.SpacingAfter = 6;
-            description.Add(new Phrase("3: ", font_body_bold));
-            description.Add(new Phrase("Usually exhibits", font_body));
-            newCell.PaddingTop = 0;
-            newCell.AddElement(description);
-            newCell.Border = 0;
-            newCell.VerticalAlignment = 1;
-            outcomeLegendTable.AddCell(newCell);
-
-            newCell = new PdfPCell(displayOutcomeBar(content, "2"));
-            newCell.Border = 0;
-            newCell.Padding = 2;
-            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-            newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
-            outcomeLegendTable.AddCell(newCell);
-
-            newCell = new PdfPCell();
-            description = new Paragraph();
-            description.SpacingBefore = 0;
-            description.SpacingAfter = 6;
-            description.Add(new Phrase("2: ", font_body_bold));
-            description.Add(new Phrase("Occasionally exhibits", font_body));
-            newCell.PaddingTop = 0;
-            newCell.AddElement(description);
-            newCell.Border = 0;
-            newCell.VerticalAlignment = 1;
-            outcomeLegendTable.AddCell(newCell);
-
-            newCell = new PdfPCell(displayOutcomeBar(content, "1"));
-            newCell.Border = 0;
-            newCell.Padding = 2;
-            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-            newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
-            outcomeLegendTable.AddCell(newCell);
-
-            newCell = new PdfPCell();
-            description = new Paragraph();
-            description.SpacingBefore = 0;
-            description.SpacingAfter = 6;
-            description.Add(new Phrase("1: ", font_body_bold));
-            description.Add(new Phrase("Beginning to exhibit", font_body));
-            newCell.PaddingTop = 0;
-            newCell.AddElement(description);
-            newCell.Border = 0;
-            newCell.VerticalAlignment = 1;
-            outcomeLegendTable.AddCell(newCell);
-
-            newCell = new PdfPCell(displayOutcomeBar(content, "IE"));
-            newCell.Border = 0;
-            newCell.Padding = 2;
-            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
             newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
             outcomeLegendTable.AddCell(newCell);
 
 
+            foreach (KeyValuePair<int, string> legendItem in potentialMarks)
+            {
+                newCell = new PdfPCell(displayOutcomeBar(content, legendItem.Key.ToString()));
+                newCell.Border = 0;
+                newCell.Padding = 2;
+                newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+                outcomeLegendTable.AddCell(newCell);
+
+                newCell = new PdfPCell();
+                description = new Paragraph();
+                description.SpacingBefore = 0;
+                description.SpacingAfter = 6;
+                description.Add(new Phrase(legendItem.Key.ToString() + ": ", font_body_bold));
+                description.Add(new Phrase(legendItem.Value, font_body));
+                newCell.PaddingTop = 0;
+                newCell.AddElement(description);
+                newCell.Border = 0;
+                newCell.VerticalAlignment = 1;
+                outcomeLegendTable.AddCell(newCell);
+            }
+            */
             return outcomeLegendTable;
         }
 
@@ -1303,7 +1323,7 @@ namespace SLReports.ReportCard
                     {
                         objectiveDescriptionCondensed = objectiveDescriptionCondensed.Substring(0, 100);
                     }
-                    objectiveDescriptionParagraph.Add(new Phrase(objectiveDescriptionCondensed, font_small));
+                    objectiveDescriptionParagraph.Add(new Phrase(objectiveDescriptionCondensed, font_body));
                     objectiveDescriptionParagraph.Add(Chunk.NEWLINE);
                     objectiveDescriptionParagraph.Add(Chunk.NEWLINE);
 
@@ -1395,7 +1415,7 @@ namespace SLReports.ReportCard
         {
             // Interesting note: If you add an element to a cell in the constructor it aligns differnetly than if you add it as an element
 
-            string lifeSkillsCategoryName = "Successful Learning Behaviors";
+            string lifeSkillsCategoryName = "Successful Learner Behaviours";
 
             int lifeSkillsTableBorder = 0;
 
@@ -1585,14 +1605,16 @@ namespace SLReports.ReportCard
             /* Course title and numeric mark */
             newP = new Paragraph();
 
-            newP.Add(new Phrase("Period / Block: " + course.blockNumber, font_small));
-            newP.Add(Chunk.NEWLINE);
+
+
             newP.Add(new Phrase(course.name, font_large_bold));
-            newP.Add(new Phrase(" (" + course.teacherName + ")", font_small));
+            newP.Add(Chunk.NEWLINE);
+            newP.Add(new Phrase("" + course.teacherName + "", font_small));   
 
             newCell = new PdfPCell(newP);
             newCell.Border = 0;
             newCell.Padding = 5;
+            newCell.PaddingLeft = 0;
             classTable.AddCell(newCell);
 
             newCell = new PdfPCell();
@@ -1621,19 +1643,27 @@ namespace SLReports.ReportCard
             }
 
 
-            // Display class marks table
+            // Display class marks table            
             if (course.Marks.Count > 0)
             {
-                /* Create a nested table to put in the mark cell */
+                // Create a nested table to put in the mark cell
                 PdfPTable markTable = new PdfPTable(course.Marks.Count);
+                               
+
+                // If the class is outcome based, ONLY display the mark from the FINAL report period in the term
+                
+
+
+                // If the class is not outcome based, display all available marks
+
 
                 foreach (Mark mark in course.Marks)
                 {
                     Paragraph markValueParagraph = new Paragraph();
 
-                    /* figure out what to display for the mark */
-                    /*  - if The class is a high school class, it should be a percent */
-                    /*  - Otherwise, display the Outcome/Objective mark */
+                    // figure out what to display for the mark 
+                    //  - if The class is a high school class, it should be a percent 
+                    //  - Otherwise, display the Outcome/Objective mark 
 
                     if (course.isHighSchoolClass())
                     {
@@ -1694,11 +1724,12 @@ namespace SLReports.ReportCard
             else
             {
                 newCell = new PdfPCell(new Paragraph(""));
-                newCell.Border = Rectangle.BOX;
+                newCell.Border = 0;
                 newCell.Padding = 5;
                 newCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
                 classTable.AddCell(newCell);
             }
+            
 
 
             //Display outcomes

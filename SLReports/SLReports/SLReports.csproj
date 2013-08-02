@@ -224,6 +224,7 @@
     <Compile Include="ReportCard\Grade_Term_PDF.aspx.designer.cs">
       <DependentUpon>Grade_Term_PDF.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ReportCard\LifeSkillsLegendItem.cs" />
     <Compile Include="ReportCard\PDFReportCardParts.cs" />
     <Compile Include="SchoolClass.cs" />
     <Compile Include="Courses\index.aspx.cs">
