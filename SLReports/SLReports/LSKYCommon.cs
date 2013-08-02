@@ -10,6 +10,8 @@ namespace SLReports
 {
     public static class LSKYCommon
     {
+        public static string internal_api_key = "6b05cb5705c07a4ca23a6bba779263ab983a5ae2";
+
         public static string boolToTrueFalse(bool thisBool)
         {
             if (thisBool)

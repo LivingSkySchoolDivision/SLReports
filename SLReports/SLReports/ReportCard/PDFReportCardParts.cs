@@ -10,7 +10,6 @@ namespace SLReports.ReportCard
 {
     public static class PDFReportCardParts
     {
-        public static string api_key = "6b05cb5705c07a4ca23a6bba779263ab983a5ae2";
         public static Font font_large = FontFactory.GetFont("Verdana", 15, BaseColor.BLACK);
         public static Font font_large_bold = FontFactory.GetFont("Verdana", 15, Font.BOLD, BaseColor.BLACK);
         public static Font font_large_italic = FontFactory.GetFont("Verdana", 15, Font.ITALIC, BaseColor.BLACK);
@@ -603,7 +602,7 @@ namespace SLReports.ReportCard
             {
                 try
                 {
-                    iTextSharp.text.Image photo = iTextSharp.text.Image.GetInstance(@"https://sldata.lskysd.ca/SLReports/photos/GetPhoto.aspx?studentnumber=" + student.getStudentID() + "&apikey=" + api_key);
+                    iTextSharp.text.Image photo = iTextSharp.text.Image.GetInstance(@"https://sldata.lskysd.ca/SLReports/photos/GetPhoto.aspx?studentnumber=" + student.getStudentID() + "&apikey=" + LSKYCommon.internal_api_key);
                     photo.Border = Rectangle.BOX;
                     photo.BorderWidth = 1;
                     photoCell.PaddingRight = 10f;
