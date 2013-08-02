@@ -68,7 +68,12 @@ namespace SLReports
 
         public override string ToString()
         {
-            return "Objective: { ID: " + this.id + ", ContainsObjectiveMarks: " + this.marks.Count + "}";
+            string subject = this.subject;
+            if (this.subject.Length > 25)
+            {
+                subject = this.subject.Substring(0, 25);
+            }
+            return "Objective: { ID: " + this.id + ", Subject: "+subject+", Category: " + this.category + ", ContainsObjectiveMarks: " + this.marks.Count + "}";
         }
     }
 }
