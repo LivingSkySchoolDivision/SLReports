@@ -662,5 +662,87 @@ namespace SLReports
             return returnMe;
         }
 
+        public static List<Student> loadReserveStudentsFromThisSchol(SqlConnection connection, School school)
+        {
+            List<Student> returnMe = new List<Student>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM LSKY_ActiveStudents WHERE ResideOnReserve=1 AND SchoolID=@SchoolID ORDER BY SchoolID ASC, Grade ASC;";
+            sqlCommand.Parameters.AddWithValue("@SchoolID", school.getGovID());
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    string HomeRoom = dataReader["HomeRoom"].ToString().Trim();
+                    string HRT_Title = dataReader["HomeRoomTeacherTitle"].ToString().Trim();
+                    string HRT_First = dataReader["HomeRoomTeacherFirstName"].ToString().Trim();
+                    string HRT_Last = dataReader["HomeRoomTeacherLastName"].ToString().Trim();
+                    if ((!string.IsNullOrEmpty(HRT_First)) && (!string.IsNullOrEmpty(HRT_Last)))
+                    {
+                        HomeRoom = HomeRoom + " (";
+                        if ((!string.IsNullOrEmpty(HRT_Title)))
+                        {
+                            HomeRoom = HomeRoom + HRT_Title;
+                        }
+                        else
+                        {
+                            HomeRoom = HomeRoom + HRT_First;
+                        }
+
+                        HomeRoom = HomeRoom + " " + HRT_Last + ")";
+                    }
+                    bool hasPhoto = false;
+                    if (!string.IsNullOrEmpty(dataReader["PhotoType"].ToString()))
+                    {
+                        hasPhoto = true;
+                    }
+
+                    Student newStudent = new Student(
+                                dataReader["LegalFirstName"].ToString(),
+                                dataReader["LegalLastName"].ToString(),
+                                dataReader["LegalMiddleName"].ToString(),
+                                dataReader["StudentNumber"].ToString(),
+                                dataReader["GovernmentIDNumber"].ToString(),
+                                dataReader["School"].ToString(),
+                                dataReader["SchoolID"].ToString(),
+                                dataReader["Grade"].ToString(),
+                                dataReader["Region"].ToString(),
+                                dataReader["City"].ToString(),
+                                dataReader["Street"].ToString(),
+                                dataReader["HouseNo"].ToString(),
+                                dataReader["ApartmentNo"].ToString(),
+                                dataReader["PostalCode"].ToString(),
+                                dataReader["Phone"].ToString(),
+                                dataReader["Gender"].ToString(),
+                                dataReader["InStatus"].ToString(),
+                                dataReader["InStatusCode"].ToString(),
+                                dataReader["HomeRoom"].ToString(),
+                                DateTime.Parse(dataReader["InDate"].ToString()),
+                                DateTime.Parse(dataReader["DateOfBirth"].ToString()),
+                                dataReader["BandNo"].ToString(),
+                                dataReader["BandName"].ToString(),
+                                dataReader["ReserveName"].ToString(),
+                                dataReader["ReserveHouse"].ToString(),
+                                dataReader["StatusNo"].ToString(),
+                                bool.Parse(dataReader["ResideOnReserve"].ToString()),
+                                int.Parse(dataReader["TrackID"].ToString()),
+                                hasPhoto,
+                                dataReader["cUserName"].ToString().Trim()
+                                );
+                    returnMe.Add(newStudent);
+
+                }
+            }
+
+            sqlCommand.Connection.Close();
+            return returnMe;
+
+        }
+
     }
 }

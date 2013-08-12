@@ -16,22 +16,32 @@ namespace SLReports
         public string relation { get; set; }
         public string telephone { get; set; }
 
+        public int priority { get; set; }
+        public bool livesWithStudent { get; set; }
+        public string houseNo { get; set; }
+        public string street { get; set; }
+        public string apartment { get; set; }
+        public string postalCode { get; set; }
+        public string city { get; set; }
+        public string region { get; set; }
 
-        public Contact(string fn, string ln, string rel, string snumber)
-        {
-            this.firstName = fn;
-            this.lastName = ln;
-            this.studentNumber = snumber;
-            this.relation = rel;
-        }
-
-        public Contact(string fn, string ln, string rel, string snumber, string telephone)
+        public Contact(string fn, string ln, string rel, string snumber, string telephone, int priority, bool livesWith, 
+            string housenumber, string street, string apt, string postalcode, string city, string region)
         {
             this.firstName = fn;
             this.lastName = ln;
             this.studentNumber = snumber;
             this.relation = rel;
             this.telephone = telephone;
+
+            this.priority = priority;
+            this.livesWithStudent = livesWith;
+            this.houseNo = housenumber;
+            this.street = street;
+            this.apartment = apt;
+            this.postalCode = postalcode;
+            this.city = city;
+            this.region = region;
         }
 
         public override string ToString()
@@ -63,14 +73,26 @@ namespace SLReports
                 returnMe.Clear();
                 while (dataReader.Read())
                 {
-                    returnMe.Add(new Contact(
+                    bool livesWithStudent = false;
+                    bool.TryParse(dataReader["lLivesWithStudent"].ToString().Trim(), out livesWithStudent);
+
+                    Contact newContact = new Contact(
                         dataReader["FirstName"].ToString().Trim(),
                         dataReader["LastName"].ToString().Trim(),
                         dataReader["Relation"].ToString().Trim(),
                         dataReader["StudentNumber"].ToString().Trim(),
-                        dataReader["Telephone"].ToString().Trim()
-                        
-                        ));
+                        dataReader["Telephone"].ToString().Trim(),
+                        int.Parse(dataReader["iContactPriority"].ToString().Trim()),
+                        livesWithStudent,
+                        dataReader["cHouseNo"].ToString().Trim(),
+                        dataReader["cStreet"].ToString().Trim(),
+                        dataReader["cApartment"].ToString().Trim(),
+                        dataReader["cPostalCode"].ToString().Trim(),
+                        dataReader["City"].ToString().Trim(),
+                        dataReader["Region"].ToString().Trim()
+                        );
+
+                    returnMe.Add(newContact);
                 }
             }
             sqlCommand.Connection.Close();
