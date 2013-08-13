@@ -44,6 +44,7 @@ namespace SLReports
 
                 }
             }
+            returnMe.Sort();
 
             return returnMe;
         }

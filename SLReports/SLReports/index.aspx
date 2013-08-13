@@ -1,24 +1,19 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/BasicTemplate.Master" AutoEventWireup="true" CodeBehind="index.aspx.cs" Inherits="SLReports.index" %>
 <asp:Content  ContentPlaceHolderID="Main" runat="server">
-<div class="large_infobox">
-    <h3>About the Data Explorer</h3>
-    <p>
-        This utility allows you to explore the <b style="color: red;">live</b> student data from the SchoolLogic, Teacherlogic, and Homelogic database.
-    </p>
-    <p>
-        All data on this site is live, and updated in real time.
-    </p>    
-    <p>
-        All data here is <b style="color: red;">read only</b> - it is not possible to edit student data anywhere on this site.
-    </p>    
-</div>
-    <br />
+   
+    <h2>Data to explore</h2>
+    <div style="padding-left: 10px;">
+        <asp:Table ID="tblNavigation" runat="server" CssClass="navigation_table">            
+        </asp:Table>
+    </div>
+<br />
+
 <div class="large_infobox">
     <p>        
         <h3>Moderately interesting statistics</h3>
         <ul>
             <li>There are currently <asp:Label ID="lblActiveStudentCount" runat="server" Text="" CssClass="small_infobox"></asp:Label> active students in the database, in <asp:Label ID="lblSchoolCount" runat="server" Text="" CssClass="small_infobox"></asp:Label> schools.</li>            
-            <ul>
+            <ul>                
                 <li><small><i>Note:</i> This number <i>is</i> accurate - SchoolLogic is more selective in the students it lists as "currently enrolled".</small></li>
             </ul>
             <li><asp:Label ID="lblMalePercent" runat="server" Text="" CssClass="small_infobox"></asp:Label> <asp:Label ID="lblMaleCount" runat="server" Text="" CssClass="small_infobox"></asp:Label> students are male </li>
@@ -30,10 +25,13 @@
     </p>    
 </div>
 <br />
+
 <div class="large_infobox">
     <p>        
         <h3>Recent changes / additions</h3>
         <ul>
+
+            <li><b>August 13th, 2013</b> - <a href="INAC/index.aspx">INAC report upgrades</a> - INAC report now displays all relevant data, and can now be exported to a CSV file</li>
             <li><b>July 25th, 2013</b> - <a href="Duplicates/index.aspx">Duplicate student finder</a> - A list of potentially duplicate students or data entry errors in the database</li>
             <li><b>July 9th, 2013</b> - <a href="Courses/CoursesWithclasses.aspx">Classes by Course</a> - The list of courses, with each of it's child classes</li>
             <li><b>July 9th, 2013</b> - <a href="Courses/">Course list</a> - A list of all courses in the system</li>            

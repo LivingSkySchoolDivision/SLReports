@@ -12,14 +12,43 @@ namespace SLReports
 {
     public partial class index : System.Web.UI.Page
     {
-        
+
+        String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+
+        private TableRow addNavItem(NavMenuItem item)
+        {
+            TableRow newRow = new TableRow();
+
+            TableCell nameCell = new TableCell();
+            nameCell.Text = "<a href=\"/SLReports"+item.url+"\">" + item.name + "</a>";
+            nameCell.CssClass = "navigation_table_name";
+            newRow.Cells.Add(nameCell);
+
+            TableCell descriptionCell = new TableCell();
+            descriptionCell.Text = item.description;
+            descriptionCell.CssClass = "navigation_table_description";
+            newRow.Cells.Add(descriptionCell);
+
+            return newRow;            
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             List<Student> allStudents = new List<Student>();
             List<School> allSchools = new List<School>();
             List<StaffMember> allStaff = new List<StaffMember>();
 
-            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+            List<NavMenuItem> MainMenu = Nav.getMainMenu();
+            foreach (NavMenuItem item in MainMenu)
+            {
+                if (item.name != "-- Front Page --")
+                {
+                    tblNavigation.Rows.Add(addNavItem(item));
+                }
+            }
+
+
+
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
                 allStudents = Student.loadAllStudents(connection);
