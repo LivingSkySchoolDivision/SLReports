@@ -93,6 +93,7 @@
     <Content Include="icon_xls.gif" />
     <Content Include="icon_xml.gif" />
     <Content Include="icon_zip.gif" />
+    <Content Include="INAC\INAC_CSV.aspx" />
     <Content Include="INAC\index.aspx" />
     <Content Include="index.aspx" />
     <Content Include="lock.png" />
@@ -216,6 +217,14 @@
     <Compile Include="Duplicates\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="INAC\INAC_CSV.aspx.cs">
+      <DependentUpon>INAC_CSV.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="INAC\INAC_CSV.aspx.designer.cs">
+      <DependentUpon>INAC_CSV.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="INAC\LSKY_INAC.cs" />
     <Compile Include="LSKYCommon.cs" />
     <Compile Include="ReportCard\Grade_Term_PDF.aspx.cs">
       <DependentUpon>Grade_Term_PDF.aspx</DependentUpon>

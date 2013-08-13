@@ -13,80 +13,28 @@ namespace SLReports.INAC
 {
     public partial class index : System.Web.UI.Page
     {
-        List<Student> AllStudents;
-
-        String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
-        //String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogic2013"].ConnectionString;
+        //String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+        String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogic2013"].ConnectionString;
 
         public static List<School> AllSchools;
 
-        private static School selectedSchool = null;
-
-        DateTime startDate = DateTime.Now.AddMonths(-1);
-        DateTime endDate = DateTime.Now;        
+        private static School selectedSchool = null;             
 
         private TableRow createStudentRow(Student student)
         {
-            StringBuilder calculationExplaination = new StringBuilder();
-
-            /* figure out days absent */
-
-            float daysAbsent =-1;
-
-            // Should we be calculating daily absenses or class based absenses
-            if (student.track.daily == true)
-            {
-                calculationExplaination.Append("Track attendance is set to DAILY&#10;");
-                calculationExplaination.Append(" Absence count in blocks: " + student.absences.Count + "&#10;");
-                calculationExplaination.Append(" Blocks per day: " + student.track.dailyBlocksPerDay + "&#10;");
-                daysAbsent = (float)((float)student.absences.Count / (float)student.track.dailyBlocksPerDay);
-                calculationExplaination.Append(" " + (float)student.absences.Count + " / " + (float)student.track.dailyBlocksPerDay + " = " + daysAbsent);
-            }
-            else
-            {
-                calculationExplaination.Append("Track attendance is set to PERIOD&#10;&#10;");
-                daysAbsent = 0;
-
-                // The required data should be preloaded into the student object...
-
-                // For each track and term
-                    // Figure out how many classes per day this student actually has
-                    // Calculate and add to the total                
-
-                foreach (Term term in student.track.terms)
-                {
-                    calculationExplaination.Append(" Term: " + term.name + "&#10;");
-                    calculationExplaination.Append("  Enrolled classes in this term: " + term.Courses.Count + "&#10;");
-                    if (term.Courses.Count > 0)
-                    {
-                        // Get all absenses that fall within this term
-                        List<Absence> thisTermAbsenses = new List<Absence>();
-                        foreach (Absence abs in student.absences)
-                        {
-                            if ((abs.getDate() > term.startDate) && (abs.getDate() < term.endDate))
-                            {
-                                thisTermAbsenses.Add(abs);
-                            }
-                        }
-                        calculationExplaination.Append("  Absences in this term (in blocks): " + thisTermAbsenses.Count + "&#10;");
-                        float daysAbsentThisTerm = (float)((float)thisTermAbsenses.Count / (float)term.Courses.Count);
-                        daysAbsent += daysAbsentThisTerm;
-                        calculationExplaination.Append("  " + (float)thisTermAbsenses.Count + " / " + (float)term.Courses.Count + " = " + daysAbsentThisTerm + "&#10;&#10;");
-                    }
-                }
-            }
-
+            string calculationExplaination = string.Empty;
+            float daysAbsent = LSKY_INAC.getDaysAbsent(student, out calculationExplaination);
+            
             /* figure out guardian(s) */
+
+            List<Contact> guardiansList = LSKY_INAC.getINACGuardians(student.contacts);
             StringBuilder guardians = new StringBuilder();
 
-            foreach (Contact contact in student.contacts)
+            foreach (Contact contact in guardiansList)
             {
-                if ((contact.priority == 1) && (contact.livesWithStudent == true))
-                {
-                    guardians.Append(contact.firstName + " " + contact.lastName + " <i>(" + contact.relation + ")</i><br>");
-                }                
-            }
-
+                guardians.Append(contact.firstName + " " + contact.lastName + " </i>(" + contact.relation + ")</i><br>");
+            } 
+            
             TableRow newRow = new TableRow();
 
             TableCell gradeCell = new TableCell();
@@ -154,12 +102,14 @@ namespace SLReports.INAC
             return newRow;
 
         }
-
+               
         protected void Page_Load(object sender, EventArgs e)
-        { 
+        {
+            DateTime startDate = DateTime.Today;
+            DateTime endDate = DateTime.Today;
+
             if (!IsPostBack)
-            {
-                AllStudents = new List<Student>();
+            {                
                 AllSchools = new List<School>();
                 selectedSchool = null;
                 
@@ -270,6 +220,7 @@ namespace SLReports.INAC
             }
             else
             {
+                #region Parse the selected school
                 foreach (School school in AllSchools)
                 {
                     if (lstSchoolList.SelectedItem.Value == school.getGovID())
@@ -277,7 +228,9 @@ namespace SLReports.INAC
                         selectedSchool = school;
                     }
                 }
+                #endregion
 
+                #region Parse the given date
                 int startYear = int.Parse(from_year.SelectedValue);
                 int startMonth = int.Parse(from_month.SelectedValue);
                 int startDay = int.Parse(from_day.SelectedValue);
@@ -289,76 +242,35 @@ namespace SLReports.INAC
                 int endDay = int.Parse(to_day.SelectedValue);
                 if (endDay > DateTime.DaysInMonth(endYear, endMonth))
                     endDay = DateTime.DaysInMonth(endYear, endMonth);
-
+                   
                 startDate = new DateTime(startYear,startMonth,startDay);
                 endDate = new DateTime(endYear,endMonth,endDay);
+                #endregion
             }
 
             using (SqlConnection connection = new SqlConnection(dbConnectionString)) 
             {
                 AllSchools = School.loadAllSchools(connection);
 
-                if (selectedSchool != null)
-                {                    
-
-                    // Load students
-                    //AllStudents = Student.loadReserveStudentsFromThisSchol(connection, selectedSchool);
-                    List<Student> loadedStudents = Student.loadReserveStudentsFromThisSchol(connection, selectedSchool);
-
-                    // Filter students to only those in a track that falls between the given dates
-
-                    AllStudents = new List<Student>();
-                    foreach (Student student in loadedStudents)
+                if (IsPostBack)
+                {
+                    if (selectedSchool != null)
                     {
-                        student.track = Track.loadThisTrack(connection, student.getTrackID());                        
-                        if ((student.track.endDate > startDate) && (student.track.startDate < endDate)) 
+                        List<Student> DisplayedStudents = LSKY_INAC.loadStudentData(connection, selectedSchool, startDate, endDate);
+
+                        lblCount.Text = "Found " + DisplayedStudents.Count + " students.";
+                        if (DisplayedStudents.Count > 0)
                         {
-                            AllStudents.Add(student);
+                            tblResults.Visible = true;
                         }
-                    }                    
-
-                    lblCount.Text = "Found " + AllStudents.Count + " students";
-
-                    if (AllStudents.Count > 0)
-                    {
-                        tblResults.Visible = true;
-                    }
-
-                    // Load some extra data for students
-                    foreach (Student student in AllStudents)
-                    {
-                        // Load track for students
-                        //student.track = Track.loadThisTrack(connection, student.getTrackID());
-
-                        // Load contacts for students
-                        student.contacts = Contact.loadContactsForStudent(connection, student);
-
-                        // Load absenses for students
-                        student.absences = Absence.loadAbsencesForThisStudentAndTimePeriod(connection, student, startDate, endDate);
-
-                        // Load any terms that fall within the specified dates
-                        student.track.terms = Term.loadTermsBetweenTheseDates(connection, student.track, startDate, endDate);
-
-                        //Response.Write("<br>" + student + "<BR>");
-
-                        // Load enrolled courses into the terms
-                        foreach (Term term in student.track.terms)
+                        DisplayedStudents.Sort();
+                        foreach (Student student in DisplayedStudents)
                         {
-                            //Response.Write("&nbsp;&nbsp;&nbsp;" + term + "<BR>");
-                            term.Courses = SchoolClass.loadStudentEnrolledClasses(connection, student, term);
-                            //Response.Write("&nbsp;&nbsp;&nbsp;&nsbp;<b>Total classes this term: " + term.Courses.Count + "</b>");
+                            tblResults.Rows.Add(createStudentRow(student));
                         }
                     }
                 }
-            }
-            
-            AllStudents.Sort();            
-
-            foreach (Student student in AllStudents)
-            {
-                tblResults.Rows.Add(createStudentRow(student));
-            }
-
+            }            
         }        
     }
 }
