@@ -26,14 +26,13 @@ namespace SLReports.INAC
             float daysAbsent = LSKY_INAC.getDaysAbsent(student, out calculationExplaination);
             
             /* figure out guardian(s) */
-
             List<Contact> guardiansList = LSKY_INAC.getINACGuardians(student.contacts);
             StringBuilder guardians = new StringBuilder();
-
             foreach (Contact contact in guardiansList)
             {
                 guardians.Append(contact.firstName + " " + contact.lastName + " </i>(" + contact.relation + ")</i><br>");
             } 
+
             
             TableRow newRow = new TableRow();
 
@@ -262,8 +261,11 @@ namespace SLReports.INAC
                         if (DisplayedStudents.Count > 0)
                         {
                             tblResults.Visible = true;
+
+                            lnkCSVDownload.Visible = true;
+                            lnkCSVDownload.NavigateUrl = "INAC_CSV.aspx?schoolid=" + selectedSchool.getGovID() + "&from_year=" + startDate.Year + "&from_month=" + startDate.Month + "&from_day=" + startDate.Day + "&to_year=" + endDate.Year + "&to_month=" + endDate.Month + "&to_day=" + endDate.Day;
                         }
-                        DisplayedStudents.Sort();
+                        
                         foreach (Student student in DisplayedStudents)
                         {
                             tblResults.Rows.Add(createStudentRow(student));

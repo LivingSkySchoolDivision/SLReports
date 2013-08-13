@@ -24,7 +24,7 @@
         </tr>
     </table><br />
 
-    <!-- <a href="#"><img src="/SLReports/icon_xls.gif">Download CSV</a> -->
+    <asp:HyperLink ID="lnkCSVDownload" Visible="false" runat="server"><img src="/SLReports/icon_xls.gif">Download CSV</asp:HyperLink><br /><br />
     <asp:Label ID="lblCount" runat="server" Text=""></asp:Label>
     <asp:Table ID="tblResults" runat="server" CssClass="datatable" CellPadding="3" Visible="false">
         <asp:TableHeaderRow CssClass="datatable_header">
