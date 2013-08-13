@@ -15,8 +15,8 @@ namespace SLReports.INAC
     {
         List<Student> AllStudents;
 
-        //String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
-        String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogic2013"].ConnectionString;
+        String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+        //String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogic2013"].ConnectionString;
 
         public static List<School> AllSchools;
 
@@ -156,9 +156,7 @@ namespace SLReports.INAC
         }
 
         protected void Page_Load(object sender, EventArgs e)
-        {           
-            
-
+        { 
             if (!IsPostBack)
             {
                 AllStudents = new List<Student>();
@@ -350,9 +348,6 @@ namespace SLReports.INAC
                             term.Courses = SchoolClass.loadStudentEnrolledClasses(connection, student, term);
                             //Response.Write("&nbsp;&nbsp;&nbsp;&nsbp;<b>Total classes this term: " + term.Courses.Count + "</b>");
                         }
-
-
-
                     }
                 }
             }
