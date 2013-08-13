@@ -13,8 +13,7 @@ namespace SLReports.INAC
 {
     public partial class index : System.Web.UI.Page
     {
-        //String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
-        String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogic2013"].ConnectionString;
+        String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
 
         public static List<School> AllSchools;
 

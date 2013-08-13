@@ -13,8 +13,7 @@ namespace SLReports.INAC
 {
     public partial class INAC_CSV : System.Web.UI.Page
     {
-        //String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
-        String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogic2013"].ConnectionString;        
+        String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;     
 
         protected void sendCSV(MemoryStream CSVData, String filename)
         {
