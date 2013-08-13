@@ -8,13 +8,13 @@
         <tr>
             <td>School<br /><asp:DropDownList ID="lstSchoolList" runat="server"></asp:DropDownList></td>
             <td>
-                Attendance From <br />
+                Date From <br />
                 <asp:DropDownList ID="from_month" runat="server"></asp:DropDownList>
                 <asp:DropDownList ID="from_day" runat="server"></asp:DropDownList>
                 <asp:DropDownList ID="from_year" runat="server"></asp:DropDownList>
             </td>
             <td>
-                Attendance To<br />                
+                Date To<br />                
                 <asp:DropDownList ID="to_month" runat="server"></asp:DropDownList>
                 <asp:DropDownList ID="to_day" runat="server"></asp:DropDownList>
                 <asp:DropDownList ID="to_year" runat="server"></asp:DropDownList>
@@ -35,12 +35,12 @@
             <asp:TableHeaderCell>Status #</asp:TableHeaderCell>
             <asp:TableHeaderCell>Reserve of Residence</asp:TableHeaderCell>
             <asp:TableHeaderCell>House #</asp:TableHeaderCell>
-            <asp:TableHeaderCell>Parent / Guardian<sup><a style="color: blue" href="#foot_1">1</a></sup></asp:TableHeaderCell>
-            <asp:TableHeaderCell>Days Absent</asp:TableHeaderCell>
-            <asp:TableHeaderCell>Date Register</asp:TableHeaderCell>
+            <asp:TableHeaderCell>Parent / Guardian<sup></sup><br /><sup>Any priority 1 contact that lives with the student</sup></asp:TableHeaderCell>
+            <asp:TableHeaderCell ColumnSpan="2">Absences<br /><sup>Hover mouse over to see how days were calculated</sup></asp:TableHeaderCell>
+            <asp:TableHeaderCell>InStatus Date</asp:TableHeaderCell>
         </asp:TableHeaderRow>
     </asp:Table>
     <br />
-        <div><a name="foot_1">1</a>: Parent / Guardian is calculated as any priority 1 contact that lives with the student.</div>
+        <div><b>Note:</b> Parent / Guardian is calculated as any priority 1 contact that lives with the student.</div>
     </form>
 </asp:Content>

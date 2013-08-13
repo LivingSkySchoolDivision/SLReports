@@ -53,7 +53,7 @@ namespace SLReports
 
         public override string ToString()
         {
-            return this.name + " ("+this.startDate.ToShortDateString()+" to "+this.endDate.ToShortDateString()+")";
+            return "Track: { Name: " + this.name + ", ID: "+this.ID+", Daily: "+ LSKYCommon.boolToYesOrNo(this.daily)+", SchoolID: "+this.schoolID+",  Starts: "+this.startDate.ToShortDateString()+", Ends: "+this.endDate.ToShortDateString()+"}";
         }
 
         public int getID()

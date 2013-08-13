@@ -13,14 +13,12 @@ namespace SLReports.INAC
 {
     public partial class index : System.Web.UI.Page
     {
+        List<Student> AllStudents;
 
         //String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
         String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogic2013"].ConnectionString;
 
-        public static List<Student> AllStudents;
-        public static List<Absence> AllAbsences;
         public static List<School> AllSchools;
-        public static List<Contact> AllContacts;
 
         private static School selectedSchool = null;
 
@@ -29,20 +27,53 @@ namespace SLReports.INAC
 
         private TableRow createStudentRow(Student student)
         {
+            StringBuilder calculationExplaination = new StringBuilder();
+
             /* figure out days absent */
+
             float daysAbsent =-1;
 
             // Should we be calculating daily absenses or class based absenses
             if (student.track.daily == true)
             {
+                calculationExplaination.Append("Track attendance is set to DAILY&#10;");
+                calculationExplaination.Append(" Absence count in blocks: " + student.absences.Count + "&#10;");
+                calculationExplaination.Append(" Blocks per day: " + student.track.dailyBlocksPerDay + "&#10;");
                 daysAbsent = (float)((float)student.absences.Count / (float)student.track.dailyBlocksPerDay);
+                calculationExplaination.Append(" " + (float)student.absences.Count + " / " + (float)student.track.dailyBlocksPerDay + " = " + daysAbsent);
             }
             else
             {
-                // Figure out how many tracks the given date range spans
-                // For each track
-                 // Figure out how many classes per day this student actually has
-                 // Calculate and add to the total                
+                calculationExplaination.Append("Track attendance is set to PERIOD&#10;&#10;");
+                daysAbsent = 0;
+
+                // The required data should be preloaded into the student object...
+
+                // For each track and term
+                    // Figure out how many classes per day this student actually has
+                    // Calculate and add to the total                
+
+                foreach (Term term in student.track.terms)
+                {
+                    calculationExplaination.Append(" Term: " + term.name + "&#10;");
+                    calculationExplaination.Append("  Enrolled classes in this term: " + term.Courses.Count + "&#10;");
+                    if (term.Courses.Count > 0)
+                    {
+                        // Get all absenses that fall within this term
+                        List<Absence> thisTermAbsenses = new List<Absence>();
+                        foreach (Absence abs in student.absences)
+                        {
+                            if ((abs.getDate() > term.startDate) && (abs.getDate() < term.endDate))
+                            {
+                                thisTermAbsenses.Add(abs);
+                            }
+                        }
+                        calculationExplaination.Append("  Absences in this term (in blocks): " + thisTermAbsenses.Count + "&#10;");
+                        float daysAbsentThisTerm = (float)((float)thisTermAbsenses.Count / (float)term.Courses.Count);
+                        daysAbsent += daysAbsentThisTerm;
+                        calculationExplaination.Append("  " + (float)thisTermAbsenses.Count + " / " + (float)term.Courses.Count + " = " + daysAbsentThisTerm + "&#10;&#10;");
+                    }
+                }
             }
 
             /* figure out guardian(s) */
@@ -71,6 +102,7 @@ namespace SLReports.INAC
             TableCell birthdayCell = new TableCell();
             birthdayCell.Text = student.getDateOfBirth().Month + "/" + student.getDateOfBirth().Day + "/" + student.getDateOfBirth().Year;
             birthdayCell.VerticalAlign = VerticalAlign.Top;
+            birthdayCell.HorizontalAlign = HorizontalAlign.Right;
             newRow.Cells.Add(birthdayCell);
 
             TableCell bandCell = new TableCell();
@@ -104,10 +136,15 @@ namespace SLReports.INAC
                 daysAbsentCell.Text = "<i style=\"color: #707070;\">No Absences</i>";
             } else if (daysAbsent >= 0)
             {
-                daysAbsentCell.Text = daysAbsent.ToString() + " days (" + student.absences.Count + " blocks)";
+                daysAbsentCell.Text = "<abbr title=\"" + calculationExplaination + "\">" + Math.Round(daysAbsent,2) + " days</abbr>";
             }
             daysAbsentCell.VerticalAlign = VerticalAlign.Top;
             newRow.Cells.Add(daysAbsentCell);
+
+            TableCell blocksAbsentcell = new TableCell();
+            blocksAbsentcell.Text = student.absences.Count + " blocks";
+            blocksAbsentcell.VerticalAlign = VerticalAlign.Top;
+            newRow.Cells.Add(blocksAbsentcell);
 
             TableCell dateRegisterCell = new TableCell();
             dateRegisterCell.Text = student.getEnrollDate().Month + "/" + student.getEnrollDate().Day + "/" + student.getEnrollDate().Year;
@@ -119,13 +156,13 @@ namespace SLReports.INAC
         }
 
         protected void Page_Load(object sender, EventArgs e)
-        {
+        {           
+            
+
             if (!IsPostBack)
             {
                 AllStudents = new List<Student>();
                 AllSchools = new List<School>();
-                AllAbsences = new List<Absence>();
-                AllContacts = new List<Contact>();
                 selectedSchool = null;
                 
                 #region set up date picker fields
@@ -158,7 +195,7 @@ namespace SLReports.INAC
                     ListItem newLI_To = new ListItem(LSKYCommon.getMonthName(x), x.ToString());
                     if (!IsPostBack)
                     {
-                        if (x == (DateTime.Now.Month - 1))
+                        if (x == (DateTime.Now.Month))
                             newLI_From.Selected = true;
                     }
 
@@ -175,25 +212,45 @@ namespace SLReports.INAC
                 #endregion
 
                 #region Day
+                ListItem firstDay_From = new ListItem("First Day", "1");
+                if (!IsPostBack)
+                {
+                    firstDay_From.Selected = true;
+                }
+                ListItem firstDay_To = new ListItem("First Day", "1");
+                from_day.Items.Add(firstDay_From);
+                to_day.Items.Add(firstDay_To);                
+
                 for (int x = 1; x <= 31; x++)
                 {
                     ListItem newLI_From = new ListItem(x.ToString(), x.ToString());
                     ListItem newLI_To = new ListItem(x.ToString(), x.ToString());
-                    if (!IsPostBack)
-                    {
-                        if (x == (DateTime.Now.Day))
-                            newLI_From.Selected = true;
-                    }
+                    
+                    //if (!IsPostBack)
+                    //{
+                    //    if (x == (DateTime.Now.Day))
+                    //        newLI_From.Selected = true;
+                    //}
 
-                    if (!IsPostBack)
-                    {
-                        if (x == DateTime.Now.Day)
-                            newLI_To.Selected = true;
-                    }
+                    //if (!IsPostBack)
+                    //{
+                    //    if (x == DateTime.Now.Day)
+                    //        newLI_To.Selected = true;
+                    //}
 
                     from_day.Items.Add(newLI_From);
                     to_day.Items.Add(newLI_To);
                 }
+
+                ListItem lastDay_From = new ListItem("Last Day", "31");
+                ListItem lastDay_To = new ListItem("Last Day", "31");
+                if (!IsPostBack)
+                {
+                    lastDay_To.Selected = true;
+                }
+                from_day.Items.Add(lastDay_From);
+                to_day.Items.Add(lastDay_To);
+
                 #endregion
 
                 #endregion
@@ -239,15 +296,28 @@ namespace SLReports.INAC
                 endDate = new DateTime(endYear,endMonth,endDay);
             }
 
-
             using (SqlConnection connection = new SqlConnection(dbConnectionString)) 
             {
                 AllSchools = School.loadAllSchools(connection);
 
                 if (selectedSchool != null)
-                {
+                {                    
+
                     // Load students
-                    AllStudents = Student.loadReserveStudentsFromThisSchol(connection, selectedSchool);
+                    //AllStudents = Student.loadReserveStudentsFromThisSchol(connection, selectedSchool);
+                    List<Student> loadedStudents = Student.loadReserveStudentsFromThisSchol(connection, selectedSchool);
+
+                    // Filter students to only those in a track that falls between the given dates
+
+                    AllStudents = new List<Student>();
+                    foreach (Student student in loadedStudents)
+                    {
+                        student.track = Track.loadThisTrack(connection, student.getTrackID());                        
+                        if ((student.track.endDate > startDate) && (student.track.startDate < endDate)) 
+                        {
+                            AllStudents.Add(student);
+                        }
+                    }                    
 
                     lblCount.Text = "Found " + AllStudents.Count + " students";
 
@@ -260,40 +330,34 @@ namespace SLReports.INAC
                     foreach (Student student in AllStudents)
                     {
                         // Load track for students
-                        student.track = Track.loadThisTrack(connection, student.getTrackID());
+                        //student.track = Track.loadThisTrack(connection, student.getTrackID());
 
                         // Load contacts for students
                         student.contacts = Contact.loadContactsForStudent(connection, student);
 
                         // Load absenses for students
                         student.absences = Absence.loadAbsencesForThisStudentAndTimePeriod(connection, student, startDate, endDate);
+
+                        // Load any terms that fall within the specified dates
+                        student.track.terms = Term.loadTermsBetweenTheseDates(connection, student.track, startDate, endDate);
+
+                        //Response.Write("<br>" + student + "<BR>");
+
+                        // Load enrolled courses into the terms
+                        foreach (Term term in student.track.terms)
+                        {
+                            //Response.Write("&nbsp;&nbsp;&nbsp;" + term + "<BR>");
+                            term.Courses = SchoolClass.loadStudentEnrolledClasses(connection, student, term);
+                            //Response.Write("&nbsp;&nbsp;&nbsp;&nsbp;<b>Total classes this term: " + term.Courses.Count + "</b>");
+                        }
+
+
+
                     }
                 }
             }
             
-            AllStudents.Sort();
-
-            foreach (Student student in AllStudents)
-            {
-                foreach (Absence abs in AllAbsences)
-                {
-                    if (abs.getStudentID().ToLower().Equals(student.getStudentID().ToLower()))
-                    {
-                        student.addAbsence(abs);
-                    }
-                }
-
-                foreach (Contact con in AllContacts)
-                {
-                    if (con.getStudentID().ToLower().Equals(student.getStudentID().ToLower()))
-                    {
-                        student.addContact(con);
-                    }                    
-                }
-            }
-
-            long LoadTime_End = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-
+            AllStudents.Sort();            
 
             foreach (Student student in AllStudents)
             {

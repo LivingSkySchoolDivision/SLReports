@@ -130,5 +130,38 @@ namespace SLReports
             sqlCommand.Connection.Close();
             return returnMe;
         }
+
+        public static List<Term> loadTermsBetweenTheseDates(SqlConnection connection, Track track, DateTime startDate, DateTime endDate)
+        {
+            List<Term> returnMe = new List<Term>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM Term WHERE iTrackID=@TRACKID AND dEndDate>@STARTDATE AND dStartDate<@ENDDATE";
+            sqlCommand.Parameters.AddWithValue("@TRACKID", track.ID);
+            sqlCommand.Parameters.AddWithValue("@STARTDATE", startDate);
+            sqlCommand.Parameters.AddWithValue("@ENDDATE", endDate);
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    returnMe.Add(new Term(
+                            int.Parse(dataReader["iTermID"].ToString().Trim()),
+                            int.Parse(dataReader["iTrackID"].ToString().Trim()),
+                            DateTime.Parse(dataReader["dStartDate"].ToString()),
+                            DateTime.Parse(dataReader["dEndDate"].ToString()),
+                            dataReader["cName"].ToString().Trim(),
+                            int.Parse(dataReader["iSchoolID"].ToString().Trim())
+                            ));
+                }
+            }
+
+            sqlCommand.Connection.Close();
+            return returnMe;
+        }
     }
 }
