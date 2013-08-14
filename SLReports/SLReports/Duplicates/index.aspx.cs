@@ -132,8 +132,8 @@ namespace SLReports.Duplicates
                         foundDuplicates_treaty.Add(student);
                         foundDuplicates_treaty.Add(workspace_treaty[student.getStatusNo()]);
 
-                        allDupesWithReason.Add(student, "Same treaty number as " + workspace_treaty[student.getStatusNo()].getStudentID() + " (" + workspace_treaty[student.getStatusNo()].getDisplayName() + ")");
-                        allDupesWithReason.Add(workspace_treaty[student.getStatusNo()], "Same treaty number as " + student.getStudentID() + " (" + student.getDisplayName() + ")");
+                        //allDupesWithReason.Add(student, "Same treaty number as " + workspace_treaty[student.getStatusNo()].getStudentID() + " (" + workspace_treaty[student.getStatusNo()].getDisplayName() + ")");
+                        //allDupesWithReason.Add(workspace_treaty[student.getStatusNo()], "Same treaty number as " + student.getStudentID() + " (" + student.getDisplayName() + ")");
                     }
                 }
 
@@ -153,6 +153,7 @@ namespace SLReports.Duplicates
                         allDupesWithReason.Add(workspace_govid[student.getGovernmentID()], "Same government ID as " + student.getStudentID() + " (" + student.getDisplayName() + ")");
                     }
                 }
+
 
                 String condensedName = student.getDisplayName().ToLower().Replace(" ",string.Empty).Replace("-", string.Empty);
                 if (!workspace_names.ContainsKey(condensedName))
@@ -204,12 +205,20 @@ namespace SLReports.Duplicates
             }
             lblNamesCount.Text = "(" + foundDuplicates_names.Count.ToString() + ")";
 
+            foreach (Student student in foundDuplicates_treaty)
+            {
+                tblTreaty.Rows.Add(addStudentRow(student));
+            }
+            lblTreaty.Text = "(" + foundDuplicates_treaty.Count.ToString() + ")";
+
 
             foreach (KeyValuePair<Student, String> student in allDupesWithReason)
             {
                 tblAllDuplicates.Rows.Add(addStudentRowWithReason(student.Key, student.Value));
             }
             lblAllCount.Text = "(" + allDupesWithReason.Count.ToString() + ")";
+
+
             
 
         }
