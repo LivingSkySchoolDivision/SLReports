@@ -280,6 +280,7 @@ namespace SLReports
             return this.HomeRoom;
         }
 
+        /*
         public Student(string givenName, string sn, string middleName, string id, string govID, string schoolName, string schoolID,
             string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
             string phone, string gender, string instat, string instatcode, string homeRm, DateTime inDate, DateTime dateOfBirth, 
@@ -309,13 +310,21 @@ namespace SLReports
             this.InStatus = instat;
             this.enrollmentDate = inDate;
             this.dateOfBirth = dateOfBirth;
+
+            this.bandNo = string.Empty;
+            this.bandName = string.Empty;
+            this.reserveName = string.Empty;
+            this.reserveHouse = string.Empty;
+            this.treatyStatusNo = string.Empty;
+            this.resideOnReserve = false;
+
             this.HomeRoom = homeRm;
             this.trackID = trackid;
             this.InStatusCode = instatcode;
             this.bHasPhoto = hasPhoto;
             this.LDAPUserName = ldapusername;
         }
-        
+        */
         public Student(string givenName, string sn, string middleName, string id, string govID, string schoolName, string schoolID,
             string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
             string phone, string gender, string instat, string instatcode, string homeRm, DateTime inDate, DateTime dateOfBirth, 
@@ -378,7 +387,7 @@ namespace SLReports
         }
 
         public string getStatusNo() 
-        {
+        {            
             return this.treatyStatusNo;
         }
         
@@ -499,6 +508,12 @@ namespace SLReports
                             HomeRoom,
                             DateTime.Parse(dataReader["InDate"].ToString()),
                             DateTime.Parse(dataReader["DateOfBirth"].ToString()),
+                            dataReader["BandNo"].ToString(),
+                            dataReader["BandName"].ToString(),
+                            dataReader["ReserveName"].ToString(),
+                            dataReader["ReserveHouse"].ToString(),
+                            dataReader["StatusNo"].ToString(),
+                            bool.Parse(dataReader["ResideOnReserve"].ToString()),
                             int.Parse(dataReader["TrackID"].ToString()),
                             hasPhoto,
                             dataReader["cUserName"].ToString().Trim()
@@ -580,6 +595,12 @@ namespace SLReports
                             HomeRoom,
                             DateTime.Parse(dataReader["InDate"].ToString()),
                             DateTime.Parse(dataReader["DateOfBirth"].ToString()),
+                            dataReader["BandNo"].ToString(),
+                            dataReader["BandName"].ToString(),
+                            dataReader["ReserveName"].ToString(),
+                            dataReader["ReserveHouse"].ToString(),
+                            dataReader["StatusNo"].ToString(),
+                            bool.Parse(dataReader["ResideOnReserve"].ToString()),
                             int.Parse(dataReader["TrackID"].ToString()),
                             hasPhoto,
                             dataReader["cUserName"].ToString().Trim()
@@ -651,6 +672,12 @@ namespace SLReports
                             HomeRoom,
                             DateTime.Parse(dataReader["InDate"].ToString()),
                             DateTime.Parse(dataReader["DateOfBirth"].ToString()),
+                            dataReader["BandNo"].ToString(),
+                            dataReader["BandName"].ToString(),
+                            dataReader["ReserveName"].ToString(),
+                            dataReader["ReserveHouse"].ToString(),
+                            dataReader["StatusNo"].ToString(),
+                            bool.Parse(dataReader["ResideOnReserve"].ToString()),
                             int.Parse(dataReader["TrackID"].ToString()),
                             hasPhoto,
                             dataReader["cUserName"].ToString().Trim()

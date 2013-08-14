@@ -30,7 +30,6 @@ namespace SLReports.FindStudent
             newcell.Text = "Results: " + results;
             newcell.BorderWidth = 0;
             newRow.Cells.Add(newcell);
-            
 
             return newRow;
         }
@@ -69,7 +68,12 @@ namespace SLReports.FindStudent
             cell_govID.Width = 125;
             cell_govID.Text = "Gov ID";
             newRow.Cells.Add(cell_govID);
-
+            
+            TableCell cell_statusNo = new TableCell();
+            cell_govID.Width = 125;
+            cell_govID.Text = "Status #";
+            newRow.Cells.Add(cell_statusNo);
+            
             TableCell cell_grade = new TableCell();
             cell_grade.Width = 50;
             cell_grade.Text = "Grade";
@@ -126,7 +130,11 @@ namespace SLReports.FindStudent
             TableCell cell_govID = new TableCell();
             cell_govID.Text = highLightSeachString(student.getGovernmentID(), searchString);
             newRow.Cells.Add(cell_govID);
-
+            
+            TableCell cell_statusNo = new TableCell();
+            cell_govID.Text = highLightSeachString(student.getStatusNo(), searchString);
+            newRow.Cells.Add(cell_statusNo);           
+             
             TableCell cell_grade = new TableCell();
             cell_grade.Text = highLightSeachString(student.getGrade(), searchString);
             newRow.Cells.Add(cell_grade);
@@ -170,6 +178,7 @@ namespace SLReports.FindStudent
                     (student.getGivenName().ToLower().Contains(searchQuery.ToLower())) ||
                     (student.getSN().ToLower().Contains(searchQuery.ToLower())) ||
                     (student.getGovernmentID().ToLower().Contains(searchQuery.ToLower())) ||
+                    (student.getStatusNo().ToLower().Contains(searchQuery.ToLower())) ||
                     (student.LDAPUserName.ToLower().Contains(searchQuery.ToLower())) ||
                     (student.getMiddleName().ToLower().Contains(searchQuery.ToLower()))
                     )

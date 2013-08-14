@@ -111,12 +111,33 @@ namespace SLReports.Duplicates
 
             Dictionary<string, Student> workspace_govid = new Dictionary<string, Student>();
             Dictionary<string, Student> workspace_names = new Dictionary<string, Student>();
+            Dictionary<string, Student> workspace_treaty = new Dictionary<string, Student>();
+
             List<Student> foundDuplicates_govid = new List<Student>();
             List<Student> foundDuplicates_names = new List<Student>();
+            List<Student> foundDuplicates_treaty = new List<Student>();
+
             Dictionary<Student, string> allDupesWithReason = new Dictionary<Student, string>();
 
             foreach (Student student in allStudents)
             {
+                if (!string.IsNullOrEmpty(student.getStatusNo())) 
+                {
+                    if (!workspace_treaty.ContainsKey(student.getStatusNo()))
+                    {
+                        workspace_treaty.Add(student.getStatusNo(), student);
+                    }
+                    else
+                    {
+                        foundDuplicates_treaty.Add(student);
+                        foundDuplicates_treaty.Add(workspace_treaty[student.getStatusNo()]);
+
+                        allDupesWithReason.Add(student, "Same treaty number as " + workspace_treaty[student.getStatusNo()].getStudentID() + " (" + workspace_treaty[student.getStatusNo()].getDisplayName() + ")");
+                        allDupesWithReason.Add(workspace_treaty[student.getStatusNo()], "Same treaty number as " + student.getStudentID() + " (" + student.getDisplayName() + ")");
+                    }
+                }
+
+
                 if (!string.IsNullOrEmpty(student.getGovernmentID()))
                 {
                     if (!workspace_govid.ContainsKey(student.getGovernmentID()))

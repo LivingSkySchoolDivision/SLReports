@@ -6,7 +6,7 @@
         <asp:TextBox ID="txtSearch" runat="server" Width="200"></asp:TextBox>
         <asp:Button ID="btnSearch" runat="server" Text="Search" onclick="btnSearch_Click"/>        
     </form>
-    <div style="font-size: 8pt;">*Searches student name, ID number, and government ID number </div>
+    <div style="font-size: 8pt;">*Searches student name, username, ID number, treaty status no, and government ID number </div>
 </div>
 <br />
 <asp:Table ID="tblResults" runat="server" CssClass="datatable" CellPadding="3" HorizontalAlign="Center"></asp:Table>
