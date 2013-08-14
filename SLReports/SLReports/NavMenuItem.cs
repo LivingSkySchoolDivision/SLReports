@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
@@ -12,14 +14,18 @@ namespace SLReports
         public string description { get; set; }
         public int id { get; set; }
         public int parent { get; set; }
+        public bool admin_only { get; set; }
+        public bool hidden { get; set; }
 
-        public NavMenuItem(int id, int parent, string url, string name, string description)
+        public NavMenuItem(int id, int parent, string url, string name, string description, bool admin_only, bool hidden)
         {
             this.id = id;
             this.parent = parent;
             this.description = description;
             this.name = name;
             this.url = url;
+            this.admin_only = admin_only;
+            this.hidden = hidden;
         }
 
         public override string ToString()
@@ -45,5 +51,64 @@ namespace SLReports
                 throw new ArgumentException("Object is not a NavMenuItem");
             }
         }
+
+        public static List<NavMenuItem> loadMenuItems(SqlConnection connection)
+        {
+            List<NavMenuItem> returnMe = new List<NavMenuItem>();
+
+            using (SqlCommand sqlCommand = new SqlCommand())
+            {
+                sqlCommand.Connection = connection;
+                sqlCommand.CommandType = CommandType.Text;
+                sqlCommand.CommandText = "SELECT * FROM menu_items;";
+                sqlCommand.Connection.Open();
+                SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
+
+                if (dbDataReader.HasRows)
+                {
+                    while (dbDataReader.Read())
+                    {
+                        bool admin_only = true;
+                        if (!bool.TryParse(dbDataReader["admin_only"].ToString(), out admin_only))
+                        {
+                            admin_only = true;
+                        }
+                        
+                        bool hidden = true;
+                        if (!bool.TryParse(dbDataReader["hidden"].ToString(), out hidden))
+                        {
+                            hidden = true;
+                        }
+
+                        string itemName = dbDataReader["name"].ToString();
+                        if (admin_only)
+                        {
+                            itemName = "ADMIN: " + itemName;
+                        }
+
+                        if (hidden)
+                        {
+                            itemName = itemName + " (HIDDEN)";
+                        }
+
+                        NavMenuItem newItem = new NavMenuItem(
+                            int.Parse(dbDataReader["id"].ToString()),
+                            int.Parse(dbDataReader["parent"].ToString()),
+                            dbDataReader["url"].ToString(),
+                            itemName,
+                            dbDataReader["description"].ToString(),
+                            admin_only,
+                            hidden                            
+                            );
+
+                        returnMe.Add(newItem);
+                    }
+                }
+
+            }
+
+            return returnMe;
+        }
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -11,7 +12,9 @@ namespace SLReports
     public static class LSKYCommon
     {
         public static string internal_api_key = "6b05cb5705c07a4ca23a6bba779263ab983a5ae2";
-
+        public static string userGroupName = "SchoolLogicDataExplorerUsers";
+        public static string adminGroupName = "SchoolLogicDataExplorerAdmins";
+        
         public static string boolToTrueFalse(bool thisBool)
         {
             if (thisBool)
@@ -353,5 +356,26 @@ namespace SLReports
             }
             return returnMe;
         }
+
+        public static List<String> getGroupMembers(string domain, string groupName)
+        {
+            List<string> returnMe = new List<string>();
+
+            using (PrincipalContext pc = new PrincipalContext(ContextType.Domain, domain))
+            {
+                using (GroupPrincipal grp = GroupPrincipal.FindByIdentity(pc, IdentityType.Name, groupName))
+                {
+                    if (grp != null)
+                    {
+                        foreach (Principal p in grp.GetMembers(true))
+                        {
+                            returnMe.Add(p.SamAccountName);
+                        }
+                    }
+                }
+            }
+            return returnMe;
+        }        
+
     }
 }

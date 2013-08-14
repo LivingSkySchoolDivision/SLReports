@@ -20,36 +20,12 @@ namespace SLReports
             String dbConnectionString = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString;
             using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
             {
-                using (SqlCommand sqlCommand = new SqlCommand())
-                {
-                    sqlCommand.Connection = dbConnection;
-                    sqlCommand.CommandType = CommandType.Text;
-                    sqlCommand.CommandText = "SELECT * FROM menu_items;";
-                    sqlCommand.Connection.Open();
-                    SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
-
-                    if (dbDataReader.HasRows)
-                    {
-                        while (dbDataReader.Read())
-                        {
-                            returnMe.Add(new NavMenuItem(
-                                int.Parse(dbDataReader["id"].ToString()),
-                                int.Parse(dbDataReader["parent"].ToString()),
-                                dbDataReader["url"].ToString(),
-                                dbDataReader["name"].ToString(),
-                                dbDataReader["description"].ToString()
-                                ));
-                        }
-                    }
-
-                }
+                returnMe = NavMenuItem.loadMenuItems(dbConnection);
             }
             returnMe.Sort();
 
             return returnMe;
         }
-               
-
 
         protected void Page_PreInit(object sender, EventArgs e)
         {

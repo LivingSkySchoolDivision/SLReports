@@ -17,7 +17,7 @@ namespace SLReports
 
         private TableRow addNavItem(NavMenuItem item)
         {
-            TableRow newRow = new TableRow();
+            TableRow newRow = new TableRow();            
 
             TableCell nameCell = new TableCell();
             nameCell.Text = "<a href=\"/SLReports"+item.url+"\">" + item.name + "</a>";
@@ -41,9 +41,12 @@ namespace SLReports
             List<NavMenuItem> MainMenu = Nav.getMainMenu();
             foreach (NavMenuItem item in MainMenu)
             {
-                if (item.name != "-- Front Page --")
+                if ((!item.hidden) && (!item.admin_only))
                 {
-                    tblNavigation.Rows.Add(addNavItem(item));
+                    if (item.name != "-- Front Page --")
+                    {
+                        tblNavigation.Rows.Add(addNavItem(item));
+                    }
                 }
             }
 

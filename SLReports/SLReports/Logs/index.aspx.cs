@@ -15,130 +15,53 @@ namespace SLReports.Logs
         List<session> AllSessions = null;
         List<LoginAttempt> AllLoginAttempts = null;
 
-        private List<LoginAttempt> getLoginAttempts(DateTime from, DateTime to)
+        private List<LoginAttempt> getLoginAttempts(SqlConnection connection, DateTime from, DateTime to)
         {
             List<LoginAttempt> returnMe = new List<LoginAttempt>();
 
             try
             {
-                String dbConnectionString = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString; 
-                using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
+                using (SqlCommand sqlCommand = new SqlCommand())
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand())
+                    sqlCommand.Connection = connection;
+                    sqlCommand.CommandType = CommandType.Text;
+                    sqlCommand.CommandText = "SELECT * FROM audit_loginAttempts WHERE eventTime < @EventTo AND eventTime > @EventFrom ORDER BY eventTime ASC;";
+                    sqlCommand.Parameters.AddWithValue("@EventTo", to);
+                    sqlCommand.Parameters.AddWithValue("@EventFrom", from);
+
+                    sqlCommand.Connection.Open();
+                    SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
+
+                    if (dbDataReader.HasRows)
                     {
-                        sqlCommand.Connection = dbConnection;
-                        sqlCommand.CommandType = CommandType.Text;
-                        sqlCommand.CommandText = "SELECT * FROM audit_loginAttempts WHERE eventTime < @EventTo AND eventTime > @EventFrom ORDER BY eventTime ASC;";
-                        sqlCommand.Parameters.AddWithValue("@EventTo", to);
-                        sqlCommand.Parameters.AddWithValue("@EventFrom", from);
-
-                        sqlCommand.Connection.Open();
-                        SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
-
-                        if (dbDataReader.HasRows)
+                        while (dbDataReader.Read())
                         {
-                            while (dbDataReader.Read())
-                            {
-                                returnMe.Add(new LoginAttempt(
-                                    DateTime.Parse(dbDataReader["eventTime"].ToString()),
-                                    dbDataReader["enteredUsername"].ToString(),
-                                    dbDataReader["ipaddress"].ToString(),
-                                    dbDataReader["useragent"].ToString(),
-                                    dbDataReader["status"].ToString(),
-                                    dbDataReader["info"].ToString()
-                                    ));
-                            }
+                            returnMe.Add(new LoginAttempt(
+                                DateTime.Parse(dbDataReader["eventTime"].ToString()),
+                                dbDataReader["enteredUsername"].ToString(),
+                                dbDataReader["ipaddress"].ToString(),
+                                dbDataReader["useragent"].ToString(),
+                                dbDataReader["status"].ToString(),
+                                dbDataReader["info"].ToString()
+                                ));
                         }
-                        sqlCommand.Connection.Close();
                     }
-                }
-            }
-            catch (Exception e) { Response.Write(e.Message); }
-            return returnMe;
-
-        }
-
-        private List<session> getActiveSessions()
-        {
-            List<session> returnMe = new List<session>();
-
-            try
-            {
-                String dbConnectionString = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString; 
-                using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand())
-                    {
-                        sqlCommand.Connection = dbConnection;
-                        sqlCommand.CommandType = CommandType.Text;
-                        sqlCommand.CommandText = "SELECT * FROM sessions WHERE sessionstarts < {fn NOW()} AND sessionends > {fn NOW()};";
-
-                        sqlCommand.Connection.Open();
-                        SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
-
-                        if (dbDataReader.HasRows)
-                        {
-                            while (dbDataReader.Read())
-                            {
-                                returnMe.Add(new session(
-                                    dbDataReader["username"].ToString(),
-                                    dbDataReader["ip"].ToString(),
-                                    dbDataReader["id_hash"].ToString(),
-                                    dbDataReader["useragent"].ToString(),
-                                    DateTime.Parse(dbDataReader["sessionstarts"].ToString()),
-                                    DateTime.Parse(dbDataReader["sessionends"].ToString())
-                                    ));
-                            }
-                        }
-                        sqlCommand.Connection.Close();
-                    }
+                    sqlCommand.Connection.Close();
                 }
             }
             catch (Exception e) { Response.Write(e.Message); }
             return returnMe;
         }
-
+        
         private session getSession(string hash, string ip, string useragent)
         {
             session returnme = null;
 
-            /* Search for the session hash in the database */
-            try
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString; 
+            using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
-                String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString; 
-                using (SqlConnection dbConnection = new SqlConnection(dbConnectionString))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand())
-                    {
-                        sqlCommand.Connection = dbConnection;
-                        sqlCommand.CommandType = CommandType.Text;
-                        sqlCommand.CommandText = "SELECT * FROM sessions WHERE id_hash=@Hash AND ip=@IP AND useragent=@UA;";
-                        sqlCommand.Parameters.AddWithValue("@Hash", hash);
-                        sqlCommand.Parameters.AddWithValue("@IP", ip);
-                        sqlCommand.Parameters.AddWithValue("@UA", useragent);
-
-                        sqlCommand.Connection.Open();
-                        SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
-
-                        if (dbDataReader.HasRows)
-                        {
-                            while (dbDataReader.Read())
-                            {
-                                returnme = new session(
-                                    dbDataReader["username"].ToString(),
-                                    dbDataReader["ip"].ToString(),
-                                    dbDataReader["id_hash"].ToString(),
-                                    dbDataReader["useragent"].ToString(),
-                                    DateTime.Parse(dbDataReader["sessionstarts"].ToString()),
-                                    DateTime.Parse(dbDataReader["sessionends"].ToString())
-                                    );
-                            }
-                        }
-                        sqlCommand.Connection.Close();
-                    }
-                }
+                returnme = session.loadThisSession(connection, hash, ip, useragent);
             }
-            catch { }
 
             if (returnme != null)
             {
@@ -159,6 +82,7 @@ namespace SLReports.Logs
 
             return null;
         }
+
         private string getSessionIDFromCookies()
         {
             HttpCookie sessionCookie = Request.Cookies["lskyDataExplorer"];
@@ -196,8 +120,12 @@ namespace SLReports.Logs
         protected void Page_Load(object sender, EventArgs e)
         {
             /* Load sessions */
-            AllSessions = getActiveSessions();
-            AllLoginAttempts = getLoginAttempts(DateTime.Now.AddMonths(-1), DateTime.Now);
+            String dbConnectionString = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(dbConnectionString))
+            {
+                AllSessions = session.getActiveSessions(connection);
+                AllLoginAttempts = getLoginAttempts(connection, DateTime.Now.AddMonths(-1), DateTime.Now);
+            }         
 
             #region load sessions into table
             foreach (session ses in AllSessions)
@@ -228,6 +156,10 @@ namespace SLReports.Logs
                     cell_IP.Font.Bold = true;
                 }
 
+                if (ses.is_admin)
+                {
+                    cell_username.Text += " <b style=\"color: red;\">(ADMIN)</b>";
+                }
 
                 tblRow.Cells.Add(cell_username);
                 tblRow.Cells.Add(cell_starttime);

@@ -16,7 +16,9 @@ namespace SLReports
         private DateTime starts;
         private DateTime ends;
 
-        public session(string username, string ip, string hash, string useragent, DateTime starts, DateTime ends)
+        public bool is_admin { get; set; }        
+
+        public session(string username, string ip, string hash, string useragent, DateTime starts, DateTime ends, bool is_admin)
         {
             this.username = username;
             this.ip = ip;
@@ -24,6 +26,7 @@ namespace SLReports
             this.useragent = useragent;
             this.starts = starts;
             this.ends = ends;
+            this.is_admin = is_admin;
         }
 
         public string getUsername() 
@@ -56,8 +59,6 @@ namespace SLReports
             return ends;
         }
 
-
-
         public static List<session> loadAllSessions(SqlConnection connection)
         {
             List<session> returnMe = new List<session>();
@@ -73,13 +74,20 @@ namespace SLReports
             {
                 while (dataReader.Read())
                 {
+                    bool is_admin = false;
+                    if (!bool.TryParse(dataReader["is_admin"].ToString(), out is_admin))
+                    {
+                        is_admin = false;
+                    }
+
                     returnMe.Add(new session(
                                 dataReader["username"].ToString(),
                                 dataReader["ip"].ToString(),
                                 dataReader["id_hash"].ToString(),
                                 dataReader["useragent"].ToString(),
                                 DateTime.Parse(dataReader["sessionstarts"].ToString()),
-                                DateTime.Parse(dataReader["sessionends"].ToString())
+                                DateTime.Parse(dataReader["sessionends"].ToString()),
+                                is_admin
                             ));
                 }
             }
@@ -107,13 +115,27 @@ namespace SLReports
             {
                 while (dataReader.Read())
                 {
+                    bool is_admin = false;
+                    /*
+                    if (!bool.TryParse(dataReader["is_admin"].ToString(), out is_admin))
+                    {
+                        is_admin = false;
+                    }*/
+
+                    List<string> adminUsers = LSKYCommon.getGroupMembers("lskysd", LSKYCommon.adminGroupName);
+                    if (adminUsers.Contains(dataReader["username"].ToString()))
+                    {
+                        is_admin = true;
+                    }
+
                     returnMe = new session(
                                 dataReader["username"].ToString(),
                                 dataReader["ip"].ToString(),
                                 dataReader["id_hash"].ToString(),
                                 dataReader["useragent"].ToString(),
                                 DateTime.Parse(dataReader["sessionstarts"].ToString()),
-                                DateTime.Parse(dataReader["sessionends"].ToString())
+                                DateTime.Parse(dataReader["sessionends"].ToString()),
+                                is_admin
                             );
                 }
             }
@@ -141,6 +163,53 @@ namespace SLReports
             {
                 return false;
             }
+        }
+
+        public static List<session> getActiveSessions(SqlConnection connection)
+        {
+            List<session> returnMe = new List<session>();
+
+            using (SqlCommand sqlCommand = new SqlCommand())
+            {
+                sqlCommand.Connection = connection;
+                sqlCommand.CommandType = CommandType.Text;
+                sqlCommand.CommandText = "SELECT * FROM sessions WHERE sessionstarts < {fn NOW()} AND sessionends > {fn NOW()};";
+
+                sqlCommand.Connection.Open();
+                SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
+
+                if (dbDataReader.HasRows)
+                {
+                    while (dbDataReader.Read())
+                    {
+                        bool is_admin = false;
+                        /*
+                         * if (!bool.TryParse(dbDataReader["is_admin"].ToString(), out is_admin))
+                        {
+                            is_admin = false;
+                        }*/
+
+                        List<string> adminUsers = LSKYCommon.getGroupMembers("lskysd", LSKYCommon.adminGroupName);
+                        if (adminUsers.Contains(dbDataReader["username"].ToString()))
+                        {
+                            is_admin = true;
+                        }
+
+                        returnMe.Add(new session(
+                            dbDataReader["username"].ToString(),
+                            dbDataReader["ip"].ToString(),
+                            dbDataReader["id_hash"].ToString(),
+                            dbDataReader["useragent"].ToString(),
+                            DateTime.Parse(dbDataReader["sessionstarts"].ToString()),
+                            DateTime.Parse(dbDataReader["sessionends"].ToString()),
+                            is_admin
+                            ));
+                    }
+                }
+                sqlCommand.Connection.Close();
+            }
+
+            return returnMe;
         }
 
     }

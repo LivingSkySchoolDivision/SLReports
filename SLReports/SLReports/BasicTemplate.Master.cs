@@ -143,7 +143,24 @@ namespace SLReports
             MainMenu.Sort();
             foreach (NavMenuItem mi in MainMenu)
             {
-                Response.Write("<option value=\"" + mi.id + "\">" + mi.name + "</option>");
+                if (mi.admin_only)
+                {
+                    if (loggedInUser.is_admin)
+                    {
+                        Response.Write("<option value=\"" + mi.id + "\">" + mi.name + "</option>");
+                    }
+                }
+                else if (mi.hidden)
+                {
+                    if (loggedInUser.is_admin)
+                    {
+                        Response.Write("<option value=\"" + mi.id + "\">" + mi.name + "</option>");
+                    }
+                }
+                else
+                {
+                    Response.Write("<option value=\"" + mi.id + "\">" + mi.name + "</option>");
+                }
             }
             Response.Write("</select>");
             Response.Write("&nbsp;<input type=\"submit\" value=\"Go\">");
@@ -154,7 +171,12 @@ namespace SLReports
         {
             if (loggedInUser != null)
             {
-                Response.Write("<div id=\"loggedInUserBanner\">Logged in as <b>" + loggedInUser.getUsername() + "</b><br>Session expires <b>" + loggedInUser.getEnd().ToShortDateString() + " " + loggedInUser.getEnd().ToShortTimeString() + "</b><br><b><a href=\"?logout=true\">Click here to log out</a></b></div>");
+                Response.Write("<div id=\"loggedInUserBanner\">Logged in as <b>" + loggedInUser.getUsername() + "</b>");
+                if (loggedInUser.is_admin)
+                {
+                    Response.Write(" <b style=\"color: red;\">(ADMIN)</b>");
+                }
+                Response.Write("<br>Session expires <b>" + loggedInUser.getEnd().ToShortDateString() + " " + loggedInUser.getEnd().ToShortTimeString() + "</b><br><b><a href=\"?logout=true\">Click here to log out</a></b></div>");
             }
             else
             {

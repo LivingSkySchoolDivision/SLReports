@@ -17,25 +17,7 @@ namespace SLReports.Login
 {
     public partial class index : System.Web.UI.Page
     {
-        public List<String> getGroupMembers(string domain, string groupName)
-        {
-            List<string> returnMe = new List<string>();
-
-            using (PrincipalContext pc = new PrincipalContext(ContextType.Domain, domain))
-            {
-                using (GroupPrincipal grp = GroupPrincipal.FindByIdentity(pc,IdentityType.Name,groupName))
-                {
-                    if (grp != null)
-                    {
-                        foreach (Principal p in grp.GetMembers(true))
-                        {
-                            returnMe.Add(p.SamAccountName);
-                        }
-                    }
-                }
-            }
-            return returnMe;    
-        }
+        
 
         public bool validate(string domain, string username, string pwd)
         {
@@ -100,7 +82,7 @@ namespace SLReports.Login
             }
         }
 
-        private void createSession(string username, string remoteIP, string useragent)
+        private void createSession(string username, string remoteIP, string useragent, bool is_admin)
         {
             string newSessionID = getNewSessionID(Request.ServerVariables["ALL_RAW"]);
 
@@ -131,7 +113,15 @@ namespace SLReports.Login
                 {
                     sqlCommand.Connection = dbConnection;
                     sqlCommand.CommandType = CommandType.Text;
-                    sqlCommand.CommandText = "INSERT INTO sessions(id_hash,username,ip,useragent,sessionstarts,sessionends) VALUES('" + newSessionID + "','" + username + "','" + remoteIP + "','" + useragent + "','" + DateTime.Now.ToString() + "','" + DateTime.Now.Add(sessionDuration).ToString() + "');";
+                    //sqlCommand.CommandText = "INSERT INTO sessions(id_hash,username,ip,useragent,sessionstarts,sessionends,is_admin) VALUES('" + newSessionID + "','" + username + "','" + remoteIP + "','" + useragent + "','" + DateTime.Now.ToString() + "','" + DateTime.Now.Add(sessionDuration).ToString() + "');";
+                    
+                    sqlCommand.CommandText = "INSERT INTO sessions(id_hash,username,ip,useragent,sessionstarts,sessionends) VALUES(@ID, @USERNAME, @IP, @USERAGENT, @SESSIONSTART, @SESSIONEND);";
+                    sqlCommand.Parameters.AddWithValue("@ID", newSessionID);
+                    sqlCommand.Parameters.AddWithValue("@USERNAME", username);
+                    sqlCommand.Parameters.AddWithValue("@IP", remoteIP);
+                    sqlCommand.Parameters.AddWithValue("@USERAGENT", useragent);
+                    sqlCommand.Parameters.AddWithValue("@SESSIONSTART", DateTime.Now);
+                    sqlCommand.Parameters.AddWithValue("@SESSIONEND", DateTime.Now.Add(sessionDuration));
 
                     sqlCommand.Connection.Open();
                     sqlCommand.ExecuteNonQuery();
@@ -172,22 +162,28 @@ namespace SLReports.Login
             string givenUsername = txtUsername.Text;
             string givenPassword = txtPassword.Text;
 
-            string groupName = "SchoolLogicDataExplorerUsers";
 
-            List<string> groupMembers = getGroupMembers("lskysd", groupName);
+            List<string> groupMembers = LSKYCommon.getGroupMembers("lskysd", LSKYCommon.userGroupName);
+            List<string> adminGroupMembers = LSKYCommon.getGroupMembers("lskysd", LSKYCommon.adminGroupName);
 
             if (!((string.IsNullOrEmpty(givenUsername)) || (string.IsNullOrEmpty(givenPassword))))
             {
                 if (validate("lskysd", givenUsername, givenPassword))
                 {
-                    if (groupMembers.Contains(givenUsername))
+                    if (adminGroupMembers.Contains(givenUsername))
                     {
-                        logLoginAttempt(txtUsername.Text, Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"], "SUCCESS", "");
-                        createSession(givenUsername, Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"]);
-
-                        /* Redirect somewhere else maybe */
+                        logLoginAttempt(txtUsername.Text, Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"], "SUCCESS", "User is administrator");
+                        createSession(givenUsername, Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"], true);
+                                                
                         Response.Redirect("/SLReports/");
+                    } 
+                    else if (groupMembers.Contains(givenUsername))
+                    {
 
+                        logLoginAttempt(txtUsername.Text, Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"], "SUCCESS", "");
+                        createSession(givenUsername, Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"], false);
+
+                        Response.Redirect("/SLReports/");
                     }
                     else
                     {
