@@ -117,9 +117,9 @@ namespace SLReports.ReportCard
 
 
                 /* NBCHS students for testing */
+                students.Add(Student.loadThisStudent(connection, "12511"));
                 students.Add(Student.loadThisStudent(connection, "11871"));
                 students.Add(Student.loadThisStudent(connection, "11804"));
-                students.Add(Student.loadThisStudent(connection, "12511"));
             }
 
             Response.Write("<br><B>TIMER: </b> Loaded basic student data in: " + stopwatch.Elapsed);

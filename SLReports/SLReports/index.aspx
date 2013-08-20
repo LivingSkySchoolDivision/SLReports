@@ -30,7 +30,7 @@
     <p>        
         <h3>Recent changes / additions</h3>
         <ul>
-
+            <li><b>August 13th, 2013</b> - <a href="Outcomes/">Outcome List</a> - A list of outcomes with their associated courses</li>
             <li><b>August 13th, 2013</b> - <a href="INAC/index.aspx">INAC report upgrades</a> - INAC report now displays all relevant data, and can now be exported to a CSV file</li>
             <li><b>July 25th, 2013</b> - <a href="Duplicates/index.aspx">Duplicate student finder</a> - A list of potentially duplicate students or data entry errors in the database</li>
             <li><b>July 9th, 2013</b> - <a href="Courses/CoursesWithclasses.aspx">Classes by Course</a> - The list of courses, with each of it's child classes</li>

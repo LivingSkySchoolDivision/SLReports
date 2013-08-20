@@ -107,6 +107,8 @@
     <Content Include="Nav.aspx" />
     <Content Include="E15\index.aspx" />
     <Content Include="outcomeBar.js" />
+    <Content Include="Outcomes\index.aspx" />
+    <Content Include="Outcomes\OutcomesCSV.aspx" />
     <Content Include="Photos\GetPhoto.aspx" />
     <Content Include="Photos\index.aspx" />
     <Content Include="Public\generalJSON.aspx" />
@@ -234,6 +236,20 @@
     </Compile>
     <Compile Include="INAC\LSKY_INAC.cs" />
     <Compile Include="LSKYCommon.cs" />
+    <Compile Include="Outcomes\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Outcomes\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Outcomes\OutcomesCSV.aspx.cs">
+      <DependentUpon>OutcomesCSV.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Outcomes\OutcomesCSV.aspx.designer.cs">
+      <DependentUpon>OutcomesCSV.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ReportCard\Grade_Term_PDF.aspx.cs">
       <DependentUpon>Grade_Term_PDF.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
