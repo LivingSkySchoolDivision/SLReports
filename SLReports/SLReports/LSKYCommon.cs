@@ -192,18 +192,28 @@ namespace SLReports
                 detectedTerms.Add(Term.loadThisTerm(connection, termid));
             }
 
-            /* Put report periods into their respective terms */
+            
             foreach (Term term in detectedTerms)
             {
                 foreach (ReportPeriod rp in reportPeriods)
                 {
+                    /* Put report periods into their respective terms */
                     if (rp.termID == term.ID)
                     {
                         term.ReportPeriods.Add(rp);
                     }
-                }
-            }
 
+                    /* Determine the final report period in a term, and assign it appropriately if it was loaded */
+                    if (
+                        (rp.endDate.Year == term.endDate.Year) &&
+                        (rp.endDate.Month == term.endDate.Month) &&
+                        (rp.endDate.Day == term.endDate.Day)
+                        )
+                    {
+                        term.FinalReportPeriod = rp;
+                    }
+                }
+            } 
 
 
             Student student = thisStudent;
@@ -215,9 +225,7 @@ namespace SLReports
 
                 /* Load attendance */
                 student.absences = Absence.loadAbsencesForThisStudentAndTimePeriod(connection, thisStudent, earliestDate, lastDate);
-
-
-
+                
                 foreach (Term thisTerm in student.track.terms)
                 {
                     /* Load enrolled classes */
@@ -225,6 +233,8 @@ namespace SLReports
 
                     foreach (SchoolClass thisClass in thisTerm.Courses)
                     {
+
+                        thisClass.term = thisTerm;
 
                         /* Put list of report periods into each class so we can easily reference it later */
                         thisClass.ReportPeriods = reportPeriods;

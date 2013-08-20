@@ -71,6 +71,7 @@
     <Content Include="Attendance\index.aspx" />
     <Content Include="Birthdays\birthdayStats.aspx" />
     <Content Include="Birthdays\index.aspx" />
+    <Content Include="CommunityAndRegionList\index.aspx" />
     <Content Include="Courses\CoursesWithClasses.aspx" />
     <Content Include="Courses\GetCourseListCSV.aspx" />
     <Content Include="Courses\index.aspx" />
@@ -185,6 +186,13 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Birthdays\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CommunityAndRegionList\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommunityAndRegionList\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
     <Compile Include="Contact.cs" />

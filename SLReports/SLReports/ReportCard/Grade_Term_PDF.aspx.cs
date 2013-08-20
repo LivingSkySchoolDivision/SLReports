@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -51,7 +52,11 @@ namespace SLReports.ReportCard
                 PageEventHandler.bottomLeft = student.getDisplayName();
                 ReportCard.Add(PDFReportCardParts.schoolNamePlate(student.school));
                 ReportCard.Add(PDFReportCardParts.namePlateTable(student));
+                ReportCard.Add(PDFReportCardParts.lifeSkillsLegend(content, student.getGrade()));
+                ReportCard.Add(PDFReportCardParts.outcomeLegend(content));
+                ReportCard.NewPage();
                 ReportCard.Add(new Phrase(string.Empty));
+                
 
                 foreach (Term term in student.track.terms)
                 {
@@ -66,9 +71,7 @@ namespace SLReports.ReportCard
                 }
 
                 ReportCard.Add(PDFReportCardParts.attendanceSummary(student));
-                ReportCard.Add(PDFReportCardParts.lifeSkillsLegend(content, LSKYCommon.parseInt(student.getGrade())));
-                ReportCard.Add(PDFReportCardParts.outcomeLegend(content));
-
+                
                 PageEventHandler.ResetPageNumbers(ReportCard);
             }
 
@@ -87,15 +90,15 @@ namespace SLReports.ReportCard
             List<Student> displayedStudents = new List<Student>();
 
             List<ReportPeriod> selectedReportPeriods = new List<ReportPeriod>();
-            
 
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
 
             String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogic2013"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
-            {
+            {                
                 /* Debugging info */
                 //selectedTerm = Term.loadThisTerm(connection, 20);
-
 
                 /* McKitrick report periods for testing */
                 //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 266));
@@ -119,17 +122,27 @@ namespace SLReports.ReportCard
                 students.Add(Student.loadThisStudent(connection, "12511"));
             }
 
-
+            Response.Write("<br><B>TIMER: </b> Loaded basic student data in: " + stopwatch.Elapsed);
+            stopwatch.Reset();
+            stopwatch.Start();
+            
             selectedReportPeriods.Sort();
+            
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
                 foreach (Student student in students)
-                {                
+                {
+                    Stopwatch studentStopWatch = new Stopwatch();
+                    studentStopWatch.Start();
                     displayedStudents.Add(LSKYCommon.loadStudentMarkData(connection, student, selectedReportPeriods));
+                    studentStopWatch.Stop();
+                    Response.Write("<br>&nbsp;&nbsp;<B>TIMER: </b> Loaded data for student \"" + student.getDisplayName() + "\" in: " + studentStopWatch.Elapsed);
                 }
                 students.Clear();
             }
 
+            Response.Write("<br><B>TIMER: </b> Loaded all mark data in: " + stopwatch.Elapsed);
+            stopwatch.Stop();
 
             if (Request.QueryString["debug"] == "true")
             {

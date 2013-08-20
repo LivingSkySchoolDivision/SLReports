@@ -21,8 +21,10 @@ namespace SLReports
         public string schoolName { get; set; }
         public string lowestGrade { get; set; }
         public string highestGrade { get; set; }
+        public string gradeLegend { get; set; }
 
         public Track track { get; set; }
+        public Term term { get; set; }
         public List<Mark> Marks { get; set; }
         public List<Objective> Objectives { get; set; }
         public List<ObjectiveMark> ObjectiveMarks { get; set; }
@@ -43,45 +45,39 @@ namespace SLReports
             }
         }
 
+        public bool isHighSchoolLevel()
+        {
+            if ((this.getGradeLevel() <= 12) && (this.getGradeLevel() >= 10))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
+        public bool hasGradeLegend()
+        {
+            if (string.IsNullOrEmpty(gradeLegend)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
 
-        // This won't be accurate if the class doesn't have outcomes loaded for it
         public bool isOutcomeBased()
         {
-            bool returnMe = false;
-
-            // This is a list so we can expand on this later if we need to
-            List<String> ignoreTheseCategories = new List<String>();
-            ignoreTheseCategories.Add("Successful Learner Behaviours".ToLower());
-            
-            if (Objectives.Count > 0)
+            if (this.hasGradeLegend())
             {
-                foreach (Objective objective in Objectives)
-                {
-                    if (!ignoreTheseCategories.Contains(objective.category.ToLower()))
-                    {
-                        returnMe = true;
-                    }
-                    
-                }
+                return true;
             }
-            return returnMe;
-        }
-
-        public bool isHighSchoolClass()
-        {
-            int gradeNum = -1;
-            if (int.TryParse(this.lowestGrade, out gradeNum))
-            {                
-                if (gradeNum >= 10)
-                {
-                    return true;
-                }
+            else
+            {
+                return false;
             }
-
-            return false;
         }
-
+        
         public string teacherName
         {
             get
@@ -116,9 +112,10 @@ namespace SLReports
 
         public override string ToString()
         {
-            return "Class: { Name: " + this.name + ", ClassID: " + this.classid + ", CourseID: " + this.courseid + ", Block: " + this.blockNumber + ", Day: " + this.dayNumber + ", Has Objectives: " + this.Objectives.Count + ", IsHighSchool: " + LSKYCommon.boolToYesOrNo(this.isHighSchoolClass()) + ", LowGrade: " + this.lowestGrade + ", HighGrade: " + this.highestGrade + ", Translated grade: " + this.getGradeLevel() + "}";
+            return "Class: { Name: " + this.name + ", ClassID: " + this.classid + ", CourseID: " + this.courseid + ", Block: " + this.blockNumber + ", Day: " + this.dayNumber + ", Has Objectives: " + this.Objectives.Count + ", IsHighSchool: " + LSKYCommon.boolToYesOrNo(this.isHighSchoolLevel()) + ", LowGrade: " + this.lowestGrade + ", HighGrade: " + this.highestGrade + ", Translated grade: " + this.getGradeLevel() + ", Grade Legend: " + this.gradeLegend + "}";
         }
-
+        
+        /* This constructor should be removed and code relying on it should be redone */
         public SchoolClass(string name, int classid, int courseid)
         {
             Objectives = new List<Objective>();
@@ -130,8 +127,8 @@ namespace SLReports
             this.classid = classid;
             this.courseid = courseid;
         }
-
-        public SchoolClass(string name, int classid, int courseid, string teacherFirst, string teacherLast, string teacherTitle, string schoolName, int blockNum, int dayNum, Track track, string lowestGrade, string highestGrade)
+        
+        public SchoolClass(string name, int classid, int courseid, string teacherFirst, string teacherLast, string teacherTitle, string schoolName, int blockNum, int dayNum, Track track, string lowestGrade, string highestGrade, string gradeLegendName)
         {
             Objectives = new List<Objective>();
             Marks = new List<Mark>();
@@ -147,9 +144,9 @@ namespace SLReports
             this.lowestGrade = lowestGrade;
             this.highestGrade = highestGrade;
             this.track = track;
+            this.gradeLegend = gradeLegendName;
+
         }
-
-
 
         public static List<SchoolClass> loadStudentEnrolledClasses(SqlConnection connection, Student student, Term term)
         {
@@ -193,7 +190,7 @@ namespace SLReports
                     {
                         dayNum = -1;
                     }
-                    
+                                        
 
                     SchoolClass newSchoolClass = new SchoolClass(
                             dataReader["cName"].ToString().Trim(),
@@ -207,7 +204,8 @@ namespace SLReports
                             dayNum,
                             newTrack,
                             dataReader["LowestGrade"].ToString().Trim(),
-                            dataReader["HighestGrade"].ToString().Trim()
+                            dataReader["HighestGrade"].ToString().Trim(),
+                            dataReader["MarkLegendName"].ToString().Trim()
                         );
                     returnMe.Add(newSchoolClass);
                 }
@@ -256,6 +254,7 @@ namespace SLReports
                             int.Parse(dataReader["SchoolID"].ToString().Trim()),
                             daily);
 
+            
                     SchoolClass newSchoolClass = new SchoolClass(
                             dataReader["cName"].ToString().Trim(),
                             int.Parse(dataReader["iClassID"].ToString().Trim()),
@@ -268,7 +267,8 @@ namespace SLReports
                             int.Parse(dataReader["iDayNumber"].ToString().Trim()),
                             newTrack,
                             dataReader["LowestGrade"].ToString().Trim(),
-                            dataReader["HighestGrade"].ToString().Trim()
+                            dataReader["HighestGrade"].ToString().Trim(),
+                            dataReader["MarkLegendName"].ToString().Trim()
                         );                   
 
 

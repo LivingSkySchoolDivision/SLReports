@@ -1181,9 +1181,17 @@ namespace SLReports.ReportCard
             return outcomeLegendTable;
         }
 
-        public static PdfPTable lifeSkillsLegend(PdfContentByte content, int gradeLevel)
+        public static PdfPTable lifeSkillsLegend(PdfContentByte content, string grade)
         {
             SortedDictionary<int, string> potentialMarks = new SortedDictionary<int, string>();
+
+            int gradeLevel = 0;
+            if (!int.TryParse(grade, out gradeLevel)) 
+            {
+                gradeLevel = 0;
+            }
+
+
             potentialMarks.Add(1, "Beginning to demonstrate these characteristics");
             potentialMarks.Add(2, "Occasionally demonstrates these characteristics");
             potentialMarks.Add(3, "Usually demonstrates these characteristics");
@@ -1207,15 +1215,22 @@ namespace SLReports.ReportCard
                 lifeSkills.Add("Self-Directed", "Prepared for class, organized, and uses class time well.");
 
             }
-            else
+            else if (gradeLevel >= 1)
             {
-                lifeSkills.Add("Engagement",    "Completes assignments, keeps trying when the work gets hard.");
-                lifeSkills.Add("Citizenship",   "Shows caring, follows class and school rules, takes responsibility for actions.");
+                lifeSkills.Add("Engagement", "Completes assignments, keeps trying when the work gets hard.");
+                lifeSkills.Add("Citizenship", "Shows caring, follows class and school rules, takes responsibility for actions.");
                 lifeSkills.Add("Collaborative", "Listens and works well with others, includes classmates at recess and in classroom.");
-                lifeSkills.Add("Leadership",    "Wants to learn and help others, good role model.");
+                lifeSkills.Add("Leadership", "Wants to learn and help others, good role model.");
                 lifeSkills.Add("Self-Directed", "Stay son task, organized.");
             }
-
+            else
+            {
+                lifeSkills.Add("Engagement", "Tries various activities, asks questions to satisfy curiosity, plays for extended periods of time.");
+                lifeSkills.Add("Citizenship", "Respects others, follows classroom procedures, accepts responsibility for own actions.");
+                lifeSkills.Add("Collaborative", "Plays and works well with others, offers and receives ideas.");
+                lifeSkills.Add("Leadership", "Adapts to new situations, wants to learn and help others.");
+                lifeSkills.Add("Self-Directed", "Problem solves, takes care of self and belongings, expresses emotions appropriately, adjusts to transitions.");
+            }
 
             PdfPTable outcomeLegendTable = new PdfPTable(2);
             outcomeLegendTable.SpacingAfter = 25f;
@@ -1587,40 +1602,18 @@ namespace SLReports.ReportCard
             }
         }
 
-        public static PdfPTable classWithMarks(SchoolClass course, PdfContentByte content)
+        public static PdfPCell emptyCell()
         {
-            PdfPTable classTable = new PdfPTable(2);
-            classTable.HorizontalAlignment = 1;
-            classTable.TotalWidth = 500f;
-            classTable.LockedWidth = true;
-            //classTable.SpacingAfter = 35;
-            classTable.KeepTogether = true;
-
-            float[] widths = new float[] { 2f, 2f };
-            classTable.SetWidths(widths);
-
-            PdfPCell newCell = null;  // Going to reuse this for each cell, because i'm lazy and don't want to create a billion extra objects...
-            Paragraph newP = null; // Ditto (newP[aragraph])
-
-            /* Course title and numeric mark */
-            newP = new Paragraph();
-
-
-
-            newP.Add(new Phrase(course.name, font_large_bold));
-            newP.Add(Chunk.NEWLINE);
-            newP.Add(new Phrase("" + course.teacherName + "", font_small));   
-
-            newCell = new PdfPCell(newP);
+            PdfPCell newCell = new PdfPCell(new Paragraph(""));
             newCell.Border = 0;
             newCell.Padding = 5;
-            newCell.PaddingLeft = 0;
-            classTable.AddCell(newCell);
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
+            return newCell;
+        }
 
-            newCell = new PdfPCell();
-            newCell.Border = 0;
-            newCell.Padding = 5;
-
+        public static PdfPTable classWithMarks(SchoolClass course, PdfContentByte content)
+        {          
+            // Housekeeping first 
             // Check if the outcomes (including life skills outcomes) actually contain any marks
             // If not, don't bother displaying their section
 
@@ -1643,109 +1636,234 @@ namespace SLReports.ReportCard
             }
 
 
-            // Display class marks table            
-            if (course.Marks.Count > 0)
+            // Start building the table
+            PdfPTable classTable = new PdfPTable(2);
+            classTable.HorizontalAlignment = 1;
+            classTable.TotalWidth = 500f;
+            classTable.LockedWidth = true;
+            //classTable.SpacingAfter = 35;
+            classTable.KeepTogether = true;
+
+
+            float[] widths = new float[] { 2f, 1f };
+
+
+            classTable.SetWidths(widths);
+            
+            // Course Title
+            Paragraph classTitleParagraph = new Paragraph();
+            classTitleParagraph.Add(new Phrase(course.name, font_large_bold));
+            classTitleParagraph.Add(Chunk.NEWLINE);
+            classTitleParagraph.Add(new Phrase("" + course.teacherName + "", font_small));
+
+            PdfPCell classTitleCell = new PdfPCell(classTitleParagraph);
+            classTitleCell.Border = 0;
+            classTitleCell.Padding = 5;
+            classTitleCell.PaddingLeft = 0;
+            classTable.AddCell(classTitleCell);
+
+
+            // Course Mark (Adjusted Grade)
+
+            // Only display an overall mark if:
+            //  - Display the final report period if the class is grade 10, 11 or 12
+            //  - Display all report periods if the class is not outcome based
+            //    - display as an outcome for K-9
+            //    - display as a percent for 10-12
+            // Otherwise, never display anything                       
+            // Class marks are always displayed as a percent                     
+
+            
+
+            // Class is not outcome based, so display the marks
+            //  - If the class has a grade legend, this is an outcome
+            //  - If the class does not have a grade legend, this is a percent
+            
+            // Class is outcome based and is 10-12
+            //  - Display the final mark only
+            //  - This is always a percent
+            
+            // Class is outcome based, and is k-9 (display nothing)
+                        
+            if (
+                (course.Marks.Count > 0) &&
+                (course.hasObjectives()) &&
+                (course.isHighSchoolLevel()) &&
+                (course.term.FinalReportPeriod != null)
+                )
             {
-                // Create a nested table to put in the mark cell
-                PdfPTable markTable = new PdfPTable(course.Marks.Count);
-                               
+                // Class is outcome based and is 10-12
+                //  - Display the final mark only
+                //  - This is always a percent
 
-                // If the class is outcome based, ONLY display the mark from the FINAL report period in the term
+                #region Outcome based 10-12 class
+
+                // Find the mark from the final report period
+                Mark finalMark = null;
+                foreach (Mark mark in course.Marks) 
+                {
+                    if (mark.reportPeriodID == course.term.FinalReportPeriod.ID)
+                    {
+                        finalMark = mark;
+                    }
+                }
+
+                if (finalMark != null)
+                {
+                    PdfPTable embeddedMarkTable = new PdfPTable(1);
+
+                    // Parse the mark so that we can round it
+                    double markToDisplay = 0;
+                    double.TryParse(finalMark.nMark, out markToDisplay);
+
+                    PdfPCell markCell = new PdfPCell(new Phrase(Math.Round(markToDisplay, 0) + "%", font_body_bold));
+                    markCell.Border = Rectangle.BOX;
+                    markCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;                    
+                    markCell.Padding = 5;
+
+                    PdfPCell titleCell = new PdfPCell(new Phrase("Final Mark", font_small));
+                    titleCell.Border = 0;
+                    titleCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                    titleCell.Padding = 2;
+                    titleCell.PaddingBottom = 3;
+
+                    
+                    embeddedMarkTable.AddCell(titleCell);
+                    embeddedMarkTable.AddCell(markCell);
+
+                    PdfPCell embeddedMarkTableContainer = new PdfPCell(embeddedMarkTable);
+                    embeddedMarkTableContainer.Border = 0;
+                    classTable.AddCell(embeddedMarkTableContainer);
+                }
+                else
+                {
+                    classTable.AddCell(emptyCell());
+                }
+                #endregion
+
+            }
+            else if (
+                (course.Marks.Count > 0) &&
+                (!course.hasObjectives()) &&
+                (course.term.FinalReportPeriod != null)
+                )
+            {
+                // Class is not outcome based, so display the marks
+                //  - If the class has a grade legend, this is an outcome
+                //  - If the class does not have a grade legend, this is a percent
+
+                #region Class without outcomes (displaying all report periods)
                 
-
-
-                // If the class is not outcome based, display all available marks
-
-
+                // Get list of report periods to display
+                List<ReportPeriod> loadedReportPeriods = new List<ReportPeriod>();
                 foreach (Mark mark in course.Marks)
                 {
-                    Paragraph markValueParagraph = new Paragraph();
-
-                    // figure out what to display for the mark 
-                    //  - if The class is a high school class, it should be a percent 
-                    //  - Otherwise, display the Outcome/Objective mark 
-
-                    if (course.isHighSchoolClass())
+                    if (!loadedReportPeriods.Contains(mark.reportPeriod))
                     {
-                        if (!string.IsNullOrEmpty(mark.nMark))
-                        {
-                            double nMarkValue = -1;
-                            Double.TryParse(mark.nMark, out nMarkValue);
-                            markValueParagraph.Add(new Phrase(Math.Round(nMarkValue) + "%", font_body_bold));
-                        }
-                        else
-                        {
-                            markValueParagraph.Add(new Phrase("No Value", font_small_italic));
-                        }
+                        loadedReportPeriods.Add(mark.reportPeriod);
                     }
-                    else
+                }
+
+                PdfPTable embeddedMarkTable = new PdfPTable(loadedReportPeriods.Count);
+
+                // Display the report period names
+                foreach (ReportPeriod rp in loadedReportPeriods)
+                {
+                    PdfPCell reportPeriodNameCell = new PdfPCell(new Phrase(rp.name, font_small));
+                    reportPeriodNameCell.Border = 0;
+                    reportPeriodNameCell.Padding = 2;
+                    reportPeriodNameCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                    embeddedMarkTable.AddCell(reportPeriodNameCell);
+                }  
+
+                // Display the marks
+                foreach (ReportPeriod rp in loadedReportPeriods)
+                {
+                    Mark MarkForThisReportPeriod = null;
+                    foreach (Mark mark in course.Marks)
                     {
-                        if (!string.IsNullOrEmpty(mark.cMark))
+                        if (mark.reportPeriodID == rp.ID) 
                         {
-                            markValueParagraph.Add(new Phrase(mark.cMark, font_large_bold));
-                        }
-                        else
-                        {
-                            if (!string.IsNullOrEmpty(mark.nMark))
-                            {
-                                double nMarkValue = -1;
-                                Double.TryParse(mark.nMark, out nMarkValue);
-                                markValueParagraph.Add(new Phrase(Math.Round(nMarkValue) + "%", font_body_bold));
-                            }
-                            else
-                            {
-                                markValueParagraph.Add(new Phrase("No Value", font_small_italic));
-                            }
+                            MarkForThisReportPeriod = mark;
                         }
                     }
 
-                    newCell = new PdfPCell(markValueParagraph);
-                    newCell.Border = Rectangle.BOX;
-                    newCell.Padding = 5;
-                    newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-                    markTable.AddCell(newCell);
+                    if (MarkForThisReportPeriod != null) 
+                    {
+
+                        // Should we display a percent or an outcome (1-4) mark?
+                        //  - If a grade legend exists, use outcome marks (cMark)
+                        //  - If a grade legend does not exist, use percent marks (nMark)
+                        Paragraph markValue = new Paragraph();
+
+                        if (course.isOutcomeBased()) {
+                           // Display an outcome mark for each valid report period
+                            markValue.Add(new Phrase(MarkForThisReportPeriod.cMark, font_body_bold));
+
+                        } else {
+                           // Display a percent mark for each valid report period
+                           double parsedMark = 0;
+                           double.TryParse(MarkForThisReportPeriod.nMark, out parsedMark);
+                           markValue.Add(new Phrase(Math.Round(parsedMark, 0) + "%", font_body_bold));
+                        }
+
+                        PdfPCell markCell = new PdfPCell(markValue);
+                        markCell.Border = Rectangle.BOX;                        
+                        markCell.Padding = 5;
+                        markCell.PaddingBottom = 7;
+                        markCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                        embeddedMarkTable.AddCell(markCell);
+
+
+                    } else {
+                        embeddedMarkTable.AddCell(emptyCell());
+                    }
 
                 }
 
-                foreach (Mark mark in course.Marks)
-                {
-                    newCell = new PdfPCell(new Phrase(mark.reportPeriod.name, font_small));
-                    newCell.Border = Rectangle.BOX;
-                    newCell.Padding = 2;
-                    newCell.PaddingBottom = 3;
-                    newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-                    markTable.AddCell(newCell);
-                }
+                              
 
-                PdfPCell markTableCell = new PdfPCell(markTable);
-                markTableCell.Border = 0;
-                classTable.AddCell(markTableCell);
+                // Display marks for each report period
+
+
+
+                PdfPCell embeddedMarkTableContainer = new PdfPCell(embeddedMarkTable);
+                embeddedMarkTableContainer.Border = 0;
+                classTable.AddCell(embeddedMarkTableContainer);
+
+                #endregion
+
             }
             else
             {
-                newCell = new PdfPCell(new Paragraph(""));
-                newCell.Border = 0;
-                newCell.Padding = 5;
-                newCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
-                classTable.AddCell(newCell);
+                // Class is outcome based, and is k-9 (display nothing)
+                // or
+                // There are no marks for this class
+                                
+                PdfPCell blankCell = new PdfPCell(new Paragraph(""));
+                blankCell.Border = 0;
+                blankCell.Padding = 5;
+                blankCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
+                classTable.AddCell(blankCell);
             }
-            
+
 
 
             //Display outcomes
             if (hasOutcomesWithMarks)
             {
-                newP = new Paragraph();
-                newP.Add(new Phrase("Outcomes:", font_body_bold));
-                newCell = new PdfPCell(newP);
-                newCell.Border = 0;
-                newCell.Padding = 5;
-                newCell.Colspan = 2;
-                classTable.AddCell(newCell);
+                Paragraph outcomeParagraph = new Paragraph();
+                outcomeParagraph.Add(new Phrase("Outcomes:", font_body_bold));
+                PdfPCell outcomeCell = new PdfPCell(outcomeParagraph);
+                outcomeCell.Border = 0;
+                outcomeCell.Padding = 5;
+                outcomeCell.Colspan = 2;
+                classTable.AddCell(outcomeCell);
 
                 /* Outcome marks */
                 foreach (Objective objective in course.Objectives)
                 {
+                    // This is broken, and I need to test something else - fix me later
                     classTable.AddCell(objectiveChunk(objective, content));
                 }
             }
@@ -1753,43 +1871,44 @@ namespace SLReports.ReportCard
             // Life skills
             if (hasOutcomesWithMarks)
             {
-                newP = new Paragraph();
-                newP.Add(new Phrase("Successful Learning Behaviors:", font_body_bold));
-                newCell = new PdfPCell(newP);
-                newCell.Border = 0;
-                newCell.Padding = 5;
-                newCell.Colspan = 2;
-                classTable.AddCell(newCell);
+                Paragraph lifeskillsParagraph = new Paragraph();
+                lifeskillsParagraph.Add(new Phrase("Successful Learning Behaviors:", font_body_bold));
+                PdfPCell lifeSkillsCell = new PdfPCell(lifeskillsParagraph);
+                lifeSkillsCell.Border = 0;
+                lifeSkillsCell.Padding = 5;
+                lifeSkillsCell.Colspan = 2;
+                classTable.AddCell(lifeSkillsCell);
                 classTable.AddCell(lifeSkillsChunk(course.Objectives, content));
             }
 
             // Comments
             if (hasComments)
             {
-                newP = new Paragraph();
-                newP.Add(new Phrase("Comments:\n", font_body_bold));
-                newCell = new PdfPCell(newP);
-                newCell.Border = 0;
-                newCell.Padding = 5;
-                newCell.Colspan = 2;
-                classTable.AddCell(newCell);
+                Paragraph commentTitleParagraph = new Paragraph();
+                commentTitleParagraph.Add(new Phrase("Comments:\n", font_body_bold));
 
-                newP = new Paragraph();
+                PdfPCell commentTitleCell = new PdfPCell(commentTitleParagraph);
+                commentTitleCell.Border = 0;
+                commentTitleCell.Padding = 5;
+                commentTitleCell.Colspan = 2;
+                classTable.AddCell(commentTitleCell);
+
+                Paragraph commentsParagraph = new Paragraph();
                 foreach (Mark mark in course.Marks)
                 {
                     if (!string.IsNullOrEmpty(mark.comment))
                     {
-                        newP.Add(new Phrase(mark.reportPeriod.name + ": ", font_small_bold));
-                        newP.Add(new Phrase(mark.comment, font_small));
-                        newP.Add(Chunk.NEWLINE);
+                        commentsParagraph.Add(new Phrase(mark.reportPeriod.name + ": ", font_small_bold));
+                        commentsParagraph.Add(new Phrase(mark.comment, font_small));
+                        commentsParagraph.Add(Chunk.NEWLINE);
                     }
                 }
-                newCell = new PdfPCell(newP);
-                newCell.Border = 0;
-                newCell.Padding = 5;
-                newCell.PaddingLeft = 10;
-                newCell.Colspan = 2;
-                classTable.AddCell(newCell);
+                PdfPCell commentsCell = new PdfPCell(commentsParagraph);
+                commentsCell.Border = 0;
+                commentsCell.Padding = 5;
+                commentsCell.PaddingLeft = 10;
+                commentsCell.Colspan = 2;
+                classTable.AddCell(commentsCell);
             }
             return classTable;
         }
