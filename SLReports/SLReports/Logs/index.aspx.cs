@@ -123,7 +123,7 @@ namespace SLReports.Logs
             String dbConnectionString = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
-                AllSessions = session.getActiveSessions(connection);
+                AllSessions = session.loadActiveSessions(connection);
                 AllLoginAttempts = getLoginAttempts(connection, DateTime.Now.AddMonths(-1), DateTime.Now);
             }         
 

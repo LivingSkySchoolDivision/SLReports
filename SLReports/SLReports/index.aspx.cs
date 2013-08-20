@@ -14,6 +14,21 @@ namespace SLReports
     {
 
         String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+        String dbConnectionString_Local = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString;
+
+        private TableRow addNavCategory(string category)
+        {
+            TableRow newRow = new TableRow();
+
+            TableCell categoryCell = new TableCell();
+            categoryCell.Text = "<br/><B>" + category + "</B>";            
+
+            categoryCell.ColumnSpan = 2;
+
+            newRow.Cells.Add(categoryCell);
+
+            return newRow;
+        }
 
         private TableRow addNavItem(NavMenuItem item)
         {
@@ -32,18 +47,87 @@ namespace SLReports
             return newRow;            
         }
 
+        private string getSessionIDFromCookies()
+        {
+            HttpCookie sessionCookie = Request.Cookies["lskyDataExplorer"];
+            if (sessionCookie != null)
+            {
+                return sessionCookie.Value;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            List<Student> allStudents = new List<Student>();
-            List<School> allSchools = new List<School>();
-            List<StaffMember> allStaff = new List<StaffMember>();
+            // Load some local session information
+            List<session> activeSessions = new List<session>();
+            session activeSession = null;
+            using (SqlConnection connection = new SqlConnection(dbConnectionString_Local))
+            {
+                activeSessions = session.loadActiveSessions(connection);
+                activeSession = session.loadThisSession(connection, getSessionIDFromCookies(), Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"]); 
+            }
 
-            List<NavMenuItem> MainMenu = Nav.getMainMenu();
+            int adminCount = 0;
+            foreach (session ses in activeSessions)
+            {
+                if (ses.is_admin)
+                {
+                    adminCount++;
+                }
+            }
+
+            lblActiveSessions.Text = activeSessions.Count.ToString();
+            lblAdminSessions.Text = adminCount.ToString();
+
+            // Generate the menu
+            List<NavMenuItem> AllMenuItems = Nav.getMainMenu();
+            List<NavMenuItem> MainMenu = new List<NavMenuItem>();
+
+            // Figure out which menu items to display
+            foreach (NavMenuItem item in AllMenuItems)
+            {
+                if (!item.hidden)
+                {
+
+                    if (activeSession.is_admin)
+                    {
+                        if (item.name != "-- Front Page --")
+                        {
+                            MainMenu.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        if ((!item.admin_only) && (!item.hidden) && (item.name != "-- Front Page --"))
+                        {
+                            MainMenu.Add(item);
+                        }
+                    }
+                }
+            }
+
+
+            // Get a list of all categories
+            List<string> MenuCategories = new List<string>();
             foreach (NavMenuItem item in MainMenu)
             {
-                if ((!item.hidden) && (!item.admin_only))
+                if (!MenuCategories.Contains(item.category))
                 {
-                    if (item.name != "-- Front Page --")
+                    MenuCategories.Add(item.category);
+                }                            
+            }
+            MenuCategories.Sort();
+
+            foreach (string category in MenuCategories)
+            {
+                tblNavigation.Rows.Add(addNavCategory(category));
+                foreach (NavMenuItem item in MainMenu)
+                {
+                    if (item.category == category)
                     {
                         tblNavigation.Rows.Add(addNavItem(item));
                     }
@@ -51,7 +135,10 @@ namespace SLReports
             }
 
 
-
+            // Load data for the statistics box
+            List<Student> allStudents = new List<Student>();
+            List<School> allSchools = new List<School>();
+            List<StaffMember> allStaff = new List<StaffMember>();
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
                 allStudents = Student.loadAllStudents(connection);

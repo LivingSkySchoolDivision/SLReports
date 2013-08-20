@@ -72,12 +72,14 @@ namespace SLReports
 
             if (dataReader.HasRows)
             {
+                List<string> adminUsers = LSKYCommon.getGroupMembers("lskysd", LSKYCommon.adminGroupName);
+                
                 while (dataReader.Read())
                 {
                     bool is_admin = false;
-                    if (!bool.TryParse(dataReader["is_admin"].ToString(), out is_admin))
+                    if (adminUsers.Contains(dataReader["username"].ToString()))
                     {
-                        is_admin = false;
+                        is_admin = true;
                     }
 
                     returnMe.Add(new session(
@@ -113,16 +115,11 @@ namespace SLReports
 
             if (dataReader.HasRows)
             {
+                List<string> adminUsers = LSKYCommon.getGroupMembers("lskysd", LSKYCommon.adminGroupName);
+
                 while (dataReader.Read())
                 {
                     bool is_admin = false;
-                    /*
-                    if (!bool.TryParse(dataReader["is_admin"].ToString(), out is_admin))
-                    {
-                        is_admin = false;
-                    }*/
-
-                    List<string> adminUsers = LSKYCommon.getGroupMembers("lskysd", LSKYCommon.adminGroupName);
                     if (adminUsers.Contains(dataReader["username"].ToString()))
                     {
                         is_admin = true;
@@ -165,7 +162,7 @@ namespace SLReports
             }
         }
 
-        public static List<session> getActiveSessions(SqlConnection connection)
+        public static List<session> loadActiveSessions(SqlConnection connection)
         {
             List<session> returnMe = new List<session>();
 
@@ -180,16 +177,11 @@ namespace SLReports
 
                 if (dbDataReader.HasRows)
                 {
+                    List<string> adminUsers = LSKYCommon.getGroupMembers("lskysd", LSKYCommon.adminGroupName);
+
                     while (dbDataReader.Read())
                     {
                         bool is_admin = false;
-                        /*
-                         * if (!bool.TryParse(dbDataReader["is_admin"].ToString(), out is_admin))
-                        {
-                            is_admin = false;
-                        }*/
-
-                        List<string> adminUsers = LSKYCommon.getGroupMembers("lskysd", LSKYCommon.adminGroupName);
                         if (adminUsers.Contains(dbDataReader["username"].ToString()))
                         {
                             is_admin = true;

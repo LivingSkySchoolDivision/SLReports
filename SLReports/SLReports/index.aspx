@@ -1,7 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/BasicTemplate.Master" AutoEventWireup="true" CodeBehind="index.aspx.cs" Inherits="SLReports.index" %>
 <asp:Content  ContentPlaceHolderID="Main" runat="server">
-   
-    <h2>Data to explore</h2>
     <div style="padding-left: 10px;">
         <asp:Table ID="tblNavigation" runat="server" CssClass="navigation_table">            
         </asp:Table>
@@ -21,6 +19,7 @@
             <li><asp:Label ID="lblBirthdayCount" runat="server" Text="" CssClass="small_infobox"></asp:Label> <a href="Birthdays/">students have a birthday today</a></li>
             <li>Students reside in <asp:Label ID="lblCities" runat="server" Text="" CssClass="small_infobox"></asp:Label> communities, in <asp:Label ID="lblRegions" runat="server" Text="" CssClass="small_infobox"></asp:Label> provinces</li>
             <li>There are <asp:Label ID="lblStaffCount" runat="server" Text="" CssClass="small_infobox"></asp:Label> active staff accounts in the SchoolLogic/TeacherLogic system</li>
+            <li>There are <asp:Label ID="lblActiveSessions" runat="server" Text="" CssClass="small_infobox"></asp:Label> active sessions on this website right now, including <asp:Label ID="lblAdminSessions" runat="server" Text="" CssClass="small_infobox"></asp:Label> administrators.</li>
         </ul>
     </p>    
 </div>

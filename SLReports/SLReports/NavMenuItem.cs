@@ -16,8 +16,9 @@ namespace SLReports
         public int parent { get; set; }
         public bool admin_only { get; set; }
         public bool hidden { get; set; }
+        public string category { get; set; }
 
-        public NavMenuItem(int id, int parent, string url, string name, string description, bool admin_only, bool hidden)
+        public NavMenuItem(int id, int parent, string url, string name, string description, bool admin_only, bool hidden, string category)
         {
             this.id = id;
             this.parent = parent;
@@ -26,6 +27,12 @@ namespace SLReports
             this.url = url;
             this.admin_only = admin_only;
             this.hidden = hidden;
+            this.category = category;
+
+            if (string.IsNullOrEmpty(category))
+            {
+                this.category = "General";
+            }
         }
 
         public override string ToString()
@@ -60,7 +67,7 @@ namespace SLReports
             {
                 sqlCommand.Connection = connection;
                 sqlCommand.CommandType = CommandType.Text;
-                sqlCommand.CommandText = "SELECT * FROM menu_items;";
+                sqlCommand.CommandText = "SELECT * FROM menu_items_with_categories;";
                 sqlCommand.Connection.Open();
                 SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
 
@@ -80,16 +87,20 @@ namespace SLReports
                             hidden = true;
                         }
 
-                        string itemName = dbDataReader["name"].ToString();
+                        string itemName = string.Empty;
+                        string itemPrefix = string.Empty;
+
                         if (admin_only)
                         {
-                            itemName = "ADMIN: " + itemName;
+                            itemPrefix = "[A] " ;
                         }
 
                         if (hidden)
                         {
-                            itemName = itemName + " (HIDDEN)";
+                            itemPrefix = "[H] ";
                         }
+
+                        itemName = itemPrefix + dbDataReader["name"].ToString();
 
                         NavMenuItem newItem = new NavMenuItem(
                             int.Parse(dbDataReader["id"].ToString()),
@@ -98,7 +109,8 @@ namespace SLReports
                             itemName,
                             dbDataReader["description"].ToString(),
                             admin_only,
-                            hidden                            
+                            hidden,
+                            dbDataReader["category"].ToString()
                             );
 
                         returnMe.Add(newItem);

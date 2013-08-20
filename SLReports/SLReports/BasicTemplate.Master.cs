@@ -151,11 +151,7 @@ namespace SLReports
                     }
                 }
                 else if (mi.hidden)
-                {
-                    if (loggedInUser.is_admin)
-                    {
-                        Response.Write("<option value=\"" + mi.id + "\">" + mi.name + "</option>");
-                    }
+                {                   
                 }
                 else
                 {
