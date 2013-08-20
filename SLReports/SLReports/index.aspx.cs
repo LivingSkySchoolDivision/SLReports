@@ -35,7 +35,15 @@ namespace SLReports
             TableRow newRow = new TableRow();            
 
             TableCell nameCell = new TableCell();
-            nameCell.Text = "<a href=\"/SLReports"+item.url+"\">" + item.name + "</a>";
+
+            string styles = "";
+
+            if (item.admin_only)
+            {
+                styles = "color: #008800;";
+            }
+
+            nameCell.Text = "<a href=\"/SLReports"+item.url+"\" style=\""+styles+"\">" + item.name + "</a>";
             nameCell.CssClass = "navigation_table_name";
             newRow.Cells.Add(nameCell);
 

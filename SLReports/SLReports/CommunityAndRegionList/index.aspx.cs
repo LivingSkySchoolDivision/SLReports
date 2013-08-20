@@ -26,7 +26,7 @@ namespace SLReports.CommunityAndRegionList
                        
             foreach (Student student in community.Value)
             {
-                toolTip.Append(student.getStudentID() + " " + student.getDisplayName() + "<br>&#10;");
+                toolTip.Append(student.getStudentID() + " " + student.getDisplayName() + " (" + student.getSchoolName() + ")<br>&#10;");
             }
 
             nameCell.Text = community.Key;

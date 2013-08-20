@@ -87,26 +87,11 @@ namespace SLReports
                             hidden = true;
                         }
 
-                        string itemName = string.Empty;
-                        string itemPrefix = string.Empty;
-
-                        if (admin_only)
-                        {
-                            itemPrefix = "[A] " ;
-                        }
-
-                        if (hidden)
-                        {
-                            itemPrefix = "[H] ";
-                        }
-
-                        itemName = itemPrefix + dbDataReader["name"].ToString();
-
                         NavMenuItem newItem = new NavMenuItem(
                             int.Parse(dbDataReader["id"].ToString()),
                             int.Parse(dbDataReader["parent"].ToString()),
                             dbDataReader["url"].ToString(),
-                            itemName,
+                            dbDataReader["name"].ToString(),
                             dbDataReader["description"].ToString(),
                             admin_only,
                             hidden,
