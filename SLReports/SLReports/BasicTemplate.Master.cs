@@ -82,8 +82,7 @@ namespace SLReports
 
             /* Check for an API key */
             if (!string.IsNullOrEmpty(Request.QueryString["apikey"]))
-            {
-                Response.Write("Derp");
+            {                
                 using (SqlConnection connection = new SqlConnection(dbConnectionString))
                 {
                     apiKey = APIKey.loadThisAPIKey(connection,Request.QueryString["apikey"]);
@@ -115,6 +114,7 @@ namespace SLReports
                 }
             }
 
+
             /* Check for a username */
             if (!string.IsNullOrEmpty(getSessionIDFromCookies()))
             {
@@ -130,7 +130,37 @@ namespace SLReports
                 {                    
                     redirectToLogin();
                 }
-            }            
+            }     
+       
+            /* Check to see if the the page is restricted to admins only */
+            List<NavMenuItem> MenuItems = Nav.getMainMenu();
+            List<string> restrictedPages = new List<string>();
+
+            foreach (NavMenuItem item in MenuItems)
+            {
+                if (item.admin_only)
+                {
+                    restrictedPages.Add(item.url);
+                }
+            }
+            
+            bool grantAccess = true;
+            foreach (string restrictedURL in restrictedPages) 
+            {
+                if (Request.RawUrl.ToLower().Contains(restrictedURL.ToLower()))
+                {
+                    if (!loggedInUser.is_admin)
+                    {
+                        grantAccess = false;
+                    }                    
+                }
+            }
+
+            if (!grantAccess)
+            {
+                Response.Write("Your user account does not have access to this page.");
+                Response.End();
+            }
         }
 
         public void displayNavDropdown()
