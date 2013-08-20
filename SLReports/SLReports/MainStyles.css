@@ -10,6 +10,14 @@
     }
 }
 
+.nav_link_normal {
+    color: blue;
+}
+
+.nav_link_admin {        
+    color: #008800;
+}
+
 .navigation_table {
     font-size: 16pt;
 }
@@ -21,8 +29,7 @@
 }
 
 
-.navigation_table_name a {
-    color: blue;
+.navigation_table_name a {    
     text-decoration: none;
 }
 

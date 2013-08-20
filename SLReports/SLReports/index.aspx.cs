@@ -36,14 +36,14 @@ namespace SLReports
 
             TableCell nameCell = new TableCell();
 
-            string styles = "";
+            string cssClass = "nav_link_normal";
 
             if (item.admin_only)
             {
-                styles = "color: #008800;";
+                cssClass = "nav_link_admin";
             }
 
-            nameCell.Text = "<a href=\"/SLReports"+item.url+"\" style=\""+styles+"\">" + item.name + "</a>";
+            nameCell.Text = "<a href=\"/SLReports" + item.url + "\" class=\"" + cssClass + "\">" + item.name + "</a>";
             nameCell.CssClass = "navigation_table_name";
             newRow.Cells.Add(nameCell);
 
