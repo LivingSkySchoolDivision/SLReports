@@ -17,7 +17,7 @@ namespace SLReports
     {
 
         private string loginURL = "/SLReports/Login/index.aspx";
-        private List<NavMenuItem> MainMenu;
+        private List<NavMenuItem> MainMenu = null;
         public session loggedInUser = null;
 
         private string getSessionIDFromCookies()
@@ -133,10 +133,13 @@ namespace SLReports
             }     
        
             /* Check to see if the the page is restricted to admins only */
-            List<NavMenuItem> MenuItems = Nav.getMainMenu();
+            if (MainMenu == null)
+            {
+                MainMenu = Nav.getMainMenu();
+            }
             List<string> restrictedPages = new List<string>();
 
-            foreach (NavMenuItem item in MenuItems)
+            foreach (NavMenuItem item in MainMenu)
             {
                 if (item.admin_only)
                 {
@@ -166,28 +169,62 @@ namespace SLReports
         public void displayNavDropdown()
         {
             /* Load the menu items */
-            MainMenu = Nav.getMainMenu();
+            if (MainMenu == null)
+            {
+                MainMenu = Nav.getMainMenu();
+            }
+
+            // Figure out which menu items to display
+            List<NavMenuItem> displayedMenuItems = new List<NavMenuItem>();            
+            foreach (NavMenuItem item in MainMenu)
+            {
+                if (!item.hidden)
+                {
+
+                    if (loggedInUser.is_admin)
+                    {
+                        displayedMenuItems.Add(item);
+                    }
+                    else
+                    {
+                        if ((!item.admin_only) && (!item.hidden))
+                        {
+                            displayedMenuItems.Add(item);
+                        }
+                    }
+                }
+            }            
+            displayedMenuItems.Sort();
+
+            // Figure out which categories to display
+            List<string> MenuCategories = new List<string>();
+            foreach (NavMenuItem item in displayedMenuItems)
+            {
+                if (!MenuCategories.Contains(item.category))
+                {
+                    MenuCategories.Add(item.category);
+                }
+            }
+
+
+            // Display the list in a dropdown box
             Response.Write("<form method=\"post\" action=\"/SLReports/Nav.aspx\" style=\"margin: 0; padding: 0;\">");
             Response.Write("<span class=\"nav_link\">Navigation:</span> ");
             Response.Write("<select name=\"selectedMenuItem\">");
-            MainMenu.Sort();
-            foreach (NavMenuItem mi in MainMenu)
+            Response.Write("<option value=\"0\"> -- Front Page --</option>");
+            foreach (string MenuCat in MenuCategories)
             {
-                if (mi.admin_only)
+                Response.Write("<option value=\"0\" style=\"font-weight: bold;\">" + MenuCat.ToUpper() + "</option>");
+                foreach (NavMenuItem mi in displayedMenuItems)
                 {
-                    if (loggedInUser.is_admin)
+                    if (mi.category == MenuCat)
                     {
-                        Response.Write("<option value=\"" + mi.id + "\">" + mi.name + "</option>");
+                        Response.Write("<option value=\"" + mi.id + "\">&nbsp;&nbsp;&nbsp;" + mi.name + "</option>");
                     }
                 }
-                else if (mi.hidden)
-                {                   
-                }
-                else
-                {
-                    Response.Write("<option value=\"" + mi.id + "\">" + mi.name + "</option>");
-                }
             }
+
+            
             Response.Write("</select>");
             Response.Write("&nbsp;<input type=\"submit\" value=\"Go\">");
             Response.Write("</form>");

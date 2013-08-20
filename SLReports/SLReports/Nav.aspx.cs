@@ -31,16 +31,25 @@ namespace SLReports
         {
             if (Request.Form.AllKeys.Contains("selectedMenuItem"))
             {
-                int selectedID = int.Parse(Request.Form["selectedMenuItem"]);
-                List<NavMenuItem> NavMenu = getMainMenu();
-                foreach (NavMenuItem mi in NavMenu)
+                int selectedID = 0;
+
+                if (int.TryParse(Request.Form["selectedMenuItem"], out selectedID))
                 {
-                    if (mi.id == selectedID)
+                    if (selectedID != 0)
                     {
-                        Response.Redirect("/SLReports" + mi.url);
+                        List<NavMenuItem> NavMenu = getMainMenu();
+                        foreach (NavMenuItem mi in NavMenu)
+                        {
+                            if (mi.id == selectedID)
+                            {
+                                Response.Redirect("/SLReports" + mi.url);
+                            }
+                        }
                     }
-                }
+                }                
             }
+
+            Response.Redirect("/SLReports/");
         }
 
         protected void Page_Load(object sender, EventArgs e)

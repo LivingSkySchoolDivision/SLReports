@@ -1635,7 +1635,6 @@ namespace SLReports.ReportCard
                 }
             }
 
-
             // Start building the table
             PdfPTable classTable = new PdfPTable(2);
             classTable.HorizontalAlignment = 1;
@@ -1651,16 +1650,31 @@ namespace SLReports.ReportCard
             classTable.SetWidths(widths);
             
             // Course Title
+            PdfPTable classTitleTable = new PdfPTable(1);
+
+            /*
             Paragraph classTitleParagraph = new Paragraph();
             classTitleParagraph.Add(new Phrase(course.name, font_large_bold));
             classTitleParagraph.Add(Chunk.NEWLINE);
             classTitleParagraph.Add(new Phrase("" + course.teacherName + "", font_small));
-
-            PdfPCell classTitleCell = new PdfPCell(classTitleParagraph);
+            */
+            
+            PdfPCell classTitleCell = new PdfPCell(new Phrase(course.name, font_large_bold));
             classTitleCell.Border = 0;
             classTitleCell.Padding = 5;
             classTitleCell.PaddingLeft = 0;
-            classTable.AddCell(classTitleCell);
+
+            PdfPCell classTeacherCell = new PdfPCell(new Phrase(course.teacherName, font_small));
+            classTeacherCell.Border = 0;
+            classTeacherCell.Padding = 5;
+            classTeacherCell.PaddingLeft = 0;
+
+            classTitleTable.AddCell(classTitleCell);
+            classTitleTable.AddCell(classTeacherCell);
+
+            PdfPCell classTitleTableContainer = new PdfPCell(classTitleTable);
+            classTitleTableContainer.Border = 0;
+            classTable.AddCell(classTitleTableContainer);
 
 
             // Course Mark (Adjusted Grade)
@@ -1774,7 +1788,7 @@ namespace SLReports.ReportCard
                     reportPeriodNameCell.Padding = 2;
                     reportPeriodNameCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
                     embeddedMarkTable.AddCell(reportPeriodNameCell);
-                }  
+                }
 
                 // Display the marks
                 foreach (ReportPeriod rp in loadedReportPeriods)
@@ -1821,11 +1835,8 @@ namespace SLReports.ReportCard
 
                 }
 
-                              
-
-                // Display marks for each report period
-
-
+                          
+                
 
                 PdfPCell embeddedMarkTableContainer = new PdfPCell(embeddedMarkTable);
                 embeddedMarkTableContainer.Border = 0;
