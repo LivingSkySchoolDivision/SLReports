@@ -7,24 +7,24 @@ using System.Web;
 
 namespace SLReports
 {
-    public class Objective // rename me to outcome
+    public class Outcome
     {
         public int id { get; set; }
         public string subject { get; set; }
-        public string description { get; set; } // Rename me to notes
+        public string notes { get; set; }
         public int courseid { get; set; }
         public string courseName { get; set; }
         public string courseCode { get; set; }
         public int order { get; set; }
         public string studentvalue { get; set; }
         public string category { get; set; }        
-        public List<ObjectiveMark> marks { get; set; }
+        public List<OutcomeMark> marks { get; set; }
 
-        public Objective(int id, int courseid, string subject, string description, string category, string coursename, string courseCode)
+        public Outcome(int id, int courseid, string subject, string notes, string category, string coursename, string courseCode)
         {
-            this.marks = new List<ObjectiveMark>();
+            this.marks = new List<OutcomeMark>();
             this.id = id;
-            this.description = description;
+            this.notes = notes;
             this.courseid = courseid;
             this.subject = subject;
             this.category = category;
@@ -32,9 +32,9 @@ namespace SLReports
             this.courseCode = courseCode;
         }
 
-        public static List<Objective> loadObjectivesForThisCourse(SqlConnection connection, SchoolClass course)
+        public static List<Outcome> loadObjectivesForThisCourse(SqlConnection connection, SchoolClass course)
         {
-            List<Objective> returnMe = new List<Objective>();
+            List<Outcome> returnMe = new List<Outcome>();
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = connection;
@@ -47,7 +47,7 @@ namespace SLReports
             {
                 while (dataReader.Read())
                 {
-                    returnMe.Add(new Objective(
+                    returnMe.Add(new Outcome(
                             int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
                             int.Parse(dataReader["iCourseID"].ToString().Trim()),
                             dataReader["cSubject"].ToString().Trim(),
@@ -63,9 +63,9 @@ namespace SLReports
             return returnMe;
         }
 
-        public static List<Objective> loadAllObjectives(SqlConnection connection)
+        public static List<Outcome> loadAllObjectives(SqlConnection connection)
         {
-            List<Objective> returnMe = new List<Objective>();
+            List<Outcome> returnMe = new List<Outcome>();
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = connection;
@@ -78,7 +78,7 @@ namespace SLReports
             {
                 while (dataReader.Read())
                 {
-                    returnMe.Add(new Objective(
+                    returnMe.Add(new Outcome(
                             int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
                             int.Parse(dataReader["iCourseID"].ToString().Trim()),
                             dataReader["cSubject"].ToString().Trim(),

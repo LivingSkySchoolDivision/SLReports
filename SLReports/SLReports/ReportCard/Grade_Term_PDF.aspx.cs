@@ -183,7 +183,7 @@ namespace SLReports.ReportCard
                                     }
                                 }
 
-                                foreach (ObjectiveMark om in c.ObjectiveMarks)
+                                foreach (OutcomeMark om in c.ObjectiveMarks)
                                 {
                                     if (om.reportPeriodID == rp.ID)
                                     {
@@ -192,7 +192,7 @@ namespace SLReports.ReportCard
                                 }
                             }
                             Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Objectives:</b> " + c.Objectives.Count);
-                            foreach (Objective o in c.Objectives)
+                            foreach (Outcome o in c.Objectives)
                             {
                                 Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>Objective:</b> " + o);
                             }

@@ -1306,7 +1306,7 @@ namespace SLReports.ReportCard
             return outcomeLegendTable;
         }
 
-        public static PdfPCell objectiveChunk(Objective objective, PdfContentByte content)
+        public static PdfPCell objectiveChunk(Outcome objective, PdfContentByte content)
         {
             // Interesting note: If you add an element to a cell in the constructor it aligns differnetly than if you add it as an element
 
@@ -1331,7 +1331,7 @@ namespace SLReports.ReportCard
 
                     // Set up the description cell
                     Paragraph objectiveDescriptionParagraph = new Paragraph();
-                    string objectiveDescriptionCondensed = objective.description;
+                    string objectiveDescriptionCondensed = objective.notes;
                     /* Limit the size - this is temporary because the testing descriptions are much longer than the actual descriptions,
                      * and I cannot change the test data.*/
                     if (objectiveDescriptionCondensed.Length > 100)
@@ -1357,7 +1357,7 @@ namespace SLReports.ReportCard
                     float[] marksTableWidths = new float[] { 2f, 1f };
                     marksTable.SetWidths(marksTableWidths);
 
-                    foreach (ObjectiveMark objectivemark in objective.marks)
+                    foreach (OutcomeMark objectivemark in objective.marks)
                     {
                         PdfPCell markCell = new PdfPCell();
 
@@ -1426,7 +1426,7 @@ namespace SLReports.ReportCard
             return objectiveChunkTableCell;
         }
 
-        public static PdfPCell lifeSkillsChunk(List<Objective> objectives, PdfContentByte content)
+        public static PdfPCell lifeSkillsChunk(List<Outcome> objectives, PdfContentByte content)
         {
             // Interesting note: If you add an element to a cell in the constructor it aligns differnetly than if you add it as an element
 
@@ -1444,8 +1444,8 @@ namespace SLReports.ReportCard
             // Currently normal objectives don't have a category, and "life skills" objectives do have a category
 
             // Condense the list of objectives to just the ones we care about
-            List<Objective> lifeSkillsObjectives = new List<Objective>();
-            foreach (Objective objective in objectives)
+            List<Outcome> lifeSkillsObjectives = new List<Outcome>();
+            foreach (Outcome objective in objectives)
             {
                 if (objective.category.ToLower() == lifeSkillsCategoryName.ToLower())
                 {
@@ -1459,7 +1459,7 @@ namespace SLReports.ReportCard
                 // Figure out life skills names and how many to display
                 List<string> lifeSkillsNames = new List<string>();
                 List<string> reportPeriodNames = new List<string>();
-                foreach (Objective objective in lifeSkillsObjectives)
+                foreach (Outcome objective in lifeSkillsObjectives)
                 {
 
                     // Figure out life skills names and how many to display
@@ -1468,7 +1468,7 @@ namespace SLReports.ReportCard
                         lifeSkillsNames.Add(objective.subject);
                     }
 
-                    foreach (ObjectiveMark mark in objective.marks)
+                    foreach (OutcomeMark mark in objective.marks)
                     {
                         if (!reportPeriodNames.Contains(mark.reportPeriod.name))
                         {
@@ -1523,11 +1523,11 @@ namespace SLReports.ReportCard
                         PdfPCell markValueCell = new PdfPCell();
                         markValueCell.Border = lifeSkillsTableBorder;
 
-                        foreach (Objective objective in lifeSkillsObjectives)
+                        foreach (Outcome objective in lifeSkillsObjectives)
                         {
                             if (objective.subject == lifeSkillName)
                             {
-                                foreach (ObjectiveMark objectivemark in objective.marks)
+                                foreach (OutcomeMark objectivemark in objective.marks)
                                 {
                                     if (objectivemark.reportPeriod.name == reportPeriodName)
                                     {
@@ -1619,7 +1619,7 @@ namespace SLReports.ReportCard
 
             bool hasOutcomesWithMarks = false;
             bool hasComments = false;
-            foreach (Objective objective in course.Objectives)
+            foreach (Outcome objective in course.Objectives)
             {
                 if (objective.marks.Count > 0)
                 {
@@ -1861,7 +1861,7 @@ namespace SLReports.ReportCard
                 classTable.AddCell(outcomeCell);
 
                 /* Outcome marks */
-                foreach (Objective objective in course.Objectives)
+                foreach (Outcome objective in course.Objectives)
                 {
                     // This is broken, and I need to test something else - fix me later
                     classTable.AddCell(objectiveChunk(objective, content));

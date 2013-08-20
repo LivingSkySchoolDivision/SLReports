@@ -333,8 +333,8 @@
       <DependentUpon>Nav.aspx</DependentUpon>
     </Compile>
     <Compile Include="NavMenuItem.cs" />
-    <Compile Include="Objective.cs" />
-    <Compile Include="ObjectiveMark.cs" />
+    <Compile Include="Outcome.cs" />
+    <Compile Include="OutcomeMark.cs" />
     <Compile Include="E15\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

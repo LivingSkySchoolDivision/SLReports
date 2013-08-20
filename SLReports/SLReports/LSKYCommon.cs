@@ -240,13 +240,13 @@ namespace SLReports
                         thisClass.ReportPeriods = reportPeriods;
 
                         /* Load objectives and objective marks */
-                        thisClass.Objectives = Objective.loadObjectivesForThisCourse(connection, thisClass);
-                        thisClass.ObjectiveMarks = ObjectiveMark.loadObjectiveMarksForThisCourse(connection, thisTerm, student, thisClass);
+                        thisClass.Objectives = Outcome.loadObjectivesForThisCourse(connection, thisClass);
+                        thisClass.ObjectiveMarks = OutcomeMark.loadObjectiveMarksForThisCourse(connection, thisTerm, student, thisClass);
 
                         /* Put objective marks in the corresonding objective */
-                        foreach (ObjectiveMark objectivemark in thisClass.ObjectiveMarks)
+                        foreach (OutcomeMark objectivemark in thisClass.ObjectiveMarks)
                         {
-                            foreach (Objective objective in thisClass.Objectives)
+                            foreach (Outcome objective in thisClass.Objectives)
                             {
                                 if (objectivemark.objectiveID == objective.id)
                                 {
@@ -264,9 +264,9 @@ namespace SLReports
 
                         }
 
-                        foreach (Objective objective in thisClass.Objectives)
+                        foreach (Outcome objective in thisClass.Objectives)
                         {
-                            foreach (ObjectiveMark objectivemark in thisClass.ObjectiveMarks)
+                            foreach (OutcomeMark objectivemark in thisClass.ObjectiveMarks)
                             {
                                 if (objective.id == objectivemark.objectiveID)
                                 {

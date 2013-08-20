@@ -26,8 +26,8 @@ namespace SLReports
         public Track track { get; set; }
         public Term term { get; set; }
         public List<Mark> Marks { get; set; }
-        public List<Objective> Objectives { get; set; }
-        public List<ObjectiveMark> ObjectiveMarks { get; set; }
+        public List<Outcome> Objectives { get; set; }
+        public List<OutcomeMark> ObjectiveMarks { get; set; }
         public List<Student> EnrolledStudents { get; set; }
         public List<Teacher> teachers { get; set; }
 
@@ -118,10 +118,10 @@ namespace SLReports
         /* This constructor should be removed and code relying on it should be redone */
         public SchoolClass(string name, int classid, int courseid)
         {
-            Objectives = new List<Objective>();
+            Objectives = new List<Outcome>();
             Marks = new List<Mark>();
             ReportPeriods = new List<ReportPeriod>();
-            ObjectiveMarks = new List<ObjectiveMark>();
+            ObjectiveMarks = new List<OutcomeMark>();
 
             this.name = name;
             this.classid = classid;
@@ -130,10 +130,10 @@ namespace SLReports
         
         public SchoolClass(string name, int classid, int courseid, string teacherFirst, string teacherLast, string teacherTitle, string schoolName, int blockNum, int dayNum, Track track, string lowestGrade, string highestGrade, string gradeLegendName)
         {
-            Objectives = new List<Objective>();
+            Objectives = new List<Outcome>();
             Marks = new List<Mark>();
             ReportPeriods = new List<ReportPeriod>();
-            ObjectiveMarks = new List<ObjectiveMark>();
+            ObjectiveMarks = new List<OutcomeMark>();
 
             this.name = name;
             this.classid = classid;

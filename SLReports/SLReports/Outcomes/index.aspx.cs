@@ -11,7 +11,7 @@ namespace SLReports.Outcomes
 {
     public partial class index : System.Web.UI.Page
     {
-        private TableRow addOutcomeRow(Objective outcome)
+        private TableRow addOutcomeRow(Outcome outcome)
         {
             TableRow returnMe = new TableRow();
 
@@ -25,7 +25,7 @@ namespace SLReports.Outcomes
             subjectCell.Text = outcome.subject;
 
             TableCell notesCell = new TableCell();
-            notesCell.Text = outcome.description;
+            notesCell.Text = outcome.notes;
 
             TableCell categoryCell = new TableCell();
             categoryCell.Text = outcome.category;
@@ -45,15 +45,15 @@ namespace SLReports.Outcomes
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            List<Objective> outcomes = new List<Objective>();
+            List<Outcome> outcomes = new List<Outcome>();
 
             String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
-                outcomes = Objective.loadAllObjectives(connection);
+                outcomes = Outcome.loadAllObjectives(connection);
             }
 
-            foreach (Objective outcome in outcomes)
+            foreach (Outcome outcome in outcomes)
             {
                 tblOutcomes.Rows.Add(addOutcomeRow(outcome));
             }

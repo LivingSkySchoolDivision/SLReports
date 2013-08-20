@@ -28,7 +28,7 @@ namespace SLReports.Outcomes
             Response.End();
         }
 
-        protected MemoryStream GenerateCSV(List<Objective> outcomes)
+        protected MemoryStream GenerateCSV(List<Outcome> outcomes)
         {
             MemoryStream csvFile = new MemoryStream();
             StreamWriter writer = new StreamWriter(csvFile, Encoding.UTF8);
@@ -39,14 +39,14 @@ namespace SLReports.Outcomes
             writer.WriteLine(headingLine.ToString());
 
             /* Data */
-            foreach (Objective outcome in outcomes)
+            foreach (Outcome outcome in outcomes)
             {
                 StringBuilder studentLine = new StringBuilder();
                 studentLine.Append(outcome.id);
                 studentLine.Append(",");
                 studentLine.Append("\"" + outcome.subject + "\"");
                 studentLine.Append(",");
-                studentLine.Append("\"" + outcome.description + "\"");
+                studentLine.Append("\"" + outcome.notes + "\"");
                 studentLine.Append(",");
                 studentLine.Append("\"" + outcome.category + "\"");
                 studentLine.Append(",");
@@ -62,12 +62,12 @@ namespace SLReports.Outcomes
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            List<Objective> outcomes = new List<Objective>();
+            List<Outcome> outcomes = new List<Outcome>();
 
             String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
-                outcomes = Objective.loadAllObjectives(connection);
+                outcomes = Outcome.loadAllObjectives(connection);
             }
 
             sendCSV(GenerateCSV(outcomes), "LSKY_OUTCOMES_" + LSKYCommon.getCurrentTimeStampForFilename());

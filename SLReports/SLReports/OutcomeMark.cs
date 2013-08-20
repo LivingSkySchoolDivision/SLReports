@@ -7,7 +7,7 @@ using System.Web;
 
 namespace SLReports
 {
-    public class ObjectiveMark
+    public class OutcomeMark
     {
         public int objectiveMarkID { get; set; }
         public int studentID { get; set; }
@@ -35,7 +35,7 @@ namespace SLReports
             }
         }
         
-        public Objective objective { get; set; }
+        public Outcome objective { get; set; }
         public ReportPeriod reportPeriod { get; set; }
 
         public string description 
@@ -44,7 +44,7 @@ namespace SLReports
             {
                 if (this.objective != null)
                 {
-                    return this.objective.description;
+                    return this.objective.notes;
                 } else {
                     return "Objective ID " + this.objectiveID;
                 }
@@ -57,7 +57,7 @@ namespace SLReports
         }
 
 
-        public ObjectiveMark(int objectiveMarkID, int studentID, int objectiveID, int reportPeriodID, int courseID, string cmark, float nmark)
+        public OutcomeMark(int objectiveMarkID, int studentID, int objectiveID, int reportPeriodID, int courseID, string cmark, float nmark)
         {
             this.objectiveMarkID = objectiveMarkID;
             this.studentID = studentID;
@@ -80,9 +80,9 @@ namespace SLReports
             return "ObjectiveMark: { ID: " + this.objectiveMarkID + ", Objective ID: " + this.objectiveID + ", nMark: " + this.nMark + ", cMark: " + this.cMark + ", Translated Mark: "+this.mark+", Report Period: " + this.reportPeriodID + ", HasObjectiveInfo: " + LSKYCommon.boolToYesOrNo(hasObjectiveAlso) + " }";
         }
 
-        public static List<ObjectiveMark> loadObjectiveMarksForThisCourse(SqlConnection connection, Term term, Student student, SchoolClass course)
+        public static List<OutcomeMark> loadObjectiveMarksForThisCourse(SqlConnection connection, Term term, Student student, SchoolClass course)
         {
-            List<ObjectiveMark> returnMe = new List<ObjectiveMark>();
+            List<OutcomeMark> returnMe = new List<OutcomeMark>();
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = connection;
@@ -102,7 +102,7 @@ namespace SLReports
                     float nMark = -1;
                     float.TryParse(dataReader["nMark"].ToString().Trim(), out nMark);
 
-                    returnMe.Add(new ObjectiveMark(
+                    returnMe.Add(new OutcomeMark(
                             int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
                             int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
                             int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
@@ -118,9 +118,9 @@ namespace SLReports
             return returnMe;
         }
 
-        public static List<ObjectiveMark> loadObjectiveMarksForThisStudent(SqlConnection connection, Term term, Student student)
+        public static List<OutcomeMark> loadObjectiveMarksForThisStudent(SqlConnection connection, Term term, Student student)
         {
-            List<ObjectiveMark> returnMe = new List<ObjectiveMark>();
+            List<OutcomeMark> returnMe = new List<OutcomeMark>();
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = connection;
@@ -138,7 +138,7 @@ namespace SLReports
                     float nMark = -1;
                     float.TryParse(dataReader["nMark"].ToString().Trim(), out nMark);
 
-                    returnMe.Add(new ObjectiveMark(
+                    returnMe.Add(new OutcomeMark(
                             int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
                             int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
                             int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
