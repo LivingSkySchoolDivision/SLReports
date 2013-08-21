@@ -17,16 +17,26 @@ namespace SLReports
         public string displayName
         {
             get {
-                StringBuilder returnMe = new StringBuilder();
-                if (!string.IsNullOrEmpty(title))
+                if (
+                    (!string.IsNullOrEmpty(firstName)) &&
+                    (!string.IsNullOrEmpty(lastName))
+                    )
                 {
-                    returnMe.Append(title + " ");
-                }
-                returnMe.Append(firstName.Substring(0,1));
-                returnMe.Append(" ");
-                returnMe.Append(lastName);
+                    StringBuilder returnMe = new StringBuilder();
+                    if (!string.IsNullOrEmpty(title))
+                    {
+                        returnMe.Append(title + " ");
+                    }
+                    returnMe.Append(firstName.Substring(0, 1));
+                    returnMe.Append(" ");
+                    returnMe.Append(lastName);
 
-                return returnMe.ToString();                    
+                    return returnMe.ToString();
+                }
+                else
+                {
+                    return string.Empty;
+                }                
             }
 
             set {

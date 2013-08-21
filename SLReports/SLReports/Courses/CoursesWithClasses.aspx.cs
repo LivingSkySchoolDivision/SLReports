@@ -124,7 +124,7 @@ namespace SLReports.Courses
             newRow.Cells.Add(newCell);
 
             newCell = new TableCell();
-            newCell.Text = thisClass.track.ToString();
+            newCell.Text = thisClass.track.name;
             newRow.Cells.Add(newCell);
 
             return newRow;
