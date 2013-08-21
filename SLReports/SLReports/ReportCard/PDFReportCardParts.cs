@@ -1306,7 +1306,7 @@ namespace SLReports.ReportCard
             return outcomeLegendTable;
         }
 
-        public static PdfPCell objectiveChunk(Outcome objective, PdfContentByte content)
+        public static PdfPCell objectiveChunk(Outcome outcome, PdfContentByte content)
         {
             // Interesting note: If you add an element to a cell in the constructor it aligns differnetly than if you add it as an element
 
@@ -1321,43 +1321,32 @@ namespace SLReports.ReportCard
 
             // TODO: This may need to check for the exact name, but that doesn't exist in the data yet 
             // Currently normal objectives don't have a category, and "life skills" objectives do have a category
-            if (objective.category.ToLower() == normalObjectiveCategoryName.ToLower())
-            {
-                if (objective.hasMarks())
-                {
 
-                    PdfPCell objectiveDescriptionCell = new PdfPCell();
+            if (outcome.category.ToLower() == normalObjectiveCategoryName.ToLower())
+            {
+                if (outcome.marks.Count > 0)
+                {
+                    
                     PdfPCell objectiveMarksCell = new PdfPCell();
 
                     // Set up the description cell
-                    Paragraph objectiveDescriptionParagraph = new Paragraph();
-                    string objectiveDescriptionCondensed = objective.notes;
-                    /* Limit the size - this is temporary because the testing descriptions are much longer than the actual descriptions,
-                     * and I cannot change the test data.*/
-                    if (objectiveDescriptionCondensed.Length > 100)
-                    {
-                        objectiveDescriptionCondensed = objectiveDescriptionCondensed.Substring(0, 100);
-                    }
-                    objectiveDescriptionParagraph.Add(new Phrase(objectiveDescriptionCondensed, font_body));
-                    objectiveDescriptionParagraph.Add(Chunk.NEWLINE);
-                    objectiveDescriptionParagraph.Add(Chunk.NEWLINE);
-
+                    PdfPCell objectiveDescriptionCell = new PdfPCell(new Phrase(outcome.notes, font_body));
                     objectiveDescriptionCell.Border = ObjectivesTableBorder;
                     objectiveDescriptionCell.Padding = 0;
                     objectiveDescriptionCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
                     objectiveDescriptionCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
-                    objectiveDescriptionCell.AddElement(objectiveDescriptionParagraph);
                     //objectiveDescriptionCell.Rowspan = objective.marks.Count;
 
-
                     // Set up the marks cell
-
                     PdfPTable marksTable = new PdfPTable(2);
                     marksTable.SpacingBefore = 5;
                     float[] marksTableWidths = new float[] { 2f, 1f };
                     marksTable.SetWidths(marksTableWidths);
 
-                    foreach (OutcomeMark objectivemark in objective.marks)
+                    
+
+
+                    foreach (OutcomeMark objectivemark in outcome.marks)
                     {
                         PdfPCell markCell = new PdfPCell();
 
@@ -1387,7 +1376,7 @@ namespace SLReports.ReportCard
                         }
 
                         // Display the report period
-                        PdfPCell reportPeriodCell = new PdfPCell(new Phrase(objectivemark.reportPeriod.name, font_small_italic));
+                        PdfPCell reportPeriodCell = new PdfPCell(new Phrase(objectivemark.reportPeriod.name, font_small_italic));                        
                         reportPeriodCell.Padding = 2;
                         reportPeriodCell.PaddingLeft = 10;
                         reportPeriodCell.Border = ObjectivesTableBorder;
@@ -1397,12 +1386,12 @@ namespace SLReports.ReportCard
                         marksTable.AddCell(markCell);
                         marksTable.AddCell(reportPeriodCell);
                     }
+                    
+
 
                     objectiveMarksCell.Border = ObjectivesTableBorder;
                     objectiveMarksCell.Padding = 0;
                     objectiveMarksCell.AddElement(marksTable);
-
-
 
                     // Build the final table to return
                     objectiveChunkTable.KeepTogether = false;
@@ -1413,11 +1402,12 @@ namespace SLReports.ReportCard
                     objectiveChunkTable.AddCell(objectiveMarksCell);
                     //objectiveChunkTable.AddCell(marksTable);
 
+                    objectiveChunkTable.SetWidths(objectivesTableWidths); 
 
-                    objectiveChunkTable.SetWidths(objectivesTableWidths);
-
-                }
+                }  
+                     
             }
+
             // Encapsulate the table in a cell object and return it
             PdfPCell objectiveChunkTableCell = new PdfPCell(objectiveChunkTable);
             objectiveChunkTableCell.Colspan = 2;
@@ -1619,7 +1609,7 @@ namespace SLReports.ReportCard
 
             bool hasOutcomesWithMarks = false;
             bool hasComments = false;
-            foreach (Outcome objective in course.Objectives)
+            foreach (Outcome objective in course.Outcomes)
             {
                 if (objective.marks.Count > 0)
                 {
@@ -1661,12 +1651,12 @@ namespace SLReports.ReportCard
             
             PdfPCell classTitleCell = new PdfPCell(new Phrase(course.name, font_large_bold));
             classTitleCell.Border = 0;
-            classTitleCell.Padding = 5;
+            classTitleCell.Padding = 0;
             classTitleCell.PaddingLeft = 0;
 
             PdfPCell classTeacherCell = new PdfPCell(new Phrase(course.teacherName, font_small));
             classTeacherCell.Border = 0;
-            classTeacherCell.Padding = 5;
+            classTeacherCell.Padding = 0;
             classTeacherCell.PaddingLeft = 0;
 
             classTitleTable.AddCell(classTitleCell);
@@ -1736,7 +1726,7 @@ namespace SLReports.ReportCard
                     markCell.Padding = 5;
 
                     PdfPCell titleCell = new PdfPCell(new Phrase("Final Mark", font_small));
-                    titleCell.Border = 0;
+                    titleCell.Border = Rectangle.BOX;
                     titleCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
                     titleCell.Padding = 2;
                     titleCell.PaddingBottom = 3;
@@ -1784,7 +1774,7 @@ namespace SLReports.ReportCard
                 foreach (ReportPeriod rp in loadedReportPeriods)
                 {
                     PdfPCell reportPeriodNameCell = new PdfPCell(new Phrase(rp.name, font_small));
-                    reportPeriodNameCell.Border = 0;
+                    reportPeriodNameCell.Border = Rectangle.BOX;
                     reportPeriodNameCell.Padding = 2;
                     reportPeriodNameCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
                     embeddedMarkTable.AddCell(reportPeriodNameCell);
@@ -1804,7 +1794,6 @@ namespace SLReports.ReportCard
 
                     if (MarkForThisReportPeriod != null) 
                     {
-
                         // Should we display a percent or an outcome (1-4) mark?
                         //  - If a grade legend exists, use outcome marks (cMark)
                         //  - If a grade legend does not exist, use percent marks (nMark)
@@ -1872,7 +1861,7 @@ namespace SLReports.ReportCard
                 classTable.AddCell(outcomeCell);
 
                 /* Outcome marks */
-                foreach (Outcome objective in course.Objectives)
+                foreach (Outcome objective in course.Outcomes)
                 {
                     // This is broken, and I need to test something else - fix me later
                     classTable.AddCell(objectiveChunk(objective, content));
@@ -1889,7 +1878,7 @@ namespace SLReports.ReportCard
                 lifeSkillsCell.Padding = 5;
                 lifeSkillsCell.Colspan = 2;
                 classTable.AddCell(lifeSkillsCell);
-                classTable.AddCell(lifeSkillsChunk(course.Objectives, content));
+                classTable.AddCell(lifeSkillsChunk(course.Outcomes, content));
             }
 
             // Comments

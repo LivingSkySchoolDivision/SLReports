@@ -103,7 +103,7 @@ namespace SLReports.ReportCard
                 /* McKitrick report periods for testing */
                 //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 266));
                 //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 267));
-                //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 268));
+                selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 268));
 
                 /* McKitrick students for testing */
                 //students.Add(Student.loadThisStudent(connection, "80451"));
@@ -114,6 +114,9 @@ namespace SLReports.ReportCard
                 selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 258));
                 selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 257));
                 selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 256));
+                selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 255));
+                selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 254));
+                selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 253));
 
 
                 /* NBCHS students for testing */
@@ -171,7 +174,7 @@ namespace SLReports.ReportCard
                             Response.Write("<BR><BR>&nbsp;&nbsp;<b>Class:</b> " + c);
                             Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Teacher:</b> " + c.teacherName);
                             Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Marks:</b> " + c.Marks.Count);
-                            Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Objective Marks:</b> " + c.ObjectiveMarks.Count);
+                            Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Objective Marks:</b> " + c.OutcomeMarks.Count);
                             foreach (ReportPeriod rp in term.ReportPeriods)
                             {
                                 Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Report Period:</b> " + rp);
@@ -183,7 +186,7 @@ namespace SLReports.ReportCard
                                     }
                                 }
 
-                                foreach (OutcomeMark om in c.ObjectiveMarks)
+                                foreach (OutcomeMark om in c.OutcomeMarks)
                                 {
                                     if (om.reportPeriodID == rp.ID)
                                     {
@@ -191,10 +194,14 @@ namespace SLReports.ReportCard
                                     }
                                 }
                             }
-                            Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Objectives:</b> " + c.Objectives.Count);
-                            foreach (Outcome o in c.Objectives)
+                            Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Objectives:</b> " + c.Outcomes.Count);
+                            foreach (Outcome o in c.Outcomes)
                             {
                                 Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>Objective:</b> " + o);
+                                foreach (OutcomeMark om in o.marks) 
+                                {
+                                    Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>ObjectiveMark:</b> " + om);
+                                }
                             }
 
                             

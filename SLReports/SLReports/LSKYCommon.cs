@@ -164,9 +164,16 @@ namespace SLReports
             DateTime lastDate = DateTime.MinValue;
 
             List<int> detectedTermIDs = new List<int>();
+            List<int> selectedReportPeriodIDs = new List<int>();
 
             foreach (ReportPeriod rp in reportPeriods)
             {
+                /* Create a list of loaded report period IDs for later use */
+                if (!selectedReportPeriodIDs.Contains(rp.ID))
+                {
+                    selectedReportPeriodIDs.Add(rp.ID);
+                }
+
                 /* Find the earliest report period and the last report period, for attendance dates */
                 if (rp.startDate < earliestDate)
                 {
@@ -240,13 +247,23 @@ namespace SLReports
                         thisClass.ReportPeriods = reportPeriods;
 
                         /* Load objectives and objective marks */
-                        thisClass.Objectives = Outcome.loadObjectivesForThisCourse(connection, thisClass);
-                        thisClass.ObjectiveMarks = OutcomeMark.loadObjectiveMarksForThisCourse(connection, thisTerm, student, thisClass);
+                        thisClass.Outcomes = Outcome.loadObjectivesForThisCourse(connection, thisClass);
+
+                        List<OutcomeMark> AllOutcomeMarksForThisCourse = OutcomeMark.loadObjectiveMarksForThisCourse(connection, thisTerm, student, thisClass);
+
+                        /* Filter out objectivemarks for report periods that we don't care about */
+                        foreach (OutcomeMark om in AllOutcomeMarksForThisCourse) 
+                        {
+                            if (selectedReportPeriodIDs.Contains(om.reportPeriodID))
+                            {
+                                thisClass.OutcomeMarks.Add(om);
+                            }                            
+                        }
 
                         /* Put objective marks in the corresonding objective */
-                        foreach (OutcomeMark objectivemark in thisClass.ObjectiveMarks)
+                        foreach (OutcomeMark objectivemark in thisClass.OutcomeMarks)
                         {
-                            foreach (Outcome objective in thisClass.Objectives)
+                            foreach (Outcome objective in thisClass.Outcomes)
                             {
                                 if (objectivemark.objectiveID == objective.id)
                                 {
@@ -264,9 +281,9 @@ namespace SLReports
 
                         }
 
-                        foreach (Outcome objective in thisClass.Objectives)
+                        foreach (Outcome objective in thisClass.Outcomes)
                         {
-                            foreach (OutcomeMark objectivemark in thisClass.ObjectiveMarks)
+                            foreach (OutcomeMark objectivemark in thisClass.OutcomeMarks)
                             {
                                 if (objective.id == objectivemark.objectiveID)
                                 {

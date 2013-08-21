@@ -26,8 +26,8 @@ namespace SLReports
         public Track track { get; set; }
         public Term term { get; set; }
         public List<Mark> Marks { get; set; }
-        public List<Outcome> Objectives { get; set; }
-        public List<OutcomeMark> ObjectiveMarks { get; set; }
+        public List<Outcome> Outcomes { get; set; }
+        public List<OutcomeMark> OutcomeMarks { get; set; }
         public List<Student> EnrolledStudents { get; set; }
         public List<Teacher> teachers { get; set; }
 
@@ -35,7 +35,7 @@ namespace SLReports
 
         public bool hasObjectives()
         {
-            if (this.Objectives.Count > 0)
+            if (this.Outcomes.Count > 0)
             {
                 return true;
             }
@@ -112,16 +112,16 @@ namespace SLReports
 
         public override string ToString()
         {
-            return "Class: { Name: " + this.name + ", ClassID: " + this.classid + ", CourseID: " + this.courseid + ", Block: " + this.blockNumber + ", Day: " + this.dayNumber + ", Has Objectives: " + this.Objectives.Count + ", IsHighSchool: " + LSKYCommon.boolToYesOrNo(this.isHighSchoolLevel()) + ", LowGrade: " + this.lowestGrade + ", HighGrade: " + this.highestGrade + ", Translated grade: " + this.getGradeLevel() + ", Grade Legend: " + this.gradeLegend + "}";
+            return "Class: { Name: " + this.name + ", ClassID: " + this.classid + ", CourseID: " + this.courseid + ", Block: " + this.blockNumber + ", Day: " + this.dayNumber + ", Has Objectives: " + this.Outcomes.Count + ", IsHighSchool: " + LSKYCommon.boolToYesOrNo(this.isHighSchoolLevel()) + ", LowGrade: " + this.lowestGrade + ", HighGrade: " + this.highestGrade + ", Translated grade: " + this.getGradeLevel() + ", Grade Legend: " + this.gradeLegend + "}";
         }
         
         /* This constructor should be removed and code relying on it should be redone */
         public SchoolClass(string name, int classid, int courseid)
         {
-            Objectives = new List<Outcome>();
+            Outcomes = new List<Outcome>();
             Marks = new List<Mark>();
             ReportPeriods = new List<ReportPeriod>();
-            ObjectiveMarks = new List<OutcomeMark>();
+            OutcomeMarks = new List<OutcomeMark>();
 
             this.name = name;
             this.classid = classid;
@@ -130,10 +130,10 @@ namespace SLReports
         
         public SchoolClass(string name, int classid, int courseid, string teacherFirst, string teacherLast, string teacherTitle, string schoolName, int blockNum, int dayNum, Track track, string lowestGrade, string highestGrade, string gradeLegendName)
         {
-            Objectives = new List<Outcome>();
+            Outcomes = new List<Outcome>();
             Marks = new List<Mark>();
             ReportPeriods = new List<ReportPeriod>();
-            ObjectiveMarks = new List<OutcomeMark>();
+            OutcomeMarks = new List<OutcomeMark>();
 
             this.name = name;
             this.classid = classid;

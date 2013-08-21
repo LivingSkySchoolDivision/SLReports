@@ -77,7 +77,13 @@ namespace SLReports
                 hasObjectiveAlso = true;
             }
 
-            return "ObjectiveMark: { ID: " + this.objectiveMarkID + ", Objective ID: " + this.objectiveID + ", nMark: " + this.nMark + ", cMark: " + this.cMark + ", Translated Mark: "+this.mark+", Report Period: " + this.reportPeriodID + ", HasObjectiveInfo: " + LSKYCommon.boolToYesOrNo(hasObjectiveAlso) + " }";
+            bool hasReportPeriod = false;
+            if (this.reportPeriod != null)
+            {
+                hasReportPeriod = true;
+            }
+
+            return "ObjectiveMark: { ID: " + this.objectiveMarkID + ", Objective ID: " + this.objectiveID + ", nMark: " + this.nMark + ", cMark: " + this.cMark + ", Translated Mark: "+this.mark+", Report Period: " + this.reportPeriodID + ", HasObjectiveInfo: " + LSKYCommon.boolToYesOrNo(hasObjectiveAlso) + " , HasReportPeriod: " + LSKYCommon.boolToYesOrNo(hasReportPeriod) + " }";
         }
 
         public static List<OutcomeMark> loadObjectiveMarksForThisCourse(SqlConnection connection, Term term, Student student, SchoolClass course)
