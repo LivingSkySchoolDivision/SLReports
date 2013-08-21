@@ -43,7 +43,8 @@ namespace SLReports
         private bool resideOnReserve;
         private int trackID;
         private bool bHasPhoto;
-        private object photo;        
+        private object photo;
+        public int creditsEarned { get; set; }
 
         public Track track { get; set; }
         public School school { get; set; }
@@ -272,7 +273,7 @@ namespace SLReports
 
         public override string ToString()
         {
-            return "Student: { DisplayName: " + getDisplayName() + ", ID: " + studentID + ", Grade: " + this.grade + "}";
+            return "Student: { DisplayName: " + getDisplayName() + ", ID: " + studentID + ", Grade: " + this.grade + ", Credits: " + this.creditsEarned + "}";
         }
 
         public string getHomeRoom()
@@ -280,56 +281,12 @@ namespace SLReports
             return this.HomeRoom;
         }
 
-        /*
-        public Student(string givenName, string sn, string middleName, string id, string govID, string schoolName, string schoolID,
-            string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
-            string phone, string gender, string instat, string instatcode, string homeRm, DateTime inDate, DateTime dateOfBirth, 
-            int trackid, bool hasPhoto, string ldapusername)
-        {
-            absences = new List<Absence>();
-            contacts = new List<Contact>();
-            
-            this.track = null;
-
-            this.givenName = givenName;
-            this.sn = sn;
-            this.studentID = id;
-            this.govID = govID;
-            this.middleName = middleName;
-            this.schoolName = schoolName;
-            this.schoolID = schoolID;
-            this.grade = grade;
-            this.region = region;
-            this.city = city;
-            this.street = street;
-            this.houseno = houseno;
-            this.apartmentno = apartmentno;
-            this.postalcode = postalcode;
-            this.phone = phone;
-            this.gender = gender;
-            this.InStatus = instat;
-            this.enrollmentDate = inDate;
-            this.dateOfBirth = dateOfBirth;
-
-            this.bandNo = string.Empty;
-            this.bandName = string.Empty;
-            this.reserveName = string.Empty;
-            this.reserveHouse = string.Empty;
-            this.treatyStatusNo = string.Empty;
-            this.resideOnReserve = false;
-
-            this.HomeRoom = homeRm;
-            this.trackID = trackid;
-            this.InStatusCode = instatcode;
-            this.bHasPhoto = hasPhoto;
-            this.LDAPUserName = ldapusername;
-        }
-        */
+        
         public Student(string givenName, string sn, string middleName, string id, string govID, string schoolName, string schoolID,
             string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
             string phone, string gender, string instat, string instatcode, string homeRm, DateTime inDate, DateTime dateOfBirth, 
             string bandNo, string bandName, string reserveName, string reserveHouse, string treatyStatus, bool resideonreserve,
-            int trackid, bool hasPhoto, string ldapusername)
+            int trackid, bool hasPhoto, string ldapusername, int credits)
         {
             absences = new List<Absence>();
             contacts = new List<Contact>();
@@ -364,6 +321,7 @@ namespace SLReports
             this.InStatusCode = instatcode;
             this.bHasPhoto = hasPhoto;
             this.LDAPUserName = ldapusername;
+            this.creditsEarned = credits;
         }
 
         public string getBandNo()
@@ -486,6 +444,11 @@ namespace SLReports
                         hasPhoto = true;
                     }
 
+                    double credits = 0;
+                    double.TryParse(dataReader["Credits"].ToString(), out credits);
+
+
+
                     returnMe = new Student(
                             dataReader["LegalFirstName"].ToString().Trim(),
                             dataReader["LegalLastName"].ToString().Trim(),
@@ -516,7 +479,8 @@ namespace SLReports
                             bool.Parse(dataReader["ResideOnReserve"].ToString()),
                             int.Parse(dataReader["TrackID"].ToString()),
                             hasPhoto,
-                            dataReader["cUserName"].ToString().Trim()
+                            dataReader["cUserName"].ToString().Trim(),
+                            (int)credits
                             );
                     //returnMe.setTrack(DateTime.Parse(dataReader["CurrentTrackStart"].ToString()), DateTime.Parse(dataReader["CurrentTrackEnd"].ToString()));
                 }
@@ -573,6 +537,9 @@ namespace SLReports
                         hasPhoto = true;
                     }
 
+                    int credits = 0;
+                    int.TryParse(dataReader["Credits"].ToString(), out credits);
+
                     returnMe.Add(new Student(
                             dataReader["LegalFirstName"].ToString().Trim(),
                             dataReader["LegalLastName"].ToString().Trim(),
@@ -603,7 +570,8 @@ namespace SLReports
                             bool.Parse(dataReader["ResideOnReserve"].ToString()),
                             int.Parse(dataReader["TrackID"].ToString()),
                             hasPhoto,
-                            dataReader["cUserName"].ToString().Trim()
+                            dataReader["cUserName"].ToString().Trim(),
+                            credits
                             ));
                 }
             }
@@ -650,6 +618,10 @@ namespace SLReports
                     {
                         hasPhoto = true;
                     }
+
+                    int credits = 0;
+                    int.TryParse(dataReader["Credits"].ToString(), out credits);
+
                     returnMe.Add(new Student(
                             dataReader["LegalFirstName"].ToString().Trim(),
                             dataReader["LegalLastName"].ToString().Trim(),
@@ -680,7 +652,8 @@ namespace SLReports
                             bool.Parse(dataReader["ResideOnReserve"].ToString()),
                             int.Parse(dataReader["TrackID"].ToString()),
                             hasPhoto,
-                            dataReader["cUserName"].ToString().Trim()
+                            dataReader["cUserName"].ToString().Trim(),
+                            credits
                             ));
                 }
             }
@@ -729,6 +702,9 @@ namespace SLReports
                         hasPhoto = true;
                     }
 
+                    int credits = 0;
+                    int.TryParse(dataReader["Credits"].ToString(), out credits);
+
                     Student newStudent = new Student(
                                 dataReader["LegalFirstName"].ToString(),
                                 dataReader["LegalLastName"].ToString(),
@@ -759,7 +735,8 @@ namespace SLReports
                                 bool.Parse(dataReader["ResideOnReserve"].ToString()),
                                 int.Parse(dataReader["TrackID"].ToString()),
                                 hasPhoto,
-                                dataReader["cUserName"].ToString().Trim()
+                                dataReader["cUserName"].ToString().Trim(),
+                                credits
                                 );
                     returnMe.Add(newStudent);
 

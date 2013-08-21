@@ -95,6 +95,8 @@ namespace SLReports.ReportCard
             stopwatch.Start();
 
             String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogic2013"].ConnectionString;
+            //String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {                
                 /* Debugging info */
@@ -103,21 +105,21 @@ namespace SLReports.ReportCard
                 /* McKitrick report periods for testing */
                 //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 266));
                 //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 267));
-                selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 268));
+                //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 268));
 
                 /* McKitrick students for testing */
                 //students.Add(Student.loadThisStudent(connection, "80451"));
                 //students.Add(Student.loadThisStudent(connection, "80891"));
 
-
                 /* NBCHS report periods for testing */
+                
                 selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 258));
                 selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 257));
-                selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 256));
-                selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 255));
-                selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 254));
-                selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 253));
-
+                //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 256));
+                //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 255));
+                //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 254));
+                //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 253));
+                
 
                 /* NBCHS students for testing */
                 students.Add(Student.loadThisStudent(connection, "12511"));
@@ -127,6 +129,24 @@ namespace SLReports.ReportCard
 
             Response.Write("<br><B>TIMER: </b> Loaded basic student data in: " + stopwatch.Elapsed);
             stopwatch.Reset();
+
+            Response.Write("<bR><b>Loaded report periods</b>");
+            foreach (ReportPeriod rp in selectedReportPeriods)
+            {
+                Response.Write("<BR>" + rp);
+                if (rp == null)
+                {
+                    Response.Write("<i>Null</i>");
+                }
+            }
+
+            Response.Write("<br><B>Loaded students</b>");
+
+            foreach (Student student in students)
+            {
+                Response.Write("<BR>" + student);
+            }
+            
             stopwatch.Start();
             
             selectedReportPeriods.Sort();
@@ -135,11 +155,14 @@ namespace SLReports.ReportCard
             {
                 foreach (Student student in students)
                 {
-                    Stopwatch studentStopWatch = new Stopwatch();
-                    studentStopWatch.Start();
-                    displayedStudents.Add(LSKYCommon.loadStudentMarkData(connection, student, selectedReportPeriods));
-                    studentStopWatch.Stop();
-                    Response.Write("<br>&nbsp;&nbsp;<B>TIMER: </b> Loaded data for student \"" + student.getDisplayName() + "\" in: " + studentStopWatch.Elapsed);
+                    if (student != null)
+                    {
+                        Stopwatch studentStopWatch = new Stopwatch();
+                        studentStopWatch.Start();
+                        displayedStudents.Add(LSKYCommon.loadStudentMarkData(connection, student, selectedReportPeriods));
+                        studentStopWatch.Stop();
+                        Response.Write("<br>&nbsp;&nbsp;<B>TIMER: </b> Loaded data for student \"" + student.getDisplayName() + "\" in: " + studentStopWatch.Elapsed);
+                    }
                 }
                 students.Clear();
             }

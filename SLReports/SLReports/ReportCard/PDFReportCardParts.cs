@@ -584,7 +584,7 @@ namespace SLReports.ReportCard
 
             if (student == null)
             {
-                student = new Student("John", "Smith", "J", "00000", "00000", "School Name", "00000", "Grade 15", "Saskatchewan", "North Battleford", "Fake St", "123", "", "H0H0H0", "3065551234", "Male", "Instatus", "Instatuscode", "Homeroom here", DateTime.Now.AddDays(-1), DateTime.Now, "000", "Band name", "Reserve Name", "House #", "000000", false, 000, false, "user.name");
+                student = new Student("John", "Smith", "J", "00000", "00000", "School Name", "00000", "Grade 15", "Saskatchewan", "North Battleford", "Fake St", "123", "", "H0H0H0", "3065551234", "Male", "Instatus", "Instatuscode", "Homeroom here", DateTime.Now.AddDays(-1), DateTime.Now, "000", "Band name", "Reserve Name", "House #", "000000", false, 000, false, "user.name", 900);
             }
 
             PdfPTable nameplateTable = new PdfPTable(3);
@@ -730,7 +730,7 @@ namespace SLReports.ReportCard
             attendanceTable.TotalWidth = 500;
             attendanceTable.LockedWidth = true;
             attendanceTable.SpacingAfter = 50;
-            attendanceTable.KeepTogether = true;
+            attendanceTable.KeepTogether = false;
 
             float[] tableWidths = new float[] { 1f, 6f, 2f, 2f, 2f };
             attendanceTable.SetWidths(tableWidths);
@@ -1007,6 +1007,7 @@ namespace SLReports.ReportCard
             newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
             newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
             newCell.Border = Rectangle.BOX;
+            newCell.PaddingBottom = 5;
             attendanceTable.AddCell(newCell);
 
             StringBuilder lateDisplay2 = new StringBuilder();
@@ -1021,6 +1022,7 @@ namespace SLReports.ReportCard
             newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
             newCell.Border = Rectangle.BOX;
+            newCell.PaddingBottom = 5;
             attendanceTable.AddCell(newCell);
 
 
@@ -1028,18 +1030,17 @@ namespace SLReports.ReportCard
             newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
             newCell.Border = Rectangle.BOX;
+            newCell.PaddingBottom = 5;
             attendanceTable.AddCell(newCell);
 
             newCell = new PdfPCell(new Phrase(totalUnexcused.ToString(), font_small));
             newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
             newCell.Border = Rectangle.BOX;
+            newCell.PaddingBottom = 5;
             attendanceTable.AddCell(newCell);
 
-
-
             return attendanceTable;
-
         }
 
         public static PdfPTable outcomeLegend(PdfContentByte content)
@@ -1325,26 +1326,23 @@ namespace SLReports.ReportCard
             if (outcome.category.ToLower() == normalObjectiveCategoryName.ToLower())
             {
                 if (outcome.marks.Count > 0)
-                {
-                    
+                {                    
                     PdfPCell objectiveMarksCell = new PdfPCell();
 
                     // Set up the description cell
-                    PdfPCell objectiveDescriptionCell = new PdfPCell(new Phrase(outcome.notes, font_body));
+                    PdfPCell objectiveDescriptionCell = new PdfPCell();
+                    objectiveDescriptionCell.AddElement(new Phrase(outcome.notes, font_small));
+                    objectiveDescriptionCell.AddElement(new Phrase(Chunk.NEWLINE));
                     objectiveDescriptionCell.Border = ObjectivesTableBorder;
                     objectiveDescriptionCell.Padding = 0;
                     objectiveDescriptionCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
                     objectiveDescriptionCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
-                    //objectiveDescriptionCell.Rowspan = objective.marks.Count;
 
                     // Set up the marks cell
                     PdfPTable marksTable = new PdfPTable(2);
                     marksTable.SpacingBefore = 5;
                     float[] marksTableWidths = new float[] { 2f, 1f };
                     marksTable.SetWidths(marksTableWidths);
-
-                    
-
 
                     foreach (OutcomeMark objectivemark in outcome.marks)
                     {
@@ -1360,8 +1358,6 @@ namespace SLReports.ReportCard
                             Temp_MarkCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
                             Temp_MarkCell.AddElement((displayOutcomeBar(content, objectivemark.cMark)));
                             markCell = Temp_MarkCell;
-
-                            //markCell.AddElement((displayOutcomeBar(content, objectivemark.cMark)));
                         }
                         else
                         {
@@ -1371,8 +1367,6 @@ namespace SLReports.ReportCard
                             Temp_ReportPeriodCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
                             Temp_ReportPeriodCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
                             markCell = Temp_ReportPeriodCell;
-
-                            //markCell.AddElement(new Phrase(Math.Round(objectivemark.nMark, 1) + "%", font_body_bold));
                         }
 
                         // Display the report period
@@ -1386,8 +1380,6 @@ namespace SLReports.ReportCard
                         marksTable.AddCell(markCell);
                         marksTable.AddCell(reportPeriodCell);
                     }
-                    
-
 
                     objectiveMarksCell.Border = ObjectivesTableBorder;
                     objectiveMarksCell.Padding = 0;
@@ -1395,7 +1387,7 @@ namespace SLReports.ReportCard
 
                     // Build the final table to return
                     objectiveChunkTable.KeepTogether = false;
-                    float[] objectivesTableWidths = new float[] { 0.25f, 3.25f, 2.5f };
+                    float[] objectivesTableWidths = new float[] { 0.10f, 3.65f, 2.75f };
 
                     objectiveChunkTable.AddCell(bufferCell);
                     objectiveChunkTable.AddCell(objectiveDescriptionCell);
@@ -1403,9 +1395,7 @@ namespace SLReports.ReportCard
                     //objectiveChunkTable.AddCell(marksTable);
 
                     objectiveChunkTable.SetWidths(objectivesTableWidths); 
-
-                }  
-                     
+                }                       
             }
 
             // Encapsulate the table in a cell object and return it
@@ -1423,7 +1413,6 @@ namespace SLReports.ReportCard
             string lifeSkillsCategoryName = "Successful Learner Behaviours";
 
             int lifeSkillsTableBorder = 0;
-
 
             PdfPCell bufferCell = new PdfPCell(new Phrase(""));
             bufferCell.Border = lifeSkillsTableBorder;
@@ -1451,7 +1440,6 @@ namespace SLReports.ReportCard
                 List<string> reportPeriodNames = new List<string>();
                 foreach (Outcome objective in lifeSkillsObjectives)
                 {
-
                     // Figure out life skills names and how many to display
                     if (!lifeSkillsNames.Contains(objective.subject))
                     {
@@ -1567,7 +1555,7 @@ namespace SLReports.ReportCard
                 cellStyle.Border = lifeSkillsTableBorder;
 
                 PdfPTable tableContainer = new PdfPTable(2);
-                float[] tableContainer_Widths = new float[] { 0.25f, 5.75f };
+                float[] tableContainer_Widths = new float[] { 0.10f, 6.4f };
                 tableContainer.SetWidths(tableContainer_Widths);
 
                 tableContainer.AddCell(bufferCell);
@@ -1631,7 +1619,7 @@ namespace SLReports.ReportCard
             classTable.TotalWidth = 500f;
             classTable.LockedWidth = true;
             //classTable.SpacingAfter = 35;
-            classTable.KeepTogether = true;
+            classTable.KeepTogether = false;
 
 
             float[] widths = new float[] { 2f, 1f };
@@ -1885,7 +1873,7 @@ namespace SLReports.ReportCard
             if (hasComments)
             {
                 Paragraph commentTitleParagraph = new Paragraph();
-                commentTitleParagraph.Add(new Phrase("Comments:\n", font_body_bold));
+                commentTitleParagraph.Add(new Phrase("\nComments:\n", font_body_bold));
 
                 PdfPCell commentTitleCell = new PdfPCell(commentTitleParagraph);
                 commentTitleCell.Border = 0;

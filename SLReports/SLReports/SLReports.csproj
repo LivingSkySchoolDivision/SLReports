@@ -115,6 +115,8 @@
     <Content Include="Public\generalXML.aspx" />
     <Content Include="ReportCard\Grade_Term_PDF.aspx" />
     <Content Include="ReportCard\index.aspx" />
+    <Content Include="ReportCard\ReportCard_ByGrade.aspx" />
+    <Content Include="ReportCard\ReportCard_ByStudent.aspx" />
     <Content Include="Staff\index.aspx" />
     <Content Include="StudentDiscrepancy\index.aspx" />
     <Content Include="StudentList\getCSV.aspx" />
@@ -259,6 +261,20 @@
     </Compile>
     <Compile Include="ReportCard\LifeSkillsLegendItem.cs" />
     <Compile Include="ReportCard\PDFReportCardParts.cs" />
+    <Compile Include="ReportCard\ReportCard_ByGrade.aspx.cs">
+      <DependentUpon>ReportCard_ByGrade.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportCard\ReportCard_ByGrade.aspx.designer.cs">
+      <DependentUpon>ReportCard_ByGrade.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ReportCard\ReportCard_ByStudent.aspx.cs">
+      <DependentUpon>ReportCard_ByStudent.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportCard\ReportCard_ByStudent.aspx.designer.cs">
+      <DependentUpon>ReportCard_ByStudent.aspx</DependentUpon>
+    </Compile>
     <Compile Include="SchoolClass.cs" />
     <Compile Include="Courses\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>

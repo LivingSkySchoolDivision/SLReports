@@ -152,12 +152,9 @@ namespace SLReports
             return returnMe.ToString();
         }
 
-        public static Student loadStudentMarkData(SqlConnection connection, Student thisStudent, List<ReportPeriod> reportPeriods)
+        public static Student loadStudentMarkData(SqlConnection connection, Student thisStudent, List<ReportPeriod> theseReportPeriods)
         {
-            /*
-             * Yes, this is really stupid and complicated, but it has to be beacuse of how data is organized in the schoollogic database.              
-             * This function attempts to translate the data into a structure that makes more sense
-             * */
+            Student returnedStudent = thisStudent;
 
             /* Find the earliest report period and the last report period, for attendance dates */
             DateTime earliestDate = DateTime.MaxValue;
@@ -165,9 +162,19 @@ namespace SLReports
 
             List<int> detectedTermIDs = new List<int>();
             List<int> selectedReportPeriodIDs = new List<int>();
+            List<ReportPeriod> reportPeriods = new List<ReportPeriod>();
 
-            foreach (ReportPeriod rp in reportPeriods)
+            /* Validate report periods so we aren't working with nulls */
+            foreach (ReportPeriod rp in theseReportPeriods)
             {
+                if (rp != null)
+                {
+                    reportPeriods.Add(rp);
+                }
+            }
+            
+            foreach (ReportPeriod rp in reportPeriods)
+            {                
                 /* Create a list of loaded report period IDs for later use */
                 if (!selectedReportPeriodIDs.Contains(rp.ID))
                 {
@@ -190,6 +197,7 @@ namespace SLReports
                 {
                     detectedTermIDs.Add(rp.termID);
                 }
+                
             }
 
             /* Derive some terms from the given report periods while we are cycling through them */
@@ -223,20 +231,20 @@ namespace SLReports
             } 
 
 
-            Student student = thisStudent;
-            if (student != null)
+            
+            if (returnedStudent != null)
             {
-                student.school = School.loadThisSchool(connection, thisStudent.getSchoolIDAsInt());
-                student.track = Track.loadThisTrack(connection, student.getTrackID());
-                student.track.terms = detectedTerms;
+                returnedStudent.school = School.loadThisSchool(connection, thisStudent.getSchoolIDAsInt());
+                returnedStudent.track = Track.loadThisTrack(connection, returnedStudent.getTrackID());
+                returnedStudent.track.terms = detectedTerms;
 
                 /* Load attendance */
-                student.absences = Absence.loadAbsencesForThisStudentAndTimePeriod(connection, thisStudent, earliestDate, lastDate);
+                returnedStudent.absences = Absence.loadAbsencesForThisStudentAndTimePeriod(connection, thisStudent, earliestDate, lastDate);
                 
-                foreach (Term thisTerm in student.track.terms)
+                foreach (Term thisTerm in returnedStudent.track.terms)
                 {
                     /* Load enrolled classes */
-                    thisTerm.Courses = SchoolClass.loadStudentEnrolledClasses(connection, student, thisTerm);
+                    thisTerm.Courses = SchoolClass.loadStudentEnrolledClasses(connection, returnedStudent, thisTerm);
 
                     foreach (SchoolClass thisClass in thisTerm.Courses)
                     {
@@ -249,7 +257,7 @@ namespace SLReports
                         /* Load objectives and objective marks */
                         thisClass.Outcomes = Outcome.loadObjectivesForThisCourse(connection, thisClass);
 
-                        List<OutcomeMark> AllOutcomeMarksForThisCourse = OutcomeMark.loadObjectiveMarksForThisCourse(connection, thisTerm, student, thisClass);
+                        List<OutcomeMark> AllOutcomeMarksForThisCourse = OutcomeMark.loadObjectiveMarksForThisCourse(connection, thisTerm, returnedStudent, thisClass);
 
                         /* Filter out objectivemarks for report periods that we don't care about */
                         foreach (OutcomeMark om in AllOutcomeMarksForThisCourse) 
@@ -301,7 +309,7 @@ namespace SLReports
 
                     foreach (ReportPeriod thisReportPeriod in thisTerm.ReportPeriods)
                     {
-                        thisReportPeriod.marks = Mark.loadMarksFromThisReportPeriod(connection, thisReportPeriod, student);
+                        thisReportPeriod.marks = Mark.loadMarksFromThisReportPeriod(connection, thisReportPeriod, returnedStudent);
                         foreach (Mark m in thisReportPeriod.marks)
                         {
                             allMarks.Add(m);
@@ -323,7 +331,7 @@ namespace SLReports
 
             }
 
-            return student;
+            return returnedStudent;
         }
 
         public static int parseInt(string thisString)
