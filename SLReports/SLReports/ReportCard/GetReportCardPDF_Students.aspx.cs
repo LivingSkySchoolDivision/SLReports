@@ -14,7 +14,7 @@ using System.Web.UI.WebControls;
 
 namespace SLReports.ReportCard
 {
-    public partial class Grade_Term_PDF : System.Web.UI.Page
+    public partial class GetReportCardPDF_Students : System.Web.UI.Page
     {
         
         protected void sendPDF(System.IO.MemoryStream PDFData, string filename)

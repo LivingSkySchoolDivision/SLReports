@@ -127,7 +127,7 @@ namespace SLReports.Attendance
                     {
                         ListItem newItem = new ListItem();
                         newItem.Text = school.getName();
-                        newItem.Value = school.getGovID();
+                        newItem.Value = school.getGovIDAsString();
                         drpSchoolList.Items.Add(newItem);
                     }
                 }

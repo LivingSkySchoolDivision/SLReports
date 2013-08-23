@@ -113,10 +113,11 @@
     <Content Include="Photos\index.aspx" />
     <Content Include="Public\generalJSON.aspx" />
     <Content Include="Public\generalXML.aspx" />
-    <Content Include="ReportCard\Grade_Term_PDF.aspx" />
+    <Content Include="ReportCard\GetReportCardPDF_Students.aspx" />
     <Content Include="ReportCard\index.aspx" />
     <Content Include="ReportCard\ReportCard_ByGrade.aspx" />
     <Content Include="ReportCard\ReportCard_ByStudent.aspx" />
+    <Content Include="ReportCard\ReportCard_Demo.aspx" />
     <Content Include="Staff\index.aspx" />
     <Content Include="StudentDiscrepancy\index.aspx" />
     <Content Include="StudentList\getCSV.aspx" />
@@ -252,12 +253,12 @@
     <Compile Include="Outcomes\OutcomesCSV.aspx.designer.cs">
       <DependentUpon>OutcomesCSV.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ReportCard\Grade_Term_PDF.aspx.cs">
-      <DependentUpon>Grade_Term_PDF.aspx</DependentUpon>
+    <Compile Include="ReportCard\GetReportCardPDF_Students.aspx.cs">
+      <DependentUpon>GetReportCardPDF_Students.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="ReportCard\Grade_Term_PDF.aspx.designer.cs">
-      <DependentUpon>Grade_Term_PDF.aspx</DependentUpon>
+    <Compile Include="ReportCard\GetReportCardPDF_Students.aspx.designer.cs">
+      <DependentUpon>GetReportCardPDF_Students.aspx</DependentUpon>
     </Compile>
     <Compile Include="ReportCard\LifeSkillsLegendItem.cs" />
     <Compile Include="ReportCard\PDFReportCardParts.cs" />
@@ -274,6 +275,13 @@
     </Compile>
     <Compile Include="ReportCard\ReportCard_ByStudent.aspx.designer.cs">
       <DependentUpon>ReportCard_ByStudent.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ReportCard\ReportCard_Demo.aspx.cs">
+      <DependentUpon>ReportCard_Demo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportCard\ReportCard_Demo.aspx.designer.cs">
+      <DependentUpon>ReportCard_Demo.aspx</DependentUpon>
     </Compile>
     <Compile Include="SchoolClass.cs" />
     <Compile Include="Courses\index.aspx.cs">

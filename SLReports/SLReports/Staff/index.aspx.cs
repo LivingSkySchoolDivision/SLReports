@@ -81,7 +81,7 @@ namespace SLReports.Staff
 
             foreach (StaffMember staff in allStaff)
             {
-                if (staff.schoolID == int.Parse(school.getGovID()))
+                if (staff.schoolID == int.Parse(school.getGovIDAsString()))
                 {
                     newTable.Rows.Add(addStaffTableRow(staff));
                 }

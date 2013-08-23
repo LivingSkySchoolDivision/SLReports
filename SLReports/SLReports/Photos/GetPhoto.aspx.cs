@@ -170,44 +170,52 @@ namespace SLReports.Photos
 
             string StudNum = Request.QueryString["studentnumber"];
 
-            if (!string.IsNullOrEmpty(StudNum))
+            if ((StudNum.ToLower() == "blank") || (StudNum.ToLower() == "demo"))
             {
-                String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
-                using (SqlConnection connection = new SqlConnection(dbConnectionString))
+
+                if (!string.IsNullOrEmpty(StudNum))
                 {
-                    SqlCommand sqlCommand = new SqlCommand();
-                    sqlCommand.Connection = connection;
-                    sqlCommand.CommandType = CommandType.Text;
-                    sqlCommand.CommandText = "SELECT Photo, PhotoType FROM LSKY_ActiveStudents WHERE StudentNumber=@StudNum";
-                    sqlCommand.Parameters.AddWithValue("@StudNum", StudNum);
-                    sqlCommand.Connection.Open();
-
-                    SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
-
-                    if (dbDataReader.HasRows)
+                    String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+                    using (SqlConnection connection = new SqlConnection(dbConnectionString))
                     {
-                        if (dbDataReader.Read())
+                        SqlCommand sqlCommand = new SqlCommand();
+                        sqlCommand.Connection = connection;
+                        sqlCommand.CommandType = CommandType.Text;
+                        sqlCommand.CommandText = "SELECT Photo, PhotoType FROM LSKY_ActiveStudents WHERE StudentNumber=@StudNum";
+                        sqlCommand.Parameters.AddWithValue("@StudNum", StudNum);
+                        sqlCommand.Connection.Open();
+
+                        SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
+
+                        if (dbDataReader.HasRows)
                         {
-                            if ((dbDataReader["Photo"] != null) && !string.IsNullOrEmpty(dbDataReader["PhotoType"].ToString()))
+                            if (dbDataReader.Read())
                             {
-                                displayPhoto((byte[])dbDataReader["Photo"], dbDataReader["PhotoType"].ToString());
-                            }
-                            else
-                            {
-                                displayPhoto(createBlankPhoto("Student has no photo"), "image/png");                    
+                                if ((dbDataReader["Photo"] != null) && !string.IsNullOrEmpty(dbDataReader["PhotoType"].ToString()))
+                                {
+                                    displayPhoto((byte[])dbDataReader["Photo"], dbDataReader["PhotoType"].ToString());
+                                }
+                                else
+                                {
+                                    displayPhoto(createBlankPhoto("Student has no photo"), "image/png");
+                                }
                             }
                         }
-                    }
-                    else 
-                    {
-                        displayPhoto(createBlankPhoto("Student not found"), "image/png");                    
-                    }
+                        else
+                        {
+                            displayPhoto(createBlankPhoto("Student not found"), "image/png");
+                        }
 
+                    }
+                }
+                else
+                {
+                    displayPhoto(createBlankPhoto("No student specified"), "image/png");
                 }
             }
             else
             {
-                displayPhoto(createBlankPhoto("No student specified"), "image/png");
+                displayPhoto(createBlankPhoto("No Photo"), "image/png");
             }
 
         }

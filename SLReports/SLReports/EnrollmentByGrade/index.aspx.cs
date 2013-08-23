@@ -118,7 +118,7 @@ namespace SLReports.DivisionStats
             foreach (School school in schools)
             {
                 Dictionary<String, int> gradeEnrollment = new Dictionary<string, int>();
-                List<Student> thisSchoolsStudents = Student.GetStudentsFromSchool(students, school.getGovID());                
+                List<Student> thisSchoolsStudents = Student.GetStudentsFromSchool(students, school.getGovIDAsString());                
                 int numMale = 0;
                 int numFemale = 0;
                 foreach (Student student in thisSchoolsStudents)

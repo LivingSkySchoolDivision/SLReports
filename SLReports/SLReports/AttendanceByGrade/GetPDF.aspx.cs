@@ -71,7 +71,7 @@ namespace SLReports.AttendanceByGrade
                                 using (SqlConnection connection = new SqlConnection(dbConnectionString))
                                 {
                                     /* Get list of all students at school */
-                                    AllStudentsAtThisSchool = Student.loadStudentsFromThisSchool(connection, int.Parse(SelectedSchool.getGovID()));
+                                    AllStudentsAtThisSchool = Student.loadStudentsFromThisSchool(connection, int.Parse(SelectedSchool.getGovIDAsString()));
                                 }
 
                                 /* Filter out only the specified grade */

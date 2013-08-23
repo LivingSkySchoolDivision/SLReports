@@ -5,6 +5,7 @@
     <form id="Form1" runat="server">
     <div class="noPrint">
         <h1>Report Cards</h1>  
+        <!--
         <table>
             <tr>
                 <td width="50%">
@@ -15,8 +16,9 @@
                 </td>
             </tr>
         </table>         
-                
-        <p style="font-size: 14pt; padding: 10px; background-color: yellow; border: 5px solid red; font-weight: bold;">Click <a href="Grade_Term_PDF.aspx">here</a> to generate the test PDF, or <a href="Grade_Term_PDF.aspx?debug=true">here</a> to see it in debug mode.</p>        
+          -->    
+        <p style="font-size: 16pt;">Click <a href="ReportCard_Demo.aspx">here</a> to generate an anonymized demo PDF, or <a href="GetReportCardPDF_Students.aspx?debug=true">here</a> to see it in debug mode.</p>        
+        
     </div>              
     </form>
 </asp:Content>

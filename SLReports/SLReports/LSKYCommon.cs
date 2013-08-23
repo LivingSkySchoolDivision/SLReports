@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
@@ -14,6 +15,10 @@ namespace SLReports
         public static string internal_api_key = "6b05cb5705c07a4ca23a6bba779263ab983a5ae2";
         public static string userGroupName = "SchoolLogicDataExplorerUsers";
         public static string adminGroupName = "SchoolLogicDataExplorerAdmins";
+
+        public static string dbConnectionString_SchoolLogic = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+        public static string dbConnectionString_OldSchoolLogic = ConfigurationManager.ConnectionStrings["SchoolLogic2013"].ConnectionString;
+        public static string dbConnectionString_DataExplorer = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString;
         
         public static string boolToTrueFalse(bool thisBool)
         {

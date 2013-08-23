@@ -108,7 +108,7 @@ namespace SLReports.StudentList
                             /* Load students */
                             List<Student> displayedStudents = new List<Student>();
 
-                            displayedStudents = Student.loadStudentsFromThisSchool(connection, int.Parse(selectedSchool.getGovID()));
+                            displayedStudents = Student.loadStudentsFromThisSchool(connection, int.Parse(selectedSchool.getGovIDAsString()));
 
                             /* Create the CSV */
                             if (displayedStudents.Count > 0)

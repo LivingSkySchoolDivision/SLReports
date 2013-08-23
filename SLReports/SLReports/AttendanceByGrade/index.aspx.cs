@@ -30,7 +30,7 @@ namespace SLReports.AttendanceByGrade
             {
                 ListItem newItem = new ListItem();
                 newItem.Text = school.getName();
-                newItem.Value = school.getGovID();
+                newItem.Value = school.getGovIDAsString();
                 drpSchoolList.Items.Add(newItem);
             }
             
@@ -50,7 +50,7 @@ namespace SLReports.AttendanceByGrade
                 SelectedSchool = School.loadThisSchool(connection, int.Parse(drpSchoolList.SelectedValue));
 
                 /* Load all students for this school */
-                SchoolStudents = Student.loadStudentsFromThisSchool(connection, int.Parse(SelectedSchool.getGovID()));
+                SchoolStudents = Student.loadStudentsFromThisSchool(connection, int.Parse(SelectedSchool.getGovIDAsString()));
             }
 
             List<String> availableGrades = new List<String>();
@@ -93,7 +93,7 @@ namespace SLReports.AttendanceByGrade
                 SelectedSchool = School.loadThisSchool(connection, int.Parse(drpSchoolList.SelectedValue));
 
                 /* Load all students for this school */
-                SchoolStudents = Student.loadStudentsFromThisSchool(connection, int.Parse(SelectedSchool.getGovID()));
+                SchoolStudents = Student.loadStudentsFromThisSchool(connection, int.Parse(SelectedSchool.getGovIDAsString()));
             }
 
             /* Get the selected grade */
@@ -176,7 +176,7 @@ namespace SLReports.AttendanceByGrade
                 SelectedSchool = School.loadThisSchool(connection, int.Parse(drpSchoolList.SelectedValue));
 
                 /* Load all students for this school */
-                SchoolStudents = Student.loadStudentsFromThisSchool(connection, int.Parse(SelectedSchool.getGovID()));
+                SchoolStudents = Student.loadStudentsFromThisSchool(connection, int.Parse(SelectedSchool.getGovIDAsString()));
             }
 
             selectedGrade = drpGradeList.SelectedValue;
@@ -186,7 +186,7 @@ namespace SLReports.AttendanceByGrade
             DateTime Date_To = new DateTime(int.Parse(to_Year.SelectedValue), int.Parse(to_Month.SelectedValue), int.Parse(to_Day.SelectedValue));
 
             /* Load the next page */
-            Response.Redirect(@"/SLReports/AttendanceByGrade/GetPDF.aspx?schoolid=" + SelectedSchool.getGovID() + "&grade=" + selectedGrade + "&from_date=" + Date_From.ToString() + "&to_date=" + Date_To.ToString());
+            Response.Redirect(@"/SLReports/AttendanceByGrade/GetPDF.aspx?schoolid=" + SelectedSchool.getGovIDAsString() + "&grade=" + selectedGrade + "&from_date=" + Date_From.ToString() + "&to_date=" + Date_To.ToString());
 
 
 

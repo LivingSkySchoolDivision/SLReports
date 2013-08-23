@@ -28,7 +28,17 @@ namespace SLReports
             return this.schoolLogicID;
         }
 
-        public string getGovID()
+        public int getGovID()
+        {
+            int returnMe = -1;
+            if (int.TryParse(this.govID, out returnMe))
+            {
+                return returnMe;
+            }
+            return -1;
+        }
+
+        public string getGovIDAsString()
         {
             return this.govID;
         }

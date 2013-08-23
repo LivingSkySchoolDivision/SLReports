@@ -210,7 +210,7 @@ namespace SLReports.INAC
                 {
                     ListItem newLI = new ListItem();
                     newLI.Text = school.getName();
-                    newLI.Value = school.getGovID();
+                    newLI.Value = school.getGovIDAsString();
                     lstSchoolList.Items.Add(newLI);
                 }
                 #endregion
@@ -221,7 +221,7 @@ namespace SLReports.INAC
                 #region Parse the selected school
                 foreach (School school in AllSchools)
                 {
-                    if (lstSchoolList.SelectedItem.Value == school.getGovID())
+                    if (lstSchoolList.SelectedItem.Value == school.getGovIDAsString())
                     {
                         selectedSchool = school;
                     }
@@ -262,7 +262,7 @@ namespace SLReports.INAC
                             tblResults.Visible = true;
 
                             lnkCSVDownload.Visible = true;
-                            lnkCSVDownload.NavigateUrl = "INAC_CSV.aspx?schoolid=" + selectedSchool.getGovID() + "&from_year=" + startDate.Year + "&from_month=" + startDate.Month + "&from_day=" + startDate.Day + "&to_year=" + endDate.Year + "&to_month=" + endDate.Month + "&to_day=" + endDate.Day;
+                            lnkCSVDownload.NavigateUrl = "INAC_CSV.aspx?schoolid=" + selectedSchool.getGovIDAsString() + "&from_year=" + startDate.Year + "&from_month=" + startDate.Month + "&from_day=" + startDate.Day + "&to_year=" + endDate.Year + "&to_month=" + endDate.Month + "&to_day=" + endDate.Day;
                         }
                         
                         foreach (Student student in DisplayedStudents)

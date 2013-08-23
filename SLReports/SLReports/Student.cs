@@ -670,7 +670,7 @@ namespace SLReports
             sqlCommand.Connection = connection;
             sqlCommand.CommandType = CommandType.Text;
             sqlCommand.CommandText = "SELECT * FROM LSKY_ActiveStudents WHERE ResideOnReserve=1 AND SchoolID=@SchoolID ORDER BY SchoolID ASC, Grade ASC;";
-            sqlCommand.Parameters.AddWithValue("@SchoolID", school.getGovID());
+            sqlCommand.Parameters.AddWithValue("@SchoolID", school.getGovIDAsString());
             sqlCommand.Connection.Open();
             SqlDataReader dataReader = sqlCommand.ExecuteReader();
 

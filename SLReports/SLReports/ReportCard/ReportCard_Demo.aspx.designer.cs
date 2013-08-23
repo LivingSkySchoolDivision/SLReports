@@ -11,7 +11,7 @@ namespace SLReports.ReportCard
 {
 
 
-    public partial class Grade_Term_PDF
+    public partial class ReportCard_Demo
     {
     }
 }

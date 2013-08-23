@@ -29,8 +29,8 @@ namespace SLReports.StudentList
                     //Response.Write("<OPTION VALUE=\"\">All Schools</OPTION>");
                     foreach (School school in schools)
                     {
-                        Response.Write("<OPTION VALUE=\"" + school.getGovID() + "\"");
-                        if (filterSchoolID == school.getGovID())
+                        Response.Write("<OPTION VALUE=\"" + school.getGovIDAsString() + "\"");
+                        if (filterSchoolID == school.getGovIDAsString())
                         {
                             Response.Write(" SELECTED=\"SELECTED\"");
                         }

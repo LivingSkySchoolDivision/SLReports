@@ -133,7 +133,47 @@ namespace SLReports
                             newTrack.school = school;
                         }
                     }
-                    
+
+                    returnMe.Add(newTrack);
+                }
+
+            }
+
+            sqlCommand.Connection.Close();
+            return returnMe;
+        }
+
+        public static List<Track> loadAllTracksFromThisSchool(SqlConnection connection, School thisSchool)
+        {
+            List<Track> returnMe = new List<Track>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM Track WHERE iSchoolID=@SCHOOL ORDER BY iSchoolID ASC, cName ASC;";
+            sqlCommand.Parameters.AddWithValue("@SCHOOL", thisSchool.getSchoolLogicID());
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    Track newTrack = new Track(
+                            int.Parse(dataReader["iTrackID"].ToString().Trim()),
+                            dataReader["cName"].ToString().Trim(),
+                            DateTime.Parse(dataReader["dStartDate"].ToString()),
+                            DateTime.Parse(dataReader["dEndDate"].ToString()),
+                            int.Parse(dataReader["iSchoolID"].ToString().Trim()),
+                            bool.Parse(dataReader["lDaily"].ToString().Trim()),
+                            dataReader["cCode"].ToString().Trim(),
+                            int.Parse(dataReader["iDaysInCycle"].ToString().Trim()),
+                            int.Parse(dataReader["iBlocksPerDay"].ToString().Trim()),
+                            int.Parse(dataReader["iDailyBlocksPerDay"].ToString().Trim())
+                            );
+
+                    newTrack.school = thisSchool;
+
                     returnMe.Add(newTrack);
                 }
 
