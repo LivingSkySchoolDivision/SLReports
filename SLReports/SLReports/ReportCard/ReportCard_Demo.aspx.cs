@@ -15,8 +15,7 @@ namespace SLReports.ReportCard
 {
     public partial class ReportCard_Demo : System.Web.UI.Page
     {
-        string dbConnectionString = LSKYCommon.dbConnectionString_OldSchoolLogic;
-
+        string dbConnectionString = LSKYCommon.dbConnectionString_OldSchoolLogic;       
 
         protected void sendPDF(System.IO.MemoryStream PDFData, string filename)
         {
@@ -44,39 +43,45 @@ namespace SLReports.ReportCard
         {
             List<Student> students = new List<Student>();
             List<Student> displayedStudents = new List<Student>();
-
             List<ReportPeriod> selectedReportPeriods = new List<ReportPeriod>();
 
-            //String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
+            bool anonymize = false;
+            if (!string.IsNullOrEmpty(Request.QueryString["anon"]))
+            {
+                anonymize = true;
+            }
+            
 
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
-                /* Debugging info */
-                //selectedTerm = Term.loadThisTerm(connection, 20);
+                // Parse student IDs
+                if (!string.IsNullOrEmpty(Request.QueryString["students"]))
+                {
 
-                /* McKitrick report periods for testing */
-                //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 266));
-                //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 267));
-                //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 268));
+                    foreach (string student in Request.QueryString["students"].Split(';'))
+                    {
+                        if (!string.IsNullOrEmpty(student))
+                        {
+                            int student_id = -1;
+                            if (int.TryParse(student, out student_id))
+                            {
+                                students.Add(Student.loadThisStudent(connection, student_id.ToString()));
+                            }
+                        }
+                    }
 
-                /* McKitrick students for testing */
-                //students.Add(Student.loadThisStudent(connection, "80451"));
-                //students.Add(Student.loadThisStudent(connection, "80891"));
-
-                /* NBCHS report periods for testing */
-
-                selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 258));
-                selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 257));
-                //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 256));
-                //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 255));
-                //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 254));
-                //selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, 253));
-
-
-                /* NBCHS students for testing */
-                students.Add(Student.loadThisStudent(connection, "12511"));
-                //students.Add(Student.loadThisStudent(connection, "11871"));
-                students.Add(Student.loadThisStudent(connection, "11804"));
+                    foreach (string rp in Request.QueryString["reportperiods"].Split(';'))
+                    {
+                        if (!string.IsNullOrEmpty(rp))
+                        {
+                            int rp_id = -1;
+                            if (int.TryParse(rp, out rp_id))
+                            {
+                                selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, rp_id));
+                            }                            
+                        }
+                    }
+                }
             }
             
             selectedReportPeriods.Sort();
@@ -95,13 +100,15 @@ namespace SLReports.ReportCard
                 }
                 students.Clear();
             }
-            
+
+            anonymize = true;
             String selectedGrade = "DEMO";
             String fileName = "ReportCards_" + selectedGrade + "_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
-            sendPDF(PDFReportCardParts.GeneratePDF(displayedStudents, true), fileName);
-            
 
-
+            if ((selectedReportPeriods.Count > 0) && (displayedStudents.Count > 0))
+            {
+                sendPDF(PDFReportCardParts.GeneratePDF(displayedStudents, anonymize), fileName);
+            }
         }
     }
 }

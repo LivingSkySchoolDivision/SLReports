@@ -42,14 +42,22 @@ namespace SLReports.ReportCard
 
         // Bar Colors
         private static BaseColor color_neutral = new BaseColor(70, 70, 70);
+        private static BaseColor color_text_neutral = new BaseColor(255, 255, 255);
+
+
         private static BaseColor color_low = new BaseColor(255, 51, 0); // Red
+        private static BaseColor color_text_low = new BaseColor(255, 255, 255);
+
         //private static BaseColor color_medium = new BaseColor(255, 119, 0); // Orange
-        private static BaseColor color_medium = new BaseColor(255, 255, 0); // Yellow
+        private static BaseColor color_medium = new BaseColor(255, 255, 50); // Yellow
+        private static BaseColor color_text_medium = new BaseColor(0, 0, 0);
 
         private static BaseColor color_high = new BaseColor(0, 128, 0); // Green
-        private static BaseColor color_max = color_high;
-            
+        private static BaseColor color_text_high = new BaseColor(255, 255, 255);
 
+        private static BaseColor color_max = color_high;
+        private static BaseColor color_text_max = color_text_high;
+            
         #region Outcome Bar Styles
         public static iTextSharp.text.Image outcomeBar_Original(PdfContentByte content, String value)
         {
@@ -367,18 +375,22 @@ namespace SLReports.ReportCard
                 if (parsedValue <= 1)
                 {
                     fillColor = color_low;
+                    textColor = color_text_low;
                 }
                 else if (parsedValue <= 2.25)
                 {
                     fillColor = color_medium;
+                    textColor = color_text_medium;
                 }
                 else if (parsedValue <= 3.5)
                 {
                     fillColor = color_high;
+                    textColor = color_text_high;
                 }
                 else if (parsedValue <= 4)
                 {
                     fillColor = color_max;
+                    textColor = color_text_max;
                 }
 
                 /* Fill */
@@ -1303,8 +1315,7 @@ namespace SLReports.ReportCard
         {
             // Interesting note: If you add an element to a cell in the constructor it aligns differnetly than if you add it as an element
 
-            //string normalObjectiveCategoryName = "Outcome";
-            string normalObjectiveCategoryName = "";
+            string normalObjectiveCategoryName = "Outcome";           
 
             int ObjectivesTableBorder = 0;
             PdfPTable objectiveChunkTable = new PdfPTable(3);
@@ -1315,7 +1326,10 @@ namespace SLReports.ReportCard
             // TODO: This may need to check for the exact name, but that doesn't exist in the data yet 
             // Currently normal objectives don't have a category, and "life skills" objectives do have a category
 
-            if (outcome.category.ToLower() == normalObjectiveCategoryName.ToLower())
+            if (
+                (outcome.category.ToLower() == normalObjectiveCategoryName.ToLower()) ||
+                (outcome.category.ToLower() == "")
+                )
             {
                 if (outcome.marks.Count > 0)
                 {                    
@@ -1328,7 +1342,7 @@ namespace SLReports.ReportCard
 
                     if (outcome.notes.Length > 100)
                     {
-                        outcomeDescription = outcome.notes.Substring(0, 97) + "...";
+                        outcomeDescription = outcome.notes.Substring(0, 100);
 
                     }
 
@@ -1362,12 +1376,29 @@ namespace SLReports.ReportCard
                         }
                         else
                         {
-                            PdfPCell Temp_ReportPeriodCell = new PdfPCell(new Phrase(Math.Round(objectivemark.nMark, 0) + "%", font_body_bold));
-                            Temp_ReportPeriodCell.Border = ObjectivesTableBorder;
-                            Temp_ReportPeriodCell.Padding = 0;
-                            Temp_ReportPeriodCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-                            Temp_ReportPeriodCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
-                            markCell = Temp_ReportPeriodCell;
+                            // If the numeric mark is between 0 and 4, assume that is it an outcome and display the bar
+                            if (
+                                (objectivemark.nMark <= 0) &&
+                                (objectivemark.nMark >= 4)
+                                )
+                            {
+                                PdfPCell Temp_MarkCell = new PdfPCell();
+                                Temp_MarkCell.Border = ObjectivesTableBorder;
+                                Temp_MarkCell.Padding = 0;
+                                Temp_MarkCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
+                                Temp_MarkCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+                                Temp_MarkCell.AddElement((displayOutcomeBar(content, objectivemark.cMark)));
+                                markCell = Temp_MarkCell;
+                            }
+                            else
+                            {
+                                PdfPCell Temp_ReportPeriodCell = new PdfPCell(new Phrase(Math.Round(objectivemark.nMark, 0) + "%", font_body_bold));
+                                Temp_ReportPeriodCell.Border = ObjectivesTableBorder;
+                                Temp_ReportPeriodCell.Padding = 0;
+                                Temp_ReportPeriodCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                                Temp_ReportPeriodCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+                                markCell = Temp_ReportPeriodCell;
+                            }                            
                         }
 
                         // Display the report period
@@ -1677,7 +1708,9 @@ namespace SLReports.ReportCard
             //  - This is always a percent
             
             // Class is outcome based, and is k-9 (display nothing)
-                        
+            
+
+            
             if (
                 (course.Marks.Count > 0) &&
                 (course.hasObjectives()) &&

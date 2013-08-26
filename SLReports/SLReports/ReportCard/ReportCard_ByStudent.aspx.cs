@@ -248,24 +248,83 @@ namespace SLReports.ReportCard
 
         }
 
+        protected void sendPDF(System.IO.MemoryStream PDFData, string filename)
+        {
+            Response.Clear();
+            Response.ClearContent();
+            Response.ClearHeaders();
+            Response.ContentEncoding = Encoding.UTF8;
+            Response.ContentType = "application/pdf";
+            Response.AddHeader("Content-Disposition", "attachment; filename=" + filename + "");
+
+            Response.OutputStream.Write(PDFData.GetBuffer(), 0, PDFData.GetBuffer().Length);
+            Response.OutputStream.Flush();
+            Response.OutputStream.Close();
+            Response.End();
+        }
+
         protected void btn_Step3_Click(object sender, EventArgs e)
         {
-            StringBuilder studentIDs = new StringBuilder();
-            foreach (ListItem item in lstSelectedStudents.Items)
+
+            // Load student data for selected students
+            List<Student> final_students = new List<Student>();
+            List<ReportPeriod> final_reportPeriods = new List<ReportPeriod>();
+
+            using (SqlConnection connection = new SqlConnection(sqlConnectionString))
             {
-                studentIDs.Append(item.Value);
-                studentIDs.Append(";");
+                // We need to do a final validation on the selected items, because they come from
+                //  web forms that could have been modified in transit.
+
+                foreach (ListItem item in lstSelectedReportPeriods.Items)
+                {
+                    if (!string.IsNullOrEmpty(item.Value))
+                    {
+                        int rpID = -1;
+                        if (int.TryParse(item.Value, out rpID))
+                        {
+                            ReportPeriod thisRP = ReportPeriod.loadThisReportPeriod(connection, rpID);
+                            if (thisRP != null)
+                            {
+                                final_reportPeriods.Add(thisRP);
+                            }
+                        }
+                    }
+                }
+
+                if (final_reportPeriods.Count > 0)
+                {
+                    foreach (ListItem item in lstSelectedStudents.Items)
+                    {
+                        if (!string.IsNullOrEmpty(item.Value))
+                        {
+                            int studentID = -1;
+                            if (int.TryParse(item.Value, out studentID))
+                            {
+                                Student thisStudent = Student.loadThisStudent(connection, studentID.ToString());
+                                if (thisStudent != null)
+                                {
+                                    final_students.Add(LSKYCommon.loadStudentMarkData(connection, thisStudent, final_reportPeriods));
+                                }
+                            }
+                        }
+                    }
+                }                
             }
 
-            StringBuilder reportPeriods = new StringBuilder();
-            foreach (ListItem item in lstSelectedReportPeriods.Items)
-            {
-                reportPeriods.Append(item.Value);
-                reportPeriods.Append(";");
-            }
+            bool anonymize = false;
 
-            Response.Redirect("GetReportCardPDF_Students.aspx?students=" + studentIDs.ToString() + "&reportperiods=" + reportPeriods.ToString() + "&debug=true");
+            // Generate the PDF
+            String fileName = "ReportCards_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
+
+            if ((final_reportPeriods.Count > 0) && (final_students.Count > 0))
+            {
+                sendPDF(PDFReportCardParts.GeneratePDF(final_students, anonymize), fileName);
+            }            
+
+            
+            //Response.Redirect("GetReportCardPDF_Students.aspx?students=" + studentIDs.ToString() + "&reportperiods=" + reportPeriods.ToString() + "&debug=true");
         }
+
 
         private void pickReportPeriod(ListItem item)
         {           

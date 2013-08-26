@@ -68,6 +68,8 @@ namespace SLReports
 
         public bool isOutcomeBased()
         {
+            // As of August 2013, numeric courses do not use grade legends, and outcome based classes do use grade legends
+
             if (this.hasGradeLegend())
             {
                 return true;
