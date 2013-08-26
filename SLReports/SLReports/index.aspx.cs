@@ -43,7 +43,7 @@ namespace SLReports
                 cssClass = "nav_link_admin";
             }
 
-            nameCell.Text = "<a href=\"/SLReports" + item.url + "\" class=\"" + cssClass + "\">" + item.name + "</a>";
+            nameCell.Text = "<a href=\"" + LSKYCommon.translateLocalURL(item.url, Request) + "\" class=\"" + cssClass + "\">" + item.name + "</a>";
             nameCell.CssClass = "navigation_table_name";
             newRow.Cells.Add(nameCell);
 
