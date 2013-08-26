@@ -27,8 +27,16 @@ namespace SLReports
             return returnMe;
         }
 
+        private void Redirect(string url)
+        {
+            //Response.Write("Redirect to: " + url);
+            Response.Redirect(url);
+        }
+
         protected void Page_PreInit(object sender, EventArgs e)
         {
+            string serverURLPath = LSKYCommon.getServerURLPath(Request);
+
             if (Request.Form.AllKeys.Contains("selectedMenuItem"))
             {
                 int selectedID = 0;
@@ -42,14 +50,15 @@ namespace SLReports
                         {
                             if (mi.id == selectedID)
                             {
-                                Response.Redirect("/SLReports" + mi.url);
+                                //Response.Redirect(serverURLPath + mi.url);
+                                Redirect(LSKYCommon.translateLocalURL(mi.url, Request));
                             }
                         }
                     }
                 }                
             }
 
-            Response.Redirect("/SLReports/");
+            Redirect(LSKYCommon.translateLocalURL("/", Request));
         }
 
         protected void Page_Load(object sender, EventArgs e)

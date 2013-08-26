@@ -118,6 +118,7 @@
     <Content Include="ReportCard\ReportCard_ByGrade.aspx" />
     <Content Include="ReportCard\ReportCard_ByStudent.aspx" />
     <Content Include="ReportCard\ReportCard_Demo.aspx" />
+    <Content Include="ServerVariables.aspx" />
     <Content Include="Staff\index.aspx" />
     <Content Include="StudentDiscrepancy\index.aspx" />
     <Content Include="StudentList\getCSV.aspx" />
@@ -404,6 +405,13 @@
     </Compile>
     <Compile Include="ReportPeriod.cs" />
     <Compile Include="School.cs" />
+    <Compile Include="ServerVariables.aspx.cs">
+      <DependentUpon>ServerVariables.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ServerVariables.aspx.designer.cs">
+      <DependentUpon>ServerVariables.aspx</DependentUpon>
+    </Compile>
     <Compile Include="session.cs" />
     <Compile Include="StaffMember.cs" />
     <Compile Include="Staff\index.aspx.cs">
@@ -458,7 +466,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="FirstPeriodClasses\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

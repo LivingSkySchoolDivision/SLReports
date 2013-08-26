@@ -415,7 +415,40 @@ namespace SLReports
                 }
             }
             return returnMe;
-        }        
+        }
+
+        public static string translateLocalURL(string path, HttpRequest Request)
+        {
+            StringBuilder returnMe = new StringBuilder();
+            returnMe.Append(getServerURLPath(Request));
+            if (path.Length > 0)
+            {
+                if (path[0] == '/')
+                {
+                    returnMe.Remove(returnMe.Length - 1, 1);
+                }
+                returnMe.Append(path);
+            }
+
+            return  returnMe.ToString();
+        }
+
+        public static string getServerURLPath(HttpRequest Request)
+        {
+            StringBuilder scriptPath = new StringBuilder();
+            scriptPath.Append("https://");
+            scriptPath.Append(Request.ServerVariables["SERVER_NAME"]);
+
+            
+
+            string[] working = Request.ServerVariables["SCRIPT_NAME"].Split('/');
+
+            scriptPath.Append('/');
+            scriptPath.Append(working[1]);
+            scriptPath.Append('/');
+            
+            return scriptPath.ToString();
+        }
 
     }
 }

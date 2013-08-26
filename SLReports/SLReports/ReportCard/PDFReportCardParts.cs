@@ -40,6 +40,16 @@ namespace SLReports.ReportCard
             //return outcomeBar_Minimalist(content, value);
         }
 
+        // Bar Colors
+        private static BaseColor color_neutral = new BaseColor(70, 70, 70);
+        private static BaseColor color_low = new BaseColor(255, 51, 0); // Red
+        //private static BaseColor color_medium = new BaseColor(255, 119, 0); // Orange
+        private static BaseColor color_medium = new BaseColor(255, 255, 0); // Yellow
+
+        private static BaseColor color_high = new BaseColor(0, 128, 0); // Green
+        private static BaseColor color_max = color_high;
+            
+
         #region Outcome Bar Styles
         public static iTextSharp.text.Image outcomeBar_Original(PdfContentByte content, String value)
         {
@@ -71,19 +81,19 @@ namespace SLReports.ReportCard
                 /* Determine fill color  based on value */
                 if (parsedValue <= 1)
                 {
-                    fillColor = new BaseColor(255, 51, 0);
+                    fillColor = color_low;
                 }
                 else if (parsedValue <= 2.25)
                 {
-                    fillColor = new BaseColor(255, 165, 0);
+                    fillColor = color_medium;
                 }
                 else if (parsedValue <= 3.5)
                 {
-                    fillColor = new BaseColor(0, 128, 0);
+                    fillColor = color_high;
                 }
                 else if (parsedValue <= 4)
                 {
-                    fillColor = new BaseColor(0, 128, 0);
+                    fillColor = color_max;
                 }
 
 
@@ -251,19 +261,19 @@ namespace SLReports.ReportCard
                 /* Determine fill color  based on value */
                 if (parsedValue <= 1)
                 {
-                    fillColor = new BaseColor(255, 51, 0);
+                    fillColor = color_low;
                 }
                 else if (parsedValue <= 2.25)
                 {
-                    fillColor = new BaseColor(255, 165, 0);
+                    fillColor = color_medium;
                 }
                 else if (parsedValue <= 3.5)
                 {
-                    fillColor = new BaseColor(0, 128, 0);
+                    fillColor = color_high;
                 }
                 else if (parsedValue <= 4)
                 {
-                    fillColor = new BaseColor(0, 128, 0);
+                    fillColor = color_max;
                 }
 
                 /* Fill */
@@ -336,7 +346,7 @@ namespace SLReports.ReportCard
             int rectancleCurveRadius = 2;
 
             /* Colors */
-            BaseColor fillColor = new BaseColor(70, 70, 70);
+            BaseColor fillColor = color_neutral;
             BaseColor borderColor = new BaseColor(0, 0, 0);
             BaseColor textColor = new BaseColor(255, 255, 255);
 
@@ -356,19 +366,19 @@ namespace SLReports.ReportCard
                 /* Determine fill color  based on value */
                 if (parsedValue <= 1)
                 {
-                    fillColor = new BaseColor(255, 51, 0); // Red
+                    fillColor = color_low;
                 }
                 else if (parsedValue <= 2.25)
                 {
-                    fillColor = new BaseColor(255, 119, 0); // Orange
+                    fillColor = color_medium;
                 }
                 else if (parsedValue <= 3.5)
                 {
-                    fillColor = new BaseColor(0, 128, 0); // green
+                    fillColor = color_high;
                 }
                 else if (parsedValue <= 4)
                 {
-                    fillColor = new BaseColor(0, 128, 0); // Green
+                    fillColor = color_max;
                 }
 
                 /* Fill */
