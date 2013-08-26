@@ -36,7 +36,7 @@ namespace SLReports.StudentList
 
             /* Headings */
             StringBuilder headingLine = new StringBuilder();
-            headingLine.Append("StudentID, GivenName, MiddleName, Surname, GovernmentID, Grade, Gender, DateOfBirth, HomeRoom, InStatus, InStatusCode, InDate, ResidesInProvince, ResidesInCity, LDAPUserName");
+            headingLine.Append("StudentID, GivenName, MiddleName, Surname, GovernmentID, Grade, Gender, DateOfBirth, HomeRoom, InStatus, InStatusCode, InDate, Telephone, Apartment, House, Street, City, Province, PostalCode, LDAPUserName");
             writer.WriteLine(headingLine.ToString());
 
             /* Data */
@@ -58,19 +58,29 @@ namespace SLReports.StudentList
                 studentLine.Append(",");
                 studentLine.Append(student.getGender());
                 studentLine.Append(",");
-                studentLine.Append(student.getDateOfBirth().ToShortDateString());
+                studentLine.Append("\"" + student.getDateOfBirth().ToShortDateString() + "\"");
                 studentLine.Append(",");
-                studentLine.Append(student.getHomeRoom());
+                studentLine.Append("\"" + student.getHomeRoom() + "\"");
                 studentLine.Append(",");
                 studentLine.Append(student.getInStatus());
                 studentLine.Append(",");
                 studentLine.Append(student.getInStatusCode());               
                 studentLine.Append(",");
-                studentLine.Append(student.getEnrollDate().ToShortDateString());
+                studentLine.Append("\"" + student.getEnrollDate().ToShortDateString() + "\"");
                 studentLine.Append(",");
-                studentLine.Append(student.getRegion());
+                studentLine.Append(student.getTelephone());
                 studentLine.Append(",");
-                studentLine.Append(student.getCity());
+                studentLine.Append("\"" + student.getApartmentNo() + "\"");
+                studentLine.Append(",");
+                studentLine.Append("\"" + student.getHouseNo() + "\"");
+                studentLine.Append(",");
+                studentLine.Append("\"" + student.getStreet() + "\"");
+                studentLine.Append(",");
+                studentLine.Append("\"" + student.getCity() + "\"");
+                studentLine.Append(",");
+                studentLine.Append("\"" + student.getRegion() + "\"");
+                studentLine.Append(",");
+                studentLine.Append(student.getPostalCode());
                 studentLine.Append(",");
                 studentLine.Append(student.LDAPUserName);
                 writer.WriteLine(studentLine.ToString());                

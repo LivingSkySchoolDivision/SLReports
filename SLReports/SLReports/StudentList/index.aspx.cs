@@ -55,11 +55,16 @@ namespace SLReports.StudentList
             Response.Write("<td>" + student.getGrade() + "</td>");
             Response.Write("<td>" + student.getGender() + "</td>");
             Response.Write("<td>" + student.getDateOfBirth().ToShortDateString() + "</td>");
-            Response.Write("<td>" + student.getHomeRoom()+ "</td>");
-            Response.Write("<td>" + student.getInStatusWithCode() + "</td>");
+            Response.Write("<td>" + student.getHomeRoom() + "</td>");
+            Response.Write("<td>" + student.getInStatusWithCode() + "</td>");            
             Response.Write("<td>" + student.getEnrollDate().ToShortDateString() + "</td>");
+            Response.Write("<td>" + student.getTelephone() + "</td>");
+            Response.Write("<td>" + student.getApartmentNo() + "</td>");
+            Response.Write("<td>" + student.getHouseNo() + "</td>");
+            Response.Write("<td>" + student.getStreet() + "</td>");
             Response.Write("<td>" + student.getCity() + "</td>");
             Response.Write("<td>" + student.getRegion() + "</td>");
+            Response.Write("<td>" + student.getPostalCode() + "</td>");
             Response.Write("<td>" + student.LDAPUserName + "</td>");            
             Response.Write("</tr>\n");
         }
@@ -89,8 +94,15 @@ namespace SLReports.StudentList
                 Response.Write("<th width=\"300\"><b>Home Room</b></th>");
                 Response.Write("<th width=\"200\"><b>InStatus</b></th>");
                 Response.Write("<th width=\"100\"><b>InDate</b></th>");
+
+                Response.Write("<th width=\"100\"><b>Telephone</b></th>");
+                Response.Write("<th width=\"100\"><b>Apartment</b></th>");
+                Response.Write("<th width=\"100\"><b>House</b></th>");
+                Response.Write("<th width=\"100\"><b>Street</b></th>");
                 Response.Write("<th width=\"100\"><b>City</b></th>");
                 Response.Write("<th width=\"100\"><b>Region</b></th>");
+                Response.Write("<th width=\"100\"><b>Postal Code</b></th>");
+
                 Response.Write("<th width=\"100\"><b>LDAP Username</b></th>");
                 Response.Write("</tr>\n");
 
