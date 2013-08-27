@@ -244,8 +244,6 @@ namespace SLReports.ReportCard
 
             tbl_Step2.Visible = true;
             tbl_Step3.Visible = false;
-
-
         }
 
         protected void sendPDF(System.IO.MemoryStream PDFData, string filename)
@@ -265,7 +263,6 @@ namespace SLReports.ReportCard
 
         protected void btn_Step3_Click(object sender, EventArgs e)
         {
-
             // Load student data for selected students
             List<Student> final_students = new List<Student>();
             List<ReportPeriod> final_reportPeriods = new List<ReportPeriod>();
@@ -303,7 +300,8 @@ namespace SLReports.ReportCard
                                 Student thisStudent = Student.loadThisStudent(connection, studentID.ToString());
                                 if (thisStudent != null)
                                 {
-                                    final_students.Add(LSKYCommon.loadStudentMarkData(connection, thisStudent, final_reportPeriods));
+                                    //final_students.Add(LSKYCommon.loadStudentMarkData(connection, thisStudent, final_reportPeriods));
+                                    final_students.Add(thisStudent);
                                 }
                             }
                         }
@@ -311,18 +309,31 @@ namespace SLReports.ReportCard
                 }                
             }
 
-            bool anonymize = false;
-
-            // Generate the PDF
+            
+            // Generate the PDF (If we loaded the mark data above that is)
+            /*
             String fileName = "ReportCards_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
-
             if ((final_reportPeriods.Count > 0) && (final_students.Count > 0))
             {
                 sendPDF(PDFReportCardParts.GeneratePDF(final_students, anonymize), fileName);
             }            
-
+            */
             
-            //Response.Redirect("GetReportCardPDF_Students.aspx?students=" + studentIDs.ToString() + "&reportperiods=" + reportPeriods.ToString() + "&debug=true");
+            // Generate a list of student IDs
+            StringBuilder studentList = new StringBuilder();
+            foreach (Student student in final_students) 
+            {
+                studentList.Append(student.getStudentID());
+                studentList.Append(";");
+            }
+
+            StringBuilder reportPeriodList = new StringBuilder();
+            foreach (ReportPeriod reportPeriod in final_reportPeriods)
+            {
+                reportPeriodList.Append(reportPeriod.ID);
+                reportPeriodList.Append(";");
+            }
+            Response.Redirect("GetReportCardPDF.aspx?students=" + studentList.ToString() + "&reportperiods=" + reportPeriodList.ToString() + "&debug=true");
         }
 
 

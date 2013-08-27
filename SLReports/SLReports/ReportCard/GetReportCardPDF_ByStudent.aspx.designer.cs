@@ -11,7 +11,7 @@ namespace SLReports.ReportCard
 {
 
 
-    public partial class GetReportCardPDF_Students
+    public partial class GetReportCardPDF_ByStudent
     {
     }
 }

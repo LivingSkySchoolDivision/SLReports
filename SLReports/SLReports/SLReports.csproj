@@ -113,7 +113,7 @@
     <Content Include="Photos\index.aspx" />
     <Content Include="Public\generalJSON.aspx" />
     <Content Include="Public\generalXML.aspx" />
-    <Content Include="ReportCard\GetReportCardPDF_Students.aspx" />
+    <Content Include="ReportCard\GetReportCardPDF_ByStudent.aspx" />
     <Content Include="ReportCard\index.aspx" />
     <Content Include="ReportCard\ReportCard_ByGrade.aspx" />
     <Content Include="ReportCard\ReportCard_ByStudent.aspx" />
@@ -255,12 +255,12 @@
     <Compile Include="Outcomes\OutcomesCSV.aspx.designer.cs">
       <DependentUpon>OutcomesCSV.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ReportCard\GetReportCardPDF_Students.aspx.cs">
-      <DependentUpon>GetReportCardPDF_Students.aspx</DependentUpon>
+    <Compile Include="ReportCard\GetReportCardPDF_ByStudent.aspx.cs">
+      <DependentUpon>GetReportCardPDF_ByStudent.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="ReportCard\GetReportCardPDF_Students.aspx.designer.cs">
-      <DependentUpon>GetReportCardPDF_Students.aspx</DependentUpon>
+    <Compile Include="ReportCard\GetReportCardPDF_ByStudent.aspx.designer.cs">
+      <DependentUpon>GetReportCardPDF_ByStudent.aspx</DependentUpon>
     </Compile>
     <Compile Include="ReportCard\LifeSkillsLegendItem.cs" />
     <Compile Include="ReportCard\PDFReportCardParts.cs" />

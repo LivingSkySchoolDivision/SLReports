@@ -2,6 +2,7 @@
 using iTextSharp.text.pdf;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
@@ -13,9 +14,9 @@ using System.Web.UI.WebControls;
 
 namespace SLReports.ReportCard
 {
-    public partial class ReportCard_Demo : System.Web.UI.Page
+    public partial class GetReportCardPDF_ByStudent : System.Web.UI.Page
     {
-        string dbConnectionString = LSKYCommon.dbConnectionString_OldSchoolLogic;
+        string dbConnectionString = LSKYCommon.dbConnectionString_OldSchoolLogic;       
 
         protected void sendPDF(System.IO.MemoryStream PDFData, string filename)
         {
@@ -32,7 +33,7 @@ namespace SLReports.ReportCard
             Response.End();
         }
 
-
+        
 
         private void displayError(string error)
         {
@@ -50,7 +51,7 @@ namespace SLReports.ReportCard
             {
                 anonymize = true;
             }
-
+            
 
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
@@ -78,12 +79,12 @@ namespace SLReports.ReportCard
                             if (int.TryParse(rp, out rp_id))
                             {
                                 selectedReportPeriods.Add(ReportPeriod.loadThisReportPeriod(connection, rp_id));
-                            }
+                            }                            
                         }
                     }
                 }
             }
-
+            
             selectedReportPeriods.Sort();
 
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
@@ -95,20 +96,20 @@ namespace SLReports.ReportCard
                         Stopwatch studentStopWatch = new Stopwatch();
                         studentStopWatch.Start();
                         displayedStudents.Add(LSKYCommon.loadStudentMarkData(connection, student, selectedReportPeriods));
-                        studentStopWatch.Stop();
+                        studentStopWatch.Stop();                        
                     }
                 }
                 students.Clear();
             }
-
-            anonymize = true;
-            String selectedGrade = "DEMO";
-            String fileName = "ReportCards_" + selectedGrade + "_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
+            
+            String fileName = "ReportCards_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
 
             if ((selectedReportPeriods.Count > 0) && (displayedStudents.Count > 0))
             {
                 sendPDF(PDFReportCardParts.GeneratePDF(displayedStudents, anonymize), fileName);
             }
+        
+
         }
     }
 }

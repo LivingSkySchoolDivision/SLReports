@@ -172,7 +172,10 @@ namespace SLReports.Photos
 
             if ((StudNum.ToLower() == "blank") || (StudNum.ToLower() == "demo"))
             {
-
+                displayPhoto(createBlankPhoto("Demo"), "image/png");
+            } 
+            else 
+            {
                 if (!string.IsNullOrEmpty(StudNum))
                 {
                     String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
@@ -212,10 +215,6 @@ namespace SLReports.Photos
                 {
                     displayPhoto(createBlankPhoto("No student specified"), "image/png");
                 }
-            }
-            else
-            {
-                displayPhoto(createBlankPhoto("No Photo"), "image/png");
             }
 
         }
