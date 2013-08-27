@@ -121,6 +121,7 @@
     <Content Include="ServerVariables.aspx" />
     <Content Include="Staff\index.aspx" />
     <Content Include="StudentDiscrepancy\index.aspx" />
+    <Content Include="StudentList\ByGrade.aspx" />
     <Content Include="StudentList\getCSV.aspx" />
     <Content Include="StudentList\index.aspx" />
     <Content Include="Tracks\index.aspx" />
@@ -430,6 +431,13 @@
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
     <Compile Include="StudentEnrollmentEntry.cs" />
+    <Compile Include="StudentList\ByGrade.aspx.cs">
+      <DependentUpon>ByGrade.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="StudentList\ByGrade.aspx.designer.cs">
+      <DependentUpon>ByGrade.aspx</DependentUpon>
+    </Compile>
     <Compile Include="StudentList\getCSV.aspx.cs">
       <DependentUpon>getCSV.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

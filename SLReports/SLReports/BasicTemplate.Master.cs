@@ -15,8 +15,7 @@ namespace SLReports
 {
     public partial class BasicTemplate : System.Web.UI.MasterPage
     {
-
-        private string loginURL = string.Empty;
+        private string loginURL = LSKYCommon.translateLocalURL("/Login/index.aspx");
         private List<NavMenuItem> MainMenu = null;
         public session loggedInUser = null;
 
@@ -76,8 +75,7 @@ namespace SLReports
         }
 
         protected void Page_Init(object sender, EventArgs e)
-        {
-            loginURL = LSKYCommon.translateLocalURL("/Login/index.aspx", Request);
+        {  
             String dbConnectionString = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString;
             APIKey apiKey = null;
 
@@ -127,7 +125,7 @@ namespace SLReports
 
             if ((loggedInUser == null) && (apiKey == null))
             {
-                if (!Request.ServerVariables["SCRIPT_NAME"].Equals(loginURL))
+                if (!Request.ServerVariables["SCRIPT_NAME"].ToLower().Equals(loginURL.ToLower()))
                 {                    
                     redirectToLogin();
                 }
@@ -209,7 +207,7 @@ namespace SLReports
 
 
             // Display the list in a dropdown box
-            Response.Write("<form method=\"post\" action=\"" + LSKYCommon.translateLocalURL("Nav.aspx", Request) + "\" style=\"margin: 0; padding: 0;\">");
+            Response.Write("<form method=\"post\" action=\"" + LSKYCommon.translateLocalURL("Nav.aspx") + "\" style=\"margin: 0; padding: 0;\">");
             Response.Write("<span class=\"nav_link\">Navigation:</span> ");
             Response.Write("<select name=\"selectedMenuItem\">");
             Response.Write("<option value=\"0\"> -- Front Page --</option>");

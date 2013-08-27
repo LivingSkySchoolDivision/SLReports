@@ -417,20 +417,19 @@ namespace SLReports
             return returnMe;
         }
 
-        public static string translateLocalURL(string path, HttpRequest Request)
+        public static string translateLocalURL(string path)
         {
-            StringBuilder returnMe = new StringBuilder();
-            returnMe.Append(getServerURLPath(Request));
+            string path_working = path;
+
             if (path.Length > 0)
             {
                 if (path[0] == '/')
                 {
-                    returnMe.Remove(returnMe.Length - 1, 1);
+                    path_working = path.Substring(1, path.Length - 1);
                 }
-                returnMe.Append(path);
             }
 
-            return  returnMe.ToString();
+            return "/SLReports/" + path_working;
         }
 
         public static string getServerURLPath(HttpRequest Request)

@@ -51,14 +51,14 @@ namespace SLReports
                             if (mi.id == selectedID)
                             {
                                 //Response.Redirect(serverURLPath + mi.url);
-                                Redirect(LSKYCommon.translateLocalURL(mi.url, Request));
+                                Redirect(LSKYCommon.translateLocalURL(mi.url));
                             }
                         }
                     }
                 }                
             }
 
-            Redirect(LSKYCommon.translateLocalURL("/", Request));
+            Redirect(LSKYCommon.translateLocalURL("/"));
         }
 
         protected void Page_Load(object sender, EventArgs e)
