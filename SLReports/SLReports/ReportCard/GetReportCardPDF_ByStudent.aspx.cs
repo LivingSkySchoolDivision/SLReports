@@ -101,7 +101,7 @@ namespace SLReports.ReportCard
                 }
                 students.Clear();
             }
-            
+
             String fileName = "ReportCards_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
 
             if ((selectedReportPeriods.Count > 0) && (displayedStudents.Count > 0))

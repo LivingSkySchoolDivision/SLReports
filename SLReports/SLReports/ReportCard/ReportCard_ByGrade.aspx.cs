@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -68,9 +69,11 @@ namespace SLReports.ReportCard
                     newItem.Value = grade;
                     drpGrades.Items.Add(newItem);
                 }
-                
+
                 tblrow_Grade.Visible = true;
                 tblrow_ReportPeriod.Visible = false;
+                tblrow_Options.Visible = false;
+                
             }
         }
 
@@ -91,24 +94,7 @@ namespace SLReports.ReportCard
                 }
 
                 if (selectedSchool != null)
-                {
-                    // Load all students
-                    List<Student> schoolStudents = new List<Student>();
-                    using (SqlConnection connection = new SqlConnection(sqlConnectionString))
-                    {
-                        schoolStudents = Student.loadStudentsFromThisSchool(connection, schoolID);
-                    }
-
-                    // Filter out the ones for that grade
-                    List<Student> thisGradeStudents = new List<Student>();
-                    foreach (Student student in schoolStudents)
-                    {
-                        if (student.getGrade() == selectedGrade)
-                        {
-                            thisGradeStudents.Add(student);
-                        }
-                    }
-                                        
+                {                                        
                     // Get some report periods to display
                     List<Track> schoolTracks = new List<Track>();                    
                     List<ReportPeriod> schoolReportPeriod = new List<ReportPeriod>();
@@ -142,6 +128,7 @@ namespace SLReports.ReportCard
                     }
 
                     tblrow_ReportPeriod.Visible = true;
+                    tblrow_Options.Visible = true;
                 }
             
             }
@@ -150,10 +137,112 @@ namespace SLReports.ReportCard
 
         protected void btnReportPeriod_Click(object sender, EventArgs e)
         {
-            // Load data and generate a report card
+            string selectedGrade = drpGrades.SelectedValue;
+
+            // Parse the selected school ID
+            int schoolID = -1;
+            if (int.TryParse(drpSchools.SelectedValue, out schoolID))
+            {
+                School selectedSchool = null;
+                using (SqlConnection connection = new SqlConnection(sqlConnectionString))
+                {
+                    // Load the school
+                    selectedSchool = School.loadThisSchool(connection, schoolID);
+
+                    if (selectedSchool != null)
+                    {
+                        // Load all students
+                        List<Student> schoolStudents = new List<Student>();                        
+                        schoolStudents = Student.loadStudentsFromThisSchool(connection, schoolID);                        
+
+                        // Filter out the ones for that grade
+                        List<Student> selectedStudents = new List<Student>();
+                        foreach (Student student in schoolStudents)
+                        {
+                            if (student != null)
+                            {
+                                if (student.getGrade() == selectedGrade)
+                                {
+                                    selectedStudents.Add(student);
+                                }
+                            }
+                        }
+
+                        // Load checked report periods
+                        List<int> selectedReportPeriodIDs = new List<int>();
+                        List<ReportPeriod> selectedReportPeriods = new List<ReportPeriod>();
+
+                        foreach (ListItem item in chkReportPeriods.Items)
+                        {
+                            if (item.Selected)
+                            {
+                                int parsedValue = -1;
+                                if (int.TryParse(item.Value, out parsedValue)) 
+                                {
+                                    if (!selectedReportPeriodIDs.Contains(parsedValue))
+                                    {
+                                        selectedReportPeriodIDs.Add(parsedValue);
+                                    }
+                                }
+                            }
+                        }
+
+                        foreach (int reportPeriodID in selectedReportPeriodIDs)
+                        {
+                            ReportPeriod loadedReportPeriod = ReportPeriod.loadThisReportPeriod(connection, reportPeriodID);
+                            if (loadedReportPeriod != null)
+                            {
+                                selectedReportPeriods.Add(loadedReportPeriod);
+                            }
+                        }
+
+                        // Load student mark data
+                        List<Student> studentsWithMarks = new List<Student>();
+                        foreach (Student student in selectedStudents)
+                        {
+                            studentsWithMarks.Add(LSKYCommon.loadStudentMarkData(connection, student, selectedReportPeriods));                            
+                        }
+
+                        // Options
+                        bool doubleSidedMode = false;
+                        if (chkDoubleSidedMode.Checked)
+                            doubleSidedMode = true;
+
+                        bool anonymize = false;
+                        if (chkAnonymize.Checked)
+                            anonymize = true;
+
+                        bool placeholderPhotos = false;
+                        if (chkShowPlaceholderPhotos.Checked)
+                            placeholderPhotos = true;
 
 
+                        // Send the report card
+                        String fileName = "ReportCards_" + LSKYCommon.removeSpaces(selectedSchool.getName()) + "_Grade" + selectedGrade + "_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
+                        if ((selectedReportPeriods.Count > 0) && (selectedStudents.Count > 0))
+                        {
+                            sendPDF(PDFReportCardParts.GeneratePDF(selectedStudents, anonymize, placeholderPhotos, doubleSidedMode), fileName);
+                        }
+                    }
+                }
+            }    
 
         }
+
+        protected void sendPDF(System.IO.MemoryStream PDFData, string filename)
+        {
+            Response.Clear();
+            Response.ClearContent();
+            Response.ClearHeaders();
+            Response.ContentEncoding = Encoding.UTF8;
+            Response.ContentType = "application/pdf";
+            Response.AddHeader("Content-Disposition", "attachment; filename=" + filename + "");
+
+            Response.OutputStream.Write(PDFData.GetBuffer(), 0, PDFData.GetBuffer().Length);
+            Response.OutputStream.Flush();
+            Response.OutputStream.Close();
+            //Response.End();
+        }
+
     }
 }

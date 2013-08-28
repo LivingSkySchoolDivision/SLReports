@@ -101,13 +101,11 @@ namespace SLReports.ReportCard
                 students.Clear();
             }
 
-            anonymize = true;
-            String selectedGrade = "DEMO";
-            String fileName = "ReportCards_" + selectedGrade + "_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
+            String fileName = "ReportCards_DEMO_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
 
             if ((selectedReportPeriods.Count > 0) && (displayedStudents.Count > 0))
             {
-                sendPDF(PDFReportCardParts.GeneratePDF(displayedStudents, anonymize), fileName);
+                sendPDF(PDFReportCardParts.GeneratePDF(displayedStudents, true, true, true), fileName);
             }
         }
     }

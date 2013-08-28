@@ -172,7 +172,7 @@ namespace SLReports.Photos
 
             if ((StudNum.ToLower() == "blank") || (StudNum.ToLower() == "demo"))
             {
-                displayPhoto(createBlankPhoto("Demo"), "image/png");
+                displayPhoto(createBlankPhoto("No Photo"), "image/png");
             } 
             else 
             {

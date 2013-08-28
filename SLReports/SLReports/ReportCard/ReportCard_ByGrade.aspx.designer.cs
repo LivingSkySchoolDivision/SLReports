@@ -85,6 +85,42 @@ namespace SLReports.ReportCard {
         protected global::System.Web.UI.WebControls.CheckBoxList chkReportPeriods;
         
         /// <summary>
+        /// tblrow_Options control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TableRow tblrow_Options;
+        
+        /// <summary>
+        /// chkDoubleSidedMode control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkDoubleSidedMode;
+        
+        /// <summary>
+        /// chkShowPlaceholderPhotos control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkShowPlaceholderPhotos;
+        
+        /// <summary>
+        /// chkAnonymize control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkAnonymize;
+        
+        /// <summary>
         /// btnReportPeriod control.
         /// </summary>
         /// <remarks>

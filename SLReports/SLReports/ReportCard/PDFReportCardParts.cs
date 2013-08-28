@@ -600,7 +600,7 @@ namespace SLReports.ReportCard
 
         }
 
-        public static PdfPTable namePlateTable(Student student, bool anonymize = false)
+        public static PdfPTable namePlateTable(Student student, bool anonymize = false, bool showPlaceholderPhotos = false)
         {
             int cellpadding = 3;
             int border = Rectangle.NO_BORDER;
@@ -621,15 +621,14 @@ namespace SLReports.ReportCard
 
             PdfPCell photoCell = new PdfPCell(new Phrase("(No Photo)", font_large_italic));
 
-            //if (student.hasPhoto())
+            if ((student.hasPhoto()) || (showPlaceholderPhotos))
             {
                 try
                 {
-                    iTextSharp.text.Image photo = iTextSharp.text.Image.GetInstance(@"https://sldata.lskysd.ca/SLReports/photos/GetPhoto.aspx?studentnumber=" + student.getStudentID() + "&apikey=" + LSKYCommon.internal_api_key);                      
+                    iTextSharp.text.Image photo = iTextSharp.text.Image.GetInstance(@"https://sldata.lskysd.ca/SLReports/photos/GetPhoto.aspx?studentnumber=" + student.getStudentID() + "&apikey=" + LSKYCommon.internal_api_key);
                     photo.Border = Rectangle.BOX;
                     photo.BorderWidth = 1;
                     photoCell.PaddingRight = 10f;
-
                     photoCell = new PdfPCell(photo);
                 }
                 catch (Exception ex)
@@ -637,6 +636,7 @@ namespace SLReports.ReportCard
                     photoCell = new PdfPCell(new Phrase(ex.Message, font_small));
                 };
             }
+            
 
             photoCell.Border = border;
             photoCell.MinimumHeight = 300f;
@@ -1942,7 +1942,7 @@ namespace SLReports.ReportCard
             return classTable;
         }
 
-        public static MemoryStream GeneratePDF(List<Student> students, bool anonymize = false)
+        public static MemoryStream GeneratePDF(List<Student> students, bool anonymize = false, bool showPlaceholderPhotos = false, bool doubleSidedMode = true)
         {
             MemoryStream memstream = new MemoryStream();
             Document ReportCard = new Document(PageSize.LETTER);
@@ -1953,7 +1953,7 @@ namespace SLReports.ReportCard
 
             PdfPageEventHandler PageEventHandler = new PdfPageEventHandler();
             writer.PageEvent = PageEventHandler;
-            PageEventHandler.DoubleSidedMode = true;
+            PageEventHandler.DoubleSidedMode = doubleSidedMode;
             PageEventHandler.ShowOnFirstPage = false;
             //PageEventHandler.bottomCenter = "Printed " + DateTime.Now.ToLongDateString();
 
@@ -1968,7 +1968,7 @@ namespace SLReports.ReportCard
                     PageEventHandler.bottomLeft = "Student Name";
                 }
                 ReportCard.Add(PDFReportCardParts.schoolNamePlate(student.school));
-                ReportCard.Add(PDFReportCardParts.namePlateTable(student, anonymize));
+                ReportCard.Add(PDFReportCardParts.namePlateTable(student, anonymize, showPlaceholderPhotos));
                 ReportCard.Add(PDFReportCardParts.lifeSkillsLegend(content, student.getGrade()));
                 ReportCard.Add(PDFReportCardParts.outcomeLegend(content));
                 ReportCard.NewPage();
