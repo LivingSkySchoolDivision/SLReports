@@ -75,12 +75,12 @@ namespace SLReports.ReportCard
                         foreach (Student student in schoolStudents)
                         {
                             ListItem newStudentItemByFirstName = new ListItem();
-                            newStudentItemByFirstName.Text = student.getGivenName() + " " + student.getSN() + " (" + student.getStudentID() + ")";
+                            newStudentItemByFirstName.Text = student.getFirstName() + " " + student.getLastName() + " (" + student.getStudentID() + ")";
                             newStudentItemByFirstName.Value = student.getStudentID();
                             drpStudentsByFirstName.Items.Add(newStudentItemByFirstName);
 
                             ListItem newStudentItemByLastName = new ListItem();
-                            newStudentItemByLastName.Text = student.getSN() + ", " + student.getGivenName() + " (" + student.getStudentID() + ")"; ;
+                            newStudentItemByLastName.Text = student.getLastName() + ", " + student.getFirstName() + " (" + student.getStudentID() + ")"; ;
                             newStudentItemByLastName.Value = student.getStudentID();
                             drpStudentsByLastName.Items.Add(newStudentItemByLastName);
 

@@ -22,15 +22,15 @@ namespace SLReports.Duplicates
             newRow.Cells.Add(newCell);
 
             newCell = new TableCell();
-            newCell.Text = student.getGivenName();
+            newCell.Text = student.getFirstName();
             newRow.Cells.Add(newCell);
 
             newCell = new TableCell();
-            newCell.Text = student.getMiddleName();
+            newCell.Text = student.getLegalMiddleName();
             newRow.Cells.Add(newCell);
 
             newCell = new TableCell();
-            newCell.Text = student.getSN();
+            newCell.Text = student.getLastName();
             newRow.Cells.Add(newCell);
 
             newCell = new TableCell();
@@ -64,15 +64,15 @@ namespace SLReports.Duplicates
             newRow.Cells.Add(newCell);
 
             newCell = new TableCell();
-            newCell.Text = student.getGivenName();
+            newCell.Text = student.getFirstName();
             newRow.Cells.Add(newCell);
 
             newCell = new TableCell();
-            newCell.Text = student.getMiddleName();
+            newCell.Text = student.getLegalMiddleName();
             newRow.Cells.Add(newCell);
 
             newCell = new TableCell();
-            newCell.Text = student.getSN();
+            newCell.Text = student.getLastName();
             newRow.Cells.Add(newCell);
 
             newCell = new TableCell();

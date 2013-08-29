@@ -124,6 +124,7 @@
     <Content Include="StudentList\ByGrade.aspx" />
     <Content Include="StudentList\getCSV.aspx" />
     <Content Include="StudentList\index.aspx" />
+    <Content Include="StudentNames\index.aspx" />
     <Content Include="Tracks\index.aspx" />
     <Content Include="up_arrow.png" />
     <Content Include="Web.config" />
@@ -450,6 +451,13 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="StudentList\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="StudentNames\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="StudentNames\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
     <Compile Include="Teacher.cs" />

@@ -49,8 +49,8 @@ namespace SLReports.StudentList
         {
             Response.Write("<tr class=\"row\">");
             Response.Write("<td>" + student.getStudentID() + "</td>");
-            Response.Write("<td>" + student.getGivenName() + "</td>");
-            Response.Write("<td>" + student.getSN() + "</td>");
+            Response.Write("<td>" + student.getFirstName() + "</td>");
+            Response.Write("<td>" + student.getLastName() + "</td>");
             Response.Write("<td>" + student.getGovernmentID() + "</td>");
             Response.Write("<td>" + student.getGrade() + "</td>");
             Response.Write("<td>" + student.getGender() + "</td>");

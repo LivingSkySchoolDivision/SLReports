@@ -74,15 +74,15 @@ namespace SLReports.Birthdays
             newRow.CssClass = "Row";
 
             TableCell cell_givenName = new TableCell();
-            cell_givenName.Text =student.getGivenName();
+            cell_givenName.Text =student.getFirstName();
             newRow.Cells.Add(cell_givenName);
 
             TableCell cell_middleName = new TableCell();
-            cell_middleName.Text = student.getMiddleName();
+            cell_middleName.Text = student.getLegalMiddleName();
             newRow.Cells.Add(cell_middleName);
 
             TableCell cell_surname = new TableCell();
-            cell_surname.Text = student.getSN();
+            cell_surname.Text = student.getLastName();
             newRow.Cells.Add(cell_surname);
 
             TableCell cell_studentID = new TableCell();

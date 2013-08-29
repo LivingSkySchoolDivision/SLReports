@@ -10,11 +10,13 @@ namespace SLReports
     public class Student : IComparable
     {
         public string LDAPUserName { get; set; }
-        private string givenName;
-        private string sn;
+        public string displayFirstName { get; set; }
+        public string displayLastName { get; set; }
+        public string legalMiddleName { get; set; }
+        public string legalFirstName { get; set; }
+        public string legalLastName {get;set;}
         private string studentID;
-        private string govID;
-        private string middleName;
+        private string govID;        
         private string schoolName;
         private string schoolID;
         private string grade;
@@ -49,6 +51,31 @@ namespace SLReports
         public Track track { get; set; }
         public School school { get; set; }
 
+        public string getFirstName()
+        {
+            return this.displayFirstName;
+        }
+
+        public string getLastName()
+        {
+            return this.displayLastName;
+        }
+
+        public string getLegalMiddleName()
+        {
+            return this.legalMiddleName;
+        }
+
+        public string getLegalFirstName()
+        {
+            return this.legalFirstName;
+        }
+
+        public string getLegalLastName()
+        {
+            return this.legalLastName;
+        }
+
         public int getAge()
         {
             int age = DateTime.Today.Year - this.dateOfBirth.Year;
@@ -58,7 +85,8 @@ namespace SLReports
 
         public int getAgeAsOf(DateTime thisDate)
         {
-            return -1;
+            // TODO: Finish this
+            throw new Exception("Not yet implemented");
         }
 
         public object getPhoto()
@@ -204,14 +232,7 @@ namespace SLReports
             return this.enrollmentDate;
         }
 
-        public string getGivenName()
-        {
-            return this.givenName;
-        }
-        public string getSN()
-        {
-            return this.sn;
-        }
+        
         public string getStudentID()
         {
             return this.studentID;
@@ -232,10 +253,7 @@ namespace SLReports
             int.TryParse(this.govID, out returnMe);
             return returnMe;
         }
-        public string getMiddleName()
-        {
-            return this.middleName;
-        }
+        
         public string getSchoolName()
         {
             return this.schoolName;
@@ -268,7 +286,7 @@ namespace SLReports
 
         public string getDisplayName()
         {
-            return givenName + " " + sn;
+            return displayFirstName + " " + displayLastName;
         }
 
         public override string ToString()
@@ -282,7 +300,7 @@ namespace SLReports
         }
 
         
-        public Student(string givenName, string sn, string middleName, string id, string govID, string schoolName, string schoolID,
+        public Student(string displayFirstName, string displayLastName, string legalfirstname, string legallastname, string legalmiddleName, string id, string govID, string schoolName, string schoolID,
             string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
             string phone, string gender, string instat, string instatcode, string homeRm, DateTime inDate, DateTime dateOfBirth, 
             string bandNo, string bandName, string reserveName, string reserveHouse, string treatyStatus, bool resideonreserve,
@@ -291,11 +309,15 @@ namespace SLReports
             absences = new List<Absence>();
             contacts = new List<Contact>();
 
-            this.givenName = givenName;
-            this.sn = sn;
+            this.displayFirstName = displayFirstName;
+            this.displayLastName = displayLastName;
+
+            this.legalMiddleName = legalmiddleName;
+            this.legalFirstName = legalfirstname;
+            this.legalLastName = legallastname;
+
             this.studentID = id;
             this.govID = govID;
-            this.middleName = middleName;
             this.schoolName = schoolName;
             this.schoolID = schoolID;
             this.grade = grade;
@@ -447,9 +469,9 @@ namespace SLReports
                     double credits = 0;
                     double.TryParse(dataReader["Credits"].ToString(), out credits);
 
-
-
                     returnMe = new Student(
+                            dataReader["FirstName"].ToString().Trim(),
+                            dataReader["LastName"].ToString().Trim(),
                             dataReader["LegalFirstName"].ToString().Trim(),
                             dataReader["LegalLastName"].ToString().Trim(),
                             dataReader["LegalMiddleName"].ToString().Trim(),
@@ -541,6 +563,8 @@ namespace SLReports
                     int.TryParse(dataReader["Credits"].ToString(), out credits);
 
                     returnMe.Add(new Student(
+                            dataReader["FirstName"].ToString().Trim(),
+                            dataReader["LastName"].ToString().Trim(),
                             dataReader["LegalFirstName"].ToString().Trim(),
                             dataReader["LegalLastName"].ToString().Trim(),
                             dataReader["LegalMiddleName"].ToString().Trim(),
@@ -623,6 +647,8 @@ namespace SLReports
                     int.TryParse(dataReader["Credits"].ToString(), out credits);
 
                     returnMe.Add(new Student(
+                            dataReader["FirstName"].ToString().Trim(),
+                            dataReader["LastName"].ToString().Trim(),
                             dataReader["LegalFirstName"].ToString().Trim(),
                             dataReader["LegalLastName"].ToString().Trim(),
                             dataReader["LegalMiddleName"].ToString().Trim(),
@@ -706,38 +732,40 @@ namespace SLReports
                     int.TryParse(dataReader["Credits"].ToString(), out credits);
 
                     Student newStudent = new Student(
-                                dataReader["LegalFirstName"].ToString(),
-                                dataReader["LegalLastName"].ToString(),
-                                dataReader["LegalMiddleName"].ToString(),
-                                dataReader["StudentNumber"].ToString(),
-                                dataReader["GovernmentIDNumber"].ToString(),
-                                dataReader["School"].ToString(),
-                                dataReader["SchoolID"].ToString(),
-                                dataReader["Grade"].ToString(),
-                                dataReader["Region"].ToString(),
-                                dataReader["City"].ToString(),
-                                dataReader["Street"].ToString(),
-                                dataReader["HouseNo"].ToString(),
-                                dataReader["ApartmentNo"].ToString(),
-                                dataReader["PostalCode"].ToString(),
-                                dataReader["Phone"].ToString(),
-                                dataReader["Gender"].ToString(),
-                                dataReader["InStatus"].ToString(),
-                                dataReader["InStatusCode"].ToString(),
-                                dataReader["HomeRoom"].ToString(),
-                                DateTime.Parse(dataReader["InDate"].ToString()),
-                                DateTime.Parse(dataReader["DateOfBirth"].ToString()),
-                                dataReader["BandNo"].ToString(),
-                                dataReader["BandName"].ToString(),
-                                dataReader["ReserveName"].ToString(),
-                                dataReader["ReserveHouse"].ToString(),
-                                dataReader["StatusNo"].ToString(),
-                                bool.Parse(dataReader["ResideOnReserve"].ToString()),
-                                int.Parse(dataReader["TrackID"].ToString()),
-                                hasPhoto,
-                                dataReader["cUserName"].ToString().Trim(),
-                                credits
-                                );
+                            dataReader["FirstName"].ToString().Trim(),
+                            dataReader["LastName"].ToString().Trim(),
+                            dataReader["LegalFirstName"].ToString(),
+                            dataReader["LegalLastName"].ToString(),
+                            dataReader["LegalMiddleName"].ToString(),
+                            dataReader["StudentNumber"].ToString(),
+                            dataReader["GovernmentIDNumber"].ToString(),
+                            dataReader["School"].ToString(),
+                            dataReader["SchoolID"].ToString(),
+                            dataReader["Grade"].ToString(),
+                            dataReader["Region"].ToString(),
+                            dataReader["City"].ToString(),
+                            dataReader["Street"].ToString(),
+                            dataReader["HouseNo"].ToString(),
+                            dataReader["ApartmentNo"].ToString(),
+                            dataReader["PostalCode"].ToString(),
+                            dataReader["Phone"].ToString(),
+                            dataReader["Gender"].ToString(),
+                            dataReader["InStatus"].ToString(),
+                            dataReader["InStatusCode"].ToString(),
+                            dataReader["HomeRoom"].ToString(),
+                            DateTime.Parse(dataReader["InDate"].ToString()),
+                            DateTime.Parse(dataReader["DateOfBirth"].ToString()),
+                            dataReader["BandNo"].ToString(),
+                            dataReader["BandName"].ToString(),
+                            dataReader["ReserveName"].ToString(),
+                            dataReader["ReserveHouse"].ToString(),
+                            dataReader["StatusNo"].ToString(),
+                            bool.Parse(dataReader["ResideOnReserve"].ToString()),
+                            int.Parse(dataReader["TrackID"].ToString()),
+                            hasPhoto,
+                            dataReader["cUserName"].ToString().Trim(),
+                            credits
+                            );
                     returnMe.Add(newStudent);
 
                 }

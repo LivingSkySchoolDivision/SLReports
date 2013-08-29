@@ -46,11 +46,11 @@ namespace SLReports.StudentList
                 studentLine.Clear();
                 studentLine.Append(student.getStudentID());
                 studentLine.Append(",");
-                studentLine.Append(student.getGivenName());
+                studentLine.Append(student.getFirstName());
                 studentLine.Append(",");
-                studentLine.Append(student.getMiddleName());
+                studentLine.Append(student.getLegalMiddleName());
                 studentLine.Append(",");
-                studentLine.Append(student.getSN());
+                studentLine.Append(student.getLastName());
                 studentLine.Append(",");
                 studentLine.Append(student.getGovernmentID());
                 studentLine.Append(",");

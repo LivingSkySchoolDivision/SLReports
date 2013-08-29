@@ -29,16 +29,16 @@ namespace SLReports.GovXML
                 Response.Write("<SchoolAssignedPersonId>"+thisStudent.getStudentID()+"</SchoolAssignedPersonId>");
                 Response.Write("<HSN/>"); /* Health Services number */
                 Response.Write("<Name Type=\"Legal\">");
-                Response.Write("<LastName>"+thisStudent.getSN()+"</LastName>");
-                Response.Write("<FirstName>"+thisStudent.getGivenName()+"</FirstName>");
-                Response.Write("<MiddleName>"+thisStudent.getMiddleName()+"</MiddleName>");
-                Response.Write("<PreferredName>"+thisStudent.getGivenName()+"</PreferredName>");
+                Response.Write("<LastName>"+thisStudent.getLastName()+"</LastName>");
+                Response.Write("<FirstName>"+thisStudent.getFirstName()+"</FirstName>");
+                Response.Write("<MiddleName>"+thisStudent.getLegalMiddleName()+"</MiddleName>");
+                Response.Write("<PreferredName>"+thisStudent.getFirstName()+"</PreferredName>");
                 Response.Write("</Name>");
                 Response.Write("<Name Type=\"Alias\">");
-                Response.Write("<LastName>" + thisStudent.getSN() + "</LastName>");
-                Response.Write("<FirstName>" + thisStudent.getGivenName() + "</FirstName>");
-                Response.Write("<MiddleName>" + thisStudent.getMiddleName() + "</MiddleName>");
-                Response.Write("<PreferredName>" + thisStudent.getGivenName() + "</PreferredName>");
+                Response.Write("<LastName>" + thisStudent.getLastName() + "</LastName>");
+                Response.Write("<FirstName>" + thisStudent.getFirstName() + "</FirstName>");
+                Response.Write("<MiddleName>" + thisStudent.getLegalMiddleName() + "</MiddleName>");
+                Response.Write("<PreferredName>" + thisStudent.getFirstName() + "</PreferredName>");
                 Response.Write("</Name>");
                 Response.Write("<Demographics>");
                 Response.Write("<Gender>"+thisStudent.getGender().Substring(0,1).ToUpper()+"</Gender>");

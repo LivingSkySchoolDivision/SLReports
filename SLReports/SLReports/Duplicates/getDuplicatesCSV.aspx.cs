@@ -46,11 +46,11 @@ namespace SLReports.Duplicates
                 StringBuilder studentLine = new StringBuilder();
                 studentLine.Append(student.Key.getStudentID());
                 studentLine.Append(",");
-                studentLine.Append(student.Key.getGivenName());
+                studentLine.Append(student.Key.getFirstName());
                 studentLine.Append(",");
-                studentLine.Append(student.Key.getMiddleName());
+                studentLine.Append(student.Key.getLegalMiddleName());
                 studentLine.Append(",");
-                studentLine.Append(student.Key.getSN());
+                studentLine.Append(student.Key.getLastName());
                 studentLine.Append(",");
                 studentLine.Append(student.Key.getGovernmentID());
                 studentLine.Append(",");

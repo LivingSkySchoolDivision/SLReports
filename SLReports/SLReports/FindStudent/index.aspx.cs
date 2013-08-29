@@ -112,15 +112,15 @@ namespace SLReports.FindStudent
             newRow.Cells.Add(cell_studentID);
 
             TableCell cell_givenName = new TableCell();
-            cell_givenName.Text = highLightSeachString(student.getGivenName(), searchString);
+            cell_givenName.Text = highLightSeachString(student.getFirstName(), searchString);
             newRow.Cells.Add(cell_givenName);
 
             TableCell cell_middleName = new TableCell();
-            cell_middleName.Text = highLightSeachString(student.getMiddleName(), searchString);
+            cell_middleName.Text = highLightSeachString(student.getLegalMiddleName(), searchString);
             newRow.Cells.Add(cell_middleName);
 
             TableCell cell_surname = new TableCell();
-            cell_surname.Text = highLightSeachString(student.getSN(), searchString);
+            cell_surname.Text = highLightSeachString(student.getLastName(), searchString);
             newRow.Cells.Add(cell_surname);
             
             TableCell cell_school = new TableCell();
@@ -175,12 +175,12 @@ namespace SLReports.FindStudent
             {
                 if (
                     (student.getStudentID().ToLower().Contains(searchQuery.ToLower())) ||
-                    (student.getGivenName().ToLower().Contains(searchQuery.ToLower())) ||
-                    (student.getSN().ToLower().Contains(searchQuery.ToLower())) ||
+                    (student.getFirstName().ToLower().Contains(searchQuery.ToLower())) ||
+                    (student.getLastName().ToLower().Contains(searchQuery.ToLower())) ||
                     (student.getGovernmentID().ToLower().Contains(searchQuery.ToLower())) ||
                     (student.getStatusNo().ToLower().Contains(searchQuery.ToLower())) ||
                     (student.LDAPUserName.ToLower().Contains(searchQuery.ToLower())) ||
-                    (student.getMiddleName().ToLower().Contains(searchQuery.ToLower()))
+                    (student.getLegalMiddleName().ToLower().Contains(searchQuery.ToLower()))
                     )
                 {
                     searchResults.Add(student);

@@ -35,15 +35,15 @@ namespace SLReports.StudentList
             newRow.Cells.Add(cell_ID);
 
             TableCell cell_GivenName = new TableCell();
-            cell_GivenName.Text = student.getGivenName();
+            cell_GivenName.Text = student.getFirstName();
             newRow.Cells.Add(cell_GivenName);
 
             TableCell cell_MiddleName = new TableCell();
-            cell_MiddleName.Text = student.getMiddleName();
+            cell_MiddleName.Text = student.getLegalMiddleName();
             newRow.Cells.Add(cell_MiddleName);
 
             TableCell cell_Surname = new TableCell();
-            cell_Surname.Text = student.getSN();
+            cell_Surname.Text = student.getLastName();
             newRow.Cells.Add(cell_Surname);
 
             TableCell cell_GovID = new TableCell();

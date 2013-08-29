@@ -48,10 +48,10 @@ namespace SLReports.PotentialProblems
                 newTD_StudentNumber.Text = s.getStudentID();
 
                 TableCell newTD_GivenName = new TableCell();
-                newTD_GivenName.Text = s.getGivenName();
+                newTD_GivenName.Text = s.getFirstName();
                     
                 TableCell newTD_Surname = new TableCell();
-                newTD_Surname.Text = s.getSN();
+                newTD_Surname.Text = s.getLastName();
 
                 TableCell newTD_Grade = new TableCell();
                 newTD_Grade.Text = s.getGrade();
