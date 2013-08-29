@@ -11,6 +11,52 @@ namespace SLReports.Duplicates
 {
     public partial class index : System.Web.UI.Page
     {
+        private TableRow addStudentRowWithTreaty(Student student)
+        {
+            TableRow newRow = new TableRow();
+
+            TableCell newCell = null;
+
+            newCell = new TableCell();
+            newCell.Text = student.getStudentID();
+            newRow.Cells.Add(newCell);
+
+            newCell = new TableCell();
+            newCell.Text = student.getFirstName();
+            newRow.Cells.Add(newCell);
+
+            newCell = new TableCell();
+            newCell.Text = student.getLegalMiddleName();
+            newRow.Cells.Add(newCell);
+
+            newCell = new TableCell();
+            newCell.Text = student.getLastName();
+            newRow.Cells.Add(newCell);
+
+            newCell = new TableCell();
+            newCell.Text = student.getGovernmentID();
+            newRow.Cells.Add(newCell);
+
+            newCell = new TableCell();
+            newCell.Text = student.getStatusNo();
+            newRow.Cells.Add(newCell);
+
+            newCell = new TableCell();
+            newCell.Text = student.getGender();
+            newRow.Cells.Add(newCell);
+
+            newCell = new TableCell();
+            newCell.Text = student.getDateOfBirth().ToShortDateString();
+            newRow.Cells.Add(newCell);
+
+            newCell = new TableCell();
+            newCell.Text = student.getSchoolName();
+            newRow.Cells.Add(newCell);
+
+
+            return newRow;
+        }
+
         private TableRow addStudentRow(Student student)
         {
             TableRow newRow = new TableRow();
@@ -121,8 +167,8 @@ namespace SLReports.Duplicates
 
             foreach (Student student in allStudents)
             {
-                if (!string.IsNullOrEmpty(student.getStatusNo())) 
-                {
+                if ((!string.IsNullOrEmpty(student.getStatusNo())) && (student.getStatusNo().Length > 2))
+                {                    
                     if (!workspace_treaty.ContainsKey(student.getStatusNo()))
                     {
                         workspace_treaty.Add(student.getStatusNo(), student);
@@ -207,7 +253,7 @@ namespace SLReports.Duplicates
 
             foreach (Student student in foundDuplicates_treaty)
             {
-                tblTreaty.Rows.Add(addStudentRow(student));
+                tblTreaty.Rows.Add(addStudentRowWithTreaty(student));
             }
             lblTreaty.Text = "(" + foundDuplicates_treaty.Count.ToString() + ")";
 

@@ -46,6 +46,7 @@
             <asp:TableHeaderCell>Student Number</asp:TableHeaderCell>
             <asp:TableHeaderCell ColumnSpan="3">Student Name</asp:TableHeaderCell>
             <asp:TableHeaderCell>Government ID</asp:TableHeaderCell>
+            <asp:TableHeaderCell>Treaty Status No</asp:TableHeaderCell>
             <asp:TableHeaderCell>Gender</asp:TableHeaderCell>
             <asp:TableHeaderCell>Date of Birth</asp:TableHeaderCell>
             <asp:TableHeaderCell>School</asp:TableHeaderCell>
