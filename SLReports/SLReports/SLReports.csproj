@@ -114,6 +114,7 @@
     <Content Include="Public\generalJSON.aspx" />
     <Content Include="Public\generalXML.aspx" />
     <Content Include="ReportCard\GetReportCardPDF_ByStudent.aspx" />
+    <Content Include="ReportCard\GetReportCard_DEBUG.aspx" />
     <Content Include="ReportCard\index.aspx" />
     <Content Include="ReportCard\ReportCard_ByGrade.aspx" />
     <Content Include="ReportCard\ReportCard_ByStudent.aspx" />
@@ -262,6 +263,13 @@
     </Compile>
     <Compile Include="ReportCard\GetReportCardPDF_ByStudent.aspx.designer.cs">
       <DependentUpon>GetReportCardPDF_ByStudent.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ReportCard\GetReportCard_DEBUG.aspx.cs">
+      <DependentUpon>GetReportCard_DEBUG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportCard\GetReportCard_DEBUG.aspx.designer.cs">
+      <DependentUpon>GetReportCard_DEBUG.aspx</DependentUpon>
     </Compile>
     <Compile Include="ReportCard\LifeSkillsLegendItem.cs" />
     <Compile Include="ReportCard\PDFReportCardParts.cs" />
