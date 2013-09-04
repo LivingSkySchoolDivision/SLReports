@@ -14,6 +14,7 @@ namespace SLReports.Logs
     {
         List<session> AllSessions = null;
         List<LoginAttempt> AllLoginAttempts = null;
+        private const int recordsToDisplay = 50;
 
         private List<LoginAttempt> getLoginAttempts(SqlConnection connection, DateTime from, DateTime to)
         {
@@ -25,7 +26,7 @@ namespace SLReports.Logs
                 {
                     sqlCommand.Connection = connection;
                     sqlCommand.CommandType = CommandType.Text;
-                    sqlCommand.CommandText = "SELECT * FROM audit_loginAttempts WHERE eventTime < @EventTo AND eventTime > @EventFrom ORDER BY eventTime ASC;";
+                    sqlCommand.CommandText = "SELECT TOP 100 * FROM audit_loginAttempts WHERE eventTime < @EventTo AND eventTime > @EventFrom ORDER BY eventTime DESC;";
                     sqlCommand.Parameters.AddWithValue("@EventTo", to);
                     sqlCommand.Parameters.AddWithValue("@EventFrom", from);
 
@@ -99,6 +100,8 @@ namespace SLReports.Logs
         private TableRow addLoginAttemptRow(LoginAttempt thisLoginAttempt)
         {
             TableRow returnMe = new TableRow();
+            returnMe.CssClass = "datatable_row";
+
             TableCell cell_time = new TableCell();
             TableCell cell_username = new TableCell();
             TableCell cell_ip = new TableCell();
@@ -109,6 +112,49 @@ namespace SLReports.Logs
             cell_ip.Text = thisLoginAttempt.ipAddress;
             cell_info.Text = thisLoginAttempt.info;
 
+            returnMe.Cells.Add(cell_time);
+            returnMe.Cells.Add(cell_username);
+            returnMe.Cells.Add(cell_ip);
+            returnMe.Cells.Add(cell_info);
+
+            return returnMe;
+        }
+
+        private TableRow addLoginAttemptRowWithType(LoginAttempt thisLoginAttempt)
+        {
+            System.Drawing.Color bgColor = System.Drawing.Color.LightGray;
+            if (thisLoginAttempt.status.ToLower().Equals("success"))
+            {
+                bgColor = System.Drawing.Color.LightGreen;
+            }
+            else
+            {
+                bgColor = System.Drawing.Color.LightSalmon;
+            }
+
+
+            TableRow returnMe = new TableRow();
+            returnMe.CssClass = "datatable_row";
+
+            TableCell cell_type = new TableCell();
+            cell_type.BackColor = bgColor;
+            TableCell cell_time = new TableCell();
+            cell_time.BackColor = bgColor;
+            TableCell cell_username = new TableCell();
+            cell_username.BackColor = bgColor;
+            TableCell cell_ip = new TableCell();
+            cell_ip.BackColor = bgColor;
+            TableCell cell_info = new TableCell();
+            cell_info.BackColor = bgColor;
+            
+            cell_type.Text = thisLoginAttempt.status;
+
+            cell_time.Text = thisLoginAttempt.eventTime.ToShortDateString() + " " + thisLoginAttempt.eventTime.ToLongTimeString();
+            cell_username.Text = thisLoginAttempt.enteredUserName;
+            cell_ip.Text = thisLoginAttempt.ipAddress;
+            cell_info.Text = thisLoginAttempt.info;
+
+            returnMe.Cells.Add(cell_type);
             returnMe.Cells.Add(cell_time);
             returnMe.Cells.Add(cell_username);
             returnMe.Cells.Add(cell_ip);
@@ -174,23 +220,57 @@ namespace SLReports.Logs
 
             #region load log into table
 
+            int counter = 0;
 
 
-            /* Successful login attempts */
+            /* All login attempts */
+            /*
+            int numToDisplay = recordsToDisplay;
+            if (AllLoginAttempts.Count < recordsToDisplay)
+            {
+                numToDisplay = AllLoginAttempts.Count;
+            }
+
+            Response.Write("<BR>Displaying: " + numToDisplay);
+
+            for (int x = AllLoginAttempts.Count; x < (AllLoginAttempts.Count - numToDisplay); x--) 
+            {
+                Response.Write(x + ", ");
+                tblLogins_All.Rows.Add(addLoginAttemptRowWithType(AllLoginAttempts[x]));
+            }
+            */
+
             foreach (LoginAttempt la in AllLoginAttempts)
             {
-                if (la.status.ToLower().Equals("success"))
+                tblLogins_All.Rows.Add(addLoginAttemptRowWithType(la));
+            }
+                
+
+            /* Successful login attempts */
+            counter = 0;
+            foreach (LoginAttempt la in AllLoginAttempts)
+            {
+                counter++;
+                if (counter <= recordsToDisplay)
                 {
-                    tblLogins_Success.Rows.Add(addLoginAttemptRow(la));
+                    if (la.status.ToLower().Equals("success"))
+                    {
+                        tblLogins_Success.Rows.Add(addLoginAttemptRow(la));
+                    }
                 }
             }
 
             /* Unsuccessful login attempts */
+            counter = 0;
             foreach (LoginAttempt la in AllLoginAttempts)
             {
-                if (la.status.ToLower().Equals("denied"))
+                counter++;
+                if (counter <= recordsToDisplay)
                 {
-                    tblLogins_Failure.Rows.Add(addLoginAttemptRow(la));
+                    if (la.status.ToLower().Equals("denied"))
+                    {
+                        tblLogins_Failure.Rows.Add(addLoginAttemptRow(la));
+                    }
                 }
             }
             #endregion

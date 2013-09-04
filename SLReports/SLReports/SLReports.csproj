@@ -98,13 +98,16 @@
     <Content Include="INAC\index.aspx" />
     <Content Include="index.aspx" />
     <Content Include="JSON\getEnrollmentStats.aspx" />
+    <Content Include="JSON\getTime.aspx" />
     <Content Include="lock.png" />
     <Content Include="Login\index.aspx" />
+    <Content Include="Login\outside.html" />
     <Content Include="Logo_Circle_Notext_Trans.png" />
     <Content Include="Logs\index.aspx" />
     <Content Include="lsky_logo_text.png" />
     <Content Include="lsky_logo_watermark.png" />
     <Content Include="MainStyles.css" />
+    <Content Include="MiniDashboard\index.aspx" />
     <Content Include="Nav.aspx" />
     <Content Include="E15\index.aspx" />
     <Content Include="outcomeBar.js" />
@@ -250,7 +253,21 @@
     <Compile Include="JSON\getEnrollmentStats.aspx.designer.cs">
       <DependentUpon>getEnrollmentStats.aspx</DependentUpon>
     </Compile>
+    <Compile Include="JSON\getTime.aspx.cs">
+      <DependentUpon>getTime.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JSON\getTime.aspx.designer.cs">
+      <DependentUpon>getTime.aspx</DependentUpon>
+    </Compile>
     <Compile Include="LSKYCommon.cs" />
+    <Compile Include="MiniDashboard\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MiniDashboard\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Outcomes\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

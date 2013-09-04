@@ -1,8 +1,19 @@
 ﻿<%@ Page Language="C#"  MasterPageFile="~/BasicTemplate.Master" AutoEventWireup="true" CodeBehind="index.aspx.cs" Inherits="SLReports.Login.index" %>
 <asp:Content ID="Content1"  ContentPlaceHolderID="Main" runat="server">
+    <form method="post" runat="server" id="LoginForm" style="padding: 0; margin: 0;">
+     
+        <asp:Table ID="tblErrorMessage" runat="server" HorizontalAlign="Center" Visible="false">
+            <asp:TableRow>
+                <asp:TableCell>
+                    <div class="large_infobox" style="width: 450px; margin-left: auto; margin-right: auto;" id="error_box">
+                        <asp:Label ID="lblErrorMessage" runat="server" Text=""></asp:Label>
+                    </div></asp:TableCell>
+            </asp:TableRow>
+        </asp:Table> 
+    
     <br />
-    <div class="LoginFormContainer">
-    <form method="post" runat="server" id="LoginForm"> 
+    <div class="LoginFormContainer"> 
+        <br />   
         <table class="CenteredTable">
             <tr>
                 <td><div style="font-size: 10pt;">Username</div></td>

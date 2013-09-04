@@ -16,6 +16,8 @@ namespace SLReports
     public partial class BasicTemplate : System.Web.UI.MasterPage
     {
         private string loginURL = LSKYCommon.translateLocalURL("/Login/index.aspx");
+        private string outsideErrorMessage = LSKYCommon.translateLocalURL("/Login/outside.html");
+        private string localNetworkChunk = "10.177.";
         private List<NavMenuItem> MainMenu = null;
         public session loggedInUser = null;
 
@@ -76,6 +78,22 @@ namespace SLReports
 
         protected void Page_Init(object sender, EventArgs e)
         {  
+            // Check the IP to make sure traffic originates from within our network
+            if (
+                !(
+                    (Request.ServerVariables["REMOTE_ADDR"].Contains("127.0.0.1")) ||
+                    (Request.ServerVariables["REMOTE_ADDR"].Contains("::1"))
+                    )
+                )
+            {
+                if (!Request.ServerVariables["REMOTE_ADDR"].StartsWith(localNetworkChunk))
+                {
+                    Response.Redirect(outsideErrorMessage);
+                    Response.End();
+                }
+            }
+
+
             String dbConnectionString = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString;
             APIKey apiKey = null;
 

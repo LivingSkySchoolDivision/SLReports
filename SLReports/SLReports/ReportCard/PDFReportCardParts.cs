@@ -1440,6 +1440,8 @@ namespace SLReports.ReportCard
 
         public static PdfPCell lifeSkillsChunk(List<Outcome> objectives, PdfContentByte content)
         {
+            /* NOTE: These marks will always be cMark */
+
             // Interesting note: If you add an element to a cell in the constructor it aligns differnetly than if you add it as an element
 
             string lifeSkillsCategoryName = "Successful Learner Behaviours";

@@ -22,6 +22,15 @@ namespace SLReports.Logs {
         protected global::System.Web.UI.WebControls.Table tblSessions;
         
         /// <summary>
+        /// tblLogins_All control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Table tblLogins_All;
+        
+        /// <summary>
         /// tblLogins_Success control.
         /// </summary>
         /// <remarks>

@@ -82,6 +82,16 @@ namespace SLReports.Login
             }
         }
 
+        private void displayError(string error)
+        {
+            // tblErrorMessage is a visible box above the login form
+            tblErrorMessage.Visible = true;
+            lblErrorMessage.Text = error;
+            
+            // lblStatus is between the password field and the login button, and useful for short messages
+            //lblStatus.Text = error;
+        }
+
         private void createSession(string username, string remoteIP, string useragent, bool is_admin)
         {
             string newSessionID = getNewSessionID(Request.ServerVariables["ALL_RAW"]);
@@ -187,15 +197,13 @@ namespace SLReports.Login
                     }
                     else
                     {
-                        lblStatus.ForeColor = Color.Red;
-                        lblStatus.Text = "Access Denied";
+                        displayError("<b style=\"color: red\">Access denied:</b> Your credentials worked, but your account does not have the required permissions to access this site.<br><br> To request access to this site, please create a ticket in our <a href=\"https://helpdesk.lskysd.ca\">Help Desk system</a>.");
                         logLoginAttempt(txtUsername.Text, Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"], "DENIED", "User is not in security group");
                     }
                 }
                 else
                 {
-                    lblStatus.ForeColor = Color.Red;
-                    lblStatus.Text = "Access Denied";
+                    displayError("<b style=\"color: red\">Access denied:</b> Invalid username or password");
                     logLoginAttempt(txtUsername.Text, Request.ServerVariables["REMOTE_ADDR"], Request.ServerVariables["HTTP_USER_AGENT"], "DENIED", "Incorrect username or password");
                 }
             }                
