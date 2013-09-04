@@ -13,8 +13,8 @@ namespace SLReports
     public partial class index : System.Web.UI.Page
     {
 
-        String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
-        String dbConnectionString_Local = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString;
+        String dbConnectionString = LSKYCommon.dbConnectionString_SchoolLogic;
+        String dbConnectionString_Local = LSKYCommon.dbConnectionString_DataExplorer;
 
         private TableRow addNavCategory(string category)
         {

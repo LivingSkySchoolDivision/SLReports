@@ -97,6 +97,7 @@
     <Content Include="INAC\INAC_CSV.aspx" />
     <Content Include="INAC\index.aspx" />
     <Content Include="index.aspx" />
+    <Content Include="JSON\getEnrollmentStats.aspx" />
     <Content Include="lock.png" />
     <Content Include="Login\index.aspx" />
     <Content Include="Logo_Circle_Notext_Trans.png" />
@@ -242,6 +243,13 @@
       <DependentUpon>INAC_CSV.aspx</DependentUpon>
     </Compile>
     <Compile Include="INAC\LSKY_INAC.cs" />
+    <Compile Include="JSON\getEnrollmentStats.aspx.cs">
+      <DependentUpon>getEnrollmentStats.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JSON\getEnrollmentStats.aspx.designer.cs">
+      <DependentUpon>getEnrollmentStats.aspx</DependentUpon>
+    </Compile>
     <Compile Include="LSKYCommon.cs" />
     <Compile Include="Outcomes\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
