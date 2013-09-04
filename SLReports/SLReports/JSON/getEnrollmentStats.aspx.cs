@@ -51,11 +51,14 @@ namespace SLReports.JSON
                 }
                 
                 // Get enrollment counts by community
-                if (!enrollment_Communities.ContainsKey(student.getCity()))
+                if (!string.IsNullOrEmpty(student.getCity()))
                 {
-                    enrollment_Communities.Add(student.getCity(), 0);
+                    if (!enrollment_Communities.ContainsKey(student.getCity()))
+                    {
+                        enrollment_Communities.Add(student.getCity(), 0);
+                    }
+                    enrollment_Communities[student.getCity()]++;
                 }
-                enrollment_Communities[student.getCity()]++;
 
                 // Get enrollment counts by school
                 if (!enrollment_Schools.ContainsKey(student.getSchoolName()))
@@ -94,8 +97,7 @@ namespace SLReports.JSON
             schools.Reverse();
 
             // Output JSON file
-
-
+            
             //Response.Clear();
             Response.ContentEncoding = Encoding.UTF8;
             Response.ContentType = "application/json; charset=utf-8";
