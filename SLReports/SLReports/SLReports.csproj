@@ -75,6 +75,7 @@
     <Content Include="Courses\CoursesWithClasses.aspx" />
     <Content Include="Courses\GetCourseListCSV.aspx" />
     <Content Include="Courses\index.aspx" />
+    <Content Include="DemographicTakeHome\index.aspx" />
     <Content Include="Duplicates\getDuplicatesCSV.aspx" />
     <Content Include="Duplicates\index.aspx" />
     <Content Include="EnrollmentByGrade\index.aspx" />
@@ -129,6 +130,7 @@
     <Content Include="Staff\index.aspx" />
     <Content Include="StudentDiscrepancy\index.aspx" />
     <Content Include="StudentList\ByGrade.aspx" />
+    <Content Include="StudentList\ByGradePDF.aspx" />
     <Content Include="StudentList\getCSV.aspx" />
     <Content Include="StudentList\index.aspx" />
     <Content Include="StudentNames\index.aspx" />
@@ -225,6 +227,13 @@
     </Compile>
     <Compile Include="Courses\GetCourseListCSV.aspx.designer.cs">
       <DependentUpon>GetCourseListCSV.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DemographicTakeHome\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DemographicTakeHome\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
     </Compile>
     <Compile Include="Duplicates\getDuplicatesCSV.aspx.cs">
       <DependentUpon>getDuplicatesCSV.aspx</DependentUpon>
@@ -488,6 +497,13 @@
     </Compile>
     <Compile Include="StudentList\ByGrade.aspx.designer.cs">
       <DependentUpon>ByGrade.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="StudentList\ByGradePDF.aspx.cs">
+      <DependentUpon>ByGradePDF.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="StudentList\ByGradePDF.aspx.designer.cs">
+      <DependentUpon>ByGradePDF.aspx</DependentUpon>
     </Compile>
     <Compile Include="StudentList\getCSV.aspx.cs">
       <DependentUpon>getCSV.aspx</DependentUpon>

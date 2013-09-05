@@ -203,6 +203,8 @@ namespace SLReports.StudentList
                         }
                     }
                     tblStudents.Visible = true;
+                    tblPDFLink.Visible = true;
+                    lnkPDFLink.NavigateUrl = "byGradePDF.aspx?schoolid=" + schoolID;
                 }
             }            
         }
