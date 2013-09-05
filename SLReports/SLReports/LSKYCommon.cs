@@ -249,7 +249,7 @@ namespace SLReports
                 foreach (Term thisTerm in returnedStudent.track.terms)
                 {
                     /* Load enrolled classes */
-                    thisTerm.Courses = SchoolClass.loadStudentEnrolledClasses(connection, returnedStudent, thisTerm);
+                    thisTerm.Courses = SchoolClass.loadStudentEnrolledClassesForThisTerm(connection, returnedStudent, thisTerm);
 
                     foreach (SchoolClass thisClass in thisTerm.Courses)
                     {

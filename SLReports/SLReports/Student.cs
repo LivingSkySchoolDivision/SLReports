@@ -48,6 +48,7 @@ namespace SLReports
         private object photo;
         public int creditsEarned { get; set; }
 
+        public List<TimeTableEntry> TimeTable { get; set; }
         public Track track { get; set; }
         public School school { get; set; }
 
@@ -308,6 +309,7 @@ namespace SLReports
         {
             absences = new List<Absence>();
             contacts = new List<Contact>();
+            TimeTable = new List<TimeTableEntry>();
 
             this.displayFirstName = displayFirstName;
             this.displayLastName = displayLastName;
@@ -516,7 +518,7 @@ namespace SLReports
 
             return returnMe;
         }
-        
+
         public static List<Student> loadStudentsFromThisSchool(SqlConnection connection, int schoolID)
         {
             List<Student> returnMe = new List<Student>();
@@ -526,6 +528,93 @@ namespace SLReports
             sqlCommand.CommandType = CommandType.Text;
             //sqlCommand.CommandText = "SELECT * FROM LSKY_ActiveStudents WHERE SchoolID='" + schoolID + "' ORDER BY Grade ASC;";
             sqlCommand.CommandText = "SELECT * FROM LSKY_ActiveStudents WHERE SchoolID='" + schoolID + "' ORDER BY LegalLastName ASC, LegalFirstName ASC;";
+
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    string HomeRoom = dataReader["HomeRoom"].ToString().Trim();
+                    string HRT_Title = dataReader["HomeRoomTeacherTitle"].ToString().Trim();
+                    string HRT_First = dataReader["HomeRoomTeacherFirstName"].ToString().Trim();
+                    string HRT_Last = dataReader["HomeRoomTeacherLastName"].ToString().Trim();
+                    if ((!string.IsNullOrEmpty(HRT_First)) && (!string.IsNullOrEmpty(HRT_Last)))
+                    {
+                        HomeRoom = HomeRoom + " (";
+                        if ((!string.IsNullOrEmpty(HRT_Title)))
+                        {
+                            HomeRoom = HomeRoom + HRT_Title;
+                        }
+                        else
+                        {
+                            HomeRoom = HomeRoom + HRT_First;
+                        }
+
+                        HomeRoom = HomeRoom + " " + HRT_Last + ")";
+                    }
+
+                    bool hasPhoto = false;
+                    if (!string.IsNullOrEmpty(dataReader["PhotoType"].ToString()))
+                    {
+                        hasPhoto = true;
+                    }
+
+                    int credits = 0;
+                    int.TryParse(dataReader["Credits"].ToString(), out credits);
+
+                    returnMe.Add(new Student(
+                            dataReader["FirstName"].ToString().Trim(),
+                            dataReader["LastName"].ToString().Trim(),
+                            dataReader["LegalFirstName"].ToString().Trim(),
+                            dataReader["LegalLastName"].ToString().Trim(),
+                            dataReader["LegalMiddleName"].ToString().Trim(),
+                            dataReader["StudentNumber"].ToString().Trim(),
+                            dataReader["GovernmentIDNumber"].ToString().Trim(),
+                            dataReader["School"].ToString().Trim(),
+                            dataReader["SchoolID"].ToString().Trim(),
+                            dataReader["Grade"].ToString().Trim(),
+                            dataReader["Region"].ToString().Trim(),
+                            dataReader["City"].ToString().Trim(),
+                            dataReader["Street"].ToString().Trim(),
+                            dataReader["HouseNo"].ToString().Trim(),
+                            dataReader["ApartmentNo"].ToString().Trim(),
+                            dataReader["PostalCode"].ToString().Trim(),
+                            dataReader["Phone"].ToString().Trim(),
+                            dataReader["Gender"].ToString().Trim(),
+                            dataReader["InStatus"].ToString().Trim(),
+                            dataReader["InStatusCode"].ToString().Trim(),
+                            HomeRoom,
+                            DateTime.Parse(dataReader["InDate"].ToString()),
+                            DateTime.Parse(dataReader["DateOfBirth"].ToString()),
+                            dataReader["BandNo"].ToString().Trim(),
+                            dataReader["BandName"].ToString().Trim(),
+                            dataReader["ReserveName"].ToString().Trim(),
+                            dataReader["ReserveHouse"].ToString().Trim(),
+                            dataReader["StatusNo"].ToString().Trim(),
+                            bool.Parse(dataReader["ResideOnReserve"].ToString()),
+                            int.Parse(dataReader["TrackID"].ToString()),
+                            hasPhoto,
+                            dataReader["cUserName"].ToString().Trim(),
+                            credits
+                            ));
+                }
+            }
+
+            sqlCommand.Connection.Close();
+            return returnMe;
+        }
+
+        public static List<Student> loadStudentsFromThisTrack(SqlConnection connection, int trackID)
+        {
+            List<Student> returnMe = new List<Student>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            //sqlCommand.CommandText = "SELECT * FROM LSKY_ActiveStudents WHERE SchoolID='" + schoolID + "' ORDER BY Grade ASC;";
+            sqlCommand.CommandText = "SELECT * FROM LSKY_ActiveStudents WHERE TrackID='" + trackID + "' ORDER BY LegalLastName ASC, LegalFirstName ASC;";
 
             sqlCommand.Connection.Open();
             SqlDataReader dataReader = sqlCommand.ExecuteReader();
@@ -688,7 +777,7 @@ namespace SLReports
             return returnMe;
         }
 
-        public static List<Student> loadReserveStudentsFromThisSchol(SqlConnection connection, School school)
+        public static List<Student> loadReserveStudentsFromThisSchool(SqlConnection connection, School school)
         {
             List<Student> returnMe = new List<Student>();
 

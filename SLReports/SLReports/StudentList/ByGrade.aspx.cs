@@ -11,14 +11,14 @@ namespace SLReports.StudentList
 {
     public partial class ByGrade : System.Web.UI.Page
     {
-        private TableRow addHeaderRow(string title)
+        private TableRow addHeaderRow(string title, int count)
         {
             TableRow newRow = new TableRow();
 
             TableCell headingCell = new TableCell();
             headingCell.CssClass = "datatable_header";
             headingCell.ColumnSpan = 9;
-            headingCell.Text = "<a name=\"anchor_" + title + "\"></a> Grade " + title;
+            headingCell.Text = "<a name=\"anchor_" + title + "\"></a> Grade " + title + " (" + count + ")";
 
             newRow.Cells.Add(headingCell);
 
@@ -180,19 +180,26 @@ namespace SLReports.StudentList
                     lblAnchors.Text = anchors.ToString();
 
 
+
                     // Display students
                     tblStudents.Rows.Clear();
                     foreach (string grade in allGrades)
                     {
-                        tblStudents.Rows.Add(addHeaderRow(grade));
-                        tblStudents.Rows.Add(addStudentHeadingsRow());
-
+                        List<Student> thisGradeStudents = new List<Student>();
                         foreach (Student student in allStudents)
                         {
                             if (student.getGrade() == grade)
                             {
-                                tblStudents.Rows.Add(addStudentRow(student));
+                                thisGradeStudents.Add(student);
                             }
+                        }
+
+                        tblStudents.Rows.Add(addHeaderRow(grade, thisGradeStudents.Count));
+                        tblStudents.Rows.Add(addStudentHeadingsRow());
+
+                        foreach (Student student in thisGradeStudents)
+                        {
+                            tblStudents.Rows.Add(addStudentRow(student));                        
                         }
                     }
                     tblStudents.Visible = true;

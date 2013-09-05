@@ -115,7 +115,7 @@ namespace SLReports.INAC
         public static List<Student> loadStudentData(SqlConnection connection, School school, DateTime startDate, DateTime endDate)
         {
             List<Student> loadedStudentList = new List<Student>();
-            List<Student> allLoadedStudents = Student.loadReserveStudentsFromThisSchol(connection, school);
+            List<Student> allLoadedStudents = Student.loadReserveStudentsFromThisSchool(connection, school);
 
             // Filter students to only those in a track that falls between the given dates
             foreach (Student student in allLoadedStudents)
@@ -142,7 +142,7 @@ namespace SLReports.INAC
                 // Load enrolled courses into the terms
                 foreach (Term term in student.track.terms)
                 {
-                    term.Courses = SchoolClass.loadStudentEnrolledClasses(connection, student, term);
+                    term.Courses = SchoolClass.loadStudentEnrolledClassesForThisTerm(connection, student, term);
                 }
             }
 

@@ -149,8 +149,8 @@ namespace SLReports
             this.gradeLegend = gradeLegendName;
 
         }
-
-        public static List<SchoolClass> loadStudentEnrolledClasses(SqlConnection connection, Student student, Term term)
+                
+        public static List<SchoolClass> loadStudentEnrolledClassesForThisTerm(SqlConnection connection, Student student, Term term)
         {
             List<SchoolClass> returnMe = new List<SchoolClass>();
 
@@ -182,17 +182,17 @@ namespace SLReports
                             daily);
 
                     int blockNum = -1;
-                    if (!int.TryParse(dataReader["iblockNumber"].ToString().Trim(), out blockNum)) 
+                    if (!int.TryParse(dataReader["iblockNumber"].ToString().Trim(), out blockNum))
                     {
                         blockNum = -1;
                     }
 
                     int dayNum = -1;
-                    if (!int.TryParse(dataReader["iDayNumber"].ToString().Trim(), out dayNum)) 
+                    if (!int.TryParse(dataReader["iDayNumber"].ToString().Trim(), out dayNum))
                     {
                         dayNum = -1;
                     }
-                                        
+
 
                     SchoolClass newSchoolClass = new SchoolClass(
                             dataReader["cName"].ToString().Trim(),

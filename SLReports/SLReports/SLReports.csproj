@@ -79,6 +79,8 @@
     <Content Include="Duplicates\index.aspx" />
     <Content Include="EnrollmentByGrade\index.aspx" />
     <Content Include="FindStudent\index.aspx" />
+    <Content Include="FirstClassOfTheDay\getCSV.aspx" />
+    <Content Include="FirstClassOfTheDay\index.aspx" />
     <Content Include="GovXML\enrollment.aspx" />
     <Content Include="GovXML\index.aspx" />
     <Content Include="icon_3d.gif" />
@@ -236,6 +238,20 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Duplicates\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FirstClassOfTheDay\getCSV.aspx.cs">
+      <DependentUpon>getCSV.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FirstClassOfTheDay\getCSV.aspx.designer.cs">
+      <DependentUpon>getCSV.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FirstClassOfTheDay\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FirstClassOfTheDay\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
     <Compile Include="INAC\INAC_CSV.aspx.cs">
@@ -440,6 +456,7 @@
     </Compile>
     <Compile Include="ReportPeriod.cs" />
     <Compile Include="School.cs" />
+    <Compile Include="SchoolDay.cs" />
     <Compile Include="ServerVariables.aspx.cs">
       <DependentUpon>ServerVariables.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -495,6 +512,7 @@
     </Compile>
     <Compile Include="Teacher.cs" />
     <Compile Include="Term.cs" />
+    <Compile Include="TimeTableEntry.cs" />
     <Compile Include="Track.cs" />
     <Compile Include="PdfPageEventHandler.cs" />
     <Compile Include="Tracks\index.aspx.cs">
