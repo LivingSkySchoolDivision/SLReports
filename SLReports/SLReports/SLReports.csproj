@@ -107,6 +107,7 @@
     <Content Include="Login\outside.html" />
     <Content Include="Logo_Circle_Notext_Trans.png" />
     <Content Include="Logs\index.aspx" />
+    <Content Include="Logs\WhoHasAccess.aspx" />
     <Content Include="lsky_logo_text.png" />
     <Content Include="lsky_logo_watermark.png" />
     <Content Include="MainStyles.css" />
@@ -284,6 +285,13 @@
     </Compile>
     <Compile Include="JSON\getTime.aspx.designer.cs">
       <DependentUpon>getTime.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Logs\WhoHasAccess.aspx.cs">
+      <DependentUpon>WhoHasAccess.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Logs\WhoHasAccess.aspx.designer.cs">
+      <DependentUpon>WhoHasAccess.aspx</DependentUpon>
     </Compile>
     <Compile Include="LSKYCommon.cs" />
     <Compile Include="MiniDashboard\index.aspx.cs">
