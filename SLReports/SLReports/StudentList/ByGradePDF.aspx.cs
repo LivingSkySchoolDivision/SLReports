@@ -100,7 +100,7 @@ namespace SLReports.StudentList
 
         private static PdfPTable studentList(List<Student> students, string grade)
         {
-            int numColumns = 4;
+            int numColumns = 5;
             PdfPTable returnMe = new PdfPTable(numColumns);
             returnMe.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             returnMe.TotalWidth = 500f;
@@ -135,10 +135,15 @@ namespace SLReports.StudentList
             cell_lastname.Border = 0;
             returnMe.AddCell(cell_lastname);
 
+
             PdfPCell cell_homeroom = new PdfPCell(new Phrase("Home Room", font_body_bold));
             cell_homeroom.Border = 0;
             returnMe.AddCell(cell_homeroom);
-
+            
+            PdfPCell cell_gender = new PdfPCell(new Phrase("Gender", font_body_bold));
+            cell_gender.Border = 0;
+            cell_gender.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+            returnMe.AddCell(cell_gender);
 
             BaseColor borderColor = BaseColor.LIGHT_GRAY;
             int bottomPadding = 5;
@@ -155,20 +160,27 @@ namespace SLReports.StudentList
                 PdfPCell cell_firstname_value = new PdfPCell(new Phrase(student.getFirstName(), font_body));
                 cell_firstname_value.Border = Rectangle.TOP_BORDER;
                 cell_firstname_value.BorderColor = borderColor;
-                cell_id_value.PaddingBottom = bottomPadding;
+                cell_firstname_value.PaddingBottom = bottomPadding;
                 returnMe.AddCell(cell_firstname_value);
 
                 PdfPCell cell_lastname_value = new PdfPCell(new Phrase(student.getLastName(), font_body));
                 cell_lastname_value.Border = Rectangle.TOP_BORDER;
                 cell_lastname_value.BorderColor = borderColor;
-                cell_id_value.PaddingBottom = bottomPadding;
+                cell_lastname_value.PaddingBottom = bottomPadding;
                 returnMe.AddCell(cell_lastname_value);
 
                 PdfPCell cell_homeroom_value = new PdfPCell(new Phrase(student.getHomeRoom(), font_body));
                 cell_homeroom_value.Border = Rectangle.TOP_BORDER;
                 cell_homeroom_value.BorderColor = borderColor;
-                cell_id_value.PaddingBottom = bottomPadding;
+                cell_homeroom_value.PaddingBottom = bottomPadding;
                 returnMe.AddCell(cell_homeroom_value);
+
+                PdfPCell cell_gender_value = new PdfPCell(new Phrase(student.getGenderInitial(), font_body));
+                cell_gender_value.Border = Rectangle.TOP_BORDER;
+                cell_gender_value.BorderColor = borderColor;
+                cell_gender_value.PaddingBottom = bottomPadding;
+                cell_gender_value.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                returnMe.AddCell(cell_gender_value);
                 
             }
 
@@ -233,8 +245,14 @@ namespace SLReports.StudentList
 
                     if (selectedSchool != null)
                     {
-                        List<Student> schoolStudents = Student.loadStudentsFromThisSchool(connection, selectedSchool.getGovID());
-                        schoolStudents.Sort();
+                        List<Student> schoolStudents = Student.loadStudentsFromThisSchool(connection, selectedSchool.getGovID());                        
+                        schoolStudents.Sort(
+                            delegate(Student first,
+                            Student next)
+                            {
+                                return first.getFirstName().CompareTo(next.getFirstName());
+                            }
+                            );
                         sendPDF(GeneratePDF(selectedSchool, schoolStudents, false), LSKYCommon.removeSpaces(selectedSchool.getName()) + "_StudentsByGrade");
                     }
                     else

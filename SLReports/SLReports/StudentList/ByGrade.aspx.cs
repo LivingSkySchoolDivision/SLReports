@@ -46,10 +46,6 @@ namespace SLReports.StudentList
             cell_Surname.Text = student.getLastName();
             newRow.Cells.Add(cell_Surname);
 
-            TableCell cell_GovID = new TableCell();
-            cell_GovID.Text = student.getGovernmentID();
-            newRow.Cells.Add(cell_GovID);
-
             TableCell cell_Gender = new TableCell();
             cell_Gender.Text = student.getGender();
             newRow.Cells.Add(cell_Gender);
@@ -93,11 +89,6 @@ namespace SLReports.StudentList
             cell_Surname.CssClass = "datatable_header";
             cell_Surname.Text = "Surname";
             newRow.Cells.Add(cell_Surname);
-
-            TableCell cell_GovID = new TableCell();
-            cell_GovID.CssClass = "datatable_header";
-            cell_GovID.Text = "Government ID";
-            newRow.Cells.Add(cell_GovID);
 
             TableCell cell_Gender = new TableCell();
             cell_Gender.CssClass = "datatable_header";
