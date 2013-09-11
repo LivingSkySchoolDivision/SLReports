@@ -78,6 +78,7 @@
     <Content Include="DemographicTakeHome\index.aspx" />
     <Content Include="Duplicates\getDuplicatesCSV.aspx" />
     <Content Include="Duplicates\index.aspx" />
+    <Content Include="Duplicates\MultipleOutStatuses.aspx" />
     <Content Include="EnrollmentByGrade\index.aspx" />
     <Content Include="FindStudent\index.aspx" />
     <Content Include="FirstClassOfTheDay\getCSV.aspx" />
@@ -135,6 +136,8 @@
     <Content Include="StudentList\getCSV.aspx" />
     <Content Include="StudentList\index.aspx" />
     <Content Include="StudentNames\index.aspx" />
+    <Content Include="StudentStatuses\StatusesOnSameDay.aspx" />
+    <Content Include="Testing.aspx" />
     <Content Include="Tracks\index.aspx" />
     <Content Include="up_arrow.png" />
     <Content Include="Web.config" />
@@ -250,6 +253,13 @@
     <Compile Include="Duplicates\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Duplicates\MultipleOutStatuses.aspx.cs">
+      <DependentUpon>MultipleOutStatuses.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Duplicates\MultipleOutStatuses.aspx.designer.cs">
+      <DependentUpon>MultipleOutStatuses.aspx</DependentUpon>
+    </Compile>
     <Compile Include="FirstClassOfTheDay\getCSV.aspx.cs">
       <DependentUpon>getCSV.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -272,6 +282,7 @@
       <DependentUpon>INAC_CSV.aspx</DependentUpon>
     </Compile>
     <Compile Include="INAC\LSKY_INAC.cs" />
+    <Compile Include="StudentStatus.cs" />
     <Compile Include="JSON\getEnrollmentStats.aspx.cs">
       <DependentUpon>getEnrollmentStats.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -534,8 +545,22 @@
     <Compile Include="StudentNames\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="StudentStatuses\StatusesOnSameDay.aspx.cs">
+      <DependentUpon>StatusesOnSameDay.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="StudentStatuses\StatusesOnSameDay.aspx.designer.cs">
+      <DependentUpon>StatusesOnSameDay.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Teacher.cs" />
     <Compile Include="Term.cs" />
+    <Compile Include="Testing.aspx.cs">
+      <DependentUpon>Testing.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Testing.aspx.designer.cs">
+      <DependentUpon>Testing.aspx</DependentUpon>
+    </Compile>
     <Compile Include="TimeTableEntry.cs" />
     <Compile Include="Track.cs" />
     <Compile Include="PdfPageEventHandler.cs" />
@@ -559,6 +584,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="FirstPeriodClasses\" />
+    <Folder Include="ReportPeriods\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

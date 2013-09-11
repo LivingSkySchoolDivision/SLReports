@@ -19,7 +19,8 @@ namespace SLReports
         public static string dbConnectionString_SchoolLogic = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
         public static string dbConnectionString_OldSchoolLogic = ConfigurationManager.ConnectionStrings["SchoolLogic2013"].ConnectionString;
         public static string dbConnectionString_DataExplorer = ConfigurationManager.ConnectionStrings["DataExplorerDatabase"].ConnectionString;
-        
+        public static string dbConnectionString_SchoolLogicTest = ConfigurationManager.ConnectionStrings["SchoolLogicTestDatabase"].ConnectionString;
+
         public static string boolToTrueFalse(bool thisBool)
         {
             if (thisBool)

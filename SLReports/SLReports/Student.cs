@@ -47,10 +47,11 @@ namespace SLReports
         private bool bHasPhoto;
         private object photo;
         public int creditsEarned { get; set; }
-
+        public List<StudentStatus> statuses { get; set; }
         public List<TimeTableEntry> TimeTable { get; set; }
         public Track track { get; set; }
         public School school { get; set; }
+        public int activeStatusID { get; set; }
 
         public string getFirstName()
         {
@@ -305,11 +306,14 @@ namespace SLReports
             string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
             string phone, string gender, string instat, string instatcode, string homeRm, DateTime inDate, DateTime dateOfBirth, 
             string bandNo, string bandName, string reserveName, string reserveHouse, string treatyStatus, bool resideonreserve,
-            int trackid, bool hasPhoto, string ldapusername, int credits)
+            int trackid, bool hasPhoto, string ldapusername, int credits, int activeStatusID)
         {
             absences = new List<Absence>();
             contacts = new List<Contact>();
             TimeTable = new List<TimeTableEntry>();
+            statuses = new List<StudentStatus>();
+
+            this.activeStatusID = activeStatusID;
 
             this.displayFirstName = displayFirstName;
             this.displayLastName = displayLastName;
@@ -504,7 +508,8 @@ namespace SLReports
                             int.Parse(dataReader["TrackID"].ToString()),
                             hasPhoto,
                             dataReader["cUserName"].ToString().Trim(),
-                            (int)credits
+                            (int)credits,
+                            int.Parse(dataReader["iActive_StudentStatusID"].ToString())
                             );
                     //returnMe.setTrack(DateTime.Parse(dataReader["CurrentTrackStart"].ToString()), DateTime.Parse(dataReader["CurrentTrackEnd"].ToString()));
                 }
@@ -597,7 +602,8 @@ namespace SLReports
                             int.Parse(dataReader["TrackID"].ToString()),
                             hasPhoto,
                             dataReader["cUserName"].ToString().Trim(),
-                            credits
+                            credits,
+                            int.Parse(dataReader["iActive_StudentStatusID"].ToString())
                             ));
                 }
             }
@@ -684,7 +690,8 @@ namespace SLReports
                             int.Parse(dataReader["TrackID"].ToString()),
                             hasPhoto,
                             dataReader["cUserName"].ToString().Trim(),
-                            credits
+                            credits,
+                            int.Parse(dataReader["iActive_StudentStatusID"].ToString())
                             ));
                 }
             }
@@ -768,7 +775,8 @@ namespace SLReports
                             int.Parse(dataReader["TrackID"].ToString()),
                             hasPhoto,
                             dataReader["cUserName"].ToString().Trim(),
-                            credits
+                            credits,
+                            int.Parse(dataReader["iActive_StudentStatusID"].ToString())
                             ));
                 }
             }
@@ -853,7 +861,8 @@ namespace SLReports
                             int.Parse(dataReader["TrackID"].ToString()),
                             hasPhoto,
                             dataReader["cUserName"].ToString().Trim(),
-                            credits
+                            credits,
+                            int.Parse(dataReader["iActive_StudentStatusID"].ToString())
                             );
                     returnMe.Add(newStudent);
 
