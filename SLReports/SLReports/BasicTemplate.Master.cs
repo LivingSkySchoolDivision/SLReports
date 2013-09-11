@@ -228,7 +228,7 @@ namespace SLReports
             Response.Write("<form method=\"post\" action=\"" + LSKYCommon.translateLocalURL("Nav.aspx") + "\" style=\"margin: 0; padding: 0;\">");
             Response.Write("<span class=\"nav_link\">Navigation:</span> ");
             Response.Write("<select name=\"selectedMenuItem\">");
-            Response.Write("<option value=\"0\"> -- Front Page --</option>");
+            Response.Write("<option value=\"0\" selected=\"selected\"> -- Front Page --</option>");
             foreach (string MenuCat in MenuCategories)
             {
                 Response.Write("<option value=\"0\" style=\"font-weight: bold;\">" + MenuCat.ToUpper() + "</option>");
