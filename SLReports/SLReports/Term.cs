@@ -103,6 +103,36 @@ namespace SLReports
             return returnMe;
         }
 
+        public static List<Term> loadAllTerms(SqlConnection connection)
+        {
+            List<Term> returnMe = new List<Term>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM Term;";
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    returnMe.Add(new Term(
+                            int.Parse(dataReader["iTermID"].ToString().Trim()),
+                            int.Parse(dataReader["iTrackID"].ToString().Trim()),
+                            DateTime.Parse(dataReader["dStartDate"].ToString()),
+                            DateTime.Parse(dataReader["dEndDate"].ToString()),
+                            dataReader["cName"].ToString().Trim(),
+                            int.Parse(dataReader["iSchoolID"].ToString().Trim())
+                            ));
+                }
+            }
+
+            sqlCommand.Connection.Close();
+            return returnMe;
+        }
+
         public static List<Term> loadTermsFromThisSchool(SqlConnection connection, School school)
         {
             List<Term> returnMe = new List<Term>();

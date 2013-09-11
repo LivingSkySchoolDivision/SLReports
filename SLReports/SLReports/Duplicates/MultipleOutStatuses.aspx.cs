@@ -58,7 +58,7 @@ namespace SLReports.Duplicates
 
             foreach (StudentStatus status in allStatuses)
             {
-                if ((!status.hasOutStatus) && (status.inStatus != "Not Base School"))
+                if ((string.IsNullOrEmpty(status.outStatus)) && (status.inStatus != "Not Base School"))
                 {
                     foreach (Student student in allStudents)
                     {
