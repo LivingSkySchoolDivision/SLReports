@@ -46,7 +46,6 @@ namespace SLReports
 
             List<SchoolClass> studentEnrolledCoursesThisTerm = SchoolClass.loadStudentEnrolledClassesForThisTerm(connection, student, term);
 
-
             // Get schedule for this school, term and class
             foreach (SchoolClass thisclass in studentEnrolledCoursesThisTerm)
             {
@@ -56,6 +55,8 @@ namespace SLReports
             return returnMe;
         }
 
+
+
         public static List<TimeTableEntry> loadTimeTableEntries(SqlConnection connection, int termID, SchoolClass schoolClass)
         {
             List<TimeTableEntry> returnMe = new List<TimeTableEntry>();
@@ -63,7 +64,7 @@ namespace SLReports
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = connection;
             sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = "SELECT * FROM LSKY_ClassSchedule WHERE iTermID=@TERMID AND iClassID=@CLASSID ORDER BY iBlockNumber ASC, cName ASC;";            
+            sqlCommand.CommandText = "SELECT * FROM LSKY_ClassSchedule WHERE iTermID=@TERMID AND iClassID=@CLASSID ORDER BY iBlockNumber ASC, cName ASC;";
             sqlCommand.Parameters.AddWithValue("@TERMID", termID);
             sqlCommand.Parameters.AddWithValue("@CLASSID", schoolClass.classid);
             sqlCommand.Connection.Open();
@@ -88,11 +89,48 @@ namespace SLReports
             }
 
             sqlCommand.Connection.Close();
-          
+
 
             return returnMe;
 
         }
+
+        /*
+        public static List<TimeTableEntry> loadAllTimeTableEntries(SqlConnection connection)
+        {
+            List<TimeTableEntry> returnMe = new List<TimeTableEntry>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM LSKY_ClassSchedule ORDER BY iBlockNumber ASC, cName ASC;";
+            sqlCommand.Connection.Open();
+
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    TimeTableEntry newTimeTableEntry = new TimeTableEntry(
+                            int.Parse(dataReader["iDayNumber"].ToString().Trim()),
+                            int.Parse(dataReader["iBlockNumber"].ToString().Trim()),
+                            int.Parse(dataReader["iSchoolID"].ToString().Trim()),
+                            int.Parse(dataReader["itermID"].ToString().Trim()),
+                            dataReader["Room"].ToString().Trim(),
+                            null
+                        );
+                    returnMe.Add(newTimeTableEntry);
+                }
+            }
+
+            sqlCommand.Connection.Close();
+
+
+            return returnMe;
+
+        }
+        */
 
         public static List<TimeTableEntry> loadTimeTableEntries(SqlConnection connection, Term term, SchoolClass sclass)
         {

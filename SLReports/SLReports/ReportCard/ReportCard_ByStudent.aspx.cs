@@ -333,7 +333,7 @@ namespace SLReports.ReportCard
                 reportPeriodList.Append(reportPeriod.ID);
                 reportPeriodList.Append(";");
             }
-            Response.Redirect("GetReportCardPDF.aspx?students=" + studentList.ToString() + "&reportperiods=" + reportPeriodList.ToString() + "&debug=true");
+            Response.Redirect("GetReportCardPDF_ByStudent.aspx?students=" + studentList.ToString() + "&reportperiods=" + reportPeriodList.ToString() + "&debug=true");
         }
 
 

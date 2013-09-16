@@ -34,11 +34,14 @@ namespace SLReports.FirstClassOfTheDay
 
             // CSV Headings
             StringBuilder headingLine = new StringBuilder();
-            headingLine.Append("StudentNumber, FirstName, LastName, ");
+            headingLine.Append("StudentNumber, FirstName, LastName, DateOfBirth, Telephone, Apartment, House, Street, City, Province, PostalCode, ");
 
             for (int x = 0; x < days.Count; x++)
             {
-                headingLine.Append(days[x].name);
+                headingLine.Append(days[x].name + "Teacher,");
+                headingLine.Append(days[x].name + "Room,");
+                headingLine.Append(days[x].name + "Class,");
+                headingLine.Append(days[x].name + "Period");
                 if ((x + 1) < days.Count)
                 {
                     headingLine.Append(",");
@@ -59,6 +62,30 @@ namespace SLReports.FirstClassOfTheDay
                 studentLine.Append(student.getLastName());
                 studentLine.Append(",");
 
+                studentLine.Append(student.getDateOfBirth().ToShortDateString());
+                studentLine.Append(",");
+
+                studentLine.Append("\"" + student.getTelephone() + "\"");
+                studentLine.Append(",");
+
+                studentLine.Append("\"" + student.getApartmentNo() + "\"");
+                studentLine.Append(",");
+
+                studentLine.Append("\"" + student.getHouseNo() + "\"");
+                studentLine.Append(",");
+
+                studentLine.Append("\"" + student.getStreet() + "\"");
+                studentLine.Append(",");
+
+                studentLine.Append("\"" + student.getCity() + "\"");
+                studentLine.Append(",");
+
+                studentLine.Append("\"" + student.getRegion() + "\"");
+                studentLine.Append(",");
+
+                studentLine.Append("\"" + student.getPostalCode() + "\"");
+                studentLine.Append(",");
+                
                 for (int x = 0; x < days.Count; x++)
                 {
                     List<TimeTableEntry> thisDayClasses = new List<TimeTableEntry>();
@@ -73,12 +100,19 @@ namespace SLReports.FirstClassOfTheDay
 
                     if (thisDayClasses.Count > 0)
                     {
-                        TimeTableEntry firstClassOfThedDay = TimeTableEntry.getEarliest(thisDayClasses);
-                        studentLine.Append("\"" + firstClassOfThedDay.ToStringFormatted() + "\"");
+                        TimeTableEntry firstClassOfTheDay = TimeTableEntry.getEarliest(thisDayClasses);
+
+                        studentLine.Append("\"" + firstClassOfTheDay.schoolClass.teacherName + "\",");
+                        studentLine.Append("\"" + firstClassOfTheDay.roomName + "\",");
+                        studentLine.Append("\"" + firstClassOfTheDay.schoolClass.name + "\",");
+                        studentLine.Append("" + firstClassOfTheDay.blockNum + "");
                     }
                     else
                     {
-                        studentLine.Append("\"No classes today\"");
+                        studentLine.Append("\"\",");
+                        studentLine.Append("\"\",");
+                        studentLine.Append("\"\"");
+                        studentLine.Append("\"\"");
                     }
 
                     
