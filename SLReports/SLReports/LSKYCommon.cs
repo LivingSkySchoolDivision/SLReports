@@ -12,6 +12,8 @@ namespace SLReports
 {
     public static class LSKYCommon
     {
+        private static Random random = new Random(DateTime.Now.Millisecond); // Not cryptographically random, but random enough for what I need it for
+
         public static string internal_api_key = "6b05cb5705c07a4ca23a6bba779263ab983a5ae2";
         public static string userGroupName = "SchoolLogicDataExplorerUsers";
         public static string adminGroupName = "SchoolLogicDataExplorerAdmins";
@@ -448,6 +450,29 @@ namespace SLReports
             scriptPath.Append('/');
             
             return scriptPath.ToString();
+        }        
+
+        public static string getRandomLipsumString()
+        {
+            string[] lipsumStrings = {
+                                     "Duis scelerisque lectus sed tellus suscipit pulvinar. Nunc ullamcorper pretium blandit",
+                                     "Praesent et pretium justo. Nulla faucibus nunc orci, non tristique velit consequat a",
+                                     "Suspendisse placerat pulvinar tortor, at rhoncus nisl malesuada vitae",
+                                     "Morbi viverra volutpat sem, vitae feugiat leo elementum sit amet. Vestibulum diam ipsum, condimentum a posuere quis, venenatis et justo",
+                                     "Donec euismod sagittis dolor ut venenatis",
+                                     "Phasellus auctor, velit a mollis placerat, sem erat facilisis nisi, sit amet fringilla quam nulla vitae ipsum",
+                                     "Praesent sollicitudin pellentesque mi vestibulum cursus",
+                                     "Nulla sollicitudin ante vitae libero pulvinar consectetur. Nunc dignissim sed odio at molestie",
+                                     "Duis eu libero sapien. Pellentesque pretium malesuada purus. Sed nec augue in nibh porta bibendum",
+                                     "Cras commodo lorem sed velit feugiat, eget ultrices odio luctus. Proin congue porttitor elit ac elementum. Etiam quis urna mattis, fermentum magna nec, cursus neque",
+                                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                                     "Integer ultrices magna vitae risus varius dictum.",
+                                     "Aenean aliquam dolor nec aliquet mollis. ",
+                                     "Sed varius, neque sed iaculis viverra, nisi urna sagittis orci, a congue arcu magna a nisi."
+                                 };
+
+            return lipsumStrings[random.Next(0,lipsumStrings.Length - 1)];
+
         }
 
     }
