@@ -27,8 +27,8 @@ namespace SLReports.ReportPeriods
             cellID.Text = rp.ID.ToString();
             cellName.Text = rp.name;
             cellSchool.Text = schoolName;
-            cellStartDate.Text = rp.startDate.ToShortDateString();
-            cellEndDate.Text = rp.endDate.ToShortDateString();
+            cellStartDate.Text = rp.startDate.ToLongDateString();
+            cellEndDate.Text = rp.endDate.ToLongDateString();
 
             TimeSpan daysLeft = rp.endDate.Subtract(DateTime.Today);
 
