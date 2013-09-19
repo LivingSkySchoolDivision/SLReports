@@ -250,7 +250,7 @@ namespace SLReports.StudentList
                             delegate(Student first,
                             Student next)
                             {
-                                return first.getFirstName().CompareTo(next.getFirstName());
+                                return first.getLastName().CompareTo(next.getLastName());
                             }
                             );
                         sendPDF(GeneratePDF(selectedSchool, schoolStudents, false), LSKYCommon.removeSpaces(selectedSchool.getName()) + "_StudentsByGrade");

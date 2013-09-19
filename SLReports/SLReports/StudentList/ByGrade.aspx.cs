@@ -185,6 +185,15 @@ namespace SLReports.StudentList
                             }
                         }
 
+                        // Sort by last name
+                        thisGradeStudents.Sort(
+                            delegate(Student first,
+                            Student next)
+                            {
+                                return first.getLastName().CompareTo(next.getLastName());
+                            }
+                            );
+
                         tblStudents.Rows.Add(addHeaderRow(grade, thisGradeStudents.Count));
                         tblStudents.Rows.Add(addStudentHeadingsRow());
 

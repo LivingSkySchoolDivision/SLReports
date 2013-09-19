@@ -20,6 +20,18 @@ namespace SLReports.INAC
             return getDaysAbsent(student, out neverUsed);
         }
 
+        public static float getDaysAbsent_Explained(Student student)
+        {
+            string neverUsed = string.Empty;
+            return getDaysAbsent_Explained(student, out neverUsed);
+        }
+
+        public static float getDaysAbsent_Unexplained(Student student)
+        {
+            string neverUsed = string.Empty;
+            return getDaysAbsent_Unexplained(student, out neverUsed);
+        }
+
         /// <summary>
         /// Attempts to figure out the number of days absent. The given student must have data loaded into it from the "loadStudentData" function in this class in order to work.
         /// </summary>
@@ -27,6 +39,12 @@ namespace SLReports.INAC
         /// <returns></returns>
         public static float getDaysAbsent(Student student, out String explaination)
         {
+            List<Absence> absences = new List<Absence>();
+            foreach (Absence abs in student.absences)
+            {
+                absences.Add(abs);
+            }
+
             StringBuilder calculationExplaination = new StringBuilder();
             float daysAbsent = -1;
 
@@ -36,10 +54,10 @@ namespace SLReports.INAC
                 if (student.track.daily == true)
                 {
                     calculationExplaination.Append("Track attendance is set to DAILY&#10;");
-                    calculationExplaination.Append(" Absence count in blocks: " + student.absences.Count + "&#10;");
+                    calculationExplaination.Append(" Absence count in blocks: " + absences.Count + "&#10;");
                     calculationExplaination.Append(" Blocks per day: " + student.track.dailyBlocksPerDay + "&#10;");
-                    daysAbsent = (float)((float)student.absences.Count / (float)student.track.dailyBlocksPerDay);
-                    calculationExplaination.Append(" " + (float)student.absences.Count + " / " + (float)student.track.dailyBlocksPerDay + " = " + daysAbsent);
+                    daysAbsent = (float)((float)absences.Count / (float)student.track.dailyBlocksPerDay);
+                    calculationExplaination.Append(" " + (float)absences.Count + " / " + (float)student.track.dailyBlocksPerDay + " = " + daysAbsent);
                 }
                 else
                 {
@@ -83,7 +101,143 @@ namespace SLReports.INAC
             explaination = calculationExplaination.ToString();
             return daysAbsent;
         }
-        
+
+        public static float getDaysAbsent_Explained(Student student, out String explaination)
+        {
+            List<Absence> absences = new List<Absence>();
+            foreach (Absence abs in student.absences)
+            {
+                if (abs.excused)
+                {
+                    absences.Add(abs);
+                }
+            }
+
+            StringBuilder calculationExplaination = new StringBuilder();
+            float daysAbsent = -1;
+
+            if (student.track != null)
+            {
+                // Should we be calculating daily absenses or class based absenses
+                if (student.track.daily == true)
+                {
+                    calculationExplaination.Append("Track attendance is set to DAILY&#10;");
+                    calculationExplaination.Append(" Absence count in blocks: " + absences.Count + "&#10;");
+                    calculationExplaination.Append(" Blocks per day: " + student.track.dailyBlocksPerDay + "&#10;");
+                    daysAbsent = (float)((float)absences.Count / (float)student.track.dailyBlocksPerDay);
+                    calculationExplaination.Append(" " + (float)absences.Count + " / " + (float)student.track.dailyBlocksPerDay + " = " + daysAbsent);
+                }
+                else
+                {
+                    calculationExplaination.Append("Track attendance is set to PERIOD&#10;&#10;");
+                    daysAbsent = 0;
+
+                    // The required data should be preloaded into the student object...
+
+                    // For each track and term
+                    // Figure out how many classes per day this student actually has
+                    // Calculate and add to the total                
+
+                    foreach (Term term in student.track.terms)
+                    {
+                        calculationExplaination.Append(" Term: " + term.name + "&#10;");
+                        calculationExplaination.Append("  Enrolled classes in this term: " + term.Courses.Count + "&#10;");
+                        if (term.Courses.Count > 0)
+                        {
+                            // Get all absenses that fall within this term
+                            List<Absence> thisTermAbsenses = new List<Absence>();
+                            foreach (Absence abs in student.absences)
+                            {
+                                if ((abs.getDate() > term.startDate) && (abs.getDate() < term.endDate))
+                                {
+                                    thisTermAbsenses.Add(abs);
+                                }
+                            }
+                            calculationExplaination.Append("  Absences in this term (in blocks): " + thisTermAbsenses.Count + "&#10;");
+                            float daysAbsentThisTerm = (float)((float)thisTermAbsenses.Count / (float)term.Courses.Count);
+                            daysAbsent += daysAbsentThisTerm;
+                            calculationExplaination.Append("  " + (float)thisTermAbsenses.Count + " / " + (float)term.Courses.Count + " = " + daysAbsentThisTerm + "&#10;&#10;");
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                throw new Exception("Student track is null");
+            }
+            explaination = calculationExplaination.ToString();
+            return daysAbsent;
+        }
+
+        public static float getDaysAbsent_Unexplained(Student student, out String explaination)
+        {
+            List<Absence> absences = new List<Absence>();
+            foreach (Absence abs in student.absences)
+            {
+                if (!abs.excused)
+                {
+                    absences.Add(abs);
+                }
+            }
+
+            StringBuilder calculationExplaination = new StringBuilder();
+            float daysAbsent = -1;
+
+            if (student.track != null)
+            {
+                // Should we be calculating daily absenses or class based absenses
+                if (student.track.daily == true)
+                {
+                    calculationExplaination.Append("Track attendance is set to DAILY&#10;");
+                    calculationExplaination.Append(" Absence count in blocks: " + absences.Count + "&#10;");
+                    calculationExplaination.Append(" Blocks per day: " + student.track.dailyBlocksPerDay + "&#10;");
+                    daysAbsent = (float)((float)absences.Count / (float)student.track.dailyBlocksPerDay);
+                    calculationExplaination.Append(" " + (float)absences.Count + " / " + (float)student.track.dailyBlocksPerDay + " = " + daysAbsent);
+                }
+                else
+                {
+                    calculationExplaination.Append("Track attendance is set to PERIOD&#10;&#10;");
+                    daysAbsent = 0;
+
+                    // The required data should be preloaded into the student object...
+
+                    // For each track and term
+                    // Figure out how many classes per day this student actually has
+                    // Calculate and add to the total                
+
+                    foreach (Term term in student.track.terms)
+                    {
+                        calculationExplaination.Append(" Term: " + term.name + "&#10;");
+                        calculationExplaination.Append("  Enrolled classes in this term: " + term.Courses.Count + "&#10;");
+                        if (term.Courses.Count > 0)
+                        {
+                            // Get all absenses that fall within this term
+                            List<Absence> thisTermAbsenses = new List<Absence>();
+                            foreach (Absence abs in student.absences)
+                            {
+                                if ((abs.getDate() > term.startDate) && (abs.getDate() < term.endDate))
+                                {
+                                    thisTermAbsenses.Add(abs);
+                                }
+                            }
+                            calculationExplaination.Append("  Absences in this term (in blocks): " + thisTermAbsenses.Count + "&#10;");
+                            float daysAbsentThisTerm = (float)((float)thisTermAbsenses.Count / (float)term.Courses.Count);
+                            daysAbsent += daysAbsentThisTerm;
+                            calculationExplaination.Append("  " + (float)thisTermAbsenses.Count + " / " + (float)term.Courses.Count + " = " + daysAbsentThisTerm + "&#10;&#10;");
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                throw new Exception("Student track is null");
+            }
+            explaination = calculationExplaination.ToString();
+            return daysAbsent;
+        }
+
         /// <summary>
         /// Filters a list of contacts to only the ones that would be displayed on the INAC report.
         /// </summary>

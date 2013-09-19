@@ -19,10 +19,29 @@ namespace SLReports.INAC
 
         private static School selectedSchool = null;             
 
-        private TableRow createStudentRow(Student student)
+        private TableRow createStudentRow(Student student, DateTime startDate, DateTime endDate)
         {
-            string calculationExplaination = string.Empty;
-            float daysAbsent = LSKY_INAC.getDaysAbsent(student, out calculationExplaination);
+            // Split absences into explained / unexplained
+            List<Absence> explainedAbsences = new List<Absence>();
+            List<Absence> unExplainedAbsences = new List<Absence>();
+            foreach (Absence abs in student.absences)
+            {
+                if (abs.excused)
+                {
+                    explainedAbsences.Add(abs);
+                }
+                else
+                {
+                    unExplainedAbsences.Add(abs);
+                }
+            }
+
+            string calculationExplaination_Total = string.Empty;
+            string calculationExplaination_Explained = string.Empty;
+            string calculationExplaination_Unexplained = string.Empty;
+            float daysAbsent_Total = LSKY_INAC.getDaysAbsent(student, out calculationExplaination_Total);
+            float daysAbsent_Explained = LSKY_INAC.getDaysAbsent_Explained(student, out calculationExplaination_Explained);
+            float daysAbsent_Unexplained = LSKY_INAC.getDaysAbsent_Unexplained(student, out calculationExplaination_Unexplained);
             
             /* figure out guardian(s) */
             List<Contact> guardiansList = LSKY_INAC.getINACGuardians(student.contacts);
@@ -34,6 +53,7 @@ namespace SLReports.INAC
 
             
             TableRow newRow = new TableRow();
+            newRow.CssClass = "datatable_row";
 
             TableCell gradeCell = new TableCell();
             gradeCell.Text = student.getGradeFormatted();
@@ -76,26 +96,77 @@ namespace SLReports.INAC
             guardianCell.VerticalAlign = VerticalAlign.Top;
             newRow.Cells.Add(guardianCell);
 
-            TableCell daysAbsentCell = new TableCell();
-            if (daysAbsent == 0)
+            
+            // Unexplained absences
+            TableCell daysAbsent_UnexplainedCell = new TableCell();
+            if (daysAbsent_Unexplained == 0)
             {
-                daysAbsentCell.Text = "<i style=\"color: #707070;\">No Absences</i>";
-            } else if (daysAbsent >= 0)
-            {
-                daysAbsentCell.Text = "<abbr title=\"" + calculationExplaination + "\">" + Math.Round(daysAbsent,2) + " days</abbr>";
+                daysAbsent_UnexplainedCell.Text = "<i style=\"color: #707070;\">No Absences</i>";
             }
-            daysAbsentCell.VerticalAlign = VerticalAlign.Top;
-            newRow.Cells.Add(daysAbsentCell);
+            else if (daysAbsent_Unexplained >= 0)
+            {
+                daysAbsent_UnexplainedCell.Text = "<abbr title=\"" + calculationExplaination_Unexplained + "\">" + Math.Round(daysAbsent_Unexplained, 2) + " days</abbr>";
+            }
+            daysAbsent_UnexplainedCell.VerticalAlign = VerticalAlign.Top;
+            daysAbsent_UnexplainedCell.BorderColor = System.Drawing.ColorTranslator.FromHtml("#E8ADAA");
+            newRow.Cells.Add(daysAbsent_UnexplainedCell);
 
-            TableCell blocksAbsentcell = new TableCell();
-            blocksAbsentcell.Text = student.absences.Count + " blocks";
-            blocksAbsentcell.VerticalAlign = VerticalAlign.Top;
-            newRow.Cells.Add(blocksAbsentcell);
+            TableCell blocksAbsent_UnexplainedCell = new TableCell();
+            blocksAbsent_UnexplainedCell.Text = unExplainedAbsences.Count + " blocks";
+            blocksAbsent_UnexplainedCell.VerticalAlign = VerticalAlign.Top;
+            blocksAbsent_UnexplainedCell.BorderColor = System.Drawing.ColorTranslator.FromHtml("#E8ADAA");
+            newRow.Cells.Add(blocksAbsent_UnexplainedCell);
+
+            // Explained absences
+            /*
+            TableCell daysAbsent_ExplainedCell = new TableCell();
+            if (daysAbsent_Explained == 0)
+            {
+                daysAbsent_ExplainedCell.Text = "<i style=\"color: #707070;\">No Absences</i>";
+            }
+            else if (daysAbsent_Explained >= 0)
+            {
+                daysAbsent_ExplainedCell.Text = "<abbr title=\"" + calculationExplaination_Explained + "\">" + Math.Round(daysAbsent_Explained, 2) + " days</abbr>";
+            }
+            daysAbsent_ExplainedCell.VerticalAlign = VerticalAlign.Top;
+            daysAbsent_ExplainedCell.BorderColor = System.Drawing.ColorTranslator.FromHtml("#C3FDB8");
+            newRow.Cells.Add(daysAbsent_ExplainedCell);
+
+            TableCell blocksAbsent_ExplainedCell = new TableCell();
+            blocksAbsent_ExplainedCell.Text = explainedAbsences.Count + " blocks";
+            blocksAbsent_ExplainedCell.VerticalAlign = VerticalAlign.Top;
+            blocksAbsent_ExplainedCell.BorderColor = System.Drawing.ColorTranslator.FromHtml("#C3FDB8");
+            newRow.Cells.Add(blocksAbsent_ExplainedCell);
+            */
+
+
+            // total absences
+            TableCell daysAbsent_TotalCell = new TableCell();
+            if (daysAbsent_Total == 0)
+            {
+                daysAbsent_TotalCell.Text = "<i style=\"color: #707070;\">No Absences</i>";
+            }
+            else if (daysAbsent_Total >= 0)
+            {
+                daysAbsent_TotalCell.Text = "<abbr title=\"" + calculationExplaination_Total + "\">" + Math.Round(daysAbsent_Total, 2) + " days</abbr>";
+            }
+            daysAbsent_TotalCell.VerticalAlign = VerticalAlign.Top;
+            newRow.Cells.Add(daysAbsent_TotalCell);
+
+            TableCell blocksAbsent_TotalCell = new TableCell();
+            blocksAbsent_TotalCell.Text = student.absences.Count + " blocks";
+            blocksAbsent_TotalCell.VerticalAlign = VerticalAlign.Top;
+            newRow.Cells.Add(blocksAbsent_TotalCell);
 
             TableCell dateRegisterCell = new TableCell();
             dateRegisterCell.Text = student.getEnrollDate().Month + "/" + student.getEnrollDate().Day + "/" + student.getEnrollDate().Year;
             dateRegisterCell.VerticalAlign = VerticalAlign.Top;
             newRow.Cells.Add(dateRegisterCell);
+
+            TableCell absenceLinkCell = new TableCell();
+            absenceLinkCell.Text = "<a href=\"../Attendance/index.aspx?from_year=" + startDate.Year + "&from_month=" + startDate.Month + "&from_day=" + startDate.Day + "&to_year=" + endDate.Year + "&to_month=" + endDate.Month + "&to_day=" + endDate.Day + "&studentid=" + student.getStudentID() + "\" TARGET=\"_blank\">View absences</a>";
+            absenceLinkCell.VerticalAlign = VerticalAlign.Top;
+            newRow.Cells.Add(absenceLinkCell);
             
             return newRow;
 
@@ -246,6 +317,8 @@ namespace SLReports.INAC
                 #endregion
             }
 
+
+
             using (SqlConnection connection = new SqlConnection(dbConnectionString)) 
             {
                 AllSchools = School.loadAllSchools(connection);
@@ -267,7 +340,7 @@ namespace SLReports.INAC
                         
                         foreach (Student student in DisplayedStudents)
                         {
-                            tblResults.Rows.Add(createStudentRow(student));
+                            tblResults.Rows.Add(createStudentRow(student, startDate, endDate));
                         }
                     }
                 }

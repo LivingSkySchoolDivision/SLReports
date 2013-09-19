@@ -26,7 +26,7 @@
 
     <asp:HyperLink ID="lnkCSVDownload" Visible="false" runat="server"><img src="/SLReports/icon_xls.gif">Download CSV</asp:HyperLink><br /><br />
     <asp:Label ID="lblCount" runat="server" Text=""></asp:Label>
-    <asp:Table ID="tblResults" runat="server" CssClass="datatable" CellPadding="3" Visible="false">
+    <asp:Table ID="tblResults" runat="server" CssClass="datatable" CellPadding="5" Visible="false">
         <asp:TableHeaderRow CssClass="datatable_header">
             <asp:TableHeaderCell>Grade</asp:TableHeaderCell>
             <asp:TableHeaderCell>Student Name</asp:TableHeaderCell>
@@ -36,8 +36,10 @@
             <asp:TableHeaderCell>Reserve of Residence</asp:TableHeaderCell>
             <asp:TableHeaderCell>House #</asp:TableHeaderCell>
             <asp:TableHeaderCell>Parent / Guardian<sup></sup><br /><sup>Any priority 1 contact that lives with the student</sup></asp:TableHeaderCell>
-            <asp:TableHeaderCell ColumnSpan="2">Absences<br /><sup>Hover mouse over to see how days were calculated</sup></asp:TableHeaderCell>
-            <asp:TableHeaderCell>InStatus Date</asp:TableHeaderCell>
+            <asp:TableHeaderCell BackColor="#C11B17" ColumnSpan="2">Unexcused Absences<br /><sup>Hover mouse over to see how days were calculated</sup></asp:TableHeaderCell>
+            <asp:TableHeaderCell ColumnSpan="2">Total Absences<br /><sup>Hover mouse over to see how days were calculated</sup></asp:TableHeaderCell>
+            <asp:TableHeaderCell>Active InStatus Date</asp:TableHeaderCell>
+            <asp:TableHeaderCell>List Absences</asp:TableHeaderCell>
         </asp:TableHeaderRow>
     </asp:Table>
     <br />

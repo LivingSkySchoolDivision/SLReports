@@ -164,7 +164,6 @@ namespace SLReports
         {
             // TODO: Overhaul this so that its more efficient and doesn't do ten million database calls
 
-
             Student returnedStudent = thisStudent;
 
             /* Find the earliest report period and the last report period, for attendance dates */

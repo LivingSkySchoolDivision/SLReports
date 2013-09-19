@@ -35,16 +35,15 @@ namespace SLReports.ReportCard
 
         private static BaseColor color_low = new BaseColor(255, 51, 0); // Red
         private static BaseColor color_text_low = new BaseColor(255, 255, 255);
-
-        //private static BaseColor color_medium = new BaseColor(255, 119, 0); // Orange
+                
         private static BaseColor color_medium = new BaseColor(255, 255, 50); // Yellow
         private static BaseColor color_text_medium = new BaseColor(0, 0, 0);
 
         private static BaseColor color_high = new BaseColor(0, 128, 0); // Green
         private static BaseColor color_text_high = new BaseColor(255, 255, 255);
 
-        private static BaseColor color_max = color_high;
-        private static BaseColor color_text_max = color_text_high;
+        private static BaseColor color_max = new BaseColor(21, 137, 255);
+        private static BaseColor color_text_max = new BaseColor(255, 255, 255);
 
         /// <summary>
         /// Displays a graphical number bar for outcomes
@@ -2253,14 +2252,15 @@ namespace SLReports.ReportCard
                     PageEventHandler.bottomLeft = "Student Name";
                 }
 
+                // Cover page
                 ReportCard.Add(PDFReportCardParts.schoolNamePlate(student.school));
                 ReportCard.Add(PDFReportCardParts.namePlateTable(student, anonymize, showPlaceholderPhotos));
                 ReportCard.Add(PDFReportCardParts.lifeSkillsLegend(content, student.getGrade()));
                 ReportCard.Add(PDFReportCardParts.outcomeLegend(content));
                 ReportCard.NewPage();
+
+                // Start course list
                 ReportCard.Add(new Phrase(string.Empty));
-
-
                 foreach (Term term in student.track.terms)
                 {
                     foreach (SchoolClass course in term.Courses)
@@ -2273,6 +2273,8 @@ namespace SLReports.ReportCard
                     }
                 }
 
+
+                // Attendance summary
                 ReportCard.Add(PDFReportCardParts.attendanceSummary(student));
 
                 PageEventHandler.ResetPageNumbers(ReportCard);

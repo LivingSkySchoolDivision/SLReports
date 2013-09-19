@@ -13,7 +13,7 @@ namespace SLReports
         public string period { get; set; }
         public int track { get; set; }
         public AttendanceBlock attendanceBlock { get; set; }
-        public DateTime blockStarttime { get; set; }
+        public DateTime blockStartTime { get; set; }
         public DateTime blockEndTime { get; set; }
         public bool excused { get; set; }
 

@@ -37,15 +37,31 @@ namespace SLReports.INAC
 
             // CSV Headings
             StringBuilder headingLine = new StringBuilder();
-            headingLine.Append("Grade, StudentName, DateOfBirth, BandAffiliation, StatusNo, ReserveOfResidence, HouseNo, ParentOrGuardian, DaysAbsent, BlocksAbsent, InStatusDate");
+            headingLine.Append("Grade, StudentName, DateOfBirth, BandAffiliation, StatusNo, ReserveOfResidence, HouseNo, ParentOrGuardian, DaysAbsentUnexcused, BlocksAbsentUnexcused, DaysAbsentExcused, BlocksAbsentExcused, DaysAbsentTotal, BlocksAbsentTotal, InStatusDate");
             writer.WriteLine(headingLine.ToString());
 
             // CSV Data
             foreach (Student student in students)
             {
+                // Get explained / unexplained counts
+                int excused = 0;
+                int unexcused = 0;
+                foreach (Absence abs in student.absences)
+                {
+                    if (abs.excused)
+                    {
+                        excused++;
+                    }
+                    else
+                    {
+                        unexcused++;
+                    }
+                }
+
                 // Figure out days absent
-                string calculationExplaination = string.Empty;
-                float daysAbsent = LSKY_INAC.getDaysAbsent(student, out calculationExplaination);
+                float daysAbsent = LSKY_INAC.getDaysAbsent(student);
+                float daysAbsent_Explained = LSKY_INAC.getDaysAbsent_Explained(student);
+                float daysAbsent_Unexplained = LSKY_INAC.getDaysAbsent_Unexplained(student);
 
                 // Figure out guardians
                 List<Contact> guardiansList = LSKY_INAC.getINACGuardians(student.contacts);
@@ -85,7 +101,24 @@ namespace SLReports.INAC
                 studentLine.Append(guardians.ToString());
                 studentLine.Append(",");
 
-                studentLine.Append(Math.Round(daysAbsent,2).ToString());
+                // Unexplained
+                studentLine.Append(Math.Round(daysAbsent_Unexplained, 2).ToString());
+                studentLine.Append(",");
+
+                studentLine.Append(unexcused.ToString());
+                studentLine.Append(",");
+
+
+                // Excused
+                studentLine.Append(Math.Round(daysAbsent_Explained, 2).ToString());
+                studentLine.Append(",");
+
+                studentLine.Append(excused.ToString());
+                studentLine.Append(",");
+
+
+                // Total
+                studentLine.Append(Math.Round(daysAbsent, 2).ToString());
                 studentLine.Append(",");
 
                 studentLine.Append(student.absences.Count.ToString());
