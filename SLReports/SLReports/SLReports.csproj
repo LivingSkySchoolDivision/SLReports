@@ -130,6 +130,7 @@
     <Content Include="ReportCard\ReportCard_Demo.aspx" />
     <Content Include="ReportPeriods\ReportPeriodList.aspx" />
     <Content Include="ReportPeriods\ReportPeriodsByDate.aspx" />
+    <Content Include="SaskSubmitted\index.aspx" />
     <Content Include="ServerVariables.aspx" />
     <Content Include="Staff\index.aspx" />
     <Content Include="StudentDiscrepancy\index.aspx" />
@@ -298,6 +299,15 @@
     <Compile Include="ReportPeriods\ReportPeriodsByDate.aspx.designer.cs">
       <DependentUpon>ReportPeriodsByDate.aspx</DependentUpon>
     </Compile>
+    <Compile Include="SaskSubmitted\index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SaskSubmitted\index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SaskSubmitted\SaskSubmittedSchoolCount.cs" />
+    <Compile Include="SaskSubmitted\SkSubmittedEntry.cs" />
     <Compile Include="StudentStatus.cs" />
     <Compile Include="JSON\getEnrollmentStats.aspx.cs">
       <DependentUpon>getEnrollmentStats.aspx</DependentUpon>
