@@ -10,7 +10,7 @@
 namespace SLReports.Attendance {
     
     
-    public partial class index {
+    public partial class getAttendance {
         
         /// <summary>
         /// lblStudentName control.

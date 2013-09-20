@@ -164,7 +164,7 @@ namespace SLReports.INAC
             newRow.Cells.Add(dateRegisterCell);
 
             TableCell absenceLinkCell = new TableCell();
-            absenceLinkCell.Text = "<a href=\"../Attendance/index.aspx?from_year=" + startDate.Year + "&from_month=" + startDate.Month + "&from_day=" + startDate.Day + "&to_year=" + endDate.Year + "&to_month=" + endDate.Month + "&to_day=" + endDate.Day + "&studentid=" + student.getStudentID() + "\" TARGET=\"_blank\">View absences</a>";
+            absenceLinkCell.Text = "<a href=\"../Attendance/getAttendance.aspx?from_year=" + startDate.Year + "&from_month=" + startDate.Month + "&from_day=" + startDate.Day + "&to_year=" + endDate.Year + "&to_month=" + endDate.Month + "&to_day=" + endDate.Day + "&studentid=" + student.getStudentID() + "\" TARGET=\"_blank\">View absences</a>";
             absenceLinkCell.VerticalAlign = VerticalAlign.Top;
             newRow.Cells.Add(absenceLinkCell);
             
@@ -178,10 +178,10 @@ namespace SLReports.INAC
             DateTime endDate = DateTime.Today;
 
             if (!IsPostBack)
-            {                
+            {
                 AllSchools = new List<School>();
                 selectedSchool = null;
-                
+
                 #region set up date picker fields
 
                 #region Year
@@ -236,13 +236,13 @@ namespace SLReports.INAC
                 }
                 ListItem firstDay_To = new ListItem("First Day", "1");
                 from_day.Items.Add(firstDay_From);
-                to_day.Items.Add(firstDay_To);                
+                to_day.Items.Add(firstDay_To);
 
                 for (int x = 1; x <= 31; x++)
                 {
                     ListItem newLI_From = new ListItem(x.ToString(), x.ToString());
                     ListItem newLI_To = new ListItem(x.ToString(), x.ToString());
-                    
+
                     //if (!IsPostBack)
                     //{
                     //    if (x == (DateTime.Now.Day))
@@ -284,42 +284,45 @@ namespace SLReports.INAC
                     newLI.Value = school.getGovIDAsString();
                     lstSchoolList.Items.Add(newLI);
                 }
-                #endregion
+                #endregion 
 
-            }
-            else
+            }         
+        }
+
+        protected void btnSelect_Click(object sender, EventArgs e)
+        {   
+            DateTime startDate = DateTime.Today;
+            DateTime endDate = DateTime.Today;        
+ 
+            #region Parse the selected school
+            foreach (School school in AllSchools)
             {
-                #region Parse the selected school
-                foreach (School school in AllSchools)
+                if (lstSchoolList.SelectedItem.Value == school.getGovIDAsString())
                 {
-                    if (lstSchoolList.SelectedItem.Value == school.getGovIDAsString())
-                    {
-                        selectedSchool = school;
-                    }
+                    selectedSchool = school;
                 }
-                #endregion
-
-                #region Parse the given date
-                int startYear = int.Parse(from_year.SelectedValue);
-                int startMonth = int.Parse(from_month.SelectedValue);
-                int startDay = int.Parse(from_day.SelectedValue);
-                if (startDay > DateTime.DaysInMonth(startYear, startMonth))
-                    startDay = DateTime.DaysInMonth(startYear, startMonth);
-
-                int endYear = int.Parse(to_year.SelectedValue);
-                int endMonth = int.Parse(to_month.SelectedValue);
-                int endDay = int.Parse(to_day.SelectedValue);
-                if (endDay > DateTime.DaysInMonth(endYear, endMonth))
-                    endDay = DateTime.DaysInMonth(endYear, endMonth);
-                   
-                startDate = new DateTime(startYear,startMonth,startDay);
-                endDate = new DateTime(endYear,endMonth,endDay);
-                #endregion
             }
+            #endregion
 
+            #region Parse the given date
+            int startYear = int.Parse(from_year.SelectedValue);
+            int startMonth = int.Parse(from_month.SelectedValue);
+            int startDay = int.Parse(from_day.SelectedValue);
+            if (startDay > DateTime.DaysInMonth(startYear, startMonth))
+                startDay = DateTime.DaysInMonth(startYear, startMonth);
 
+            int endYear = int.Parse(to_year.SelectedValue);
+            int endMonth = int.Parse(to_month.SelectedValue);
+            int endDay = int.Parse(to_day.SelectedValue);
+            if (endDay > DateTime.DaysInMonth(endYear, endMonth))
+                endDay = DateTime.DaysInMonth(endYear, endMonth);
 
-            using (SqlConnection connection = new SqlConnection(dbConnectionString)) 
+            startDate = new DateTime(startYear, startMonth, startDay);
+            endDate = new DateTime(endYear, endMonth, endDay);
+            #endregion
+            
+
+            using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
                 AllSchools = School.loadAllSchools(connection);
 
@@ -337,14 +340,16 @@ namespace SLReports.INAC
                             lnkCSVDownload.Visible = true;
                             lnkCSVDownload.NavigateUrl = "INAC_CSV.aspx?schoolid=" + selectedSchool.getGovIDAsString() + "&from_year=" + startDate.Year + "&from_month=" + startDate.Month + "&from_day=" + startDate.Day + "&to_year=" + endDate.Year + "&to_month=" + endDate.Month + "&to_day=" + endDate.Day;
                         }
-                        
+
                         foreach (Student student in DisplayedStudents)
                         {
                             tblResults.Rows.Add(createStudentRow(student, startDate, endDate));
                         }
                     }
                 }
-            }            
+            }  
+
+
         }        
     }
 }

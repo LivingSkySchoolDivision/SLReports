@@ -20,7 +20,7 @@
                 <asp:DropDownList ID="to_year" runat="server"></asp:DropDownList>
 
             </td>
-            <td valign="bottom"><asp:Button ID="Button1" runat="server" Text="Display Students" /></td>
+            <td valign="bottom"><asp:Button ID="btnSelect" runat="server" Text="Display Students" onclick="btnSelect_Click"/></td>
         </tr>
     </table><br />
 

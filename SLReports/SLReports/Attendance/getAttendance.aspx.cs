@@ -8,7 +8,7 @@ using System.Web.UI.WebControls;
 
 namespace SLReports.Attendance
 {
-    public partial class index : System.Web.UI.Page
+    public partial class getAttendance : System.Web.UI.Page
     {
         private TableRow addAbsenceRow(Absence abs)
         {
@@ -29,6 +29,10 @@ namespace SLReports.Attendance
             TableCell reasonCell = new TableCell();
             reasonCell.Text = abs.getReason();
             newRow.Cells.Add(reasonCell);
+
+            TableCell excusedCell = new TableCell();
+            excusedCell.Text = LSKYCommon.boolToYesOrNoHTML(abs.excused);
+            newRow.Cells.Add(excusedCell);
 
             TableCell commentCell = new TableCell();
             commentCell.Text = abs.getComment();

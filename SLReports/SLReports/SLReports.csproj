@@ -68,7 +68,7 @@
     <Content Include="APIKeys\lookup.aspx" />
     <Content Include="AttendanceByGrade\GetPDF.aspx" />
     <Content Include="AttendanceByGrade\index.aspx" />
-    <Content Include="Attendance\index.aspx" />
+    <Content Include="Attendance\getAttendance.aspx" />
     <Content Include="Birthdays\birthdayStats.aspx" />
     <Content Include="Birthdays\index.aspx" />
     <Content Include="CommunityAndRegionList\index.aspx" />
@@ -184,12 +184,12 @@
     <Compile Include="AttendanceByGrade\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Attendance\index.aspx.cs">
-      <DependentUpon>index.aspx</DependentUpon>
+    <Compile Include="Attendance\getAttendance.aspx.cs">
+      <DependentUpon>getAttendance.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Attendance\index.aspx.designer.cs">
-      <DependentUpon>index.aspx</DependentUpon>
+    <Compile Include="Attendance\getAttendance.aspx.designer.cs">
+      <DependentUpon>getAttendance.aspx</DependentUpon>
     </Compile>
     <Compile Include="BasicTemplate.Master.cs">
       <DependentUpon>BasicTemplate.Master</DependentUpon>

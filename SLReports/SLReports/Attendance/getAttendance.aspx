@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/BasicTemplate.Master" AutoEventWireup="true" CodeBehind="index.aspx.cs" Inherits="SLReports.Attendance.index" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/BasicTemplate.Master" AutoEventWireup="true" CodeBehind="getAttendance.aspx.cs" Inherits="SLReports.Attendance.getAttendance" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Main" runat="server">
@@ -13,6 +13,7 @@
             <asp:TableCell>Block</asp:TableCell>
             <asp:TableCell>Status</asp:TableCell>
             <asp:TableCell>Reason</asp:TableCell>
+            <asp:TableCell>Excused</asp:TableCell>
             <asp:TableCell>Comment</asp:TableCell>
         </asp:TableHeaderRow>
     </asp:Table>
