@@ -38,6 +38,8 @@
             <asp:TableCell>First Name</asp:TableCell>
             <asp:TableCell>Last Name</asp:TableCell>
             <asp:TableCell>Student Number</asp:TableCell>
+            <asp:TableCell>SubmittedID</asp:TableCell>
+            <asp:TableCell>Grade</asp:TableCell>
         </asp:TableRow>
     </asp:Table>
 

@@ -20,18 +20,25 @@ namespace SLReports.SaskSubmitted
             TableCell firstNameCell = new TableCell();
             TableCell lastNameCell = new TableCell();
             TableCell studentNumberCell = new TableCell();
+            TableCell submittedIDCell = new TableCell();
+            TableCell gradeCell = new TableCell();
 
             successCell.Text = "Success";
             dateCell.Text = "Date Submitted";
             firstNameCell.Text = "First Name";
             lastNameCell.Text = "Last Name";
             studentNumberCell.Text = "Student Number";
+            submittedIDCell.Text = "SubmittedID";
+            gradeCell.Text = "Grade";
 
             newRow.Cells.Add(successCell);
             newRow.Cells.Add(dateCell);
             newRow.Cells.Add(firstNameCell);
             newRow.Cells.Add(lastNameCell);
             newRow.Cells.Add(studentNumberCell);
+            newRow.Cells.Add(submittedIDCell);
+            newRow.Cells.Add(gradeCell);
+
 
             return newRow;
         }
@@ -46,6 +53,8 @@ namespace SLReports.SaskSubmitted
             TableCell firstNameCell = new TableCell();
             TableCell lastNameCell = new TableCell();
             TableCell studentNumberCell = new TableCell();
+            TableCell submittedIDCell = new TableCell();
+            TableCell gradeCell = new TableCell();
 
             string successString = string.Empty;
 
@@ -62,12 +71,16 @@ namespace SLReports.SaskSubmitted
             firstNameCell.Text = entry.firstName;
             lastNameCell.Text = entry.lastName;
             studentNumberCell.Text = entry.StudentNumber;
+            submittedIDCell.Text = entry.submittedID;
+            gradeCell.Text = entry.grade;
 
             newRow.Cells.Add(successCell);
             newRow.Cells.Add(dateCell);
             newRow.Cells.Add(firstNameCell);
             newRow.Cells.Add(lastNameCell);
             newRow.Cells.Add(studentNumberCell);
+            newRow.Cells.Add(submittedIDCell);
+            newRow.Cells.Add(gradeCell);
 
             return newRow;
         }

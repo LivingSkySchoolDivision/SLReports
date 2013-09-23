@@ -20,8 +20,9 @@ namespace SLReports.SaskSubmitted
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string gender { get; set; }
+        public string grade { get; set; }
         
-        public SkSubmittedEntry(int id, bool failed, DateTime submitted, string submittedid, int schoolid, string govid, string studentnumber, string firstname, string lastname, string gender, DateTime dateOfBirth)
+        public SkSubmittedEntry(int id, bool failed, DateTime submitted, string submittedid, int schoolid, string govid, string studentnumber, string firstname, string lastname, string gender, DateTime dateOfBirth, string grade)
         {
             this.failed = failed;
             this.id = id;
@@ -35,6 +36,7 @@ namespace SLReports.SaskSubmitted
 
             this.SubmittedDate = submitted;
             this.DateOfBirth = dateOfBirth;
+            this.grade = grade;
         }
 
 
@@ -70,7 +72,8 @@ namespace SLReports.SaskSubmitted
                             dataReader["CLEGALFIRSTNM"].ToString().Trim(),
                             dataReader["CLEGALLASTNM"].ToString().Trim(),
                             dataReader["CGENDER"].ToString().Trim(),
-                            DateTime.Parse(dataReader["DDOB"].ToString().Trim())
+                            DateTime.Parse(dataReader["DDOB"].ToString().Trim()),
+                            dataReader["CGRADECODE"].ToString().Trim()
                             ));
                 }
             }
@@ -112,7 +115,8 @@ namespace SLReports.SaskSubmitted
                             dataReader["CLEGALFIRSTNM"].ToString().Trim(),
                             dataReader["CLEGALLASTNM"].ToString().Trim(),
                             dataReader["CGENDER"].ToString().Trim(),
-                            DateTime.Parse(dataReader["DDOB"].ToString().Trim())
+                            DateTime.Parse(dataReader["DDOB"].ToString().Trim()),
+                            dataReader["CGRADECODE"].ToString().Trim()
                             ));
                 }
             }
