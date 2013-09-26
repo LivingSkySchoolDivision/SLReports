@@ -34,16 +34,28 @@ namespace SLReports.StudentList
             cell_ID.Text = student.getStudentID();
             newRow.Cells.Add(cell_ID);
 
+            string firstNameString = student.getFirstName();
+            if (student.getFirstName() != student.getLegalFirstName())
+            {
+                firstNameString += " (" + student.getLegalFirstName() + ")";
+            }
+
             TableCell cell_GivenName = new TableCell();
-            cell_GivenName.Text = student.getFirstName();
+            cell_GivenName.Text = firstNameString;
             newRow.Cells.Add(cell_GivenName);
 
             TableCell cell_MiddleName = new TableCell();
             cell_MiddleName.Text = student.getLegalMiddleName();
             newRow.Cells.Add(cell_MiddleName);
 
+            string lastNameString = student.getLastName();
+            if (student.getLastName() != student.getLegalLastName())
+            {
+                lastNameString += " (" + student.getLegalLastName() + ")";
+            }
+
             TableCell cell_Surname = new TableCell();
-            cell_Surname.Text = student.getLastName();
+            cell_Surname.Text = lastNameString;
             newRow.Cells.Add(cell_Surname);
 
             TableCell cell_Gender = new TableCell();

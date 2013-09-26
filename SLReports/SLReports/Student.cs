@@ -42,6 +42,10 @@ namespace SLReports
         private string reserveName;
         private string reserveHouse;
         private string treatyStatusNo;
+
+        public string aborigStatus { get; set; }
+        public string language { get; set; }
+
         private bool resideOnReserve;
         private int trackID;
         private bool bHasPhoto;
@@ -51,7 +55,7 @@ namespace SLReports
         public List<TimeTableEntry> TimeTable { get; set; }
         public Track track { get; set; }
         public School school { get; set; }
-        public int activeStatusID { get; set; }
+        public int activeStatusID { get; set; }        
 
         public string getFirstName()
         {
@@ -306,7 +310,7 @@ namespace SLReports
             string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
             string phone, string gender, string instat, string instatcode, string homeRm, DateTime inDate, DateTime dateOfBirth, 
             string bandNo, string bandName, string reserveName, string reserveHouse, string treatyStatus, bool resideonreserve,
-            int trackid, bool hasPhoto, string ldapusername, int credits, int activeStatusID)
+            int trackid, bool hasPhoto, string ldapusername, int credits, int activeStatusID, string aboriginalStatus, string homeLanguage)
         {
             absences = new List<Absence>();
             contacts = new List<Contact>();
@@ -350,6 +354,9 @@ namespace SLReports
             this.bHasPhoto = hasPhoto;
             this.LDAPUserName = ldapusername;
             this.creditsEarned = credits;
+
+            this.language = homeLanguage;
+            this.aborigStatus = aboriginalStatus;
         }
 
         public string getBandNo()
@@ -509,7 +516,9 @@ namespace SLReports
                             hasPhoto,
                             dataReader["cUserName"].ToString().Trim(),
                             (int)credits,
-                            int.Parse(dataReader["iActive_StudentStatusID"].ToString())
+                            int.Parse(dataReader["iActive_StudentStatusID"].ToString()),
+                            dataReader["AboriginalStatus"].ToString().Trim(),
+                            dataReader["LanguageHome"].ToString().Trim()
                             );
                     //returnMe.setTrack(DateTime.Parse(dataReader["CurrentTrackStart"].ToString()), DateTime.Parse(dataReader["CurrentTrackEnd"].ToString()));
                 }
@@ -603,7 +612,9 @@ namespace SLReports
                             hasPhoto,
                             dataReader["cUserName"].ToString().Trim(),
                             credits,
-                            int.Parse(dataReader["iActive_StudentStatusID"].ToString())
+                            int.Parse(dataReader["iActive_StudentStatusID"].ToString()),
+                            dataReader["AboriginalStatus"].ToString().Trim(),
+                            dataReader["LanguageHome"].ToString().Trim()
                             ));
                 }
             }
@@ -691,7 +702,9 @@ namespace SLReports
                             hasPhoto,
                             dataReader["cUserName"].ToString().Trim(),
                             credits,
-                            int.Parse(dataReader["iActive_StudentStatusID"].ToString())
+                            int.Parse(dataReader["iActive_StudentStatusID"].ToString()),
+                            dataReader["AboriginalStatus"].ToString().Trim(),
+                            dataReader["LanguageHome"].ToString().Trim()
                             ));
                 }
             }
@@ -776,7 +789,9 @@ namespace SLReports
                             hasPhoto,
                             dataReader["cUserName"].ToString().Trim(),
                             credits,
-                            int.Parse(dataReader["iActive_StudentStatusID"].ToString())
+                            int.Parse(dataReader["iActive_StudentStatusID"].ToString()),
+                            dataReader["AboriginalStatus"].ToString().Trim(),
+                            dataReader["LanguageHome"].ToString().Trim()
                             ));
                 }
             }
@@ -862,7 +877,9 @@ namespace SLReports
                             hasPhoto,
                             dataReader["cUserName"].ToString().Trim(),
                             credits,
-                            int.Parse(dataReader["iActive_StudentStatusID"].ToString())
+                            int.Parse(dataReader["iActive_StudentStatusID"].ToString()),
+                            dataReader["AboriginalStatus"].ToString().Trim(),
+                            dataReader["LanguageHome"].ToString().Trim()
                             );
                     returnMe.Add(newStudent);
 

@@ -22,6 +22,7 @@ namespace SLReports.SaskSubmitted
             TableCell studentNumberCell = new TableCell();
             TableCell submittedIDCell = new TableCell();
             TableCell gradeCell = new TableCell();
+            TableCell dobCell = new TableCell();
 
             successCell.Text = "Success";
             dateCell.Text = "Date Submitted";
@@ -30,6 +31,7 @@ namespace SLReports.SaskSubmitted
             studentNumberCell.Text = "Student Number";
             submittedIDCell.Text = "SubmittedID";
             gradeCell.Text = "Grade";
+            dobCell.Text = "Date of Birth";
 
             newRow.Cells.Add(successCell);
             newRow.Cells.Add(dateCell);
@@ -38,6 +40,7 @@ namespace SLReports.SaskSubmitted
             newRow.Cells.Add(studentNumberCell);
             newRow.Cells.Add(submittedIDCell);
             newRow.Cells.Add(gradeCell);
+            newRow.Cells.Add(dobCell);
 
 
             return newRow;
@@ -55,6 +58,7 @@ namespace SLReports.SaskSubmitted
             TableCell studentNumberCell = new TableCell();
             TableCell submittedIDCell = new TableCell();
             TableCell gradeCell = new TableCell();
+            TableCell dobCell = new TableCell();
 
             string successString = string.Empty;
 
@@ -73,6 +77,7 @@ namespace SLReports.SaskSubmitted
             studentNumberCell.Text = entry.StudentNumber;
             submittedIDCell.Text = entry.submittedID;
             gradeCell.Text = entry.grade;
+            dobCell.Text = entry.DateOfBirth.ToShortDateString();
 
             newRow.Cells.Add(successCell);
             newRow.Cells.Add(dateCell);
@@ -81,6 +86,7 @@ namespace SLReports.SaskSubmitted
             newRow.Cells.Add(studentNumberCell);
             newRow.Cells.Add(submittedIDCell);
             newRow.Cells.Add(gradeCell);
+            newRow.Cells.Add(dobCell);
 
             return newRow;
         }

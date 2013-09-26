@@ -207,6 +207,7 @@ namespace SLReports.StudentList
             if (!string.IsNullOrEmpty(post["schoolid"]))
             {
                 filterSchoolID = post["schoolid"];
+                litCSVLink.Visible = false;
             }
             else
             {

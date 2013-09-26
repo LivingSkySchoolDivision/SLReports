@@ -157,13 +157,26 @@ namespace SLReports.StudentList
                 cell_id_value.PaddingBottom = bottomPadding;
                 returnMe.AddCell(cell_id_value);
 
-                PdfPCell cell_firstname_value = new PdfPCell(new Phrase(student.getFirstName(), font_body));
+                string firstNameString = student.getFirstName();
+                if (student.getFirstName() != student.getLegalFirstName())
+                {
+                    firstNameString += " (" + student.getLegalFirstName() + ")";
+                }
+
+                string lastNameString = student.getLastName();
+                if (student.getLastName() != student.getLegalLastName())
+                {
+                    lastNameString += " (" + student.getLegalLastName() + ")";
+                }
+
+
+                PdfPCell cell_firstname_value = new PdfPCell(new Phrase(firstNameString, font_body));
                 cell_firstname_value.Border = Rectangle.TOP_BORDER;
                 cell_firstname_value.BorderColor = borderColor;
                 cell_firstname_value.PaddingBottom = bottomPadding;
                 returnMe.AddCell(cell_firstname_value);
 
-                PdfPCell cell_lastname_value = new PdfPCell(new Phrase(student.getLastName(), font_body));
+                PdfPCell cell_lastname_value = new PdfPCell(new Phrase(lastNameString, font_body));
                 cell_lastname_value.Border = Rectangle.TOP_BORDER;
                 cell_lastname_value.BorderColor = borderColor;
                 cell_lastname_value.PaddingBottom = bottomPadding;
@@ -184,8 +197,6 @@ namespace SLReports.StudentList
                 
             }
 
-
-
             return returnMe;
         }
 
@@ -204,8 +215,7 @@ namespace SLReports.StudentList
             PageEventHandler.ShowOnFirstPage = true;
             PageEventHandler.bottomCenter = "Printed " + DateTime.Now.ToLongDateString();
             PageEventHandler.bottomLeft = "Student list by grade";
-
-
+            
             // Organize students into grades
             SortedDictionary<string, List<Student>> studentsByGrade = new SortedDictionary<string, List<Student>>();
             foreach (Student student in students)

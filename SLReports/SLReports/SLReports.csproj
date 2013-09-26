@@ -134,6 +134,8 @@
     <Content Include="ServerVariables.aspx" />
     <Content Include="Staff\index.aspx" />
     <Content Include="StudentDiscrepancy\index.aspx" />
+    <Content Include="StudentList\allStudents.aspx" />
+    <Content Include="StudentList\allStudentsCSV.aspx" />
     <Content Include="StudentList\ByGrade.aspx" />
     <Content Include="StudentList\ByGradePDF.aspx" />
     <Content Include="StudentList\getCSV.aspx" />
@@ -308,6 +310,20 @@
     </Compile>
     <Compile Include="SaskSubmitted\SaskSubmittedSchoolCount.cs" />
     <Compile Include="SaskSubmitted\SkSubmittedEntry.cs" />
+    <Compile Include="StudentList\allStudents.aspx.cs">
+      <DependentUpon>allStudents.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="StudentList\allStudents.aspx.designer.cs">
+      <DependentUpon>allStudents.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="StudentList\allStudentsCSV.aspx.cs">
+      <DependentUpon>allStudentsCSV.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="StudentList\allStudentsCSV.aspx.designer.cs">
+      <DependentUpon>allStudentsCSV.aspx</DependentUpon>
+    </Compile>
     <Compile Include="StudentStatus.cs" />
     <Compile Include="JSON\getEnrollmentStats.aspx.cs">
       <DependentUpon>getEnrollmentStats.aspx</DependentUpon>

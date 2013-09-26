@@ -24,8 +24,8 @@ namespace SLReports.ReportCard
         public static Font font_small_bold_white = FontFactory.GetFont("Verdana", 8, Font.BOLD, BaseColor.WHITE);
         public static Font font_small_italic = FontFactory.GetFont("Verdana", 8, Font.ITALIC, BaseColor.BLACK);
 
-        public static Font font_very_small = FontFactory.GetFont("Verdana", 6, BaseColor.BLACK);
-        public static Font font_very_small_bold = FontFactory.GetFont("Verdana", 6, Font.BOLD, BaseColor.BLACK);
+        public static Font font_very_small = FontFactory.GetFont("Verdana", 5, BaseColor.BLACK);
+        public static Font font_very_small_bold = FontFactory.GetFont("Verdana", 5, Font.BOLD, BaseColor.BLACK);
         
         
         // Bar Colors
@@ -756,7 +756,7 @@ namespace SLReports.ReportCard
 
             if ((student == null) || (anonymize))
             {
-                student = new Student("John", "Smith", "John", "Smith", "J", "Demo", "000000000", "Demo School", "00000", "X", "Saskatchewan", "North Battleford", "Fake St", "123", "", "H0H0H0", "3065551234", "Male", "Instatus", "Instatuscode", "Homeroom Teacher", DateTime.Now.AddDays(-1), DateTime.Now, "000", "Band name", "Reserve Name", "House #", "000000000", false, 000, false, "user.name", 20, 0);
+                student = new Student("John", "Smith", "John", "Smith", "J", "Demo", "000000000", "Demo School", "00000", "X", "Saskatchewan", "North Battleford", "Fake St", "123", "", "H0H0H0", "3065551234", "Male", "Instatus", "Instatuscode", "Homeroom Teacher", DateTime.Now.AddDays(-1), DateTime.Now, "000", "Band name", "Reserve Name", "House #", "000000000", false, 000, false, "user.name", 20, 0, "", "English");
             }
 
             PdfPTable nameplateTable = new PdfPTable(3);
@@ -1375,7 +1375,7 @@ namespace SLReports.ReportCard
                 lifeSkills.Add("Citizenship", "Shows caring, follows class and school rules, takes responsibility for actions.");
                 lifeSkills.Add("Collaborative", "Listens and works well with others, includes classmates at recess and in classroom.");
                 lifeSkills.Add("Leadership", "Wants to learn and help others, good role model.");
-                lifeSkills.Add("Self-Directed", "Stay son task, organized.");
+                lifeSkills.Add("Self-Directed", "Stays on task, organized.");
             }
             else
             {

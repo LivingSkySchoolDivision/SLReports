@@ -31,16 +31,7 @@
     <b><asp:Label ID="lblEntryCount" runat="server" Text="" Visible="false"></asp:Label></b>
     <br /><br />
 
-    <asp:Table ID="tblEntries" runat="server" Visible="false" CellPadding="4" CssClass="datatable" Width="600">
-        <asp:TableRow>
-            <asp:TableCell>Success</asp:TableCell>
-            <asp:TableCell>Date Entered</asp:TableCell>
-            <asp:TableCell>First Name</asp:TableCell>
-            <asp:TableCell>Last Name</asp:TableCell>
-            <asp:TableCell>Student Number</asp:TableCell>
-            <asp:TableCell>SubmittedID</asp:TableCell>
-            <asp:TableCell>Grade</asp:TableCell>
-        </asp:TableRow>
+    <asp:Table ID="tblEntries" runat="server" Visible="false" CellPadding="4" CssClass="datatable" Width="900">
     </asp:Table>
 
     </form>
