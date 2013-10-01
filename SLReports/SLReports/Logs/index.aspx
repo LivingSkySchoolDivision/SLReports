@@ -11,13 +11,14 @@
     </asp:Table>
 
     <h3>Recent activity (Most recent 100 events, Newest at top)</h3>
-    <asp:Table ID="tblLogins_All" runat="server" CssClass="datatable" Width="850" CellPadding="5">
+    <asp:Table ID="tblLogins_All" runat="server" CssClass="datatable" Width="1050" CellPadding="5">
         <asp:TableHeaderRow CssClass="datatable_header">            
             <asp:TableHeaderCell>Type</asp:TableHeaderCell>
             <asp:TableHeaderCell>Time</asp:TableHeaderCell>
             <asp:TableHeaderCell>Username</asp:TableHeaderCell>
             <asp:TableHeaderCell>IP Address</asp:TableHeaderCell>
             <asp:TableHeaderCell>Info</asp:TableHeaderCell>
+            <asp:TableHeaderCell>User Agent</asp:TableHeaderCell>
         </asp:TableHeaderRow>
     </asp:Table>
 

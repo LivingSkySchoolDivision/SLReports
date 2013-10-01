@@ -146,19 +146,25 @@ namespace SLReports.Logs
             cell_ip.BackColor = bgColor;
             TableCell cell_info = new TableCell();
             cell_info.BackColor = bgColor;
+
+            TableCell cell_UserAgent = new TableCell();
+            cell_UserAgent.BackColor = bgColor;
+
+            
             
             cell_type.Text = thisLoginAttempt.status;
-
             cell_time.Text = thisLoginAttempt.eventTime.ToShortDateString() + " " + thisLoginAttempt.eventTime.ToLongTimeString();
             cell_username.Text = thisLoginAttempt.enteredUserName;
             cell_ip.Text = thisLoginAttempt.ipAddress;
             cell_info.Text = thisLoginAttempt.info;
+            cell_UserAgent.Text = thisLoginAttempt.userAgent;
 
             returnMe.Cells.Add(cell_type);
             returnMe.Cells.Add(cell_time);
             returnMe.Cells.Add(cell_username);
             returnMe.Cells.Add(cell_ip);
             returnMe.Cells.Add(cell_info);
+            returnMe.Cells.Add(cell_UserAgent);
 
             return returnMe;
         }
