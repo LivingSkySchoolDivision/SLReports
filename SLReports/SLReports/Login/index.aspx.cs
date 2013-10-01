@@ -152,6 +152,8 @@ namespace SLReports.Login
         protected void Page_Load(object sender, EventArgs e)
         {
             txtUsername.Focus();
+            btnLogin.Enabled = true;
+            btnLogin.Text = "Login";
         }
 
         /* This doesn't do anything yet - It was a hair-brained scheme that may or may not make it into the final version */
@@ -169,6 +171,9 @@ namespace SLReports.Login
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
+            btnLogin.Enabled = false;
+            btnLogin.Text = "Loading...";
+
             string givenUsername = txtUsername.Text;
             string givenPassword = txtPassword.Text;
 

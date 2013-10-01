@@ -5,6 +5,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>School Logic Data Explorer</title>
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+    <META NAME="ROBOTS" CONTENT="NONE"> 
+    <META NAME="GOOGLEBOT" CONTENT="NOARCHIVE"> 
     <link rel="stylesheet" href="MainStyles.css" />    
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
