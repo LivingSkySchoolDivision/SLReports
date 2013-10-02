@@ -30,6 +30,10 @@ namespace SLReports.StudentDiscrepancy
                     drpSchool.Items.Add(newItem);
                 }
             }
+
+
+
+            btnGo.Attributes.Add("OnClick", "this.value='Thinking...'");
         }
 
         private TableRow addIDRow(int idnumber)
