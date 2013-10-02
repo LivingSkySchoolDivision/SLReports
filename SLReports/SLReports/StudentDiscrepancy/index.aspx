@@ -7,9 +7,11 @@
     <p>You should copy and paste the student ID column from an excel spreadsheet. This form expects <i>only</i> id numbers, each on a new line, no commas or semicolens.</p>
     <form runat="server">
         <asp:TextBox Height="300" TextMode="MultiLine" width="400" ID="txtInput" runat="server"></asp:TextBox><br />
+        <asp:DropDownList ID="drpSchool" runat="server">
+            <asp:ListItem Value="0">All Schools</asp:ListItem>
+        </asp:DropDownList>
         <asp:Button ID="btnGo" runat="server" Text="Analyze" OnClick="btnGo_Click" />
     </form>
-    <p>This may take some time - it can take over 25 million calculations.</p>
     <br />
     <asp:Label ID="lblStatus" runat="server" Text=""></asp:Label>
 

@@ -13,7 +13,23 @@ namespace SLReports.StudentDiscrepancy
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Add schools to the dropdown list
+            if (!IsPostBack)
+            {
+                List<School> allSchools;
+                using (SqlConnection connection = new SqlConnection(LSKYCommon.dbConnectionString_SchoolLogic))
+                {
+                    allSchools = School.loadAllSchools(connection);
+                }
 
+                foreach (School school in allSchools)
+                {
+                    ListItem newItem = new ListItem();
+                    newItem.Value = school.getGovID().ToString();
+                    newItem.Text = school.getName();
+                    drpSchool.Items.Add(newItem);
+                }
+            }
         }
 
         private TableRow addIDRow(int idnumber)
@@ -41,7 +57,6 @@ namespace SLReports.StudentDiscrepancy
 
         protected void btnGo_Click(object sender, EventArgs e)
         {
-
             string[] input = txtInput.Text.Split('\n');
 
             List<int> inputtedIDNumbers = new List<int>();
@@ -56,12 +71,26 @@ namespace SLReports.StudentDiscrepancy
 
             lblStatus.Text = "Found " + inputtedIDNumbers.Count + " valid id numbers.";
 
-            /* Load all students */
+            // Parse the selected school
+            int selectedSchoolID = 0;
+            if (!int.TryParse(drpSchool.SelectedValue, out selectedSchoolID))
+            {
+                selectedSchoolID = 0;
+            }
+
+            // Load all students
             List<Student> allStudents = new List<Student>(); 
             String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
-                allStudents = Student.loadAllStudents(connection);
+                if (selectedSchoolID == 0)
+                {
+                    allStudents = Student.loadAllStudents(connection);
+                }
+                else
+                {
+                    allStudents = Student.loadStudentsFromThisSchool(connection, selectedSchoolID);
+                }
             }
 
             List<int> idNumbersMissingFromDatabase = new List<int>();
