@@ -578,6 +578,12 @@ namespace SLReports
                     int credits = 0;
                     int.TryParse(dataReader["Credits"].ToString(), out credits);
 
+                    bool resideOnReserve = false;
+                    if (!string.IsNullOrEmpty(dataReader["ResideOnReserve"].ToString()))
+                    {
+                        bool.TryParse(dataReader["ResideOnReserve"].ToString(), out resideOnReserve);
+                    }
+
                     returnMe.Add(new Student(
                             dataReader["FirstName"].ToString().Trim(),
                             dataReader["LastName"].ToString().Trim(),
@@ -607,7 +613,7 @@ namespace SLReports
                             dataReader["ReserveName"].ToString().Trim(),
                             dataReader["ReserveHouse"].ToString().Trim(),
                             dataReader["StatusNo"].ToString().Trim(),
-                            bool.Parse(dataReader["ResideOnReserve"].ToString()),
+                            resideOnReserve,
                             int.Parse(dataReader["TrackID"].ToString()),
                             hasPhoto,
                             dataReader["cUserName"].ToString().Trim(),

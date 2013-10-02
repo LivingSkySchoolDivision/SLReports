@@ -30,7 +30,7 @@
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkShowPlaceholderPhotos" runat="server" /></asp:TableCell>
-                            <asp:TableCell VerticalAlign="Top"><b>Show Placeholder photos when student has no photo.</b><br /><a target="_blank" href="https://sldata.lskysd.ca/SLReports/Photos/GetPhoto.aspx?studentnumber=Demo">Click here for example of placeholder photo</a>.</asp:TableCell>
+                            <asp:TableCell VerticalAlign="Top"><b>Show Placeholder photos when student has no photo.</b><br /><a target="_blank" href="https://sldata.lskysd.ca/SLReports/Photos/GetPhoto.aspx?studentnumber=Demo">Click here for example of placeholder photo</a>. If unchecked, photo will appear as whitespace.</asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkAnonymize" runat="server" /></asp:TableCell>
