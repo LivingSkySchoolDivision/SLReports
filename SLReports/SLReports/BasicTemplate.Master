@@ -37,6 +37,6 @@
         </asp:ContentPlaceHolder>
     </div>
     
-<div class="footer">If you experience a problem with this site, or would like to request a feature, please create a <a href="https://helpdesk.lskysd.ca">Help Desk</a> ticket, or send an email to <a href="mailto:mark.strendin@lskysd.ca">mark.strendin@lskysd.ca</a></div>
+<div class="footer">If you experience a problem with this site, or would like to request a feature, please create a <a href="https://helpdesk.lskysd.ca">Help Desk</a> ticket.</div>
 </body>
 </html>
