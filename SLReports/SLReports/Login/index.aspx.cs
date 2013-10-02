@@ -17,8 +17,6 @@ namespace SLReports.Login
 {
     public partial class index : System.Web.UI.Page
     {
-        
-
         public bool validate(string domain, string username, string pwd)
         {
             using (PrincipalContext pc = new PrincipalContext(ContextType.Domain, domain))
@@ -104,7 +102,7 @@ namespace SLReports.Login
             /*  If logging in during the work day, make a session last 7 hours */
             /*  If logging in after hours, make the session only last 2 hours */
             TimeSpan workDayStart = new TimeSpan(7, 0, 0);
-            TimeSpan workDayEnd = new TimeSpan(16, 0, 0);
+            TimeSpan workDayEnd = new TimeSpan(15, 00, 0);
             TimeSpan now = DateTime.Now.TimeOfDay;
             TimeSpan sessionDuration;
 
@@ -152,8 +150,7 @@ namespace SLReports.Login
         protected void Page_Load(object sender, EventArgs e)
         {
             txtUsername.Focus();
-            btnLogin.Enabled = true;
-            btnLogin.Text = "Login";
+            btnLogin.Attributes.Add("OnClick", "this.value='Processing...'");
         }
 
         /* This doesn't do anything yet - It was a hair-brained scheme that may or may not make it into the final version */
@@ -171,8 +168,6 @@ namespace SLReports.Login
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            btnLogin.Enabled = false;
-            btnLogin.Text = "Loading...";
 
             string givenUsername = txtUsername.Text;
             string givenPassword = txtPassword.Text;
