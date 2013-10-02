@@ -79,6 +79,7 @@
     <Content Include="Duplicates\getDuplicatesCSV.aspx" />
     <Content Include="Duplicates\index.aspx" />
     <Content Include="Duplicates\MultipleOutStatuses.aspx" />
+    <Content Include="EnrollmentByGrade\getCSV.aspx" />
     <Content Include="EnrollmentByGrade\index.aspx" />
     <Content Include="FindStudent\index.aspx" />
     <Content Include="FirstClassOfTheDay\getCSV.aspx" />
@@ -264,6 +265,13 @@
     </Compile>
     <Compile Include="Duplicates\MultipleOutStatuses.aspx.designer.cs">
       <DependentUpon>MultipleOutStatuses.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EnrollmentByGrade\getCSV.aspx.cs">
+      <DependentUpon>getCSV.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EnrollmentByGrade\getCSV.aspx.designer.cs">
+      <DependentUpon>getCSV.aspx</DependentUpon>
     </Compile>
     <Compile Include="FirstClassOfTheDay\getCSV.aspx.cs">
       <DependentUpon>getCSV.aspx</DependentUpon>

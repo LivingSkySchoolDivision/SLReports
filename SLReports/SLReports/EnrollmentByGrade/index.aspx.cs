@@ -11,280 +11,341 @@ using System.Web.UI.WebControls;
 namespace SLReports.DivisionStats
 {
     public partial class index : System.Web.UI.Page
-    {
-        public static List<Student> AllStudents;
-        public static List<School> Schools;
-        public SortedDictionary<School, List<Student>> StudentsBySchool;
-                
-        public void buildGradeStatisticsTable(List<Student> students)
+    {            
+        TableRow addTableHeader_1(List<string> grades)
         {
-            /* Gather statistics */
-            int totalStudents = 0;
-            int totalMales = 0;
-            int totalFemales = 0;
-            List<String> allGrades = new List<String>();
-            SortedDictionary<string, int> grades = new SortedDictionary<string, int>();
+            TableHeaderRow newRow = new TableHeaderRow();
 
-            /* Get list of possible grades */
+            TableHeaderCell titleCell_School = new TableHeaderCell();
+            titleCell_School.RowSpan = 2;
+            titleCell_School.CssClass = "datatable_header";
+            titleCell_School.Text = "School";
+            newRow.Cells.Add(titleCell_School);
+
+            TableHeaderCell titleCell_Students = new TableHeaderCell();
+            titleCell_Students.ColumnSpan = 3;
+            titleCell_Students.CssClass = "datatable_header";
+            titleCell_Students.Text = "Students";
+            newRow.Cells.Add(titleCell_Students);
+
+            TableHeaderCell titleCell_Grades = new TableHeaderCell();
+            titleCell_Grades.ColumnSpan = grades.Count;
+            titleCell_Grades.CssClass = "datatable_header";
+            titleCell_Grades.Text = "Grades";
+            newRow.Cells.Add(titleCell_Grades);
+
+            return newRow;
+        }
+
+        TableRow addTableHeader_2(List<string> grades)
+        {
+            TableHeaderRow newRow = new TableHeaderRow();
+
+            TableHeaderCell titleCell_Total = new TableHeaderCell();
+            titleCell_Total.CssClass = "datatable_header";
+            titleCell_Total.Text = "Total";
+            newRow.Cells.Add(titleCell_Total);
+
+            TableHeaderCell titleCell_Male = new TableHeaderCell();
+            titleCell_Male.CssClass = "datatable_header";
+            titleCell_Male.Text = "Male";
+            newRow.Cells.Add(titleCell_Male);
+
+            TableHeaderCell titleCell_Female = new TableHeaderCell();
+            titleCell_Female.CssClass = "datatable_header";
+            titleCell_Female.Text = "Female";
+            newRow.Cells.Add(titleCell_Female);
+
+            if (grades.Contains("PK"))
+            {
+                TableHeaderCell titleCell_Grades = new TableHeaderCell();
+                titleCell_Grades.CssClass = "datatable_header";
+                titleCell_Grades.Text = "PK";
+                newRow.Cells.Add(titleCell_Grades);
+            }
+
+            if (grades.Contains("0K"))
+            {
+                TableHeaderCell titleCell_Grades = new TableHeaderCell();
+                titleCell_Grades.CssClass = "datatable_header";
+                titleCell_Grades.Text = "K";
+                newRow.Cells.Add(titleCell_Grades);
+            }
+            
+            foreach (string grade in grades)
+            {
+                if ((grade.ToLower() != "0k") && (grade.ToLower() != "k") && (grade.ToLower() != "pk"))
+                {                    
+                    TableHeaderCell titleCell_Grades = new TableHeaderCell();
+                    titleCell_Grades.CssClass = "datatable_header";
+                    
+                    int gradeNum = 0;
+                    if (int.TryParse(grade, out gradeNum))
+                    {
+                        titleCell_Grades.Text = gradeNum.ToString();
+                    }
+                    else
+                    {
+                        titleCell_Grades.Text = grade;
+                    }
+                    
+                    
+                    newRow.Cells.Add(titleCell_Grades);
+                }
+            }
+
+            return newRow;
+        }
+
+        TableRow addSchoolRow(string school, List<string> grades, List<Student> students)
+        {
+            // Figure out grade numbers
+            // and while you're at it, figure out male and female counts
+            Dictionary<string, int> gradesWithCounts = new Dictionary<string, int>();
+            int males = 0;
+            int females = 0;
+
+            foreach (string grade in grades)
+            {
+                if (!gradesWithCounts.ContainsKey(grade))
+                {
+                    gradesWithCounts.Add(grade, 0);
+                }
+            }
+
             foreach (Student student in students)
             {
-                /* Compile a list of all possible grades */
-                if (!allGrades.Contains(student.getGrade()))
+                if (student.getGender().ToLower() == "male")
                 {
-                    allGrades.Add(student.getGrade());
-                }
-
-                /* Get some basic headcounts */
-                totalStudents++;
-                if (student.getGender().ToLower().Equals("male"))
-                {
-                    totalMales++;
+                    males++;
                 }
                 else
                 {
-                    totalFemales++;
+                    females++;
                 }
-            }
 
-            allGrades.Sort();
-            int thisGradeCount;
-            grades.Clear();
-
-            foreach (String grade in allGrades)
-            {
-                thisGradeCount = 0;
-                foreach (Student student in students)
+                if (!gradesWithCounts.ContainsKey(student.getGrade()))
                 {
-                    if (student.getGrade().Equals(grade))
-                    {
-                        thisGradeCount++;
-                    }
+                    gradesWithCounts.Add(student.getGrade(), 0);
                 }
-                grades.Add(grade, thisGradeCount);
+
+                gradesWithCounts[student.getGrade()]++;
             }
+            
+            TableRow newRow = new TableRow();
+            newRow.CssClass = "datatable_row";
 
-            /* Display in a table */
+            TableCell cell_schoolName = new TableCell();
+            cell_schoolName.CssClass = "datatable_row";
+            cell_schoolName.Text = school;
+            newRow.Cells.Add(cell_schoolName);
 
-            Response.Write("<table>");
-            Response.Write("<tr class=\"datatable_header\">");
-            Response.Write("<th width=\"75\">Grade</th>");
-            foreach (var grade in grades)
+            TableCell cell_Total = new TableCell();
+            cell_Total.CssClass = "datatable_row";
+            cell_Total.Text = "<b>" + students.Count.ToString() + "</b>";
+            newRow.Cells.Add(cell_Total);
+
+            TableCell cell_Male = new TableCell();
+            cell_Male.CssClass = "datatable_row";
+            cell_Male.BackColor = System.Drawing.ColorTranslator.FromHtml("#F0F0F0");
+            cell_Male.Text = males.ToString();
+            newRow.Cells.Add(cell_Male);
+
+            TableCell cell_Female = new TableCell();
+            cell_Female.CssClass = "datatable_row";
+            cell_Female.BackColor = System.Drawing.ColorTranslator.FromHtml("#F0F0F0");
+            cell_Female.Text = females.ToString();
+            newRow.Cells.Add(cell_Female);
+
+
+            // If grade "PK" exists, display it before the numerical grades
+            if (grades.Contains("PK"))
             {
-                Response.Write("<th align=\"center\" width=\"25\">" + grade.Key + "</th>");
+                TableCell titleCell_Grades = new TableCell();
+                titleCell_Grades.CssClass = "datatable_row";
+                if (gradesWithCounts["PK"] > 0) 
+                {
+                    titleCell_Grades.Text = gradesWithCounts["PK"].ToString();
+                }
+                newRow.Cells.Add(titleCell_Grades);
             }
-            Response.Write("</tr><tr>");
-            Response.Write("<th class=\"datatable_header\"><b>Count</b></th>");
-            foreach (var grade in grades)
+
+            // If grade "K" exists, display it before the numerical grades
+            if (grades.Contains("0K"))
             {
-                Response.Write("<td align=\"center\" style=\"border: 1px solid black;\">" + grade.Value + " </td>");
+                TableCell titleCell_Grades = new TableCell();
+                titleCell_Grades.CssClass = "datatable_row";
+                if (gradesWithCounts["0K"] > 0)
+                {
+                    titleCell_Grades.Text = gradesWithCounts["0K"].ToString();
+                }
+                newRow.Cells.Add(titleCell_Grades);
+            }
+            // Display numerical grades (but not PK or K)
+            foreach (string grade in grades)
+            {
+                if ((grade.ToLower() != "0k") && (grade.ToLower() != "k") && (grade.ToLower() != "pk"))
+                {
+                    TableCell cell_Grades = new TableCell();
+                    cell_Grades.CssClass = "datatable_row";
+                    if (gradesWithCounts[grade] > 0)
+                    {
+                        cell_Grades.Text = gradesWithCounts[grade].ToString();
+                    }
+                    newRow.Cells.Add(cell_Grades);
+                }
             }
 
-            Response.Write("</tr></table>");
-
-
-
+            return newRow;
         }
 
-        public void buildEnrollmentTable(List<School> schools, List<Student> students)
+        TableRow addTotalRow(List<string> grades, List<Student> students)
         {
-            List<String> allGrades = new List<String>();
-            SortedDictionary<string, int> grades = new SortedDictionary<string, int>();
+            // Figure out grade numbers
+            // and while you're at it, figure out male and female counts
+            Dictionary<string, int> gradesWithCounts = new Dictionary<string, int>();
+            int males = 0;
+            int females = 0;
 
-            /* Get list of possible grades */
+            foreach (string grade in grades)
+            {
+                if (!gradesWithCounts.ContainsKey(grade))
+                {
+                    gradesWithCounts.Add(grade, 0);
+                }
+            }
+
             foreach (Student student in students)
             {
-                /* Compile a list of all possible grades */
-                if (!allGrades.Contains(student.getGrade()))
+                if (student.getGender().ToLower() == "male")
                 {
-                    allGrades.Add(student.getGrade());
+                    males++;
                 }
-            }
-            allGrades.Sort();
-
-            int totalMales = 0;
-            int totalFemales = 0;            
-
-            /* School by School */
-            Response.Write("<table class=\"datatable\" cellpadding=5>");
-            Response.Write("<tr class=\"datatable_header\"><th></th><th colspan=3>Students</th><th colspan=\""+allGrades.Count()+"\">Grade</tr>");
-            Response.Write("<tr class=\"datatable_header\"><th>School</th><th>Total</th><th>Male</th><th>Female</th>");
-            foreach (String grade in allGrades)
-            {
-                Response.Write("<th>"+grade+"</th>");
-            }
-            Response.Write("</tr>");
-
-            Dictionary<String, int> totalGradeEnrollment = new Dictionary<string, int>();
-            foreach (School school in schools)
-            {
-                Dictionary<String, int> gradeEnrollment = new Dictionary<string, int>();
-                List<Student> thisSchoolsStudents = Student.GetStudentsFromSchool(students, school.getGovIDAsString());                
-                int numMale = 0;
-                int numFemale = 0;
-                foreach (Student student in thisSchoolsStudents)
-                {                    
-                    if (student.getGender().ToLower().Equals("male"))
-                    {
-                        numMale++;
-                        totalMales++;
-                    }
-                    else
-                    {
-                        numFemale++;
-                        totalFemales++;
-                    }
-
-                    if (!gradeEnrollment.ContainsKey(student.getGrade()))
-                    {
-                        gradeEnrollment.Add(student.getGrade(), 1);
-                    }
-                    else
-                    {
-                        gradeEnrollment[student.getGrade()]++;
-                    }
-
-                    if (!totalGradeEnrollment.ContainsKey(student.getGrade()))
-                    {
-                        totalGradeEnrollment.Add(student.getGrade(), 1);
-                    }
-                    else
-                    {
-                        totalGradeEnrollment[student.getGrade()]++;
-                    }
-                }                
-
-                Response.Write("<tr class=\"row\"><td>" + school.getName() + "</td><td class=\"td_total\">" + thisSchoolsStudents.Count() + "</td><td class=\"td_male\">" + numMale + "</td><td class=\"td_female\">" + numFemale + "</td>");
-                foreach (String grade in allGrades)
+                else
                 {
-                    Response.Write("<td>");
-                    if (gradeEnrollment.ContainsKey(grade))
-                    {
-                        Response.Write(gradeEnrollment[grade].ToString());
-                    }
-                    Response.Write("</td>");
+                    females++;
                 }
-                Response.Write("</tr>");
-            }
 
-            Response.Write("<tr class=\"datatable_header\"><td><b>Total</b></td><td>" + students.Count() + "</td><td>" + totalMales + "</td><td>" + totalFemales + "</td>");
-            foreach (String grade in allGrades)
-            {
-                Response.Write("<td>");
-                if (totalGradeEnrollment.ContainsKey(grade))
+                if (!gradesWithCounts.ContainsKey(student.getGrade()))
                 {
-                    Response.Write(totalGradeEnrollment[grade].ToString());
+                    gradesWithCounts.Add(student.getGrade(), 0);
                 }
-                Response.Write("</td>");
+
+                gradesWithCounts[student.getGrade()]++;
             }
-            Response.Write("</tr>");
-            Response.Write("</table>");
-        }
 
-        public void buildStatisticsTableBySchool(List<School> schools, List<Student> students)
-        {
-            
-            
-            List<String> allGrades = new List<String>();
-            SortedDictionary<string, int> grades = new SortedDictionary<string, int>();
+            TableRow newRow = new TableRow();
 
-            /* Get list of possible grades */
-            foreach (Student student in students)
+            TableCell cell_schoolName = new TableCell();
+            cell_schoolName.CssClass = "datatable_row";
+            cell_schoolName.Text = "<b>Total</b>";
+            newRow.Cells.Add(cell_schoolName);
+
+            TableCell cell_Total = new TableCell();
+            cell_Total.CssClass = "datatable_row";
+            cell_Total.Text = "<B>" + students.Count.ToString() + "</B>";
+            newRow.Cells.Add(cell_Total);
+
+            TableCell cell_Male = new TableCell();
+            cell_Male.CssClass = "datatable_row";
+            cell_Male.BackColor = System.Drawing.ColorTranslator.FromHtml("#F0F0F0");
+            cell_Male.Text = "<B>" + males.ToString() + "</B>";
+            newRow.Cells.Add(cell_Male);
+
+            TableCell cell_Female = new TableCell();
+            cell_Female.CssClass = "datatable_row";
+            cell_Female.BackColor = System.Drawing.ColorTranslator.FromHtml("#F0F0F0");
+            cell_Female.Text = "<B>" + females.ToString() + "</B>";
+            newRow.Cells.Add(cell_Female);
+
+
+            // If grade "PK" exists, display it before the numerical grades
+            if (grades.Contains("PK"))
             {
-                /* Compile a list of all possible grades */
-                if (!allGrades.Contains(student.getGrade()))
+                TableCell titleCell_Grades = new TableCell();
+                titleCell_Grades.CssClass = "datatable_row";
+                if (gradesWithCounts["PK"] > 0)
                 {
-                    allGrades.Add(student.getGrade());
+                    titleCell_Grades.Text = "<B>" + gradesWithCounts["PK"].ToString() + "</B>";
+                }
+                newRow.Cells.Add(titleCell_Grades);
+            }
+
+            // If grade "K" exists, display it before the numerical grades
+            if (grades.Contains("0K"))
+            {
+                TableCell titleCell_Grades = new TableCell();
+                titleCell_Grades.CssClass = "datatable_row";
+                if (gradesWithCounts["0K"] > 0)
+                {
+                    titleCell_Grades.Text = "<B>" + gradesWithCounts["0K"].ToString() + "</B>";
+                }
+                newRow.Cells.Add(titleCell_Grades);
+            }
+            // Display numerical grades (but not PK or K)
+            foreach (string grade in grades)
+            {
+                if ((grade.ToLower() != "0k") && (grade.ToLower() != "k") && (grade.ToLower() != "pk"))
+                {
+                    TableCell cell_Grades = new TableCell();
+                    cell_Grades.CssClass = "datatable_row";
+                    if (gradesWithCounts[grade] > 0)
+                    {
+                        cell_Grades.Text = "<B>" + gradesWithCounts[grade].ToString() + "</B>";
+                    }
+                    newRow.Cells.Add(cell_Grades);
                 }
             }
 
-            allGrades.Sort();
-            int thisGradeCount;
-            grades.Clear();
-
-            foreach (String grade in allGrades)
-            {
-                thisGradeCount = 0;
-                foreach (Student student in students)
-                {
-                    if (student.getGrade().Equals(grade))
-                    {
-                        thisGradeCount++;
-                    }
-                }
-                grades.Add(grade, thisGradeCount);
-            }
-
-            Response.Write("<br><table border=0 cellspacing=0 cellpadding=3>");
-            Response.Write("<tr>");
-            Response.Write("<td width=\"75\"><b>Grade</b></td>");
-            foreach (var grade in grades)
-            {
-                Response.Write("<td align=\"center\" style=\"border: 1px solid black;background-color: #555555; color: white;\" width=\"25\"><b>" + grade.Key + "</b></td>");
-            }
-            Response.Write("</tr><tr>");
-            Response.Write("<td><b>Count</b></td>");
-            foreach (var grade in grades)
-            {
-                Response.Write("<td align=\"center\" style=\"border: 1px solid black;\">" + grade.Value + " </td>");
-            }
-
-            Response.Write("</tr></table>");
-
-
-
+            return newRow;
         }
 
 
         protected void Page_Load(object sender, EventArgs e)
-        {
-            AllStudents = new List<Student>();
-            Schools = new List<School>();
+        {            
+            List<Student> AllStudents;
+            SortedDictionary<string, List<Student>> StudentsBySchool = new SortedDictionary<string,List<Student>>();
 
-            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
-
-            #region Load all students
-            using (SqlConnection connection = new SqlConnection(dbConnectionString))
+            using (SqlConnection connection = new SqlConnection(LSKYCommon.dbConnectionString_SchoolLogic))
             {
                 AllStudents = Student.loadAllStudents(connection);
             }
-            #endregion
-
-            /* Load Schools */
-            #region Load all schools
-            try
+            
+            // Figure out how many grades exist
+            List<string> grades = new List<string>();
+            foreach (Student student in AllStudents)
             {
-                SqlConnection dbConnection = new SqlConnection(dbConnectionString);
-                SqlCommand sqlCommand = new SqlCommand();
-
-                sqlCommand.Connection = dbConnection;
-                sqlCommand.CommandType = CommandType.Text;
-                sqlCommand.CommandText = "SELECT * FROM LSKY_LSKYSchools;";
-                sqlCommand.Connection.Open();
-
-                SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
-
-                if (dbDataReader.HasRows)
+                if (!grades.Contains(student.getGrade()))
                 {
-                    Schools.Clear();
-                    while (dbDataReader.Read())
-                    {
-                        //dbDataReader["LegalFirstName"].ToString() + " " + dbDataReader["LegalLastName"].ToString()
-                        Schools.Add(new School(dbDataReader["name"].ToString(), dbDataReader["internalID"].ToString(), dbDataReader["govID"].ToString(), dbDataReader["address"].ToString()));
-                    }
-                }
-
-                sqlCommand.Connection.Close();
-            }
-            catch (Exception ex)
-            {
-                Response.Write("Exception: " + ex.Message);
-                if (ex.InnerException != null)
-                {
-                    Response.Write("Exception: " + ex.InnerException.Message);
+                    grades.Add(student.getGrade());
                 }
             }
+            grades.Sort();
 
-            #endregion
+            // Split students into lists according to school, for easier processing
+            foreach (Student student in AllStudents)
+            {
+                if (!StudentsBySchool.ContainsKey(student.getSchoolName()))
+                {
+                    StudentsBySchool.Add(student.getSchoolName(), new List<Student>());
+                }
+
+                StudentsBySchool[student.getSchoolName()].Add(student);
+            }
+
+            // Display table headings
+            tblSchoolStats.Rows.Add(addTableHeader_1(grades));
+            tblSchoolStats.Rows.Add(addTableHeader_2(grades));
+
+            // Display the school rows
+            foreach (KeyValuePair<string, List<Student>> kvp in StudentsBySchool)
+            {
+                tblSchoolStats.Rows.Add(addSchoolRow(kvp.Key, grades, kvp.Value));
+            }
+            
+            // Display the total row
+            tblSchoolStats.Rows.Add(addTotalRow(grades, AllStudents));
+
         }
     }
 }
