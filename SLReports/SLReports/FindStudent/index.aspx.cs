@@ -70,8 +70,8 @@ namespace SLReports.FindStudent
             newRow.Cells.Add(cell_govID);
             
             TableCell cell_statusNo = new TableCell();
-            cell_govID.Width = 125;
-            cell_govID.Text = "Status #";
+            cell_statusNo.Width = 125;
+            cell_statusNo.Text = "Status #";
             newRow.Cells.Add(cell_statusNo);
             
             TableCell cell_grade = new TableCell();
@@ -132,7 +132,7 @@ namespace SLReports.FindStudent
             newRow.Cells.Add(cell_govID);
             
             TableCell cell_statusNo = new TableCell();
-            cell_govID.Text = highLightSeachString(student.getStatusNo(), searchString);
+            cell_statusNo.Text = highLightSeachString(student.getStatusNo(), searchString);
             newRow.Cells.Add(cell_statusNo);           
              
             TableCell cell_grade = new TableCell();
