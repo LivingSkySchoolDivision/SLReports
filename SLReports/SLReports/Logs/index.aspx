@@ -21,35 +21,4 @@
             <asp:TableHeaderCell>User Agent</asp:TableHeaderCell>
         </asp:TableHeaderRow>
     </asp:Table>
-
-    <table>
-        <tr>
-            <td style="vertical-align: top;">
-                <h3>Recent successful logins (Newest at top)</h3>
-                <asp:Table ID="tblLogins_Success" runat="server" CssClass="datatable">
-                    <asp:TableHeaderRow CssClass="datatable_header">
-                        <asp:TableHeaderCell>Time</asp:TableHeaderCell>
-                        <asp:TableHeaderCell>Username</asp:TableHeaderCell>
-                        <asp:TableHeaderCell>IP Address</asp:TableHeaderCell>
-                        <asp:TableHeaderCell>Info</asp:TableHeaderCell>
-                    </asp:TableHeaderRow>
-                </asp:Table>
-            </td>
-            <td style="vertical-align: top;">
-                <h3>Recent unsuccessful logins (Newest at top)</h3>
-                <asp:Table ID="tblLogins_Failure" runat="server" CssClass="datatable">
-                    <asp:TableHeaderRow CssClass="datatable_header">
-                        <asp:TableHeaderCell>Time</asp:TableHeaderCell>
-                        <asp:TableHeaderCell>Entered Username</asp:TableHeaderCell>
-                        <asp:TableHeaderCell>IP Address</asp:TableHeaderCell>
-                        <asp:TableHeaderCell>Info</asp:TableHeaderCell>
-                    </asp:TableHeaderRow>
-                </asp:Table>
-
-            </td>
-        </tr>
-    </table>
-    <h3></h3>
-    
-
 </asp:Content>

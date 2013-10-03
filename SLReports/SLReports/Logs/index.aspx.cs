@@ -180,6 +180,16 @@ namespace SLReports.Logs
             }         
 
             #region load sessions into table
+
+            // Sort sessions by username
+            AllSessions.Sort(
+                delegate(session first,
+                session next)
+                {
+                    return first.getUsername().CompareTo(next.getUsername());
+                }
+                );
+
             foreach (session ses in AllSessions)
             {
                 tblSessions.CellPadding = 3;
@@ -225,59 +235,10 @@ namespace SLReports.Logs
             #endregion
 
             #region load log into table
-
-            int counter = 0;
-
-
-            /* All login attempts */
-            /*
-            int numToDisplay = recordsToDisplay;
-            if (AllLoginAttempts.Count < recordsToDisplay)
-            {
-                numToDisplay = AllLoginAttempts.Count;
-            }
-
-            Response.Write("<BR>Displaying: " + numToDisplay);
-
-            for (int x = AllLoginAttempts.Count; x < (AllLoginAttempts.Count - numToDisplay); x--) 
-            {
-                Response.Write(x + ", ");
-                tblLogins_All.Rows.Add(addLoginAttemptRowWithType(AllLoginAttempts[x]));
-            }
-            */
-
+                        
             foreach (LoginAttempt la in AllLoginAttempts)
             {
                 tblLogins_All.Rows.Add(addLoginAttemptRowWithType(la));
-            }
-                
-
-            /* Successful login attempts */
-            counter = 0;
-            foreach (LoginAttempt la in AllLoginAttempts)
-            {
-                counter++;
-                if (counter <= recordsToDisplay)
-                {
-                    if (la.status.ToLower().Equals("success"))
-                    {
-                        tblLogins_Success.Rows.Add(addLoginAttemptRow(la));
-                    }
-                }
-            }
-
-            /* Unsuccessful login attempts */
-            counter = 0;
-            foreach (LoginAttempt la in AllLoginAttempts)
-            {
-                counter++;
-                if (counter <= recordsToDisplay)
-                {
-                    if (la.status.ToLower().Equals("denied"))
-                    {
-                        tblLogins_Failure.Rows.Add(addLoginAttemptRow(la));
-                    }
-                }
             }
             #endregion
 
