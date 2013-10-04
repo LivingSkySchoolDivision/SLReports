@@ -55,7 +55,12 @@ namespace SLReports
         public List<TimeTableEntry> TimeTable { get; set; }
         public Track track { get; set; }
         public School school { get; set; }
-        public int activeStatusID { get; set; }        
+        public int activeStatusID { get; set; }
+
+        public string getCountry()
+        {
+            return "Canada";
+        }
 
         public string getFirstName()
         {

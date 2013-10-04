@@ -17,9 +17,8 @@ namespace SLReports.AttendanceByGrade
         String selectedGrade;
 
         protected void Page_Init(object sender, EventArgs e)
-        { 
-            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(dbConnectionString))
+        {
+            using (SqlConnection connection = new SqlConnection(LSKYCommon.dbConnectionString_SchoolLogic))
             {
                 /* Load all schools */
                 AllSchools = School.loadAllSchools(connection);
@@ -44,8 +43,7 @@ namespace SLReports.AttendanceByGrade
         protected void Button1_Click(object sender, EventArgs e)
         {
             /* Get all grades for selected school and list them */
-            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(dbConnectionString))
+            using (SqlConnection connection = new SqlConnection(LSKYCommon.dbConnectionString_SchoolLogic))
             {
                 SelectedSchool = School.loadThisSchool(connection, int.Parse(drpSchoolList.SelectedValue));
 
@@ -87,8 +85,7 @@ namespace SLReports.AttendanceByGrade
 
         protected void Button2_Click(object sender, EventArgs e)
         {
-            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(dbConnectionString))
+            using (SqlConnection connection = new SqlConnection(LSKYCommon.dbConnectionString_SchoolLogic))
             {
                 SelectedSchool = School.loadThisSchool(connection, int.Parse(drpSchoolList.SelectedValue));
 
@@ -191,10 +188,7 @@ namespace SLReports.AttendanceByGrade
 
         protected void Button3_Click(object sender, EventArgs e)
         {
-            /* Not sure why I need to reload this every time... */
-
-            String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(dbConnectionString))
+            using (SqlConnection connection = new SqlConnection(LSKYCommon.dbConnectionString_SchoolLogic))
             {
                 SelectedSchool = School.loadThisSchool(connection, int.Parse(drpSchoolList.SelectedValue));
 

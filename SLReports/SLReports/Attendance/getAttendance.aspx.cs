@@ -23,7 +23,14 @@ namespace SLReports.Attendance
             newRow.Cells.Add(blockCell);
 
             TableCell statusCell = new TableCell();
-            statusCell.Text = abs.getStatus();
+
+            string status = abs.getStatus();
+            if (abs.getStatus().ToLower() == "late")
+            {
+                status = status + " (" + abs.getMinutes() + " min)";
+            }
+
+            statusCell.Text = status;
             newRow.Cells.Add(statusCell);
 
             TableCell reasonCell = new TableCell();

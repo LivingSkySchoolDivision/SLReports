@@ -1,18 +1,18 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/BasicTemplate.Master" AutoEventWireup="true" CodeBehind="attendanceByGrade.aspx.cs" Inherits="SLReports.AttendanceByGrade.attendanceByGrade" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/BasicTemplate.Master" AutoEventWireup="true" CodeBehind="attendanceByStudent.aspx.cs" Inherits="SLReports.Attendance.attendanceByStudent" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Main" runat="server">
     <div class="noPrint">
-    <h3>Attendance Report By Grade</h3>
+    <h3>Attendance Report By Student</h3>
     <form id="Form1" runat="server">
         <asp:Table ID="Table1" runat="server">
             <asp:TableRow>
                 <asp:TableCell><asp:DropDownList ID="drpSchoolList" runat="server"></asp:DropDownList></asp:TableCell>
-                <asp:TableCell><asp:Button ID="Button1" runat="server" Text="Select School" width="150"  OnClick="Button1_Click"/></asp:TableCell>
+                <asp:TableCell><asp:Button ID="btnSchool" runat="server" Text="Select School" width="150"  OnClick="btnSchool_Click"/></asp:TableCell>
             </asp:TableRow>            
-            <asp:TableRow ID="TableRow_Grade" Visible="false">                
-                <asp:TableCell><asp:DropDownList ID="drpGradeList" runat="server"></asp:DropDownList></asp:TableCell>
-                <asp:TableCell><asp:Button ID="Button2" runat="server" Text="Select Grade" width="150" OnClick="Button2_Click" /></asp:TableCell>
+            <asp:TableRow ID="TableRow_Students" Visible="false">                
+                <asp:TableCell><asp:DropDownList ID="drpStudentList" runat="server"></asp:DropDownList></asp:TableCell>
+                <asp:TableCell><asp:Button ID="btnStudent" runat="server" Text="Select Student" width="150" OnClick="btnStudent_Click" /></asp:TableCell>
             </asp:TableRow>          
             <asp:TableRow ID="TableRow_Date" Visible="false">                
                 <asp:TableCell>
@@ -28,7 +28,9 @@
 
                 </asp:TableCell>
                 <asp:TableCell>
-                    <asp:Button ID="Button3" runat="server" Text="Create PDF" width="250" OnClick="Button3_Click"/>
+                    <asp:Button ID="btnDate" runat="server" Text="Create PDF" width="250" OnClick="btnDate_Click"/><br />
+                    <asp:Button ID="btnHTML" runat="server" Text="View in Browser" width="250" OnClick="btnHTML_Click"/>
+
                 </asp:TableCell>
             </asp:TableRow>
         </asp:Table>

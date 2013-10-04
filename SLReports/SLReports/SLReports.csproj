@@ -68,6 +68,8 @@
     <Content Include="APIKeys\lookup.aspx" />
     <Content Include="Attendance\attendanceByGradePDF.aspx" />
     <Content Include="Attendance\attendanceByGrade.aspx" />
+    <Content Include="Attendance\attendanceByStudent.aspx" />
+    <Content Include="Attendance\attendanceByStudentPDF.aspx" />
     <Content Include="Attendance\getAttendance.aspx" />
     <Content Include="Birthdays\birthdayStats.aspx" />
     <Content Include="Birthdays\index.aspx" />
@@ -187,6 +189,21 @@
     <Compile Include="Attendance\attendanceByGrade.aspx.designer.cs">
       <DependentUpon>attendanceByGrade.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Attendance\attendanceByStudent.aspx.cs">
+      <DependentUpon>attendanceByStudent.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Attendance\attendanceByStudent.aspx.designer.cs">
+      <DependentUpon>attendanceByStudent.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Attendance\attendanceByStudentPDF.aspx.cs">
+      <DependentUpon>attendanceByStudentPDF.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Attendance\attendanceByStudentPDF.aspx.designer.cs">
+      <DependentUpon>attendanceByStudentPDF.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Attendance\AttendancePDFParts.cs" />
     <Compile Include="Attendance\getAttendance.aspx.cs">
       <DependentUpon>getAttendance.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
