@@ -13,7 +13,7 @@ using System.Web.UI.WebControls;
 
 namespace SLReports.AttendanceByGrade
 {
-    public partial class GetPDF : System.Web.UI.Page
+    public partial class attendanceByGradePDF : System.Web.UI.Page
     {
         iTextSharp.text.Image lskyLogo = iTextSharp.text.Image.GetInstance(@"https://sldata.lskysd.ca/SLReports/Logo_Circle_Notext_Trans.png");
 

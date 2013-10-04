@@ -66,8 +66,8 @@
     <Content Include="APIKeys\index.aspx" />
     <Content Include="APIKeys\logs.aspx" />
     <Content Include="APIKeys\lookup.aspx" />
-    <Content Include="AttendanceByGrade\GetPDF.aspx" />
-    <Content Include="AttendanceByGrade\index.aspx" />
+    <Content Include="Attendance\attendanceByGradePDF.aspx" />
+    <Content Include="Attendance\attendanceByGrade.aspx" />
     <Content Include="Attendance\getAttendance.aspx" />
     <Content Include="Birthdays\birthdayStats.aspx" />
     <Content Include="Birthdays\index.aspx" />
@@ -173,19 +173,19 @@
       <DependentUpon>lookup.aspx</DependentUpon>
     </Compile>
     <Compile Include="AttendanceBlock.cs" />
-    <Compile Include="AttendanceByGrade\GetPDF.aspx.cs">
-      <DependentUpon>GetPDF.aspx</DependentUpon>
+    <Compile Include="Attendance\attendanceByGradePDF.aspx.cs">
+      <DependentUpon>attendanceByGradePDF.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="AttendanceByGrade\GetPDF.aspx.designer.cs">
-      <DependentUpon>GetPDF.aspx</DependentUpon>
+    <Compile Include="Attendance\attendanceByGradePDF.aspx.designer.cs">
+      <DependentUpon>attendanceByGradePDF.aspx</DependentUpon>
     </Compile>
-    <Compile Include="AttendanceByGrade\index.aspx.cs">
-      <DependentUpon>index.aspx</DependentUpon>
+    <Compile Include="Attendance\attendanceByGrade.aspx.cs">
+      <DependentUpon>attendanceByGrade.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="AttendanceByGrade\index.aspx.designer.cs">
-      <DependentUpon>index.aspx</DependentUpon>
+    <Compile Include="Attendance\attendanceByGrade.aspx.designer.cs">
+      <DependentUpon>attendanceByGrade.aspx</DependentUpon>
     </Compile>
     <Compile Include="Attendance\getAttendance.aspx.cs">
       <DependentUpon>getAttendance.aspx</DependentUpon>
@@ -633,6 +633,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="AttendanceByGrade\" />
     <Folder Include="FirstPeriodClasses\" />
   </ItemGroup>
   <PropertyGroup>

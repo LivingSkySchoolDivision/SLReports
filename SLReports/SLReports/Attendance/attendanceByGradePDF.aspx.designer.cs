@@ -11,7 +11,7 @@ namespace SLReports.AttendanceByGrade
 {
 
 
-    public partial class GetPDF
+    public partial class attendanceByGradePDF
     {
     }
 }

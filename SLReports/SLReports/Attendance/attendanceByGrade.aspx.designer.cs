@@ -10,7 +10,7 @@
 namespace SLReports.AttendanceByGrade {
     
     
-    public partial class index {
+    public partial class attendanceByGrade {
         
         /// <summary>
         /// Form1 control.

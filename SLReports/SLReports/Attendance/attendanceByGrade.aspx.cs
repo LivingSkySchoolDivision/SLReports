@@ -9,7 +9,7 @@ using System.Web.UI.WebControls;
 
 namespace SLReports.AttendanceByGrade
 {
-    public partial class index : System.Web.UI.Page
+    public partial class attendanceByGrade : System.Web.UI.Page
     {
         List<School> AllSchools;
         List<Student> SchoolStudents;
@@ -245,7 +245,7 @@ namespace SLReports.AttendanceByGrade
                 DateTime endDate = new DateTime(endYear, endMonth, endDay);
 
                 /* Load the next page */
-                Response.Redirect(@"/SLReports/AttendanceByGrade/GetPDF.aspx?schoolid=" + SelectedSchool.getGovIDAsString() + "&grade=" + selectedGrade + "&from_date=" + startDate.ToString() + "&to_date=" + endDate.ToString());
+                Response.Redirect(@"attendanceByGradePDF.aspx?schoolid=" + SelectedSchool.getGovIDAsString() + "&grade=" + selectedGrade + "&from_date=" + startDate.ToString() + "&to_date=" + endDate.ToString());
 
             }
             else
