@@ -11,7 +11,7 @@ namespace SLReports.ReportPeriods
     public partial class ReportPeriodsByDate : System.Web.UI.Page
     {
 
-        TableRow addActiveReportPeriodRow(ReportPeriod rp, string termString, string schoolName)
+        TableRow addOpenReportPeriodRow(ReportPeriod rp, string termString, string schoolName)
         {
             TableRow newRow = new TableRow();
 
@@ -22,17 +22,22 @@ namespace SLReports.ReportPeriods
             TableCell cellStartDate = new TableCell();
             TableCell cellEndDate = new TableCell();
             TableCell cellDaysLeft = new TableCell();
+            TableCell cellOpenDate = new TableCell();
+            TableCell cellCloseDate = new TableCell();
 
             cellTerm.Text = termString;
             cellID.Text = rp.ID.ToString();
             cellName.Text = rp.name;
             cellSchool.Text = schoolName;
-            cellStartDate.Text = rp.startDate.ToLongDateString();
-            cellEndDate.Text = rp.endDate.ToLongDateString();
+            cellStartDate.Text = rp.startDate.ToShortDateString();
+            cellEndDate.Text = rp.endDate.ToShortDateString();
+            cellOpenDate.Text = rp.DateOpens.ToShortDateString();
+            cellCloseDate.Text = rp.DateCloses.ToShortDateString();
 
-            TimeSpan daysLeft = rp.endDate.Subtract(DateTime.Today);
+            TimeSpan daysLeft = rp.DateCloses.Subtract(DateTime.Today);
 
             cellDaysLeft.Text = daysLeft.Days.ToString();
+            cellDaysLeft.HorizontalAlign = HorizontalAlign.Center;
 
             newRow.Cells.Add(cellTerm);
             newRow.Cells.Add(cellID);
@@ -40,22 +45,58 @@ namespace SLReports.ReportPeriods
             newRow.Cells.Add(cellSchool);
             newRow.Cells.Add(cellStartDate);
             newRow.Cells.Add(cellEndDate);
+            newRow.Cells.Add(cellOpenDate);
+            newRow.Cells.Add(cellCloseDate);
             newRow.Cells.Add(cellDaysLeft);
 
             return newRow;
         }
 
-        /*
-         * 
-            <asp:TableCell>Term</asp:TableCell>
-            <asp:TableCell>Report Period ID</asp:TableCell>            
-            <asp:TableCell>Report Period Name</asp:TableCell>
-            <asp:TableCell>School</asp:TableCell>            
-            <asp:TableCell>Starts</asp:TableCell>
-            <asp:TableCell>Ends</asp:TableCell>
-            <asp:TableCell>Days left</asp:TableCell>
-         */
+        TableRow addUpcomingReportPeriodRow(ReportPeriod rp, string termString, string schoolName)
+        {
+            TableRow newRow = new TableRow();
 
+            TableCell cellTerm = new TableCell();
+            TableCell cellID = new TableCell();
+            TableCell cellName = new TableCell();
+            TableCell cellSchool = new TableCell();
+            TableCell cellStartDate = new TableCell();
+            TableCell cellEndDate = new TableCell();
+            TableCell cellOpenDate = new TableCell();
+            TableCell cellCloseDate = new TableCell();
+            TableCell cellDaysUntilOpen = new TableCell();
+            TableCell cellDaysUntilClose = new TableCell();
+
+            cellTerm.Text = termString;
+            cellID.Text = rp.ID.ToString();
+            cellName.Text = rp.name;
+            cellSchool.Text = schoolName;
+            cellStartDate.Text = rp.startDate.ToShortDateString();
+            cellEndDate.Text = rp.endDate.ToShortDateString();
+            cellOpenDate.Text = rp.DateOpens.ToShortDateString();
+            cellCloseDate.Text = rp.DateCloses.ToShortDateString();
+
+            TimeSpan daysUntilClose = rp.DateCloses.Subtract(DateTime.Today);
+            TimeSpan daysUntilOpen = rp.DateOpens.Subtract(DateTime.Today);
+
+            cellDaysUntilOpen.Text = daysUntilOpen.Days.ToString();
+            cellDaysUntilClose.Text = daysUntilClose.Days.ToString();
+            cellDaysUntilClose.HorizontalAlign = HorizontalAlign.Center;
+            cellDaysUntilOpen.HorizontalAlign = HorizontalAlign.Center;
+
+            newRow.Cells.Add(cellTerm);
+            newRow.Cells.Add(cellID);
+            newRow.Cells.Add(cellName);
+            newRow.Cells.Add(cellSchool);
+            newRow.Cells.Add(cellStartDate);
+            newRow.Cells.Add(cellEndDate);
+            newRow.Cells.Add(cellOpenDate);
+            newRow.Cells.Add(cellCloseDate);
+            newRow.Cells.Add(cellDaysUntilOpen);
+            newRow.Cells.Add(cellDaysUntilClose);
+
+            return newRow;
+        }
 
         TableRow addCompletedReportPeriodRow(ReportPeriod rp, string termString, string schoolName)
         {
@@ -67,6 +108,8 @@ namespace SLReports.ReportPeriods
             TableCell cellSchool = new TableCell();
             TableCell cellStartDate = new TableCell();
             TableCell cellEndDate = new TableCell();
+            TableCell cellOpenDate = new TableCell();
+            TableCell cellCloseDate = new TableCell();
 
             cellTerm.Text = termString;
             cellID.Text = rp.ID.ToString();
@@ -74,14 +117,19 @@ namespace SLReports.ReportPeriods
             cellSchool.Text = schoolName;
             cellStartDate.Text = rp.startDate.ToShortDateString();
             cellEndDate.Text = rp.endDate.ToShortDateString();
+            cellOpenDate.Text = rp.DateOpens.ToShortDateString();
+            cellCloseDate.Text = rp.DateCloses.ToShortDateString();
+
             newRow.Cells.Add(cellTerm);
             newRow.Cells.Add(cellID);
             newRow.Cells.Add(cellName);
             newRow.Cells.Add(cellSchool);
             newRow.Cells.Add(cellStartDate);
+            newRow.Cells.Add(cellOpenDate);
+            newRow.Cells.Add(cellCloseDate);
             newRow.Cells.Add(cellEndDate);
 
-            return newRow;            
+            return newRow;
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -102,10 +150,10 @@ namespace SLReports.ReportPeriods
                 delegate(ReportPeriod first,
                 ReportPeriod next)
                 {
-                    return first.endDate.CompareTo(next.endDate);                    
+                    return first.endDate.CompareTo(next.endDate);
                 }
                 );
-            
+
 
             foreach (ReportPeriod rp in allReportPeriods)
             {
@@ -136,18 +184,20 @@ namespace SLReports.ReportPeriods
                     }
                 }
 
-
-
-                if (rp.endDate > DateTime.Now)
+                if ((DateTime.Now >= rp.DateOpens) && (DateTime.Now <= rp.DateCloses))
                 {
-                    tblReportPeriodsUpcoming.Rows.Add(addActiveReportPeriodRow(rp, termString, schoolString));
+                    tblOpenReportPeriods.Rows.Add(addOpenReportPeriodRow(rp, termString, schoolString));
+                }
+                else if (rp.DateOpens > DateTime.Now)
+                {
+                    tblReportPeriodsUpcoming.Rows.Add(addUpcomingReportPeriodRow(rp, termString, schoolString));
                 }
                 else
                 {
                     tblReportPeriodsCompleted.Rows.Add(addCompletedReportPeriodRow(rp, termString, schoolString));
                 }
             }
-            
+
 
         }
     }

@@ -13,6 +13,15 @@ namespace SLReports.ReportPeriods {
     public partial class ReportPeriodsByDate {
         
         /// <summary>
+        /// tblOpenReportPeriods control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Table tblOpenReportPeriods;
+        
+        /// <summary>
         /// tblReportPeriodsUpcoming control.
         /// </summary>
         /// <remarks>

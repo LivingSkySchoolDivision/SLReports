@@ -154,6 +154,37 @@ namespace SLReports
             return returnMe;
         }
 
+        /// <summary>
+        /// Loads all of the settings for a school
+        /// </summary>
+        /// <returns></returns>
+        public static Dictionary<string, string> loadSchoolSettings(SqlConnection connection, int SchoolID)
+        {
+            Dictionary<string, string> returnMe = new Dictionary<string, string>();
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand();
+                sqlCommand.Connection = connection;
+                sqlCommand.CommandType = CommandType.Text;
+                sqlCommand.CommandText = "SELECT * FROM Settings WHERE iSchoolID=@SCHOOLID;";
+                sqlCommand.Parameters.AddWithValue("@SCHOOLID", SchoolID);
+                sqlCommand.Connection.Open();
+                SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
+
+                if (dbDataReader.HasRows)
+                {
+                    while (dbDataReader.Read())
+                    {
+                        returnMe.Add(dbDataReader["cKey"].ToString(), dbDataReader["cValue"].ToString());                            
+                    }
+                }
+
+                sqlCommand.Connection.Close();
+            }
+            catch { }            
+            return returnMe;
+        }
+
 
         public int CompareTo(object obj)
         {

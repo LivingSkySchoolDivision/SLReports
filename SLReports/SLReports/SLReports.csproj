@@ -651,7 +651,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AttendanceByGrade\" />
-    <Folder Include="FirstPeriodClasses\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

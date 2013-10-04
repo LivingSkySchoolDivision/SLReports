@@ -21,6 +21,8 @@ namespace SLReports.ReportPeriods
             TableCell cellStartDate = new TableCell();
             TableCell cellEndDate = new TableCell();
             TableCell cellDaysLeft = new TableCell();
+            TableCell cellOpenDate = new TableCell();
+            TableCell cellCloseDate = new TableCell();
 
             cellTerm.Text = termString;
             cellID.Text = rp.ID.ToString();
@@ -28,8 +30,10 @@ namespace SLReports.ReportPeriods
             cellSchool.Text = schoolName;
             cellStartDate.Text = rp.startDate.ToShortDateString();
             cellEndDate.Text = rp.endDate.ToShortDateString();
+            cellOpenDate.Text = rp.DateOpens.ToShortDateString();
+            cellCloseDate.Text = rp.DateCloses.ToShortDateString();
 
-            TimeSpan daysLeft = rp.endDate.Subtract(DateTime.Today);
+            TimeSpan daysLeft = rp.DateCloses.Subtract(DateTime.Today);
 
             cellDaysLeft.Text = daysLeft.Days.ToString();
 
@@ -40,6 +44,8 @@ namespace SLReports.ReportPeriods
             newRow.Cells.Add(cellStartDate);
             newRow.Cells.Add(cellEndDate);
             newRow.Cells.Add(cellDaysLeft);
+            newRow.Cells.Add(cellOpenDate);
+            newRow.Cells.Add(cellCloseDate);
 
             return newRow;
         }
@@ -89,9 +95,9 @@ namespace SLReports.ReportPeriods
                         schoolString = school.getName();
                     }
                 }
-                
+
                 tblReportPeriodsUpcoming.Rows.Add(addReportPeriodRow(rp, termString, schoolString));
-                
+
             }
 
         }

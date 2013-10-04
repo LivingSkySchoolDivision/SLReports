@@ -18,6 +18,56 @@ namespace SLReports
         public List<Mark> marks { get; set; }
         public List<SchoolClass> courses { get; set; }
         public List<Outcome> objectives { get; set; }
+        public int daysOpenBeforeEnd { get; set; }
+        public int daysOpenAfterEnd { get; set; }
+        public DateTime DateOpens
+        {
+            get
+            {
+                return endDate.AddDays(this.daysOpenBeforeEnd * -1);
+            }
+            set
+            {
+                // Do nothing because this value should never be set
+            }
+        }
+        public DateTime DateCloses
+        {
+            get
+            {
+                return endDate.AddDays(this.daysOpenAfterEnd);
+            }
+            set
+            {
+                // Do nothing because this value should never be set
+            }
+        }
+
+        private void loadReportPeriodSettings(SqlConnection connection)
+        {
+            // Get the days before and after
+            int daysBefore = 0;
+            int daysAfter = 0;
+
+            Dictionary<string, string> schoolSettings = School.loadSchoolSettings(connection, this.schoolID);
+
+            foreach (KeyValuePair<string, string> kvp in schoolSettings)
+            {
+                if (kvp.Key.ToLower().Trim() == "Grades/PreReportDays".ToLower().Trim())
+                {
+                    int.TryParse(kvp.Value, out daysBefore);
+                }
+
+                if (kvp.Key.ToLower().Trim() == "Grades/PostReportDays".ToLower().Trim())
+                {
+                    int.TryParse(kvp.Value, out daysAfter);
+                }
+            }
+
+            this.daysOpenAfterEnd = daysAfter;
+            this.daysOpenBeforeEnd = daysBefore;
+
+        }
 
         public ReportPeriod(int id, string name, DateTime start, DateTime end, int schoolid, int termid)
         {
@@ -64,6 +114,7 @@ namespace SLReports
             }
 
             sqlCommand.Connection.Close();
+            returnMe.loadReportPeriodSettings(connection);
             return returnMe;
 
         }
@@ -94,7 +145,11 @@ namespace SLReports
                 }
             }
 
-            sqlCommand.Connection.Close();
+            sqlCommand.Connection.Close(); 
+            foreach (ReportPeriod rp in returnMe)
+            {
+                rp.loadReportPeriodSettings(connection);
+            }
             return returnMe;
         }
 
@@ -125,6 +180,10 @@ namespace SLReports
             }
 
             sqlCommand.Connection.Close();
+            foreach (ReportPeriod rp in returnMe)
+            {
+                rp.loadReportPeriodSettings(connection);
+            }
             return returnMe;
         }
 
@@ -155,6 +214,10 @@ namespace SLReports
             }
 
             sqlCommand.Connection.Close();
+            foreach (ReportPeriod rp in returnMe)
+            {
+                rp.loadReportPeriodSettings(connection);
+            }
             return returnMe;
         }
 
@@ -185,6 +248,10 @@ namespace SLReports
             }
 
             sqlCommand.Connection.Close();
+            foreach (ReportPeriod rp in returnMe)
+            {
+                rp.loadReportPeriodSettings(connection);
+            }
             return returnMe;
         }
 
