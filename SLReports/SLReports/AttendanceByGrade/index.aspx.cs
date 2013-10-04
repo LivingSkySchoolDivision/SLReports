@@ -139,13 +139,36 @@ namespace SLReports.AttendanceByGrade
                 newItem = new ListItem();
                 newItem.Text = Months[month - 1];
                 newItem.Value = month.ToString();
+                if (month == DateTime.Now.Month)
+                {
+                    newItem.Selected = true;
+                }
                 from_Month.Items.Add(newItem);
 
                 newItem = new ListItem();
                 newItem.Text = Months[month - 1];
                 newItem.Value = month.ToString();
+                if (month == DateTime.Now.Month)
+                {
+                    newItem.Selected = true;
+                }
                 to_Month.Items.Add(newItem);
             }
+
+
+            ListItem firstDay_From = new ListItem("First Day", "1");
+            if (!IsPostBack)
+            {
+                firstDay_From.Selected = true;
+            }
+            from_Day.Items.Add(firstDay_From);
+
+            ListItem lastDay_To = new ListItem("Last Day", "31");
+            if (!IsPostBack)
+            {
+                lastDay_To.Selected = true;
+            }
+            to_Day.Items.Add(lastDay_To);
 
             for (int day = 1; day <= 31; day++)
             {
@@ -180,15 +203,61 @@ namespace SLReports.AttendanceByGrade
             }
 
             selectedGrade = drpGradeList.SelectedValue;
+                       
+            // Parse from date
+            int startYear = -1;
+            int startMonth = -1;
+            int startDay = -1;
             
-            /* Figure out a date range */
-            DateTime Date_From = new DateTime(int.Parse(from_Year.SelectedValue), int.Parse(from_Month.SelectedValue), int.Parse(from_Day.SelectedValue));
-            DateTime Date_To = new DateTime(int.Parse(to_Year.SelectedValue), int.Parse(to_Month.SelectedValue), int.Parse(to_Day.SelectedValue));
 
-            /* Load the next page */
-            Response.Redirect(@"/SLReports/AttendanceByGrade/GetPDF.aspx?schoolid=" + SelectedSchool.getGovIDAsString() + "&grade=" + selectedGrade + "&from_date=" + Date_From.ToString() + "&to_date=" + Date_To.ToString());
+            int.TryParse(from_Year.SelectedValue, out startYear);
+            int.TryParse(from_Month.SelectedValue, out startMonth);
+            int.TryParse(from_Day.SelectedValue, out startDay);
+                            
+            // Parse to date
+            int endYear = -1;
+            int endMonth = -1;
+            int endDay = -1;
 
+            int.TryParse(to_Year.SelectedValue, out endYear);
+            int.TryParse(to_Month.SelectedValue, out endMonth);
+            int.TryParse(to_Day.SelectedValue, out endDay);
 
+            if (
+                !(
+                (startYear == -1) ||
+                (startMonth == -1) ||
+                (startDay == -1) ||
+                (endYear == -1) ||
+                (endMonth == -1) ||
+                (endDay == -1)
+                )
+                )
+            {
+
+                if (startDay > DateTime.DaysInMonth(startYear, startMonth))
+                    startDay = DateTime.DaysInMonth(startYear, startMonth);
+
+                if (endDay > DateTime.DaysInMonth(endYear, endMonth))
+                    endDay = DateTime.DaysInMonth(endYear, endMonth);
+
+                DateTime startDate = new DateTime(startYear, startMonth, startDay);
+                DateTime endDate = new DateTime(endYear, endMonth, endDay);
+
+                /* Load the next page */
+                Response.Redirect(@"/SLReports/AttendanceByGrade/GetPDF.aspx?schoolid=" + SelectedSchool.getGovIDAsString() + "&grade=" + selectedGrade + "&from_date=" + startDate.ToString() + "&to_date=" + endDate.ToString());
+
+            }
+            else
+            {
+                Response.Write("Invalid date specified<br>");
+                Response.Write(" From Year: " + startYear + "<br>");
+                Response.Write(" From Month: " + startMonth + "<br>");
+                Response.Write(" From Day: " + startDay + "<br>");
+                Response.Write(" To Year: " + endYear + "<br>");
+                Response.Write(" To Month: " + endMonth + "<br>");
+                Response.Write(" To Day: " + endDay + "<br>");
+            }
 
         }
     }

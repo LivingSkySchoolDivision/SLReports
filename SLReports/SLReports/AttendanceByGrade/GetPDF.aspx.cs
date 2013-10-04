@@ -109,7 +109,7 @@ namespace SLReports.AttendanceByGrade
                                     }
 
                                 }
-                                sendPDF(GeneratePDF(Date_From, Date_To, SelectedStudents), "Attendance_" + (SelectedSchool.getName()).ToLower().Substring(0, 4) + "_Gr" + SelectedGrade + "_" + Date_From.Year + "_" + Date_From.Month + "_" + Date_From.Day + "_to_" + Date_To.Year + "_" + Date_To.Month + "_" + Date_From.Day);
+                                sendPDF(GeneratePDF(Date_From, Date_To, SelectedStudents), "Attendance_" + (SelectedSchool.getName()).ToLower().Substring(0, 4) + "_Gr" + SelectedGrade + "_" + Date_From.Year + "_" + Date_From.Month + "_" + Date_From.Day + "_to_" + Date_To.Year + "_" + Date_To.Month + "_" + Date_To.Day);
                             }
                             else
                             {
