@@ -83,7 +83,7 @@ namespace SLReports
                 hasReportPeriod = true;
             }
 
-            return "ObjectiveMark: { ID: " + this.objectiveMarkID + ", Objective ID: " + this.objectiveID + ", nMark: " + this.nMark + ", cMark: " + this.cMark + ", Translated Mark: "+this.mark+", Report Period: " + this.reportPeriodID + ", HasObjectiveInfo: " + LSKYCommon.boolToYesOrNo(hasObjectiveAlso) + " , HasReportPeriod: " + LSKYCommon.boolToYesOrNo(hasReportPeriod) + " }";
+            return "OutcomeMark: { ID: " + this.objectiveMarkID + ", Objective ID: " + this.objectiveID + ", nMark: " + this.nMark + ", cMark: " + this.cMark + ", Translated Mark: " + this.mark + ", Report Period: " + this.reportPeriodID + ", HasOutcomeInfo: " + LSKYCommon.boolToYesOrNo(hasObjectiveAlso) + " , HasReportPeriod: " + LSKYCommon.boolToYesOrNo(hasReportPeriod) + " }";
         }
 
         public static List<OutcomeMark> loadObjectiveMarksForThisCourse(SqlConnection connection, Term term, Student student, SchoolClass course)
@@ -115,7 +115,7 @@ namespace SLReports
                             int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
                             int.Parse(dataReader["iCourseID"].ToString().Trim()),
                             dataReader["cMark"].ToString().Trim(),
-                            nMark
+                            (float)Math.Round(nMark, 1)
                             ));
                 }
             }
@@ -151,7 +151,7 @@ namespace SLReports
                             int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
                             int.Parse(dataReader["iCourseID"].ToString().Trim()),
                             dataReader["cMark"].ToString().Trim(),
-                            nMark
+                            (float)Math.Round(nMark, 1)
                             ));
                 }
             }

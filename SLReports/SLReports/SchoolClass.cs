@@ -28,6 +28,8 @@ namespace SLReports
         public List<Mark> Marks { get; set; }
         public List<Outcome> Outcomes { get; set; }
         public List<OutcomeMark> OutcomeMarks { get; set; }
+        public List<Outcome> LifeSkills { get; set; }
+        public List<OutcomeMark> LifeSkillMarks { get; set; }
         public List<Student> EnrolledStudents { get; set; }
         public List<Teacher> teachers { get; set; }
 
@@ -57,20 +59,22 @@ namespace SLReports
             }
         }
 
-        public bool hasGradeLegend()
-        {
-            if (string.IsNullOrEmpty(gradeLegend)) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-
         public bool isOutcomeBased()
         {
-            // As of August 2013, numeric courses do not use grade legends, and outcome based classes do use grade legends
+            // Outcome based courses have outcomes, non outcome based courses have no outcomes
+            // Life skills don't count
 
-            if (this.hasGradeLegend())
+            int outcomes = 0;
+
+            foreach (Outcome oc in this.Outcomes)
+            {
+                if (oc.category.ToLower() != "Successful Learning Behaviours")
+                {
+                    outcomes++;
+                }
+            }
+
+            if (outcomes > 0)
             {
                 return true;
             }
@@ -120,11 +124,12 @@ namespace SLReports
         /* This constructor should be removed and code relying on it should be redone */
         public SchoolClass(string name, int classid, int courseid)
         {
-            Outcomes = new List<Outcome>();
             Marks = new List<Mark>();
             ReportPeriods = new List<ReportPeriod>();
+            Outcomes = new List<Outcome>();
             OutcomeMarks = new List<OutcomeMark>();
-
+            LifeSkillMarks = new List<OutcomeMark>();
+            LifeSkills = new List<Outcome>();
             this.name = name;
             this.classid = classid;
             this.courseid = courseid;
@@ -136,6 +141,8 @@ namespace SLReports
             Marks = new List<Mark>();
             ReportPeriods = new List<ReportPeriod>();
             OutcomeMarks = new List<OutcomeMark>();
+            LifeSkillMarks = new List<OutcomeMark>();
+            LifeSkills = new List<Outcome>();
 
             this.name = name;
             this.classid = classid;

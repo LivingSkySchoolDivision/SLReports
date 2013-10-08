@@ -16,7 +16,7 @@ namespace SLReports.ReportCard
 {
     public partial class GetReportCardPDF_ByStudent : System.Web.UI.Page
     {
-        string dbConnectionString = LSKYCommon.dbConnectionString_OldSchoolLogic;       
+        string dbConnectionString = PDFReportCardParts.ReportCardDatabase;    
 
         protected void sendPDF(System.IO.MemoryStream PDFData, string filename)
         {

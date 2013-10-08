@@ -12,8 +12,7 @@ namespace SLReports.ReportCard
     public partial class GetReportCard_DEBUG : System.Web.UI.Page
     {
         // So that the database can be quickly changed
-        //string sqlConnectionString = LSKYCommon.dbConnectionString_SchoolLogic;
-        string sqlConnectionString = LSKYCommon.dbConnectionString_OldSchoolLogic;
+        string sqlConnectionString = PDFReportCardParts.ReportCardDatabase;
 
 
         protected void Page_Load(object sender, EventArgs e)
@@ -107,7 +106,7 @@ namespace SLReports.ReportCard
                       Response.Write("<BR><BR>&nbsp;&nbsp;<b>Class:</b> " + c);
                       Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Teacher:</b> " + c.teacherName);
                       Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Marks:</b> " + c.Marks.Count);
-                      Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Objective Marks:</b> " + c.OutcomeMarks.Count);                    
+                      Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Outcome Marks:</b> " + c.OutcomeMarks.Count);                    
                       foreach (ReportPeriod rp in term.ReportPeriods)
                       {
                           Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Report Period:</b> " + rp);
@@ -122,17 +121,27 @@ namespace SLReports.ReportCard
                           {
                               if (om.reportPeriodID == rp.ID)
                               {
-                                  Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>ObjectiveMark:</b> " + om);
+                                  Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>OutcomeMark:</b> " + om);
                               }
                           }
                       }
-                      Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Objectives:</b> " + c.Outcomes.Count);
+                      Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Outcomes:</b> " + c.Outcomes.Count);
                       foreach (Outcome o in c.Outcomes)
                       {
-                          Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>Objective:</b> " + o);
-                          foreach (OutcomeMark om in o.marks) 
+                          Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>Outcome:</b> " + o);
+                          foreach (OutcomeMark om in o.marks)
                           {
-                              Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>ObjectiveMark:</b> " + om);
+                              Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>OutcomeMark:</b> " + om);
+                          }
+                      }
+
+                      Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Life Skills / SLBs:</b> " + c.LifeSkills.Count);
+                      foreach (Outcome o in c.LifeSkills)
+                      {
+                          Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>Outcome</b> " + o);
+                          foreach (OutcomeMark om in o.marks)
+                          {
+                              Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>OutcomeMark:</b> " + om);
                           }
                       }
                       

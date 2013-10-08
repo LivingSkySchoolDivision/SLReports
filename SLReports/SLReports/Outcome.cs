@@ -111,7 +111,7 @@ namespace SLReports
             {
                 subject = this.subject.Substring(0, 25);
             }
-            return "Objective: { ID: " + this.id + ", Subject: "+subject+", Category: " + this.category + ", ContainsObjectiveMarks: " + this.marks.Count + "}";
+            return "Outcome: { ID: " + this.id + ", Subject: " + subject + ", Category: " + this.category + ", ContainsOutcomeMarks: " + this.marks.Count + "}";
         }
     }
 }

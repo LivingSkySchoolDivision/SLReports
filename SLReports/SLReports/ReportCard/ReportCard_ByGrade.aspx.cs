@@ -13,7 +13,7 @@ namespace SLReports.ReportCard
     {
         // So that the database can be quickly changed
         //string sqlConnectionString = LSKYCommon.dbConnectionString_SchoolLogic;
-        string sqlConnectionString = LSKYCommon.dbConnectionString_OldSchoolLogic;
+        string sqlConnectionString = PDFReportCardParts.ReportCardDatabase;
 
         protected void Page_Load(object sender, EventArgs e)
         {

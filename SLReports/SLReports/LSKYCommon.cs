@@ -265,23 +265,25 @@ namespace SLReports
                         thisClass.ReportPeriods = reportPeriods;
 
                         /* Load objectives and objective marks */
-                        thisClass.Outcomes = Outcome.loadObjectivesForThisCourse(connection, thisClass);
 
-                        List<OutcomeMark> AllOutcomeMarksForThisCourse = OutcomeMark.loadObjectiveMarksForThisCourse(connection, thisTerm, returnedStudent, thisClass);
-
-                        /* Filter out objectivemarks for report periods that we don't care about */
-                        foreach (OutcomeMark om in AllOutcomeMarksForThisCourse) 
+                        List<Outcome> courseOutcomes = Outcome.loadObjectivesForThisCourse(connection, thisClass);
+                        List<OutcomeMark> courseOutcomeMarks_All = OutcomeMark.loadObjectiveMarksForThisCourse(connection, thisTerm, returnedStudent, thisClass);
+                        List<OutcomeMark> courseOutcomeMarks = new List<OutcomeMark>();
+                                                
+                        // Filter outcome marks to only the report periods that we care about
+                        foreach (OutcomeMark om in courseOutcomeMarks_All)
                         {
                             if (selectedReportPeriodIDs.Contains(om.reportPeriodID))
                             {
-                                thisClass.OutcomeMarks.Add(om);
-                            }                            
+                                courseOutcomeMarks.Add(om);
+                            }
                         }
 
+                        //////////
                         /* Put objective marks in the corresonding objective */
-                        foreach (OutcomeMark objectivemark in thisClass.OutcomeMarks)
+                        foreach (OutcomeMark objectivemark in courseOutcomeMarks)
                         {
-                            foreach (Outcome objective in thisClass.Outcomes)
+                            foreach (Outcome objective in courseOutcomes)
                             {
                                 if (objectivemark.objectiveID == objective.id)
                                 {
@@ -299,9 +301,9 @@ namespace SLReports
 
                         }
 
-                        foreach (Outcome objective in thisClass.Outcomes)
+                        foreach (Outcome objective in courseOutcomes)
                         {
-                            foreach (OutcomeMark objectivemark in thisClass.OutcomeMarks)
+                            foreach (OutcomeMark objectivemark in courseOutcomeMarks)
                             {
                                 if (objective.id == objectivemark.objectiveID)
                                 {
@@ -309,6 +311,41 @@ namespace SLReports
                                 }
                             }
                         }
+                        //////////
+
+                        // Sort into life skills and non life skills
+                        List<Outcome> lifeSkillsOutcomes = new List<Outcome>();
+                        List<Outcome> normalOutcomes = new List<Outcome>();
+                        List<OutcomeMark> lifeSkillsOutcomeMarks = new List<OutcomeMark>();
+                        List<OutcomeMark> normalOutcomeMarks = new List<OutcomeMark>();                        
+                                                
+                        string normalObjectiveCategoryName = "Outcomes";
+                        string lifeSkillsCategoryName = "Successful Learner Behaviours";
+
+                        foreach (Outcome o in courseOutcomes)
+                        {
+                            if (o.category == lifeSkillsCategoryName)
+                            {
+                                lifeSkillsOutcomes.Add(o);
+                                lifeSkillsOutcomeMarks.AddRange(o.marks);
+                                
+                            }
+                            else
+                            {
+                                normalOutcomes.Add(o);
+                                normalOutcomeMarks.AddRange(o.marks);
+                            }
+                        }
+                                                
+
+                        // Put the outcomes and outcome marks into the course object
+                        thisClass.Outcomes = normalOutcomes;
+                        thisClass.LifeSkills = lifeSkillsOutcomes;
+                        thisClass.OutcomeMarks = normalOutcomeMarks;
+                        thisClass.LifeSkillMarks = lifeSkillsOutcomeMarks;
+
+                        //thisClass.Outcomes = Outcome.loadObjectivesForThisCourse(connection, thisClass);
+                        //List<OutcomeMark> AllOutcomeMarksForThisCourse = OutcomeMark.loadObjectiveMarksForThisCourse(connection, thisTerm, returnedStudent, thisClass);
 
                     }
 
