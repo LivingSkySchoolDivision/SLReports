@@ -1314,7 +1314,7 @@ namespace SLReports.ReportCard
             return attendanceTable;
         }
 
-        public static PdfPTable outcomeLegend(PdfContentByte content)
+        public static PdfPTable outcomeLegend(PdfContentByte content, OutcomeBarStyle barStyle = OutcomeBarStyle.Slider)
         {
             PdfPTable outcomeLegendTable = new PdfPTable(2);
             outcomeLegendTable.SpacingAfter = 25f;
@@ -1336,7 +1336,7 @@ namespace SLReports.ReportCard
             newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
             outcomeLegendTable.AddCell(newCell);
 
-            newCell = new PdfPCell(displayOutcomeBar(content, "4"));
+            newCell = new PdfPCell(displayOutcomeBar(content, "4", barStyle));
             newCell.Border = 0;
             newCell.Padding = 2;
             newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
@@ -1355,7 +1355,7 @@ namespace SLReports.ReportCard
             newCell.VerticalAlignment = 1;
             outcomeLegendTable.AddCell(newCell);
 
-            newCell = new PdfPCell(displayOutcomeBar(content, "3"));
+            newCell = new PdfPCell(displayOutcomeBar(content, "3", barStyle));
             newCell.Border = 0;
             newCell.Padding = 2;
             newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
@@ -1374,7 +1374,7 @@ namespace SLReports.ReportCard
             newCell.VerticalAlignment = 1;
             outcomeLegendTable.AddCell(newCell);
 
-            newCell = new PdfPCell(displayOutcomeBar(content, "2"));
+            newCell = new PdfPCell(displayOutcomeBar(content, "2", barStyle));
             newCell.Border = 0;
             newCell.Padding = 2;
             newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
@@ -1393,7 +1393,7 @@ namespace SLReports.ReportCard
             newCell.VerticalAlignment = 1;
             outcomeLegendTable.AddCell(newCell);
 
-            newCell = new PdfPCell(displayOutcomeBar(content, "1"));
+            newCell = new PdfPCell(displayOutcomeBar(content, "1", barStyle));
             newCell.Border = 0;
             newCell.Padding = 2;
             newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
@@ -1412,7 +1412,7 @@ namespace SLReports.ReportCard
             newCell.VerticalAlignment = 1;
             outcomeLegendTable.AddCell(newCell);
 
-            newCell = new PdfPCell(displayOutcomeBar(content, "IE"));
+            newCell = new PdfPCell(displayOutcomeBar(content, "IE", barStyle));
             newCell.Border = 0;
             newCell.Padding = 2;
             newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
@@ -1425,6 +1425,25 @@ namespace SLReports.ReportCard
             description.SpacingAfter = 6;
             description.Add(new Phrase("IE: ", font_body_bold));
             description.Add(new Phrase("Insufficient Evidence", font_body));
+            newCell.PaddingTop = 0;
+            newCell.AddElement(description);
+            newCell.Border = 0;
+            newCell.VerticalAlignment = 1;
+            outcomeLegendTable.AddCell(newCell);
+
+            newCell = new PdfPCell(displayOutcomeBar(content, "NYM", barStyle));
+            newCell.Border = 0;
+            newCell.Padding = 2;
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+            outcomeLegendTable.AddCell(newCell);
+
+            newCell = new PdfPCell();
+            description = new Paragraph();
+            description.SpacingBefore = 0;
+            description.SpacingAfter = 6;
+            description.Add(new Phrase("NYM: ", font_body_bold));
+            description.Add(new Phrase("Not Yet Meeting", font_body));
             newCell.PaddingTop = 0;
             newCell.AddElement(description);
             newCell.Border = 0;
@@ -1558,7 +1577,7 @@ namespace SLReports.ReportCard
             return outcomeLegendTable;
         }
 
-        public static PdfPCell outcomeChunk(Outcome outcome, PdfContentByte content)
+        public static PdfPCell outcomeChunk(Outcome outcome, PdfContentByte content, OutcomeBarStyle barStyle = OutcomeBarStyle.Slider)
         {                      
             int ObjectivesTableDebuggingBorder = 0;
 
@@ -1606,7 +1625,7 @@ namespace SLReports.ReportCard
                         Temp_MarkCell.Padding = 0;
                         Temp_MarkCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
                         Temp_MarkCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
-                        Temp_MarkCell.AddElement((displayOutcomeBar(content, objectivemark.cMark)));
+                        Temp_MarkCell.AddElement((displayOutcomeBar(content, objectivemark.cMark, barStyle)));
                         markCell = Temp_MarkCell;
                     }
                     else
@@ -1625,7 +1644,7 @@ namespace SLReports.ReportCard
                             Temp_MarkCell.Padding = 1;
                             Temp_MarkCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
                             Temp_MarkCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
-                            Temp_MarkCell.AddElement((displayOutcomeBar(content, objectivemark.cMark)));
+                            Temp_MarkCell.AddElement((displayOutcomeBar(content, objectivemark.cMark, barStyle)));
                             markCell = Temp_MarkCell;
                         }
                         else
@@ -1935,8 +1954,8 @@ namespace SLReports.ReportCard
             newCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
             return newCell;
         }
-        
-        public static PdfPTable classWithMarks(SchoolClass course, PdfContentByte content, bool anonymize = false)
+
+        public static PdfPTable classWithMarks(SchoolClass course, PdfContentByte content, bool anonymize = false, OutcomeBarStyle barStyle = OutcomeBarStyle.Slider)
         {          
             // Housekeeping first 
 
@@ -2186,7 +2205,7 @@ namespace SLReports.ReportCard
                 {
                     if (objective.marks.Count > 0)
                     {
-                        classTable.AddCell(outcomeChunk(objective, content));                        
+                        classTable.AddCell(outcomeChunk(objective, content, barStyle));                        
                     }
                 }
             }
@@ -2276,8 +2295,12 @@ namespace SLReports.ReportCard
             return classTable;
         }
         
-        public static MemoryStream GeneratePDF(List<Student> students, bool anonymize = false, bool showPlaceholderPhotos = false, bool doubleSidedMode = true)
+        public static MemoryStream GeneratePDF(List<Student> students, bool anonymize = false, bool showPlaceholderPhotos = false, bool doubleSidedMode = true, OutcomeBarStyle barStyle = OutcomeBarStyle.Slider)
         {
+            // Debugging 
+            barStyle = OutcomeBarStyle.Thin;
+            // done debugging
+
             MemoryStream memstream = new MemoryStream();
             Document ReportCard = new Document(PageSize.LETTER);
             PdfWriter writer = PdfWriter.GetInstance(ReportCard, memstream);
@@ -2306,7 +2329,7 @@ namespace SLReports.ReportCard
                 ReportCard.Add(PDFReportCardParts.schoolNamePlate(student.school));
                 ReportCard.Add(PDFReportCardParts.namePlateTable(student, anonymize, showPlaceholderPhotos));
                 ReportCard.Add(PDFReportCardParts.lifeSkillsLegend(content, student.getGrade()));
-                ReportCard.Add(PDFReportCardParts.outcomeLegend(content));
+                ReportCard.Add(PDFReportCardParts.outcomeLegend(content, barStyle));
                 ReportCard.NewPage();
 
                 // Start course list
@@ -2315,7 +2338,7 @@ namespace SLReports.ReportCard
                 {
                     foreach (SchoolClass course in term.Courses)
                     {
-                        ReportCard.Add(PDFReportCardParts.classWithMarks(course, content, anonymize));
+                        ReportCard.Add(PDFReportCardParts.classWithMarks(course, content, anonymize, barStyle));
                         if (!student.track.daily)
                         {
                             ReportCard.Add(PDFReportCardParts.courseAttendanceSummary(student, course));

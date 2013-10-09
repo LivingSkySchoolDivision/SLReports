@@ -129,10 +129,7 @@ namespace SLReports
 
         public static string findClassNameForThisBlock(List<SchoolClass> classes, string block)
         {
-            /* Try to parse the block */
-
             List<string> classNames = new List<string>();
-
 
             int blockNum = -1;
             if (int.TryParse(block, out blockNum))
@@ -145,7 +142,6 @@ namespace SLReports
                     }
                 }
             }
-
 
             StringBuilder returnMe = new StringBuilder();
             for (int x = 0; x < classNames.Count; x++)
