@@ -105,7 +105,7 @@ namespace SLReports.ReportCard
 
             if ((selectedReportPeriods.Count > 0) && (displayedStudents.Count > 0))
             {
-                sendPDF(PDFReportCardParts.GeneratePDF(displayedStudents, true, true, true), fileName);
+                sendPDF(PDFReportCardParts.GeneratePDF(displayedStudents, selectedReportPeriods, true, true, true), fileName);
             }
         }
     }
