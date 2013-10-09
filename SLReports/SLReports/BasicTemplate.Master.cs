@@ -25,13 +25,14 @@ namespace SLReports
         {
             HttpCookie sessionCookie = Request.Cookies["lskyDataExplorer"];
             if (sessionCookie != null)
-            {
+            {                
                 return sessionCookie.Value;
             }
             else
             {
                 return null;
             }
+
         }
 
         public void expireSession()
@@ -52,7 +53,8 @@ namespace SLReports
                 HttpCookie newCookie = new HttpCookie("lskyDataExplorer");
                 newCookie.Value = "NOTHING TO SEE HERE";
                 newCookie.Expires = DateTime.Now.AddDays(-1D);
-                newCookie.Domain = "sldata.lskysd.ca";
+                //newCookie.Domain = "sldata.lskysd.ca";
+                newCookie.Domain = LSKYCommon.getServerName(Request);
                 newCookie.Secure = true;
                 //Response.SetCookie(Response.Cookies["lskyDataExplorer"]);
                 Response.Cookies.Add(newCookie);
@@ -77,7 +79,8 @@ namespace SLReports
         }
 
         protected void Page_Init(object sender, EventArgs e)
-        {  
+        {
+
             // Check the IP to make sure traffic originates from within our network
             if (
                 !(

@@ -452,6 +452,11 @@ namespace SLReports
             return "/SLReports/" + path_working;
         }
 
+        public static string getServerName(HttpRequest Request)
+        {
+            return Request.ServerVariables["SERVER_NAME"].ToString().Trim();
+        }
+
         public static string getServerURLPath(HttpRequest Request)
         {
             StringBuilder scriptPath = new StringBuilder();

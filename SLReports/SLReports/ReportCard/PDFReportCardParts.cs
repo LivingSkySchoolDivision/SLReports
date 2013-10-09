@@ -847,7 +847,7 @@ namespace SLReports.ReportCard
             
             schoolNamePlateTable.AddCell(SchoolNameCell);
 
-            lskyLogo.ScalePercent(3);
+            lskyLogo.ScalePercent(5);
             PdfPCell divisionLogoCell = new PdfPCell(lskyLogo);
             divisionLogoCell.Border = 0;
             divisionLogoCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
@@ -1335,7 +1335,7 @@ namespace SLReports.ReportCard
             Cell_Title.Colspan = 2;
             Cell_Title.Padding = 2;
             Cell_Title.PaddingBottom = 10;
-            Cell_Title.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            Cell_Title.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             Cell_Title.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
             outcomeLegendTable.AddCell(Cell_Title);
 
@@ -1380,7 +1380,11 @@ namespace SLReports.ReportCard
         }
 
         private static PdfPTable lifeSkillsLegend(PdfContentByte content, string grade)
-        {
+        {            
+            Font font_legend_title = FontFactory.GetFont("Verdana", 12, Font.BOLD, BaseColor.BLACK);
+            Font font_legend = FontFactory.GetFont("Verdana", 9, BaseColor.BLACK);
+            Font font_legend_bold = FontFactory.GetFont("Verdana", 9, Font.BOLD, BaseColor.BLACK);
+
             SortedDictionary<int, string> potentialMarks = new SortedDictionary<int, string>();
 
             int gradeLevel = 0;
@@ -1432,40 +1436,36 @@ namespace SLReports.ReportCard
             PdfPTable outcomeLegendTable = new PdfPTable(2);
             outcomeLegendTable.SpacingAfter = 25f;
             outcomeLegendTable.HorizontalAlignment = 1;
-            outcomeLegendTable.TotalWidth = 500;
+            outcomeLegendTable.TotalWidth = 250;
             outcomeLegendTable.LockedWidth = true;
 
             float[] widths = new float[] { 1f, 5f };
             outcomeLegendTable.SetWidths(widths);
-
-            PdfPCell newCell = null;
-            Paragraph description = null;
-
-            newCell = new PdfPCell(new Phrase("Characteristics of Successful Learning Behaviours", font_large_bold));
-            newCell.Border = 0;
-            newCell.Colspan = 2;
-            newCell.Padding = 2;
-            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
-            newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
-            outcomeLegendTable.AddCell(newCell);
+            
+            PdfPCell titleCell = new PdfPCell(new Phrase("Characteristics of Successful Learning Behaviours", font_legend_title));
+            titleCell.Border = 0;
+            titleCell.Colspan = 2;
+            titleCell.Padding = 2;
+            titleCell.PaddingBottom = 10;
+            titleCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+            titleCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+            outcomeLegendTable.AddCell(titleCell);
 
             foreach (KeyValuePair<string, string> legendItem in lifeSkills)
             {
-                newCell = new PdfPCell(new Phrase(legendItem.Key, font_body_bold));
-                newCell.Border = 0;
-                newCell.Padding = 5;
-                newCell.PaddingLeft = 10;
-                newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
-                newCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
-                outcomeLegendTable.AddCell(newCell);
+                Paragraph lifeSkillDescription = new Paragraph();
+                lifeSkillDescription.Leading = 10;
+                lifeSkillDescription.Add(new Phrase(legendItem.Key, font_legend_bold));
+                lifeSkillDescription.Add(Chunk.NEWLINE);
+                lifeSkillDescription.Add(new Phrase(legendItem.Value, font_legend));
 
-                newCell = new PdfPCell(new Phrase(legendItem.Value, font_body));
-                newCell.PaddingTop = 0;
-                newCell.Padding = 5;
-                newCell.AddElement(description);
-                newCell.Border = 0;
-                newCell.VerticalAlignment = 1;
-                outcomeLegendTable.AddCell(newCell);
+                PdfPCell lifeskillCell = new PdfPCell(lifeSkillDescription);                
+                lifeskillCell.Border = 0;
+                lifeskillCell.Colspan = 2;
+                lifeskillCell.Padding = 5;
+                lifeskillCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                lifeskillCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+                outcomeLegendTable.AddCell(lifeskillCell);
             }
 
             /*
@@ -1513,15 +1513,15 @@ namespace SLReports.ReportCard
             float[] widths = new float[] { 250f, 250f };
             legendTable.SetWidths(widths);
                         
-            PdfPCell lifeskills_column = new PdfPCell();
+            PdfPCell lifeskills_column = new PdfPCell(lifeSkillsLegend(content, grade));
             lifeskills_column.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-            lifeskills_column.Border = Rectangle.BOX;
-
+            lifeskills_column.Border = Rectangle.RIGHT_BORDER;
+            lifeskills_column.BorderColor = new BaseColor(128, 128, 128);
             legendTable.AddCell(lifeskills_column);
 
             PdfPCell outcomes_column = new PdfPCell(outcomeLegend(content, barStyle));
             outcomes_column.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-            outcomes_column.Border = Rectangle.BOX;
+            outcomes_column.Border = 0;
 
             legendTable.AddCell(outcomes_column);
 
