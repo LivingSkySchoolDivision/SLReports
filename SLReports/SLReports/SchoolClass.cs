@@ -11,6 +11,7 @@ namespace SLReports
     public class SchoolClass : IComparable
     {
         public string name { get; set; }
+        public string courseName { get; set; }
         public int courseid { get; set; }
         public int classid { get; set; }
         public int trackID { get; set; }
@@ -35,9 +36,21 @@ namespace SLReports
 
         public List<ReportPeriod> ReportPeriods { get; set; }
 
-        public bool hasObjectives()
+        public bool hasOutcomes()
         {
             if (this.Outcomes.Count > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool hasLifeSkills()
+        {
+            if (this.LifeSkills.Count > 0)
             {
                 return true;
             }
@@ -118,7 +131,7 @@ namespace SLReports
 
         public override string ToString()
         {
-            return "Class: { Name: " + this.name + ", ClassID: " + this.classid + ", CourseID: " + this.courseid + ", Block: " + this.blockNumber + ", Day: " + this.dayNumber + ", Has Objectives: " + this.Outcomes.Count + ", IsHighSchool: " + LSKYCommon.boolToYesOrNo(this.isHighSchoolLevel()) + ", LowGrade: " + this.lowestGrade + ", HighGrade: " + this.highestGrade + ", Translated grade: " + this.getGradeLevel() + ", Grade Legend: " + this.gradeLegend + "}";
+            return "Class: { Name: " + this.name + ", Course Name: " + this.courseName+ ", ClassID: " + this.classid + ", CourseID: " + this.courseid + ", Block: " + this.blockNumber + ", Day: " + this.dayNumber + ", Has Objectives: " + this.Outcomes.Count + ", IsHighSchool: " + LSKYCommon.boolToYesOrNo(this.isHighSchoolLevel()) + ", LowGrade: " + this.lowestGrade + ", HighGrade: " + this.highestGrade + ", Translated grade: " + this.getGradeLevel() + ", Grade Legend: " + this.gradeLegend + "}";
         }
         
         /* This constructor should be removed and code relying on it should be redone */
@@ -135,7 +148,7 @@ namespace SLReports
             this.courseid = courseid;
         }
         
-        public SchoolClass(string name, int classid, int courseid, string teacherFirst, string teacherLast, string teacherTitle, string schoolName, int blockNum, int dayNum, Track track, string lowestGrade, string highestGrade, string gradeLegendName)
+        public SchoolClass(string name, string courseName, int classid, int courseid, string teacherFirst, string teacherLast, string teacherTitle, string schoolName, int blockNum, int dayNum, Track track, string lowestGrade, string highestGrade, string gradeLegendName)
         {
             Outcomes = new List<Outcome>();
             Marks = new List<Mark>();
@@ -145,6 +158,7 @@ namespace SLReports
             LifeSkills = new List<Outcome>();
 
             this.name = name;
+            this.courseName = courseName;
             this.classid = classid;
             this.courseid = courseid;
             this.schoolName = schoolName;
@@ -164,7 +178,7 @@ namespace SLReports
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = connection;
             sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = "SELECT * FROM LSKY_StudentclassEnrollment WHERE cStudentNumber=@STUDENTNUM AND iTermID=@TERMID ORDER BY SchoolName ASC, cName ASC, iClassID ASC;";
+            sqlCommand.CommandText = "SELECT * FROM LSKY_StudentclassEnrollment WHERE cStudentNumber=@STUDENTNUM AND iTermID=@TERMID ORDER BY SchoolName ASC, ClassName ASC, iClassID ASC;";
             sqlCommand.Parameters.AddWithValue("@STUDENTNUM", student.getStudentID());
             sqlCommand.Parameters.AddWithValue("@TERMID", term.ID);
             sqlCommand.Connection.Open();
@@ -202,7 +216,8 @@ namespace SLReports
 
 
                     SchoolClass newSchoolClass = new SchoolClass(
-                            dataReader["cName"].ToString().Trim(),
+                            dataReader["ClassName"].ToString().Trim(),
+                            dataReader["CourseName"].ToString().Trim(),
                             int.Parse(dataReader["iClassID"].ToString().Trim()),
                             int.Parse(dataReader["iCourseID"].ToString().Trim()),
                             dataReader["TeacherFirstName"].ToString().Trim(),
@@ -240,7 +255,7 @@ namespace SLReports
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = connection;
             sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = "SELECT * FROM LSKY_Classes ORDER BY SchoolName ASC, cName ASC, iClassID ASC;";
+            sqlCommand.CommandText = "SELECT * FROM LSKY_Classes ORDER BY SchoolName ASC, ClassName ASC, iClassID ASC;";
             sqlCommand.Connection.Open();
             SqlDataReader dataReader = sqlCommand.ExecuteReader();
 
@@ -263,9 +278,10 @@ namespace SLReports
                             int.Parse(dataReader["SchoolID"].ToString().Trim()),
                             daily);
 
-            
+
                     SchoolClass newSchoolClass = new SchoolClass(
-                            dataReader["cName"].ToString().Trim(),
+                            dataReader["ClassName"].ToString().Trim(),
+                            dataReader["CourseName"].ToString().Trim(),
                             int.Parse(dataReader["iClassID"].ToString().Trim()),
                             int.Parse(dataReader["iCourseID"].ToString().Trim()),
                             dataReader["TeacherFirstName"].ToString().Trim(),

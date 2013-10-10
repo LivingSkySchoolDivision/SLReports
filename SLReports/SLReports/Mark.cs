@@ -17,9 +17,6 @@ namespace SLReports
         public int classID { get; set; }
         public int courseID { get; set; }
         public string comment { get; set; }
-        public SchoolClass schoolclass { get; set; }
-        public List<Teacher> teachers { get; set; }
-
         public ReportPeriod reportPeriod { get; set; }
 
         public Mark(int id, int reportPeriodID, string numberMark, string outcomeMark, string classname, int classid, int courseid, string comment, ReportPeriod rperiod)
@@ -32,10 +29,8 @@ namespace SLReports
             this.comment = comment;
             this.reportPeriod = rperiod;
             this.classID = classid;
-            this.courseID = courseid;
-            this.schoolclass = new SchoolClass(this.className, this.classID, this.courseID);            
+            this.courseID = courseid;            
         }
-
        
         public string getMark()
         {   
@@ -99,7 +94,6 @@ namespace SLReports
             sqlCommand.Connection.Close();
             return returnMe;
         }
-
         
         public static List<Mark> loadMarksFromTheseReportPeriods(SqlConnection connection, List<ReportPeriod> periods, Student student)
         {
@@ -107,7 +101,6 @@ namespace SLReports
 
             foreach (ReportPeriod rp in periods)
             {
-
                 SqlCommand sqlCommand = new SqlCommand();
                 sqlCommand.Connection = connection;
                 sqlCommand.CommandType = CommandType.Text;
@@ -131,20 +124,13 @@ namespace SLReports
                                 rp
                                 );
 
-
                         newMark.reportPeriod = rp;
-
                         
                         returnMe.Add(newMark);
 
                     }
                 }
             sqlCommand.Connection.Close();
-            }
-
-            foreach (Mark newMark in returnMe)
-            {
-                newMark.teachers = Teacher.loadTeachersForThisClass(connection, newMark.classID);
             }
 
             return returnMe;

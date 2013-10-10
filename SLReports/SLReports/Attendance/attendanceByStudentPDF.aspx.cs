@@ -14,20 +14,6 @@ namespace SLReports.Attendance
 {
     public partial class attendanceByStudentPDF : System.Web.UI.Page
     {
-        iTextSharp.text.Image lskyLogo = iTextSharp.text.Image.GetInstance(@"https://sldata.lskysd.ca/SLReports/Logo_Circle_Notext_Trans.png");
-
-        Font font_large = FontFactory.GetFont("Verdana", 15, BaseColor.BLACK);
-        Font font_large_bold = FontFactory.GetFont("Verdana", 15, Font.BOLD, BaseColor.BLACK);
-        Font font_large_italic = FontFactory.GetFont("Verdana", 15, Font.ITALIC, BaseColor.BLACK);
-
-        Font font_body = FontFactory.GetFont("Verdana", 8, BaseColor.BLACK);
-        Font font_body_bold = FontFactory.GetFont("Verdana", 8, Font.BOLD, BaseColor.BLACK);
-        Font font_body_italic = FontFactory.GetFont("Verdana", 8, Font.ITALIC, BaseColor.BLACK);
-
-        Font font_small = FontFactory.GetFont("Verdana", 8, BaseColor.BLACK);
-        Font font_small_bold = FontFactory.GetFont("Verdana", 8, Font.BOLD, BaseColor.BLACK);
-        Font font_small_italic = FontFactory.GetFont("Verdana", 8, Font.ITALIC, BaseColor.BLACK);
-
         protected void sendPDF(System.IO.MemoryStream PDFData, String filename)
         {
             Response.Clear();

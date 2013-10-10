@@ -141,7 +141,6 @@ namespace SLReports.Login
             HttpCookie newCookie = new HttpCookie("lskyDataExplorer");
             newCookie.Value = newSessionID;
             newCookie.Expires = DateTime.Now.Add(sessionDuration);
-            //newCookie.Domain = "sldata.lskysd.ca";
             newCookie.Domain = LSKYCommon.getServerName(Request);
             newCookie.Secure = true;
             Response.Cookies.Add(newCookie);

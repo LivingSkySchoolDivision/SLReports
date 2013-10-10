@@ -20,12 +20,15 @@
             <li><a href="GetReportCard_DEBUG.aspx?anon=true&students=600000866;&reportperiods=282;">Anonymized Demo - NBCHS Grade 9</a></li>
             <li><a href="GetReportCard_DEBUG.aspx?anon=true&students=11907;12254;600000866;&reportperiods=282;">Several students in one</a></li>         
         </ul>
-        <h1>Interal test data</h1>
+        <h1>Non Anonymized students for report card testing</h1>
         <ul style="font-size: 14pt;">
-            <li><a href="GetReportCard_DEBUG.aspx?students=600004912;&reportperiods=282;283;284;">600004912 - Debug</a></li>
-            <li><a href="GetReportCardPDF_ByStudent.aspx?students=600004912;&reportperiods=282;283;284;">600004912 - Report Card</a></li>
-            <li><a href="GetReportCard_DEBUG.aspx?students=600000080;&reportperiods=282;283;284;">600000080 - Debug</a></li>
-            <li><a href="GetReportCardPDF_ByStudent.aspx?students=600000080;&reportperiods=282;283;284;">600000080 - Report Card</a></li>
+            <li>11907 (Grade 12) - <a href="GetReportCardPDF_ByStudent.aspx?students=11907;&reportperiods=282;">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=11907;&reportperiods=282;">Data</a></li>
+            <li>12254 (Grade 11) - <a href="GetReportCardPDF_ByStudent.aspx?students=12254;&reportperiods=282;">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=12254;&reportperiods=282;">Data</a></li>
+            <li>12518 (Grade 10) - <a href="GetReportCardPDF_ByStudent.aspx?students=12518;&reportperiods=282;">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=12518;&reportperiods=282;">Data</a></li>
+            <li>600000866 (Grade 9) - <a href="GetReportCardPDF_ByStudent.aspx?students=600000866;&reportperiods=282;">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=600000866;&reportperiods=282;">Data</a></li>
+            <li>600004912 (Grade 8) - <a href="GetReportCardPDF_ByStudent.aspx?students=600004912;&reportperiods=282;">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=600004912;&reportperiods=282;">Data</a></li>
+            <li>600000080 (Has invalid life skills)- <a href="GetReportCardPDF_ByStudent.aspx?students=600000080;&reportperiods=282;">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=600000080;&reportperiods=282;">Data</a></li>
+            <li>11803 (Has life skills)- <a href="GetReportCardPDF_ByStudent.aspx?students=11803;&reportperiods=282;283;">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=11803;&reportperiods=282;283;">Data</a></li>
         </ul>
     </div>              
     </form>

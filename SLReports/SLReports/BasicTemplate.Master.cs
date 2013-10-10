@@ -53,7 +53,6 @@ namespace SLReports
                 HttpCookie newCookie = new HttpCookie("lskyDataExplorer");
                 newCookie.Value = "NOTHING TO SEE HERE";
                 newCookie.Expires = DateTime.Now.AddDays(-1D);
-                //newCookie.Domain = "sldata.lskysd.ca";
                 newCookie.Domain = LSKYCommon.getServerName(Request);
                 newCookie.Secure = true;
                 //Response.SetCookie(Response.Cookies["lskyDataExplorer"]);
