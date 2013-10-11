@@ -86,7 +86,7 @@ namespace SLReports
             return "OutcomeMark: { ID: " + this.objectiveMarkID + ", Objective ID: " + this.objectiveID + ", nMark: " + this.nMark + ", cMark: " + this.cMark + ", Translated Mark: " + this.mark + ", Report Period: " + this.reportPeriodID + ", HasOutcomeInfo: " + LSKYCommon.boolToYesOrNo(hasObjectiveAlso) + " , HasReportPeriod: " + LSKYCommon.boolToYesOrNo(hasReportPeriod) + " }";
         }
         
-        public static List<OutcomeMark> loadObjectiveMarksForThisCourse(SqlConnection connection, Term term, Student student, SchoolClass course)
+        public static List<OutcomeMark> loadOutcomeMarksForThisCourse(SqlConnection connection, Term term, Student student, SchoolClass course)
         {
             List<OutcomeMark> returnMe = new List<OutcomeMark>();
 
@@ -124,7 +124,7 @@ namespace SLReports
             return returnMe;
         }
 
-        public static List<OutcomeMark> loadObjectiveMarksForThisStudent(SqlConnection connection, Term term, Student student)
+        public static List<OutcomeMark> loadOutcomeMarksForThisStudent(SqlConnection connection, Term term, Student student)
         {
             List<OutcomeMark> returnMe = new List<OutcomeMark>();
 
@@ -159,6 +159,40 @@ namespace SLReports
             sqlCommand.Connection.Close();
             return returnMe;
         }
-                
+        
+        public static List<OutcomeMark> loadAllOutcomeMarks(SqlConnection connection)
+        {
+            List<OutcomeMark> returnMe = new List<OutcomeMark>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM LSKY_ObjectiveMarks;";
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    float nMark = -1;
+                    float.TryParse(dataReader["nMark"].ToString().Trim(), out nMark);
+
+                    returnMe.Add(new OutcomeMark(
+                            int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
+                            int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
+                            int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
+                            int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
+                            int.Parse(dataReader["iCourseID"].ToString().Trim()),
+                            dataReader["cMark"].ToString().Trim(),
+                            (float)Math.Round(nMark, 1)
+                            ));
+                }
+            }
+
+            sqlCommand.Connection.Close();
+            return returnMe;
+        }
+        
     }
 }

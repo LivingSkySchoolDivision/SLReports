@@ -257,7 +257,7 @@ namespace SLReports
 
                         // Load outcomes and outcome marks
                         List<Outcome> courseOutcomes = Outcome.loadObjectivesForThisCourse(connection, thisClass);
-                        List<OutcomeMark> courseOutcomeMarks_All = OutcomeMark.loadObjectiveMarksForThisCourse(connection, thisTerm, returnedStudent, thisClass);
+                        List<OutcomeMark> courseOutcomeMarks_All = OutcomeMark.loadOutcomeMarksForThisCourse(connection, thisTerm, returnedStudent, thisClass);
                         List<OutcomeMark> courseOutcomeMarks = new List<OutcomeMark>();
                                                 
                         // Filter outcome marks to only the report periods that we care about
