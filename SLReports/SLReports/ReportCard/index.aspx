@@ -27,8 +27,9 @@
             <li>12518 (Grade 10) - <a href="GetReportCardPDF_ByStudent.aspx?students=12518;&reportperiods=282;">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=12518;&reportperiods=282;">Data</a></li>
             <li>600000866 (Grade 9) - <a href="GetReportCardPDF_ByStudent.aspx?students=600000866;&reportperiods=282;">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=600000866;&reportperiods=282;">Data</a></li>
             <li>600004912 (Grade 8) - <a href="GetReportCardPDF_ByStudent.aspx?students=600004912;&reportperiods=282;">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=600004912;&reportperiods=282;">Data</a></li>
-            <li>600000080 (Has invalid life skills)- <a href="GetReportCardPDF_ByStudent.aspx?students=600000080;&reportperiods=282;">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=600000080;&reportperiods=282;">Data</a></li>
-            <li>11803 (Has life skills)- <a href="GetReportCardPDF_ByStudent.aspx?students=11803;&reportperiods=282;283;">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=11803;&reportperiods=282;283;">Data</a></li>
+            <li>600000080 (Grade 9) Has invalid life skills - <a href="GetReportCardPDF_ByStudent.aspx?students=600000080;&reportperiods=282;">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=600000080;&reportperiods=282;">Data</a></li>
+            <li>11803 (Grade 12) Has life skills- <a href="GetReportCardPDF_ByStudent.aspx?students=11803;&reportperiods=282;283;">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=11803;&reportperiods=282;283;">Data</a></li>
+            <li>11907 (Grade 12) with 2 report periods - <a href="GetReportCardPDF_ByStudent.aspx?students=11907;&reportperiods=282;283">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=11907;&reportperiods=282;283">Data</a></li>
         </ul>
     </div>              
     </form>

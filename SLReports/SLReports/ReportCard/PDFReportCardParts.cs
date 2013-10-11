@@ -11,28 +11,6 @@ namespace SLReports.ReportCard
 {
     public static class PDFReportCardParts
     {
-        #region Options for look and feel
-        public enum OutcomeMarkDisplayStyle
-        {
-            AsPercent,
-            AsNumber,
-            AsOutcomeBar
-        }
-
-        public enum ClassMarksToDisplay
-        {
-            None,
-            FinalReportPeriodOnly,
-            AllReportPeriods
-        }
-
-        public enum ClassMarkDisplayStyle
-        {
-            AsPercent,
-            AsNumber,
-            AsOutcomeBar
-        }
-
         public enum OutcomeBarStyle
         {
             Slider,
@@ -43,7 +21,6 @@ namespace SLReports.ReportCard
             NumberBar,
             Table
         }
-        #endregion
 
         #region Globals (Standard colors and fonts)
         public static String ReportCardDatabase = LSKYCommon.dbConnectionString_SchoolLogicTest;
@@ -345,7 +322,7 @@ namespace SLReports.ReportCard
 
             PdfTemplate canvas = content.CreateTemplate(width + (CanvasPaddingX * 2), height + (CanvasPaddingY * 2));
 
-            BaseColor borderColor = new BaseColor(0.4f, 0.4f, 0.4f);
+            BaseColor borderColor = new BaseColor(0, 0, 0);
             
             /* Background */
             canvas.Rectangle(0, 0, width + (CanvasPaddingX * 2), height + (CanvasPaddingY * 2));
@@ -420,8 +397,8 @@ namespace SLReports.ReportCard
 
             /* Border */
             canvas.SetRGBColorStroke(255, 255, 255);
-            canvas.RoundRectangle(CanvasPaddingX, CanvasPaddingY, width, height, rectancleCurveRadius);
-            //canvas.Rectangle(CanvasPaddingX, CanvasPaddingY, width, height);
+            //canvas.RoundRectangle(CanvasPaddingX, CanvasPaddingY, width, height, rectancleCurveRadius);
+            canvas.Rectangle(CanvasPaddingX, CanvasPaddingY, width, height);
             canvas.SetColorStroke(borderColor);
             canvas.Stroke();
 
@@ -947,7 +924,7 @@ namespace SLReports.ReportCard
             PdfPTable studentInfoTable = new PdfPTable(2);
             float[] studentInfoTableWidths = new float[] { 115f, 235f };
             studentInfoTable.SetWidths(studentInfoTableWidths);            
-
+               
             foreach (KeyValuePair<string, string> kvp in studentInformation)
             {
                 PdfPCell titleCell = new PdfPCell(new Phrase(kvp.Key, font_title));                
@@ -997,9 +974,6 @@ namespace SLReports.ReportCard
                     latestDate = rp.endDate;
                 }
             }
-
-
-            BaseColor backgroundColor = new BaseColor(0.99f, 0.99f, 0.99f, 0.2f);
             
             Font font_title = FontFactory.GetFont("Verdana", 11, Font.NORMAL, BaseColor.BLACK);
             Font font_date = FontFactory.GetFont("Verdana", 14, Font.NORMAL, BaseColor.BLACK);
@@ -1021,12 +995,10 @@ namespace SLReports.ReportCard
             PdfPCell reportNameCell = new PdfPCell(reportName);
             reportNameCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             reportNameCell.Border = Rectangle.BOX;
-            reportNameCell.BorderColor = new BaseColor(0.4f, 0.4f, 0.4f);
-            reportNameCell.BackgroundColor = new BaseColor(0.9f, 0.9f, 0.9f);
+            reportNameCell.BorderColor = new BaseColor(0.9f, 0.9f, 0.9f);
+            reportNameCell.BackgroundColor = new BaseColor(0.97f, 0.97f, 0.97f);
+            reportNameCell.Padding = 10;
             reportNamePlateTable.AddCell(reportNameCell);
-            
-
-
 
             return reportNamePlateTable;
         }
@@ -1419,13 +1391,13 @@ namespace SLReports.ReportCard
             return outcomeLegendTable;
         }
 
-        private static PdfPTable lifeSkillsLegend(PdfContentByte content, string grade)
+        private static PdfPTable lifeSkillsLegend(PdfContentByte content, string grade, OutcomeBarStyle barStyle = OutcomeBarStyle.LifeSkills)
         {            
             Font font_legend_title = FontFactory.GetFont("Verdana", 12, Font.BOLD, BaseColor.BLACK);
             Font font_legend = FontFactory.GetFont("Verdana", 9, BaseColor.BLACK);
             Font font_legend_bold = FontFactory.GetFont("Verdana", 9, Font.BOLD, BaseColor.BLACK);
 
-            SortedDictionary<int, string> potentialMarks = new SortedDictionary<int, string>();
+            Dictionary<int, string> potentialMarks = new Dictionary<int, string>();
 
             int gradeLevel = 0;
             if (!int.TryParse(grade, out gradeLevel)) 
@@ -1433,10 +1405,10 @@ namespace SLReports.ReportCard
                 gradeLevel = 0;
             }
 
-            potentialMarks.Add(1, "Beginning to demonstrate these characteristics");
-            potentialMarks.Add(2, "Occasionally demonstrates these characteristics");
-            potentialMarks.Add(3, "Usually demonstrates these characteristics");
-            potentialMarks.Add(4, "Consistently demonstrates these characteristics");
+            potentialMarks.Add(4, "Consistently demonstrates");
+            potentialMarks.Add(3, "Usually demonstrates");
+            potentialMarks.Add(2, "Occasionally demonstrates");
+            potentialMarks.Add(1, "Beginning to demonstrate");
 
             SortedDictionary<string, string> lifeSkills = new SortedDictionary<string, string>();
             if (gradeLevel >= 10)
@@ -1479,7 +1451,7 @@ namespace SLReports.ReportCard
             outcomeLegendTable.TotalWidth = 250;
             outcomeLegendTable.LockedWidth = true;
 
-            float[] widths = new float[] { 1f, 5f };
+            float[] widths = new float[] {1f, 2f };
             outcomeLegendTable.SetWidths(widths);
             
             PdfPCell titleCell = new PdfPCell(new Phrase("Characteristics of Successful Learning Behaviours", font_legend_title));
@@ -1490,6 +1462,7 @@ namespace SLReports.ReportCard
             titleCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             titleCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
             outcomeLegendTable.AddCell(titleCell);
+                        
 
             foreach (KeyValuePair<string, string> legendItem in lifeSkills)
             {
@@ -1509,10 +1482,62 @@ namespace SLReports.ReportCard
                 outcomeLegendTable.AddCell(lifeskillCell);
             }
             
+            // Spacing cell
+            PdfPCell spacerCell = new PdfPCell(new Phrase(" "));
+            spacerCell.Border = 0;
+            spacerCell.Colspan = 2;
+            outcomeLegendTable.AddCell(spacerCell);
+
+            // Add example bars
+            Font font_key = FontFactory.GetFont("Verdana", 8, BaseColor.BLACK);
+            Font font_key_bold = FontFactory.GetFont("Verdana", 8, Font.BOLD, BaseColor.BLACK);
+            
+            // Empty number bar
+            if (barStyle == OutcomeBarStyle.LifeSkills)
+            {
+                PdfPCell numberBarCell = new PdfPCell();
+                numberBarCell.AddElement(outcomeBar_NumberBar(content));
+                numberBarCell.Border = 0;
+                numberBarCell.PaddingTop = 5;
+                numberBarCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+
+                PdfPCell numberBarDescriptioncell = new PdfPCell();
+                numberBarDescriptioncell.Border = 0;
+                numberBarDescriptioncell.SetLeading(0, 1.25f);
+                numberBarDescriptioncell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+
+                outcomeLegendTable.AddCell(numberBarCell);
+                outcomeLegendTable.AddCell(numberBarDescriptioncell);
+            }
+
+            foreach (KeyValuePair<int, string> keyItem in potentialMarks)
+            {
+                PdfPCell keyValueCell = new PdfPCell();
+                keyValueCell.AddElement(displayOutcomeBar(content, keyItem.Key.ToString(), barStyle));
+                keyValueCell.Border = 0;
+                keyValueCell.PaddingTop = 5;
+                keyValueCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+
+                Paragraph descriptionParagraph = new Paragraph();
+                //descriptionParagraph.Add(new Phrase(keyItem.Key.ToString() + ": ", font_key_bold));
+                descriptionParagraph.Add(new Phrase(keyItem.Value, font_key));
+                PdfPCell keyDescriptionCell = new PdfPCell(descriptionParagraph);
+                keyDescriptionCell.Border = 0;
+                keyDescriptionCell.SetLeading(0, 1.25f);
+                keyDescriptionCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+
+                outcomeLegendTable.AddCell(keyValueCell);
+                outcomeLegendTable.AddCell(keyDescriptionCell);
+
+            }
+
+            // Spacer cell for the bottom, because the bottom cell is always stretched to fit the parent cell            
+            outcomeLegendTable.AddCell(spacerCell);
+
             return outcomeLegendTable;
         }
 
-        private static PdfPTable legend(PdfContentByte content, string grade, OutcomeBarStyle barStyle)
+        private static PdfPTable legend(PdfContentByte content, string grade, OutcomeBarStyle outcomeBarStyle, OutcomeBarStyle lifeSkillsBarStyle)
         {
             PdfPTable legendTable = new PdfPTable(2);
             legendTable.HorizontalAlignment = 1;
@@ -1522,14 +1547,13 @@ namespace SLReports.ReportCard
             float[] widths = new float[] { 250f, 250f };
             legendTable.SetWidths(widths);
 
-
-            PdfPCell lifeskills_column = new PdfPCell(lifeSkillsLegend(content, grade));
+            PdfPCell lifeskills_column = new PdfPCell(lifeSkillsLegend(content, grade, lifeSkillsBarStyle));
             lifeskills_column.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             lifeskills_column.Border = Rectangle.RIGHT_BORDER;
             lifeskills_column.BorderColor = new BaseColor(190, 190, 190);
             legendTable.AddCell(lifeskills_column);
 
-            PdfPCell outcomes_column = new PdfPCell(outcomeLegend(content, barStyle));
+            PdfPCell outcomes_column = new PdfPCell(outcomeLegend(content, outcomeBarStyle));
             outcomes_column.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             outcomes_column.Border = 0;
 
@@ -1553,11 +1577,6 @@ namespace SLReports.ReportCard
                 PdfPCell objectiveDescriptionCell = new PdfPCell();
 
                 String outcomeDescription = outcome.notes;
-
-                if (outcome.notes.Length > 100)
-                {
-                    outcomeDescription = outcome.notes.Substring(0, 100);
-                }
 
                 objectiveDescriptionCell.AddElement(new Phrase(outcomeDescription, font_small));
                 //objectiveDescriptionCell.AddElement(new Phrase(Chunk.NEWLINE));
@@ -1620,11 +1639,16 @@ namespace SLReports.ReportCard
                     }
 
                     // Display the report period
-                    PdfPCell reportPeriodCell = new PdfPCell(new Phrase(objectivemark.reportPeriod.name + ":", font_very_small_bold));
+                    Paragraph reportPeriodParagraph = new Paragraph();
+                    if (outcome.marks.Count > 1)
+                    {
+                        reportPeriodParagraph.Add(new Phrase(objectivemark.reportPeriod.name + ":", font_very_small_bold));
+                    }
+                    PdfPCell reportPeriodCell = new PdfPCell(reportPeriodParagraph);
                     reportPeriodCell.Padding = 2;
                     reportPeriodCell.PaddingLeft = 10;
                     reportPeriodCell.Border = ObjectivesTableDebuggingBorder;
-                    reportPeriodCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                    reportPeriodCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
                     reportPeriodCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
                         
                     marksTable.AddCell(reportPeriodCell);
@@ -1660,7 +1684,7 @@ namespace SLReports.ReportCard
             return objectiveChunkTableCell;
         }
 
-        private static PdfPCell lifeSkillsChunk(List<Outcome> objectives, PdfContentByte content)
+        private static PdfPCell lifeSkillsChunk(List<Outcome> objectives, PdfContentByte content, OutcomeBarStyle barStyle = OutcomeBarStyle.LifeSkills)
         {
             int lifeSkillsTableBorder = 0;
 
@@ -1722,13 +1746,16 @@ namespace SLReports.ReportCard
                 }
 
                 // Display number bars
-                lifeSkillChunkTable.AddCell(bufferCell);
-                foreach (string lifeSkillName in lifeSkillsNames)
+                if (barStyle != OutcomeBarStyle.JustNumber)
                 {
-                    PdfPCell columnHeadingCell = new PdfPCell(outcomeBar_NumberBar(content), true);
-                    columnHeadingCell.Border = lifeSkillsTableBorder;
-                    columnHeadingCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
-                    lifeSkillChunkTable.AddCell(columnHeadingCell);
+                    lifeSkillChunkTable.AddCell(bufferCell);
+                    foreach (string lifeSkillName in lifeSkillsNames)
+                    {
+                        PdfPCell columnHeadingCell = new PdfPCell(outcomeBar_NumberBar(content), true);
+                        columnHeadingCell.Border = lifeSkillsTableBorder;
+                        columnHeadingCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                        lifeSkillChunkTable.AddCell(columnHeadingCell);
+                    }
                 }
 
                 // Display outcome bars
@@ -1775,7 +1802,7 @@ namespace SLReports.ReportCard
                                             markToDisplay = -1;
                                         }
 
-                                        markValueCell.AddElement(outcomeBar_LifeSkills(content, markToDisplay.ToString()));
+                                        markValueCell.AddElement(displayOutcomeBar(content, markToDisplay.ToString(), barStyle));
 
                                     }
                                 }
@@ -1826,14 +1853,9 @@ namespace SLReports.ReportCard
             return newCell;
         }
 
-        private static PdfPTable classWithMarks(SchoolClass course, PdfContentByte content, bool anonymize = false, OutcomeBarStyle barStyle = OutcomeBarStyle.Slider)
+        private static PdfPTable classWithMarks(SchoolClass course, PdfContentByte content, bool anonymize = false, OutcomeBarStyle outcomeBarStyle = OutcomeBarStyle.Slider, OutcomeBarStyle lifeSkillsBarStyle = OutcomeBarStyle.LifeSkills)
         {          
-            // Housekeeping first 
-
-            // Default display modes
-            ClassMarkDisplayStyle classMarkDisplayStyle = ClassMarkDisplayStyle.AsPercent;
-            ClassMarksToDisplay classMarksToDisplay = ClassMarksToDisplay.None;
-            
+            // Housekeeping first            
                         
             // Table that the whole "class" will be displayed in
             PdfPTable classTable = new PdfPTable(2);
@@ -1965,7 +1987,7 @@ namespace SLReports.ReportCard
 
                 #region Class without outcomes (displaying all report periods)
                 
-                // Get list of report periods to display
+                // Get list of report periods to display (just the ones with marks in them)                
                 List<ReportPeriod> loadedReportPeriods = new List<ReportPeriod>();
                 foreach (Mark mark in course.Marks)
                 {
@@ -2073,7 +2095,7 @@ namespace SLReports.ReportCard
                 {
                     if (objective.marks.Count > 0)
                     {
-                        classTable.AddCell(outcomeChunk(objective, content, barStyle));                        
+                        classTable.AddCell(outcomeChunk(objective, content, outcomeBarStyle));                        
                     }
                 }
             }
@@ -2099,8 +2121,8 @@ namespace SLReports.ReportCard
             }
 
             if (lifeSkillsWithMarks > 0)
-            {                    
-                classTable.AddCell(lifeSkillsChunk(course.LifeSkills, content));
+            {
+                classTable.AddCell(lifeSkillsChunk(course.LifeSkills, content, lifeSkillsBarStyle));
             }
             
             
@@ -2111,11 +2133,21 @@ namespace SLReports.ReportCard
             // Check for comments
             bool hasAcademicComments = false;
 
+            // This is to determine how many different report periods we have comments for,
+            // so we know if we need to display the report period name or not.
+            List<int> differentReportPeriods = new List<int>();
+
             foreach (Mark m in course.Marks)
             {
                 if (!string.IsNullOrEmpty(m.comment))
                 {
                     hasAcademicComments = true;
+
+                    // Figure out how many different report periods we have comments for
+                    if (!differentReportPeriods.Contains(m.reportPeriodID))
+                    {
+                        differentReportPeriods.Add(m.reportPeriodID);
+                    }                    
                 }
             }
 
@@ -2135,7 +2167,12 @@ namespace SLReports.ReportCard
                 {
                     if (!string.IsNullOrEmpty(mark.comment))
                     {
-                        commentsParagraph.Add(new Phrase(mark.reportPeriod.name + ": ", font_small_bold));
+                        // Display the report period if there are multiple comments from multiple report periods
+                        if (differentReportPeriods.Count > 1)
+                        {
+                            commentsParagraph.Add(new Phrase(mark.reportPeriod.name + ": ", font_small_bold));
+                        }
+
                         if (anonymize)
                         {
                             commentsParagraph.Add(new Phrase(LSKYCommon.getRandomLipsumString(), font_small));
@@ -2158,7 +2195,7 @@ namespace SLReports.ReportCard
             return classTable;
         }
 
-        public static MemoryStream GeneratePDF(List<Student> students, List<ReportPeriod> reportPeriods, bool anonymize = false, bool showPlaceholderPhotos = false, bool doubleSidedMode = true, OutcomeBarStyle barStyle = OutcomeBarStyle.Slider)
+        public static MemoryStream GeneratePDF(List<Student> students, List<ReportPeriod> reportPeriods, bool anonymize = false, bool showPlaceholderPhotos = false, bool doubleSidedMode = true, OutcomeBarStyle outcomeBarStyle = OutcomeBarStyle.Slider, OutcomeBarStyle lifeSkillsBarStyle = OutcomeBarStyle.LifeSkills)
         {
             MemoryStream memstream = new MemoryStream();
             Document ReportCard = new Document(PageSize.LETTER);
@@ -2195,19 +2232,23 @@ namespace SLReports.ReportCard
                 {
                     PageEventHandler.bottomLeft = "Student Name";
                 }
-                
+
                 // Determine bar style based on grade number
-                OutcomeBarStyle determinedBarStyle = barStyle;
+                OutcomeBarStyle determinedBarStyle_Outcomes = outcomeBarStyle;
+                OutcomeBarStyle determinedBarStyle_LifeSkills = lifeSkillsBarStyle;
+
                 int gradeParsed = 0;
                 if (int.TryParse(student.getGradeFormatted(), out gradeParsed))
                 {
                     if (gradeParsed >= 10)
                     {
-                        determinedBarStyle = OutcomeBarStyle.JustNumber;
+                        determinedBarStyle_Outcomes = OutcomeBarStyle.JustNumber;
+                        determinedBarStyle_LifeSkills = OutcomeBarStyle.JustNumber;
                     }
                     else
                     {
-                        determinedBarStyle = OutcomeBarStyle.Slider;
+                        determinedBarStyle_Outcomes = OutcomeBarStyle.Slider;
+                        determinedBarStyle_LifeSkills = OutcomeBarStyle.LifeSkills;
                     }
                 }
 
@@ -2215,7 +2256,7 @@ namespace SLReports.ReportCard
                 ReportCard.Add(PDFReportCardParts.schoolNamePlate(student.school));
                 ReportCard.Add(PDFReportCardParts.namePlateTable(student, anonymize, showPlaceholderPhotos));
                 ReportCard.Add(PDFReportCardParts.reportNamePlate(reportPeriods));
-                ReportCard.Add(PDFReportCardParts.legend(content, student.getGrade(), determinedBarStyle));
+                ReportCard.Add(PDFReportCardParts.legend(content, student.getGrade(), determinedBarStyle_Outcomes, determinedBarStyle_LifeSkills));
                 //ReportCard.Add(PDFReportCardParts.lifeSkillsLegend(content, student.getGrade()));
                 //ReportCard.Add(PDFReportCardParts.outcomeLegend(content, barStyle));
                 ReportCard.NewPage();
@@ -2228,7 +2269,7 @@ namespace SLReports.ReportCard
                     {
                         if ((course.Marks.Count > 0) || (course.OutcomeMarks.Count > 0) || (course.LifeSkillMarks.Count > 0))
                         {
-                            ReportCard.Add(PDFReportCardParts.classWithMarks(course, content, anonymize, determinedBarStyle));
+                            ReportCard.Add(PDFReportCardParts.classWithMarks(course, content, anonymize, determinedBarStyle_Outcomes, determinedBarStyle_LifeSkills));
                             if (!student.track.daily)
                             {
                                 //ReportCard.Add(PDFReportCardParts.courseAttendanceSummary(student, course));
