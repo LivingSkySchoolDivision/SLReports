@@ -194,7 +194,7 @@ namespace SLReports
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = connection;
             sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = "SELECT * FROM ReportPeriod;";
+            sqlCommand.CommandText = "SELECT * FROM ReportPeriod ORDER BY iSchoolID ASC, cName ASC;";
             sqlCommand.Connection.Open();
             SqlDataReader dataReader = sqlCommand.ExecuteReader();
 

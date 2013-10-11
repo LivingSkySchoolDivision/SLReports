@@ -156,6 +156,13 @@ namespace SLReports
             return returnMe.ToString();
         }
 
+        /// <summary>
+        /// Loads mark data for a student for report cards. Loads terms, report periods, enrolled classes, class marks, outcomes, outcome marks, and attendance
+        /// </summary>
+        /// <param name="connection">Database connection</param>
+        /// <param name="thisStudent">The student to load data for</param>
+        /// <param name="theseReportPeriods">Report periods to load data for</param>
+        /// <returns>Student object loaded with terms, report periods, enrolled classes, class marks, outcomes, outcome marks, and attendance</returns>
         public static Student loadStudentMarkData(SqlConnection connection, Student thisStudent, List<ReportPeriod> theseReportPeriods)
         {
             Student returnedStudent = thisStudent;

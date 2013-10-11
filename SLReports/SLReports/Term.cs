@@ -225,5 +225,36 @@ namespace SLReports
             sqlCommand.Connection.Close();
             return returnMe;
         }
+
+        /// <summary>
+        /// Loads the term from a given report period ID number
+        /// </summary>
+        /// <param name="connection">An active SQL connection</param>
+        /// <param name="reportPeriodID">The report period ID number to search for</param>
+        /// <returns></returns>
+        public static Term loadTermFromReportPeriod(SqlConnection connection, int reportPeriodID)
+        {
+            ReportPeriod selectedReportPeriod = ReportPeriod.loadThisReportPeriod(connection, reportPeriodID);
+
+            if (selectedReportPeriod != null)
+            {
+                return loadTermFromReportPeriod(connection, selectedReportPeriod);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Loads the term from a given report period
+        /// </summary>
+        /// <param name="connection">An active SQL connection</param>
+        /// <param name="reportPeriodID">The report period ID number to search for</param>
+        /// <returns></returns>
+        public static Term loadTermFromReportPeriod(SqlConnection connection, ReportPeriod reportPeriod)
+        {
+            return Term.loadThisTerm(connection, reportPeriod.termID);
+        }
     }
 }

@@ -207,8 +207,7 @@ namespace SLReports.FirstClassOfTheDay
             List<SchoolDay> schoolDays = new List<SchoolDay>();
 
             using (SqlConnection connection = new SqlConnection(LSKYCommon.dbConnectionString_SchoolLogic))
-            {                
-
+            {    
                 int selectedTermID = -1;
                 if (int.TryParse(drpTerm.SelectedValue, out selectedTermID))
                 {

@@ -66,7 +66,7 @@ namespace SLReports.ReportPeriods
             }
 
             allReportPeriods.Sort();
-
+            
             foreach (ReportPeriod rp in allReportPeriods)
             {
                 // Find this report period's term

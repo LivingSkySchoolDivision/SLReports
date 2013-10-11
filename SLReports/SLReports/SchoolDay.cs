@@ -29,8 +29,6 @@ namespace SLReports
             this.name = name;
         }
 
-
-
         public static List<SchoolDay> loadDaysFromThisSchool(SqlConnection connection, School school)
         {
             List<SchoolDay> returnMe = new List<SchoolDay>();

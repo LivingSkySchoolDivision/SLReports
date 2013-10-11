@@ -28,6 +28,19 @@ namespace SLReports
             this.roomName = room;
         }
 
+        public static int getHighestDayNumber(this List<TimeTableEntry> entries)
+        {
+            int maxDayNum = 0;
+            foreach (TimeTableEntry entry in entries)
+            {
+                if (entry.dayNum > maxDayNum)
+                {
+                    maxDayNum = entry.dayNum;
+                }
+            }
+            return maxDayNum;
+        }
+
         public string ToStringFormatted()
         {
             return this.schoolClass.name + "; Room " + roomName + "; Period " + blockNum + "; Teacher " + schoolClass.teacherName;
