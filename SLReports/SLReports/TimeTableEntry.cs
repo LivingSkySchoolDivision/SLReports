@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Web;
 
 namespace SLReports
@@ -28,18 +29,25 @@ namespace SLReports
             this.roomName = room;
         }
 
-        public static int getHighestDayNumber(this List<TimeTableEntry> entries)
+        public static string getClassInThisDayAndBlock(List<TimeTableEntry> entries, int day, int block)
         {
-            int maxDayNum = 0;
+            StringBuilder returnMe = new StringBuilder();
+            
             foreach (TimeTableEntry entry in entries)
             {
-                if (entry.dayNum > maxDayNum)
+                if ((entry.dayNum == day) && (entry.blockNum == block)) 
                 {
-                    maxDayNum = entry.dayNum;
+                    if (returnMe.Length > 0)
+                    {
+                        returnMe.Append(" / ");
+                    }
+                    returnMe.Append(entry.className);
                 }
             }
-            return maxDayNum;
+
+            return returnMe.ToString();
         }
+               
 
         public string ToStringFormatted()
         {

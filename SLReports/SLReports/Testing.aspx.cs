@@ -44,7 +44,7 @@ namespace SLReports
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            string selectedStudentID = "12646";
+            string selectedStudentID = "106757957";
             int selectedReportPeriodID = 479;            
 
             using (SqlConnection connection = new SqlConnection(LSKYCommon.dbConnectionString_SchoolLogic))
@@ -58,28 +58,26 @@ namespace SLReports
 
                 // Track is already loaded from the student load function
                 displayString("<B>Student Track: </B>" + selectedStudent.track);
-                
-                // Load school days for the track
-                List<SchoolDay> schoolDays = SchoolDay.loadDaysFromThisTrack(connection, selectedStudent.track);
-                displayList("School Days", schoolDays);
+                                
 
                 // Load student timetable entries
                 selectedStudent.TimeTable = TimeTableEntry.loadStudentTimeTable(connection, selectedStudent, selectedTerm);
 
-                selectedStudent.TimeTable.getHighestDayNumber();
-                
-                displayList("Student Timetable", selectedStudent.TimeTable);
+                // Load absences from the last month (for testing)
+                selectedStudent.absences = Absence.loadAbsencesForThisStudentAndTimePeriod(connection, selectedStudent, DateTime.Now.AddDays(-30), DateTime.Now);
 
-                litOutput.Text = generateTimeTableTable(selectedStudent.TimeTable, schoolDays);
+                // Display absences
+                displayList("Absences", selectedStudent.absences);
+
+                
+
             }
 
             
+
             
-
-            // Load a student's time table into a multidimensional array
-
-            // Display the time table
-
+            
+            
 
             displayString("<BR><BR>");
             stopwatch.Stop();

@@ -364,10 +364,16 @@ namespace SLReports.ReportCard
                 else
                 {
                     borderColor = new BaseColor(1f, 0f, 0f);
+
+                    //Redraw a red background
+                    canvas.Rectangle(0, 0, width + (CanvasPaddingX * 2), height + (CanvasPaddingY * 2));
+                    canvas.SetColorFill(new BaseColor(1f,0,0,0.5f));
+                    canvas.Fill();
+
                     BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                    canvas.SetRGBColorFill(0, 0, 0);
+                    canvas.SetColorFill(new BaseColor(1f, 1f, 1f, 1f));
                     canvas.BeginText();
-                    canvas.SetFontAndSize(bf, 6);
+                    canvas.SetFontAndSize(bf, 8);
                     canvas.ShowTextAligned(PdfContentByte.ALIGN_CENTER, "INVALID DATA", width / 2, (height / 2) - 2, 0);
                     canvas.EndText();
                 }
@@ -2272,7 +2278,7 @@ namespace SLReports.ReportCard
                             ReportCard.Add(PDFReportCardParts.classWithMarks(course, content, anonymize, determinedBarStyle_Outcomes, determinedBarStyle_LifeSkills));
                             if (!student.track.daily)
                             {
-                                //ReportCard.Add(PDFReportCardParts.courseAttendanceSummary(student, course));
+                                ReportCard.Add(PDFReportCardParts.courseAttendanceSummary(student, course));
                             }
                         }
                     }
