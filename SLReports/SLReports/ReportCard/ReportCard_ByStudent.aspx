@@ -110,6 +110,42 @@
                     </div>
                 </asp:TableCell>
             </asp:TableRow>
+
+            <asp:Table ID="tbl_Step4" runat="server" Visible="false" HorizontalAlign="Center" >
+            <asp:TableRow>
+                <asp:TableCell>
+                    <div class="large_infobox" style="width: 600px; margin-left: auto; margin-right: auto;">
+                        <h3 style="color: #C0C0C0;">Step 1: <asp:Label ID="lblSelectedSchool3" runat="server" Text=""></asp:Label></h3>
+                        <h3 style="color: #C0C0C0;">Step 2: <asp:Label ID="lblSelectedStudents2" runat="server" Text=""></asp:Label></h3>
+                        <h3 style="color: #C0C0C0;">Step 3: <asp:Label ID="lblSelectedReportPeriods" runat="server" Text=""></asp:Label></h3>
+                        <h3>Step 4: Options</h3>
+
+                        <asp:Table ID="Table6" runat="server">
+                            <asp:TableRow>
+                            <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkDoubleSidedMode" runat="server" Checked="true"/></asp:TableCell>
+                            <asp:TableCell Width="400" VerticalAlign="Top"><b>Format for printing on both sides of the page.</b><br />This will add extra pages to the end of report cards, when necesary, to ensure that one report card does not start on the back of the previous report card.</asp:TableCell>
+                        </asp:TableRow>>
+                        <asp:TableRow>
+                            <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkShowPhotos" runat="server" /></asp:TableCell>
+                            <asp:TableCell VerticalAlign="Top"><b>Show student photos.</b></asp:TableCell>
+                        </asp:TableRow>
+                        <asp:TableRow>
+                            <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkAnonymize" runat="server" /></asp:TableCell>
+                            <asp:TableCell Width="400" VerticalAlign="Top"><b>Anonymize data</b><br />Hide personal information from students, and show placeholder data instead.</asp:TableCell>
+                        </asp:TableRow>
+                        </asp:Table>                        
+
+                        <br /><br />
+                        <asp:Table ID="Table7" runat="server" Width="100%">
+                            <asp:TableRow>
+                                <asp:TableCell HorizontalAlign="Left"><asp:Button ID="btn_BackToStep3" runat="server" Text="Previous Step" OnClick="btn_BackToStep3_Click" /></asp:TableCell>
+                                <asp:TableCell HorizontalAlign="Right"><asp:Button ID="btn_Step4" runat="server" Text="Next Step" OnClick="btn_Step4_Click" /></asp:TableCell>
+                            </asp:TableRow>
+                        </asp:Table>
+                    
+                    </div>
+                </asp:TableCell>
+            </asp:TableRow>
         </asp:Table>          
     </form>
 </asp:Content>

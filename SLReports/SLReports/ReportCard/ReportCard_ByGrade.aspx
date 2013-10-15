@@ -29,8 +29,8 @@
                             <asp:TableCell Width="400" VerticalAlign="Top"><b>Format for printing on both sides of the page.</b><br />This will add extra pages to the end of report cards, when necesary, to ensure that one report card does not start on the back of the previous report card.</asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
-                            <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkShowPlaceholderPhotos" runat="server" /></asp:TableCell>
-                            <asp:TableCell VerticalAlign="Top"><b>Show Placeholder photos when student has no photo.</b><br /><a target="_blank" href="../Photos/GetPhoto.aspx?studentnumber=Demo">Click here for example of placeholder photo</a>. If unchecked, photo will appear as whitespace.</asp:TableCell>
+                            <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkShowPhotos" runat="server" Checked="true"/></asp:TableCell>
+                            <asp:TableCell VerticalAlign="Top"><b>Show student photos.</b></asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkAnonymize" runat="server" /></asp:TableCell>

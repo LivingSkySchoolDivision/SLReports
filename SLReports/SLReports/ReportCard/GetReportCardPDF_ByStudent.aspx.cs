@@ -51,7 +51,18 @@ namespace SLReports.ReportCard
             {
                 anonymize = true;
             }
+
+            bool showPhoto = false;
+            if (!string.IsNullOrEmpty(Request.QueryString["showphoto"]))
+            {
+                showPhoto = true;
+            } 
             
+            bool doubleSided = false;
+            if (!string.IsNullOrEmpty(Request.QueryString["doublesided"]))
+            {
+                doubleSided = true;
+            } 
 
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
             {
@@ -106,7 +117,7 @@ namespace SLReports.ReportCard
 
             if ((selectedReportPeriods.Count > 0) && (displayedStudents.Count > 0))
             {
-                sendPDF(PDFReportCardParts.GeneratePDF(displayedStudents, selectedReportPeriods, anonymize), fileName);
+                sendPDF(PDFReportCardParts.GeneratePDF(displayedStudents, selectedReportPeriods, anonymize, showPhoto, doubleSided), fileName);
             }
         
 

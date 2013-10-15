@@ -11,7 +11,7 @@ namespace SLReports
     {
         public int ID { get; set; }
         public int reportPeriodID { get; set; }
-        public string nMark { get; set; }
+        public decimal nMark { get; set; }
         public string cMark { get; set; }
         public string className { get; set; }
         public int classID { get; set; }
@@ -19,7 +19,7 @@ namespace SLReports
         public string comment { get; set; }
         public ReportPeriod reportPeriod { get; set; }
 
-        public Mark(int id, int reportPeriodID, string numberMark, string outcomeMark, string classname, int classid, int courseid, string comment, ReportPeriod rperiod)
+        public Mark(int id, int reportPeriodID, decimal numberMark, string outcomeMark, string classname, int classid, int courseid, string comment, ReportPeriod rperiod)
         {            
             this.ID = id;
             this.reportPeriodID = reportPeriodID;
@@ -32,27 +32,6 @@ namespace SLReports
             this.courseID = courseid;            
         }
        
-        public string getMark()
-        {   
-            if (((int)Double.Parse(this.nMark) == 0) && (string.IsNullOrEmpty(cMark)))
-            {
-                return string.Empty;
-            }
-            else
-            {
-                if (string.IsNullOrEmpty(cMark))
-                {
-                    int markVal = (int)double.Parse(this.nMark);
-
-                    return markVal + "%";
-                }
-                else
-                {
-                    return this.cMark;
-                }
-            }
-        }
-
         public override string ToString()
         {
             return "Mark: {Mark ID: "+this.ID+",CourseID: "+this.courseID+", ClassID: " + this.classID + ", ClassName: " + this.className + ", nMark: " + this.nMark + ", cMark: "+this.cMark+" , ReportPeriodID: " + this.reportPeriod.ID + "}";
@@ -76,7 +55,7 @@ namespace SLReports
                     returnMe.Add(new Mark(
                             int.Parse(dataReader["iMarksID"].ToString().Trim()),
                             int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
-                            dataReader["MarkPercent"].ToString().Trim(),
+                            decimal.Parse(dataReader["MarkPercent"].ToString().Trim()),
                             dataReader["MarkOutcome"].ToString().Trim(),
                             dataReader["Class"].ToString().Trim(),
                             int.Parse(dataReader["iClassID"].ToString().Trim()),
@@ -115,7 +94,7 @@ namespace SLReports
                         Mark newMark = new Mark(
                                 int.Parse(dataReader["iMarksID"].ToString().Trim()),
                                 int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
-                                dataReader["MarkPercent"].ToString().Trim(),
+                                decimal.Parse(dataReader["MarkPercent"].ToString().Trim()),
                                 dataReader["MarkOutcome"].ToString().Trim(),
                                 dataReader["Class"].ToString().Trim(),
                                 int.Parse(dataReader["iClassID"].ToString().Trim()),

@@ -15,7 +15,6 @@ namespace SLReports.ReportCard
         // So that the database can be quickly changed
         string sqlConnectionString = PDFReportCardParts.ReportCardDatabase;
 
-
         protected void Page_Load(object sender, EventArgs e)
         {
             // Load list of schools
@@ -262,77 +261,11 @@ namespace SLReports.ReportCard
 
         protected void btn_Step3_Click(object sender, EventArgs e)
         {
-            // Load student data for selected students
-            List<Student> final_students = new List<Student>();
-            List<ReportPeriod> final_reportPeriods = new List<ReportPeriod>();
-
-            using (SqlConnection connection = new SqlConnection(sqlConnectionString))
-            {
-                // We need to do a final validation on the selected items, because they come from
-                //  web forms that could have been modified in transit.
-
-                foreach (ListItem item in lstSelectedReportPeriods.Items)
-                {
-                    if (!string.IsNullOrEmpty(item.Value))
-                    {
-                        int rpID = -1;
-                        if (int.TryParse(item.Value, out rpID))
-                        {
-                            ReportPeriod thisRP = ReportPeriod.loadThisReportPeriod(connection, rpID);
-                            if (thisRP != null)
-                            {
-                                final_reportPeriods.Add(thisRP);
-                            }
-                        }
-                    }
-                }
-
-                if (final_reportPeriods.Count > 0)
-                {
-                    foreach (ListItem item in lstSelectedStudents.Items)
-                    {
-                        if (!string.IsNullOrEmpty(item.Value))
-                        {
-                            int studentID = -1;
-                            if (int.TryParse(item.Value, out studentID))
-                            {
-                                Student thisStudent = Student.loadThisStudent(connection, studentID.ToString());
-                                if (thisStudent != null)
-                                {
-                                    //final_students.Add(LSKYCommon.loadStudentMarkData(connection, thisStudent, final_reportPeriods));
-                                    final_students.Add(thisStudent);
-                                }
-                            }
-                        }
-                    }
-                }                
-            }
-
             
-            // Generate the PDF (If we loaded the mark data above that is)
-            /*
-            String fileName = "ReportCards_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
-            if ((final_reportPeriods.Count > 0) && (final_students.Count > 0))
-            {
-                sendPDF(PDFReportCardParts.GeneratePDF(final_students, anonymize), fileName);
-            }            
-            */
             
-            // Generate a list of student IDs
-            StringBuilder studentList = new StringBuilder();
-            foreach (Student student in final_students) 
-            {
-                studentList.Append(student.getStudentID());
-                studentList.Append(";");
-            }
-
-            StringBuilder reportPeriodList = new StringBuilder();
-            foreach (ReportPeriod reportPeriod in final_reportPeriods)
-            {
-                reportPeriodList.Append(reportPeriod.ID);
-                reportPeriodList.Append(";");
-            }
-            Response.Redirect("GetReportCardPDF_ByStudent.aspx?students=" + studentList.ToString() + "&reportperiods=" + reportPeriodList.ToString() + "&debug=true");
+            
+            
+             
         }
 
 
@@ -377,6 +310,97 @@ namespace SLReports.ReportCard
             {
                 lstSelectedReportPeriods.Items.Add(item);
             }
+        }
+
+        protected void btn_BackToStep3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btn_Step4_Click(object sender, EventArgs e)
+        {
+            // Do some validation before actually doing this
+            // Load student data for selected students
+            List<Student> final_students = new List<Student>();
+            List<ReportPeriod> final_reportPeriods = new List<ReportPeriod>();
+
+
+            using (SqlConnection connection = new SqlConnection(sqlConnectionString))
+            {
+                // We need to do a final validation on the selected items, because they come from
+                //  web forms that could have been modified in transit.
+
+                foreach (ListItem item in lstSelectedReportPeriods.Items)
+                {
+                    if (!string.IsNullOrEmpty(item.Value))
+                    {
+                        int rpID = -1;
+                        if (int.TryParse(item.Value, out rpID))
+                        {
+                            ReportPeriod thisRP = ReportPeriod.loadThisReportPeriod(connection, rpID);
+                            if (thisRP != null)
+                            {
+                                final_reportPeriods.Add(thisRP);
+                            }
+                        }
+                    }
+                }
+
+                if (final_reportPeriods.Count > 0)
+                {
+                    foreach (ListItem item in lstSelectedStudents.Items)
+                    {
+                        if (!string.IsNullOrEmpty(item.Value))
+                        {
+                            int studentID = -1;
+                            if (int.TryParse(item.Value, out studentID))
+                            {
+                                Student thisStudent = Student.loadThisStudent(connection, studentID.ToString());
+                                if (thisStudent != null)
+                                {
+                                    //final_students.Add(LSKYCommon.loadStudentMarkData(connection, thisStudent, final_reportPeriods));
+                                    final_students.Add(thisStudent);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Generate a list of student IDs
+            StringBuilder studentList = new StringBuilder();
+            foreach (Student student in final_students)
+            {
+                studentList.Append(student.getStudentID());
+                studentList.Append(";");
+            }
+
+            StringBuilder reportPeriodList = new StringBuilder();
+            foreach (ReportPeriod reportPeriod in final_reportPeriods)
+            {
+                reportPeriodList.Append(reportPeriod.ID);
+                reportPeriodList.Append(";");
+            }
+
+            bool anonymize = true;
+            if (chkAnonymize.Checked)
+                anonymize = true;
+
+            bool showPhotos = true;
+            if (chkShowPhotos.Checked)
+                showPhotos = true;
+
+            bool doublesided = true;
+            if (chkDoubleSidedMode.Checked)
+                doublesided = true;
+
+            //Response.Redirect("GetReportCardPDF_ByStudent.aspx?students=" + studentList.ToString() + "&reportperiods=" + reportPeriodList.ToString() + "&debug=true");
+            String fileName = "ReportCards_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
+            if ((final_reportPeriods.Count > 0) && (final_students.Count > 0))
+            {
+                sendPDF(PDFReportCardParts.GeneratePDF(final_students, final_reportPeriods, anonymize, showPhotos, doublesided), fileName);
+            } 
+
         }
     }
 }

@@ -856,12 +856,11 @@ namespace SLReports.ReportCard
             divisionLogoCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             schoolNamePlateTable.AddCell(divisionLogoCell);
 
-
             return schoolNamePlateTable;
 
         }
 
-        private static PdfPTable namePlateTable(Student student, bool anonymize = false, bool showPlaceholderPhotos = false)
+        private static PdfPTable namePlateTable(Student student, bool anonymize, bool showPhotos)
         {
             Font font_StudentName = FontFactory.GetFont("Verdana", 22, Font.BOLD, BaseColor.BLACK);
             Font font_title = FontFactory.GetFont("Verdana", 10, Font.BOLD, BaseColor.BLACK);
@@ -887,23 +886,25 @@ namespace SLReports.ReportCard
             nameplateTable.AddCell(studentNamecell);
 
 
-            PdfPCell photoCell = new PdfPCell(new Phrase("", font_large_italic));            
-            if ((student.hasPhoto()) || (showPlaceholderPhotos))
+            PdfPCell photoCell = new PdfPCell(new Phrase("", font_large_italic));
+            if (showPhotos)
             {
-                try
+                if (student.hasPhoto())
                 {
-                    iTextSharp.text.Image photo = iTextSharp.text.Image.GetInstance(@"https://sldata.lskysd.ca/SLReports/photos/GetPhoto.aspx?studentnumber=" + student.getStudentID() + "&apikey=" + LSKYCommon.internal_api_key);                    
-                    photo.Border = Rectangle.BOX;
-                    photo.BorderWidth = 1;
-                    photoCell.PaddingRight = 10f;
-                    photoCell = new PdfPCell(photo);
+                    try
+                    {
+                        iTextSharp.text.Image photo = iTextSharp.text.Image.GetInstance(@"https://sldata.lskysd.ca/SLReports/photos/GetPhoto.aspx?studentnumber=" + student.getStudentID() + "&apikey=" + LSKYCommon.internal_api_key);
+                        photo.Border = Rectangle.BOX;
+                        photo.BorderWidth = 1;
+                        photoCell.PaddingRight = 10f;
+                        photoCell = new PdfPCell(photo);
+                    }
+                    catch (Exception ex)
+                    {
+                        photoCell = new PdfPCell(new Phrase(ex.Message, font_small));
+                    };
                 }
-                catch (Exception ex)
-                {
-                    photoCell = new PdfPCell(new Phrase(ex.Message, font_small));
-                };
             }
-
             photoCell.Border = border;
             photoCell.MinimumHeight = 300f;
             photoCell.Rowspan = 10;
@@ -1858,7 +1859,7 @@ namespace SLReports.ReportCard
             newCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
             return newCell;
         }
-
+        
         private static PdfPTable classWithMarks(SchoolClass course, PdfContentByte content, bool anonymize = false, OutcomeBarStyle outcomeBarStyle = OutcomeBarStyle.Slider, OutcomeBarStyle lifeSkillsBarStyle = OutcomeBarStyle.LifeSkills)
         {          
             // Housekeeping first            
@@ -1927,156 +1928,236 @@ namespace SLReports.ReportCard
             
             // Class is outcome based, and is k-9 (display nothing)
 
-            if (
-                (course.Marks.Count > 0) &&
-                (course.hasOutcomes()) &&
-                (course.isHighSchoolLevel()) &&
-                (course.term.FinalReportPeriod != null)
-                )
+            PdfPCell blankCell = new PdfPCell(new Paragraph(""));
+            blankCell.Border = 0;
+            blankCell.Padding = 5;
+            blankCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
+
+
+            // Should we even display a mark at all? Don't display if the class is k-9
+            if (course.isHighSchoolLevel())
             {
-                // Class is outcome based and is 10-12
-                //  - Display the final mark only
-                //  - This is always a percent
-
-                #region Outcome based 10-12 class
-
-                // Find the mark from the final report period
-                Mark finalMark = null;
-                foreach (Mark mark in course.Marks) 
+                // Is the class outcome based? If yes, only display the final report period                
+                // If the class is not outcome based, display all marks
+                if (course.hasOutcomes())
                 {
-                    if (mark.reportPeriodID == course.term.FinalReportPeriod.ID)
+                    // Only display the final report period of the term (in percents)
+                    if (course.term.FinalReportPeriod != null)
                     {
-                        finalMark = mark;
+                        // Figure out which mark to display (cMark or nMark)
+                        //  - if nMark is not zero, display it
+                        //  - if cMark is empty, ignore the mark entirely
+                        //  - display cMark as number bar
+
+                        // Get the mark from the final report period
+                        Mark finalMark = null;
+                        foreach (Mark mark in course.Marks)
+                        {
+                            if (mark.reportPeriodID == course.term.FinalReportPeriod.ID)
+                            {
+                                finalMark = mark;
+                            }
+                        }
+                        
+
+                        if (finalMark != null)
+                        {                        
+                            string markToDisplay = string.Empty;
+                            if (finalMark.nMark > 0)
+                            {
+
+                                // If the nMark is between 1 and 4, assume its an outcome
+
+                                if ((finalMark.nMark >= 1) && (finalMark.nMark <= 4))
+                                {
+                                    // Final mark of a high school class should always be a percent, but display it as an outcome anyways, 
+                                    //  in case someone is dumb
+
+                                    // Display the mark as an outcome bar
+                                    PdfPTable embeddedMarkTable = new PdfPTable(1);
+                                    PdfPCell markCell = new PdfPCell(displayOutcomeBar(content, finalMark.cMark, outcomeBarStyle));
+                                    markCell.Border = Rectangle.BOX;
+                                    markCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                                    markCell.Padding = 5;
+
+                                    PdfPCell titleCell = new PdfPCell(new Phrase("Final Mark", font_small));
+                                    titleCell.Border = Rectangle.BOX;
+                                    titleCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                                    titleCell.Padding = 2;
+                                    titleCell.PaddingBottom = 3;
+                                    embeddedMarkTable.AddCell(titleCell);
+                                    embeddedMarkTable.AddCell(markCell);
+
+                                    PdfPCell embeddedMarkTableContainer = new PdfPCell(embeddedMarkTable);
+                                    embeddedMarkTableContainer.Border = 0;
+                                    classTable.AddCell(embeddedMarkTableContainer);
+                                }
+                                else
+                                {
+                                    // Display the mark as a percent
+                                    PdfPTable embeddedMarkTable = new PdfPTable(1);
+                                    PdfPCell markCell = new PdfPCell(new Phrase(Math.Round(finalMark.nMark, 0) + "%", font_body_bold));
+                                    markCell.Border = Rectangle.BOX;
+                                    markCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                                    markCell.Padding = 5;
+
+                                    PdfPCell titleCell = new PdfPCell(new Phrase("Final Mark", font_small));
+                                    titleCell.Border = Rectangle.BOX;
+                                    titleCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                                    titleCell.Padding = 2;
+                                    titleCell.PaddingBottom = 3;
+                                    embeddedMarkTable.AddCell(titleCell);
+                                    embeddedMarkTable.AddCell(markCell);
+
+                                    PdfPCell embeddedMarkTableContainer = new PdfPCell(embeddedMarkTable);
+                                    embeddedMarkTableContainer.Border = 0;
+                                    classTable.AddCell(embeddedMarkTableContainer);
+                                }
+                            }
+                            else if (!string.IsNullOrEmpty(finalMark.cMark))
+                            {
+                                // Display the cMark
+
+
+                            }
+                            else
+                            {
+                                classTable.AddCell(blankCell);
+                            }
+                        }
+                        else
+                        {
+                            classTable.AddCell(blankCell);
+                        }
                     }
-                }
-
-                if (finalMark != null)
-                {
-                    PdfPTable embeddedMarkTable = new PdfPTable(1);
-
-                    // Parse the mark so that we can round it
-                    double markToDisplay = 0;
-                    double.TryParse(finalMark.nMark, out markToDisplay);
-
-                    PdfPCell markCell = new PdfPCell(new Phrase(Math.Round(markToDisplay, 0) + "%", font_body_bold));
-                    markCell.Border = Rectangle.BOX;
-                    markCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;                    
-                    markCell.Padding = 5;
-
-                    PdfPCell titleCell = new PdfPCell(new Phrase("Final Mark", font_small));
-                    titleCell.Border = Rectangle.BOX;
-                    titleCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-                    titleCell.Padding = 2;
-                    titleCell.PaddingBottom = 3;
-
-                    
-                    embeddedMarkTable.AddCell(titleCell);
-                    embeddedMarkTable.AddCell(markCell);
-
-                    PdfPCell embeddedMarkTableContainer = new PdfPCell(embeddedMarkTable);
-                    embeddedMarkTableContainer.Border = 0;
-                    classTable.AddCell(embeddedMarkTableContainer);
+                    else
+                    {
+                        classTable.AddCell(blankCell);
+                    }
                 }
                 else
                 {
-                    classTable.AddCell(emptyCell());
-                }
-                #endregion
+                    // Course has no outcomes
 
-            }
-            else if (
-                (course.Marks.Count > 0) &&
-                (!course.hasOutcomes())
-                )
-            {
-                // Class is not outcome based, so display all of the marks
+                    // Display all marks from all given report periods
 
-                #region Class without outcomes (displaying all report periods)
-                
-                // Get list of report periods to display (just the ones with marks in them)                
-                List<ReportPeriod> loadedReportPeriods = new List<ReportPeriod>();
-                foreach (Mark mark in course.Marks)
-                {
-                    if (!loadedReportPeriods.Contains(mark.reportPeriod))
-                    {
-                        loadedReportPeriods.Add(mark.reportPeriod);
-                    }
-                }
+                    // For each available mark:
+                    // Figure out which mark to display (cMark or nMark)
+                    //  - if nMark is not zero, display it
+                    //  - if cMark is empty, ignore the mark entirely
+                    //  - display cMark as number bar
 
-                PdfPTable embeddedMarkTable = new PdfPTable(loadedReportPeriods.Count);
+                    #region Class without outcomes (displaying all report periods)
 
-                // Display the report period names
-                foreach (ReportPeriod rp in loadedReportPeriods)
-                {
-                    PdfPCell reportPeriodNameCell = new PdfPCell(new Phrase(rp.name, font_small));
-                    reportPeriodNameCell.Border = Rectangle.BOX;
-                    reportPeriodNameCell.Padding = 2;
-                    reportPeriodNameCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-                    embeddedMarkTable.AddCell(reportPeriodNameCell);
-                }
-
-                // Display the marks
-                foreach (ReportPeriod rp in loadedReportPeriods)
-                {
-                    Mark MarkForThisReportPeriod = null;
+                    // Get list of report periods to display (just the ones with marks in them)                
+                    List<ReportPeriod> loadedReportPeriods = new List<ReportPeriod>();
                     foreach (Mark mark in course.Marks)
                     {
-                        if (mark.reportPeriodID == rp.ID) 
+                        if ((mark.nMark > 0) || (!string.IsNullOrEmpty(mark.cMark)))
                         {
-                            MarkForThisReportPeriod = mark;
+                            if (!loadedReportPeriods.Contains(mark.reportPeriod))
+                            {
+                                loadedReportPeriods.Add(mark.reportPeriod);
+                            }
                         }
                     }
-
-                    if (MarkForThisReportPeriod != null) 
+                    if (loadedReportPeriods.Count > 0)
                     {
-                        // Should we display a percent or an outcome (1-4) mark?
-                        //  - If a grade legend exists, use outcome marks (cMark)
-                        //  - If a grade legend does not exist, use percent marks (nMark)
-                        Paragraph markValue = new Paragraph();
+                        PdfPTable embeddedMarkTable = new PdfPTable(loadedReportPeriods.Count);
 
-                        if (course.isOutcomeBased()) {
-                           // Display an outcome mark for each valid report period
-                            markValue.Add(new Phrase(MarkForThisReportPeriod.cMark, font_body_bold));
-
-                        } else {
-                           // Display a percent mark for each valid report period
-                           double parsedMark = 0;
-                           double.TryParse(MarkForThisReportPeriod.nMark, out parsedMark);
-                           markValue.Add(new Phrase(Math.Round(parsedMark, 0) + "%", font_body_bold));
+                        // Display the report period names
+                        foreach (ReportPeriod rp in loadedReportPeriods)
+                        {
+                            PdfPCell reportPeriodNameCell = new PdfPCell(new Phrase(rp.name, font_small));
+                            reportPeriodNameCell.Border = Rectangle.BOX;
+                            reportPeriodNameCell.Padding = 2;
+                            reportPeriodNameCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                            embeddedMarkTable.AddCell(reportPeriodNameCell);
                         }
 
-                        PdfPCell markCell = new PdfPCell(markValue);
-                        markCell.Border = Rectangle.BOX;                      
-                        markCell.Padding = 5;
-                        markCell.PaddingBottom = 7;
-                        markCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-                        embeddedMarkTable.AddCell(markCell);
+                        // Display the marks
+                        foreach (ReportPeriod rp in loadedReportPeriods)
+                        {
+                            Mark MarkForThisReportPeriod = null;
+                            foreach (Mark mark in course.Marks)
+                            {
+                                if (mark.reportPeriodID == rp.ID)
+                                {
+                                    MarkForThisReportPeriod = mark;
+                                }
+                            }
+
+                            if (MarkForThisReportPeriod != null)
+                            {
+                                // Should we display a percent or an outcome (1-4) mark?
+                                // If the nMark exists, display it
+                                //  - if the nMark is between 1-4, it is an outcome
+                                // if the cMark 
+
+                                if (MarkForThisReportPeriod.nMark > 4)
+                                {
+                                    // Display the mark as a percent
+                                    PdfPCell markCell = new PdfPCell(new Phrase(Math.Round(MarkForThisReportPeriod.nMark, 0) + "%"));
+                                    markCell.Border = Rectangle.BOX;
+                                    markCell.Padding = 5;
+                                    markCell.PaddingBottom = 7;
+                                    markCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                                    embeddedMarkTable.AddCell(markCell);
+                                }
+                                else
+                                {
+                                    // Display the mark as an outcome
+                                    string markToDisplay = string.Empty;
+                                    if (MarkForThisReportPeriod.nMark > 0)
+                                    {
+                                        markToDisplay = MarkForThisReportPeriod.nMark.ToString();
+                                    }
+                                    else
+                                    {
+                                        markToDisplay = MarkForThisReportPeriod.cMark;
+                                    }
+
+                                    PdfPCell markCell = new PdfPCell(displayOutcomeBar(content, markToDisplay, outcomeBarStyle));
+                                    markCell.Border = Rectangle.BOX;
+                                    markCell.Padding = 5;
+                                    markCell.PaddingBottom = 7;
+                                    markCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                                    embeddedMarkTable.AddCell(markCell);
+                                }
+
+                            }
+                            else
+                            {
+                                // There is no mark for this report period
+                                embeddedMarkTable.AddCell(emptyCell());
+                            }
+                        }
 
 
-                    } else {
-                        embeddedMarkTable.AddCell(emptyCell());
+                        PdfPCell embeddedMarkTableContainer = new PdfPCell(embeddedMarkTable);
+                        embeddedMarkTableContainer.Border = 0;
+                        classTable.AddCell(embeddedMarkTableContainer);
                     }
-                } 
+                    else
+                    {
+                        // No valid marks to display
+                        classTable.AddCell(blankCell);
 
-                PdfPCell embeddedMarkTableContainer = new PdfPCell(embeddedMarkTable);
-                embeddedMarkTableContainer.Border = 0;
-                classTable.AddCell(embeddedMarkTableContainer);
+                    }
+                    #endregion
 
-                #endregion
+                }
 
             }
             else
             {
-                // Class is outcome based, and is k-9 (display nothing)
-                // or
-                // There are no marks for this class
-                                
-                PdfPCell blankCell = new PdfPCell(new Paragraph(""));
-                blankCell.Border = 0;
-                blankCell.Padding = 5;
-                blankCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
+                // Class is not high school level, so there is no such thing as class marks for it
                 classTable.AddCell(blankCell);
             }
+
+
+           
+
 
             // *********************************
             // *  Outcomes
@@ -2201,7 +2282,7 @@ namespace SLReports.ReportCard
             return classTable;
         }
 
-        public static MemoryStream GeneratePDF(List<Student> students, List<ReportPeriod> reportPeriods, bool anonymize = false, bool showPlaceholderPhotos = false, bool doubleSidedMode = true, OutcomeBarStyle outcomeBarStyle = OutcomeBarStyle.Slider, OutcomeBarStyle lifeSkillsBarStyle = OutcomeBarStyle.LifeSkills)
+        public static MemoryStream GeneratePDF(List<Student> students, List<ReportPeriod> reportPeriods, bool anonymize, bool showPhotos, bool doubleSidedMode, OutcomeBarStyle outcomeBarStyle = OutcomeBarStyle.Slider, OutcomeBarStyle lifeSkillsBarStyle = OutcomeBarStyle.LifeSkills)
         {
             MemoryStream memstream = new MemoryStream();
             Document ReportCard = new Document(PageSize.LETTER);
@@ -2260,7 +2341,7 @@ namespace SLReports.ReportCard
 
                 // Cover page
                 ReportCard.Add(PDFReportCardParts.schoolNamePlate(student.school));
-                ReportCard.Add(PDFReportCardParts.namePlateTable(student, anonymize, showPlaceholderPhotos));
+                ReportCard.Add(PDFReportCardParts.namePlateTable(student, anonymize, showPhotos));
                 ReportCard.Add(PDFReportCardParts.reportNamePlate(reportPeriods));
                 ReportCard.Add(PDFReportCardParts.legend(content, student.getGrade(), determinedBarStyle_Outcomes, determinedBarStyle_LifeSkills));
                 //ReportCard.Add(PDFReportCardParts.lifeSkillsLegend(content, student.getGrade()));

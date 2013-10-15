@@ -103,13 +103,13 @@ namespace SLReports.ReportCard {
         protected global::System.Web.UI.WebControls.CheckBox chkDoubleSidedMode;
         
         /// <summary>
-        /// chkShowPlaceholderPhotos control.
+        /// chkShowPhotos control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkShowPlaceholderPhotos;
+        protected global::System.Web.UI.WebControls.CheckBox chkShowPhotos;
         
         /// <summary>
         /// chkAnonymize control.
