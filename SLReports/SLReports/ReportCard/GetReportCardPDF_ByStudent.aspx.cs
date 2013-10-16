@@ -30,7 +30,7 @@ namespace SLReports.ReportCard
             Response.OutputStream.Write(PDFData.GetBuffer(), 0, PDFData.GetBuffer().Length);
             Response.OutputStream.Flush();
             Response.OutputStream.Close();
-            Response.End();
+            Response.End();            
         }
 
         

@@ -40,9 +40,48 @@ namespace SLReports
             sqlCommand.CommandType = CommandType.Text;
 
             StringBuilder SQL = new StringBuilder();
-            
+
             SQL.Clear();
             SQL.Append("SELECT * FROM AttendanceBlocks;");
+
+            sqlCommand.CommandText = SQL.ToString();
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    returnMe.Add(new AttendanceBlock(
+                        int.Parse(dataReader["iAttendanceBlocksID"].ToString()),
+                        dataReader["cName"].ToString().Trim(),
+                        int.Parse(dataReader["iTrackID"].ToString().Trim()),
+                        int.Parse(dataReader["iBlockNumber"].ToString().Trim()),
+                        int.Parse(dataReader["iInstructionalMinutes"].ToString().Trim()),
+                        bool.Parse(dataReader["lNotReported"].ToString().Trim()),
+                        DateTime.Parse(dataReader["tStartTime"].ToString().Trim()),
+                        DateTime.Parse(dataReader["tEndTime"].ToString().Trim())
+                        ));
+                }
+            }
+            sqlCommand.Connection.Close();
+
+            return returnMe;
+
+        }
+
+        public static List<AttendanceBlock> loadBlocksForTrack(SqlConnection connection, int trackID)
+        {
+            List<AttendanceBlock> returnMe = new List<AttendanceBlock>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+
+            StringBuilder SQL = new StringBuilder();
+
+            SQL.Clear();
+            SQL.Append("SELECT * FROM AttendanceBlocks WHERE ;");
 
             sqlCommand.CommandText = SQL.ToString();
             sqlCommand.Connection.Open();

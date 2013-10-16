@@ -1043,6 +1043,11 @@ namespace SLReports.ReportCard
             }
         }
 
+        /// <summary>
+        /// Lists all absence entries, organized by class name
+        /// </summary>
+        /// <param name="student"></param>
+        /// <returns></returns>
         private static PdfPTable attendanceSummaryByClassName(Student student)
         {
             // Sort attendance entries by class name
@@ -1073,7 +1078,7 @@ namespace SLReports.ReportCard
             attendanceTable.HorizontalAlignment = 1;
             attendanceTable.TotalWidth = 500;
             attendanceTable.LockedWidth = true;
-            attendanceTable.SpacingAfter = 50;
+            attendanceTable.SpacingAfter = 30;
             attendanceTable.KeepTogether = true;
 
             float[] tableWidths = new float[] { 6f, 2f, 2f, 2f };
@@ -1088,7 +1093,7 @@ namespace SLReports.ReportCard
             int totalLateMinutes = 0;
 
             // Title (full colspan)
-            newCell = new PdfPCell(new Paragraph("Attendance Summary (By Class)\n\n", font_large_bold));
+            newCell = new PdfPCell(new Paragraph("Absence Summary (By Class)\n\n", font_large_bold));
             newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
             newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
             newCell.Border = Rectangle.NO_BORDER;
@@ -1246,6 +1251,11 @@ namespace SLReports.ReportCard
             return attendanceTable;
         }
 
+        /// <summary>
+        /// Lists all absence entries organized by block
+        /// </summary>
+        /// <param name="student"></param>
+        /// <returns></returns>
         private static PdfPTable attendanceSummaryByPeriod(Student student)
         {
             // Sort attendance entries by class name
@@ -1265,7 +1275,7 @@ namespace SLReports.ReportCard
             attendanceTable.HorizontalAlignment = 1;
             attendanceTable.TotalWidth = 500;
             attendanceTable.LockedWidth = true;
-            attendanceTable.SpacingAfter = 50;
+            attendanceTable.SpacingAfter = 30;
             attendanceTable.KeepTogether = true;
 
             float[] tableWidths = new float[] { 6f, 2f, 2f, 2f };
@@ -1280,7 +1290,7 @@ namespace SLReports.ReportCard
             int totalLateMinutes = 0;
 
             // Title (full colspan)
-            newCell = new PdfPCell(new Paragraph("Attendance Summary (By Period)\n\n", font_large_bold));
+            newCell = new PdfPCell(new Paragraph("Absence Summary (By Period)\n\n", font_large_bold));
             newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
             newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
             newCell.Border = Rectangle.NO_BORDER;
@@ -1332,8 +1342,16 @@ namespace SLReports.ReportCard
                 int numAbsUnexc = 0;
                 int numMinutesLate = 0;
 
+                string periodName = absByclass.Key.ToString();
+
                 foreach (Absence abs in absByclass.Value)
                 {
+                    // Figure out what the periods might be called
+                    if (abs.attendanceBlock != null)
+                    {
+                        periodName = abs.attendanceBlock.name;
+                    }
+
                     if (abs.getStatus().ToLower() == "late")
                     {
                         numLates++;
@@ -1356,7 +1374,7 @@ namespace SLReports.ReportCard
                     }
                 }
 
-                newCell = new PdfPCell(new Phrase(absByclass.Key.ToString(), font_body));
+                newCell = new PdfPCell(new Phrase(periodName, font_body));
                 newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
                 newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
                 newCell.SetLeading(0, 1.25f);
@@ -1437,15 +1455,19 @@ namespace SLReports.ReportCard
 
             return attendanceTable;
         }
-
+                
 
         private static PdfPTable courseAttendanceSummary(Student student, SchoolClass course)
         {
-            PdfPTable attendanceTable = new PdfPTable(4);
-            attendanceTable.HorizontalAlignment = 1;
-            attendanceTable.TotalWidth = 500;
+            int titleBorders = 0;
+            int valueBorders = Rectangle.BOX;
+            BaseColor borderColor = new BaseColor(0.8f, 0.8f, 0.8f);
+
+            PdfPTable attendanceTable = new PdfPTable(3);
+            attendanceTable.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+            attendanceTable.TotalWidth = 300;
             attendanceTable.LockedWidth = true;
-            attendanceTable.SpacingAfter = 35;
+            attendanceTable.SpacingAfter = 40;
             attendanceTable.SpacingBefore = 10;
             attendanceTable.KeepTogether = true;
 
@@ -1483,42 +1505,32 @@ namespace SLReports.ReportCard
             }
 
             /* Headings */
-            newCell = new PdfPCell(new Phrase("Course Attendance", font_body_bold));
-            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
-            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
-            newCell.Border = Rectangle.BOX;
+
+            newCell = new PdfPCell(new Phrase("Lates", font_small_bold));
+            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_BOTTOM;
+            newCell.Border = titleBorders;
+            newCell.BorderColor = borderColor;
             newCell.PaddingBottom = 5;
             attendanceTable.AddCell(newCell);
 
-            newCell = new PdfPCell(new Phrase("Lates", font_body_bold));
+            newCell = new PdfPCell(new Phrase("Excused Absences", font_small_bold));
             newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
-            newCell.Border = Rectangle.BOX;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_BOTTOM;
+            newCell.Border = titleBorders;
+            newCell.BorderColor = borderColor;
             newCell.PaddingBottom = 5;
             attendanceTable.AddCell(newCell);
 
-            newCell = new PdfPCell(new Phrase("Excused Absences", font_body_bold));
+            newCell = new PdfPCell(new Phrase("Unexcused Absences", font_small_bold));
             newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
-            newCell.Border = Rectangle.BOX;
-            newCell.PaddingBottom = 5;
-            attendanceTable.AddCell(newCell);
-
-            newCell = new PdfPCell(new Phrase("Unexcused Absences", font_body_bold));
-            newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
-            newCell.Border = Rectangle.BOX;
+            newCell.VerticalAlignment = PdfPCell.ALIGN_BOTTOM;
+            newCell.Border = titleBorders;
+            newCell.BorderColor = borderColor;
             newCell.PaddingBottom = 5;
             attendanceTable.AddCell(newCell);
 
             /* Values */
-            newCell = new PdfPCell(new Phrase(course.name, font_small));
-            newCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
-            newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
-            newCell.Border = Rectangle.BOX;
-            newCell.PaddingBottom = 5;
-            attendanceTable.AddCell(newCell);
-
             StringBuilder lateDisplay2 = new StringBuilder();
             lateDisplay2.Append(totalLates);
 
@@ -1530,7 +1542,8 @@ namespace SLReports.ReportCard
             newCell = new PdfPCell(new Phrase(lateDisplay2.ToString(), font_small));
             newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
-            newCell.Border = Rectangle.BOX;
+            newCell.Border = valueBorders;
+            newCell.BorderColor = borderColor;
             newCell.PaddingBottom = 5;
             attendanceTable.AddCell(newCell);
 
@@ -1538,19 +1551,22 @@ namespace SLReports.ReportCard
             newCell = new PdfPCell(new Phrase(totalExcused.ToString(), font_small));
             newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
-            newCell.Border = Rectangle.BOX;
+            newCell.Border = valueBorders;
+            newCell.BorderColor = borderColor;
             newCell.PaddingBottom = 5;
             attendanceTable.AddCell(newCell);
 
             newCell = new PdfPCell(new Phrase(totalUnexcused.ToString(), font_small));
             newCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
             newCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
-            newCell.Border = Rectangle.BOX;
+            newCell.Border = valueBorders;
+            newCell.BorderColor = borderColor;
             newCell.PaddingBottom = 5;
             attendanceTable.AddCell(newCell);
 
             return attendanceTable;
         }
+
 
         private static PdfPTable outcomeLegend(PdfContentByte content, OutcomeBarStyle barStyle)
         {
