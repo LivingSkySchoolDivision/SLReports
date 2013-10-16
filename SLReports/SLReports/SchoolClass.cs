@@ -61,7 +61,9 @@ namespace SLReports
         }
 
         public bool isHighSchoolLevel()
-        {
+        {                        
+            // Exception that breaks this: driver training at nbchs has a grade level of 9, but should behave like its a high school course
+            /*
             if ((this.getGradeLevel() <= 12) && (this.getGradeLevel() >= 10))
             {
                 return true;
@@ -70,6 +72,18 @@ namespace SLReports
             {
                 return false;
             }
+            */
+
+            // Use the grade legend to determine
+            if (this.gradeLegend == "K-9 Outcome Evaluation Key")
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
         }
 
         public bool isOutcomeBased()
