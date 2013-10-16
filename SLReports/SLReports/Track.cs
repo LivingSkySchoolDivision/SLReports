@@ -37,7 +37,7 @@ namespace SLReports
         }
 
         public Track(int id, string name, DateTime start, DateTime end, int schoolid, bool dailyAttendance, string code, int daysInCycle, int blocksPerDay, int dailyBlocksPerDay)
-        {
+        {         
             this.terms = new List<Term>();
             this.ID = id;
             this.name = name;
