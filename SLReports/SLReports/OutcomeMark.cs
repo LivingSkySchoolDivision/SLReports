@@ -16,48 +16,12 @@ namespace SLReports
         public int courseID { get; set; }
         public string cMark { get; set; }
         public float nMark { get; set; }
-        public string mark {
-            get
-            {
-                if (string.IsNullOrEmpty(cMark))
-                {
-                    return nMark.ToString();
-                }
-                else
-                {
-                    return cMark;
-                }
-            }
-
-            set
-            {
-                throw new Exception("This value cannot be modified");
-            }
-        }
         
-        public Outcome objective { get; set; }
+        public Outcome outcome { get; set; }
         public ReportPeriod reportPeriod { get; set; }
 
-        public string description 
-        {
-            get
-            {
-                if (this.objective != null)
-                {
-                    return this.objective.notes;
-                } else {
-                    return "Objective ID " + this.objectiveID;
-                }
-            }
 
-            set
-            {
-                // Do nothing beacuse this should never be set directly
-            }
-        }
-
-
-        public OutcomeMark(int objectiveMarkID, int studentID, int objectiveID, int reportPeriodID, int courseID, string cmark, float nmark)
+        public OutcomeMark(int objectiveMarkID, int studentID, int objectiveID, int reportPeriodID, int courseID, string cmark, float nmark, Outcome outcome)
         {
             this.objectiveMarkID = objectiveMarkID;
             this.studentID = studentID;
@@ -66,13 +30,20 @@ namespace SLReports
             this.courseID = courseID;
             this.cMark = cmark;
             this.nMark = nmark;
+            this.outcome = outcome;
+
+            // Add this mark to the child outcome's list of marks so it is easy to manipulate this data later            
+            if (!this.outcome.marks.Contains(this))
+            {
+                this.outcome.marks.Add(this);
+            }
+
         }
 
         public override string ToString()
         {
             bool hasObjectiveAlso = false;
-
-            if (this.objective != null)
+            if (this.outcome != null)
             {
                 hasObjectiveAlso = true;
             }
@@ -83,7 +54,7 @@ namespace SLReports
                 hasReportPeriod = true;
             }
 
-            return "OutcomeMark: { ID: " + this.objectiveMarkID + ", Objective ID: " + this.objectiveID + ", nMark: " + this.nMark + ", cMark: " + this.cMark + ", Translated Mark: " + this.mark + ", Report Period: " + this.reportPeriodID + ", HasOutcomeInfo: " + LSKYCommon.boolToYesOrNo(hasObjectiveAlso) + " , HasReportPeriod: " + LSKYCommon.boolToYesOrNo(hasReportPeriod) + " }";
+            return "OutcomeMark: { ID: " + this.objectiveMarkID + ", Objective ID: " + this.objectiveID + ", nMark: " + this.nMark + ", cMark: " + this.cMark + ", Report Period: " + this.reportPeriodID + ", HasOutcomeInfo: " + LSKYCommon.boolToYesOrNo(hasObjectiveAlso) + " , HasReportPeriod: " + LSKYCommon.boolToYesOrNo(hasReportPeriod) + " }";
         }
         
         public static List<OutcomeMark> loadOutcomeMarksForThisCourse(SqlConnection connection, Term term, Student student, SchoolClass course)
@@ -93,7 +64,7 @@ namespace SLReports
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.Connection = connection;
             sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = "SELECT * FROM LSKY_ObjectiveMarks WHERE cStudentNumber=@StudentNum AND iCourseID=@CourseID AND iTermID=@TermID";
+            sqlCommand.CommandText = "SELECT * FROM LSKY_ObjectiveMarks WHERE cStudentNumber=@StudentNum AND iTermID=@TermID AND (ObjectiveCourseID=@CourseID OR MarkCourseID=@CourseID)";
             sqlCommand.Parameters.AddWithValue("@TermID", term.ID);
             sqlCommand.Parameters.AddWithValue("@StudentNum", student.getStudentID());
             sqlCommand.Parameters.AddWithValue("@CourseID", course.courseid);
@@ -104,18 +75,26 @@ namespace SLReports
             {
                 while (dataReader.Read())
                 {
-
                     float nMark = -1;
                     float.TryParse(dataReader["nMark"].ToString().Trim(), out nMark);
-
+                    
                     returnMe.Add(new OutcomeMark(
                             int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
                             int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
                             int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
                             int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
-                            int.Parse(dataReader["iCourseID"].ToString().Trim()),
+                            int.Parse(dataReader["MarkCourseID"].ToString().Trim()),
                             dataReader["cMark"].ToString().Trim(),
-                            (float)Math.Round(nMark, 1)
+                            (float)Math.Round(nMark, 1),
+                            new Outcome(
+                                int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
+                                int.Parse(dataReader["ObjectiveCourseID"].ToString().Trim()),
+                                dataReader["cSubject"].ToString().Trim(),
+                                dataReader["mNotes"].ToString().Trim(),
+                                dataReader["OutcomeCategory"].ToString().Trim(),
+                                dataReader["CourseName"].ToString().Trim(),
+                                dataReader["cCourseCode"].ToString().Trim()
+                                )
                             ));
                 }
             }
@@ -151,7 +130,16 @@ namespace SLReports
                             int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
                             int.Parse(dataReader["iCourseID"].ToString().Trim()),
                             dataReader["cMark"].ToString().Trim(),
-                            (float)Math.Round(nMark, 1)
+                            (float)Math.Round(nMark, 1),
+                            new Outcome(
+                                int.Parse(dataReader["iCourseObjectiveID"].ToString()),
+                                int.Parse(dataReader["ObjectiveCourseID"].ToString()),
+                                dataReader["cSubject"].ToString(),
+                                dataReader["cNotes"].ToString(),
+                                dataReader["OutcomeCategory"].ToString(),
+                                dataReader["CourseName"].ToString(),
+                                dataReader["cCourseCode"].ToString()
+                                )
                             ));
                 }
             }
@@ -185,7 +173,16 @@ namespace SLReports
                             int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
                             int.Parse(dataReader["iCourseID"].ToString().Trim()),
                             dataReader["cMark"].ToString().Trim(),
-                            (float)Math.Round(nMark, 1)
+                            (float)Math.Round(nMark, 1),
+                            new Outcome(
+                                int.Parse(dataReader["iCourseObjectiveID"].ToString()),
+                                int.Parse(dataReader["ObjectiveCourseID"].ToString()),
+                                dataReader["cSubject"].ToString(),
+                                dataReader["cNotes"].ToString(),
+                                dataReader["OutcomeCategory"].ToString(),
+                                dataReader["CourseName"].ToString(),
+                                dataReader["cCourseCode"].ToString()
+                                )
                             ));
                 }
             }

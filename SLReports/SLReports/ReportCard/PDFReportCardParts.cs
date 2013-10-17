@@ -835,6 +835,12 @@ namespace SLReports.ReportCard
             return returnMe;
         }
 
+
+        /// <summary>
+        /// The "school" section of the page, with school names, logos, and address
+        /// </summary>
+        /// <param name="school"></param>
+        /// <returns></returns>
         private static PdfPTable schoolNamePlate(School school)
         {
             int cellpadding = 3;
@@ -876,6 +882,13 @@ namespace SLReports.ReportCard
 
         }
 
+        /// <summary>
+        /// The student's name, photo, and other general information about the student
+        /// </summary>
+        /// <param name="student"></param>
+        /// <param name="anonymize"></param>
+        /// <param name="showPhotos"></param>
+        /// <returns></returns>
         private static PdfPTable namePlateTable(Student student, bool anonymize, bool showPhotos)
         {
             Font font_StudentName = FontFactory.GetFont("Verdana", 22, Font.BOLD, BaseColor.BLACK);
@@ -979,6 +992,11 @@ namespace SLReports.ReportCard
 
         }
 
+        /// <summary>
+        /// Title of the document - this section displays that this is a progress report, and what date ranges are covered in the report
+        /// </summary>
+        /// <param name="reportPeriods"></param>
+        /// <returns></returns>
         private static PdfPTable reportNamePlate(List<ReportPeriod> reportPeriods) {
             
             // Find the earliest date from the given report periods
@@ -1455,8 +1473,55 @@ namespace SLReports.ReportCard
 
             return attendanceTable;
         }
-                
 
+
+        private static PdfPTable reportPeriodCommentsSection(List<ReportPeriodComment> comments)
+        {
+            PdfPTable commentsTable = new PdfPTable(1);
+            commentsTable.HorizontalAlignment = 1;
+            commentsTable.TotalWidth = 500;
+            commentsTable.LockedWidth = true;
+            commentsTable.SpacingAfter = 30;
+            commentsTable.KeepTogether = true;
+            
+            // Title
+            PdfPCell titleCell = new PdfPCell(new Paragraph("Overall Comments\n", font_large_bold));
+            titleCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            titleCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+            titleCell.Border = Rectangle.NO_BORDER;
+            titleCell.Colspan = 5;
+            titleCell.PaddingBottom = 2;
+            commentsTable.AddCell(titleCell);
+
+            // Comments
+            foreach (ReportPeriodComment comment in comments)
+            {
+                Paragraph commentParagraph = new Paragraph();
+                if (comments.Count > 1)
+                {
+                    commentParagraph.Add(new Phrase(comment.reportPeriodName + ": ", font_body_bold));
+                }
+                commentParagraph.Add(new Phrase(comment.comment, font_body));
+
+                PdfPCell commentCell = new PdfPCell(commentParagraph);
+                commentCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                commentCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+                commentCell.SetLeading(0, 1.25f);
+                commentCell.Border = 0;
+                commentCell.PaddingBottom = 5;
+                commentsTable.AddCell(commentCell);
+            }
+
+
+            return commentsTable;
+        }
+                
+        /// <summary>
+        /// This is a brief absence summary attached to the bottom of each "class" section of the page, displaying absences for just that class
+        /// </summary>
+        /// <param name="student"></param>
+        /// <param name="course"></param>
+        /// <returns></returns>
         private static PdfPTable courseAttendanceSummary(Student student, SchoolClass course)
         {
             int titleBorders = 0;
@@ -1567,7 +1632,12 @@ namespace SLReports.ReportCard
             return attendanceTable;
         }
 
-
+        /// <summary>
+        /// An explaination of what outcome values mean
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="barStyle"></param>
+        /// <returns></returns>
         private static PdfPTable outcomeLegend(PdfContentByte content, OutcomeBarStyle barStyle)
         {
             Font font_legend = FontFactory.GetFont("Verdana", 7, BaseColor.BLACK);
@@ -1634,6 +1704,13 @@ namespace SLReports.ReportCard
             return outcomeLegendTable;
         }
 
+        /// <summary>
+        /// An explaination of what life skills values mean
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="grade"></param>
+        /// <param name="barStyle"></param>
+        /// <returns></returns>
         private static PdfPTable lifeSkillsLegend(PdfContentByte content, string grade, OutcomeBarStyle barStyle = OutcomeBarStyle.LifeSkills)
         {            
             Font font_legend_title = FontFactory.GetFont("Verdana", 12, Font.BOLD, BaseColor.BLACK);
@@ -1780,6 +1857,14 @@ namespace SLReports.ReportCard
             return outcomeLegendTable;
         }
 
+        /// <summary>
+        /// This section combines the "outcomeLegend" nad "lifeskillsLegend" into two columns for display on the front page of the report
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="grade"></param>
+        /// <param name="outcomeBarStyle"></param>
+        /// <param name="lifeSkillsBarStyle"></param>
+        /// <returns></returns>
         private static PdfPTable legend(PdfContentByte content, string grade, OutcomeBarStyle outcomeBarStyle, OutcomeBarStyle lifeSkillsBarStyle)
         {
             PdfPTable legendTable = new PdfPTable(2);
@@ -1805,6 +1890,14 @@ namespace SLReports.ReportCard
             return legendTable;
         }
 
+        /// <summary>
+        /// The "Outcome" sub-section of a class section - this is called for each outcome that has marks
+        /// </summary>
+        /// <param name="outcome"></param>
+        /// <param name="course"></param>
+        /// <param name="content"></param>
+        /// <param name="barStyle"></param>
+        /// <returns></returns>
         private static PdfPCell outcomeChunk(Outcome outcome, SchoolClass course, PdfContentByte content, OutcomeBarStyle barStyle = OutcomeBarStyle.Slider)
         {                      
             int ObjectivesTableDebuggingBorder = 0;
@@ -1951,20 +2044,13 @@ namespace SLReports.ReportCard
             return objectiveChunkTableCell;
         }
 
-        private static PdfPCell lifeSkillsChunk(List<Outcome> objectives, PdfContentByte content, OutcomeBarStyle barStyle = OutcomeBarStyle.LifeSkills)
+        private static PdfPCell lifeSkillsChunk(List<Outcome> lifeSkillsObjectives, PdfContentByte content, OutcomeBarStyle barStyle = OutcomeBarStyle.LifeSkills)
         {
             int lifeSkillsTableBorder = 0;
 
             PdfPCell bufferCell = new PdfPCell(new Phrase(""));
             bufferCell.Border = lifeSkillsTableBorder;
             
-            // Condense the list of objectives to just the ones we care about
-            List<Outcome> lifeSkillsObjectives = new List<Outcome>();
-            foreach (Outcome objective in objectives)
-            {
-                lifeSkillsObjectives.Add(objective);                
-            }
-
             if (lifeSkillsObjectives.Count > 0)
             {
                 // Figure out life skills names and how many to display
@@ -2110,16 +2196,7 @@ namespace SLReports.ReportCard
                 return blankCell;
             }
         }
-                
-        private static PdfPCell emptyCell()
-        {
-            PdfPCell newCell = new PdfPCell(new Paragraph(""));
-            newCell.Border = 0;
-            newCell.Padding = 5;
-            newCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
-            return newCell;
-        }
-        
+
         private static PdfPTable classWithMarks(Student student, SchoolClass course, PdfContentByte content, bool anonymize = false, OutcomeBarStyle outcomeBarStyle = OutcomeBarStyle.Slider, OutcomeBarStyle lifeSkillsBarStyle = OutcomeBarStyle.LifeSkills)
         {          
             // Housekeeping first            
@@ -2415,7 +2492,11 @@ namespace SLReports.ReportCard
                             else
                             {
                                 // There is no mark for this report period
-                                embeddedMarkTable.AddCell(emptyCell());
+                                PdfPCell emptycell = new PdfPCell(new Paragraph(""));
+                                emptycell.Border = 0;
+                                emptycell.Padding = 5;
+                                emptycell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
+                                embeddedMarkTable.AddCell(emptycell);
                             }
                         }
 
@@ -2502,13 +2583,8 @@ namespace SLReports.ReportCard
             // * Life skills / Successful Learning Behaviors / SLBs
             // *********************************
             
-            int lifeSkillsWithMarks = 0;
-            foreach (Outcome o in course.LifeSkills)
-            {
-                lifeSkillsWithMarks += o.marks.Count;
-            }
 
-            if (lifeSkillsWithMarks > 0)
+            if (course.LifeSkillMarks.Count > 0)
             {
                 classTable.AddCell(lifeSkillsChunk(course.LifeSkills, content, lifeSkillsBarStyle));
             }
@@ -2583,6 +2659,17 @@ namespace SLReports.ReportCard
             return classTable;
         }
 
+        /// <summary>
+        /// Piece together the report card parts into a document that can be sent out
+        /// </summary>
+        /// <param name="students"></param>
+        /// <param name="reportPeriods"></param>
+        /// <param name="anonymize"></param>
+        /// <param name="showPhotos"></param>
+        /// <param name="doubleSidedMode"></param>
+        /// <param name="outcomeBarStyle"></param>
+        /// <param name="lifeSkillsBarStyle"></param>
+        /// <returns></returns>
         public static MemoryStream GeneratePDF(List<Student> students, List<ReportPeriod> reportPeriods, bool anonymize, bool showPhotos, bool doubleSidedMode, OutcomeBarStyle outcomeBarStyle = OutcomeBarStyle.Slider, OutcomeBarStyle lifeSkillsBarStyle = OutcomeBarStyle.LifeSkills)
         {
             MemoryStream memstream = new MemoryStream();
@@ -2665,6 +2752,11 @@ namespace SLReports.ReportCard
                     }
                 }
 
+                // Report period comments (called "Report Card Comments" in SchoolLogic)
+                if (student.ReportPeriodComments.Count > 0)
+                {
+                    ReportCard.Add(PDFReportCardParts.reportPeriodCommentsSection(student.ReportPeriodComments));
+                }
 
                 // Attendance summary
                 if (!student.track.daily)

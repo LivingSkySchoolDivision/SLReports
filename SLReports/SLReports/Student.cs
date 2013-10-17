@@ -56,6 +56,7 @@ namespace SLReports
         public Track track { get; set; }
         public School school { get; set; }
         public int activeStatusID { get; set; }
+        public List<ReportPeriodComment> ReportPeriodComments { get; set; }
 
         public string getCountry()
         {
@@ -321,6 +322,7 @@ namespace SLReports
             contacts = new List<Contact>();
             TimeTable = new List<TimeTableEntry>();
             statuses = new List<StudentStatus>();
+            ReportPeriodComments = new List<ReportPeriodComment>();
 
             this.activeStatusID = activeStatusID;
 

@@ -16,8 +16,6 @@ namespace SLReports
         public int classid { get; set; }
         public int trackID { get; set; }
         public int enrollmentCount { get; set; }
-        public int blockNumber { get; set; }
-        public int dayNumber { get; set; }
         public string mark { get; set; }
         public string schoolName { get; set; }
         public string lowestGrade { get; set; }
@@ -27,10 +25,13 @@ namespace SLReports
         public Track track { get; set; }
         public Term term { get; set; }
         public List<Mark> Marks { get; set; }
+
         public List<Outcome> Outcomes { get; set; }
         public List<OutcomeMark> OutcomeMarks { get; set; }
+
         public List<Outcome> LifeSkills { get; set; }
         public List<OutcomeMark> LifeSkillMarks { get; set; }
+
         public List<Student> EnrolledStudents { get; set; }
         public List<Teacher> teachers { get; set; }
 
@@ -145,24 +146,10 @@ namespace SLReports
 
         public override string ToString()
         {
-            return "Class: { Name: " + this.name + ", Course Name: " + this.courseName+ ", ClassID: " + this.classid + ", CourseID: " + this.courseid + ", Block: " + this.blockNumber + ", Day: " + this.dayNumber + ", Has Objectives: " + this.Outcomes.Count + ", IsHighSchool: " + LSKYCommon.boolToYesOrNo(this.isHighSchoolLevel()) + ", LowGrade: " + this.lowestGrade + ", HighGrade: " + this.highestGrade + ", Translated grade: " + this.getGradeLevel() + ", Grade Legend: " + this.gradeLegend + "}";
+            return "Class: { Name: " + this.name + ", Course Name: " + this.courseName+ ", ClassID: " + this.classid + ", CourseID: " + this.courseid + ", Has Objectives: " + this.Outcomes.Count + ", IsHighSchool: " + LSKYCommon.boolToYesOrNo(this.isHighSchoolLevel()) + ", LowGrade: " + this.lowestGrade + ", HighGrade: " + this.highestGrade + ", Translated grade: " + this.getGradeLevel() + ", Grade Legend: " + this.gradeLegend + "}";
         }
-        
-        /* This constructor should be removed and code relying on it should be redone */
-        public SchoolClass(string name, int classid, int courseid)
-        {
-            Marks = new List<Mark>();
-            ReportPeriods = new List<ReportPeriod>();
-            Outcomes = new List<Outcome>();
-            OutcomeMarks = new List<OutcomeMark>();
-            LifeSkillMarks = new List<OutcomeMark>();
-            LifeSkills = new List<Outcome>();
-            this.name = name;
-            this.classid = classid;
-            this.courseid = courseid;
-        }
-        
-        public SchoolClass(string name, string courseName, int classid, int courseid, string teacherFirst, string teacherLast, string teacherTitle, string schoolName, int blockNum, int dayNum, Track track, string lowestGrade, string highestGrade, string gradeLegendName)
+                
+        public SchoolClass(string name, string courseName, int classid, int courseid, string schoolName, Track track, string lowestGrade, string highestGrade, string gradeLegendName)
         {
             Outcomes = new List<Outcome>();
             Marks = new List<Mark>();
@@ -176,8 +163,6 @@ namespace SLReports
             this.classid = classid;
             this.courseid = courseid;
             this.schoolName = schoolName;
-            this.dayNumber = dayNum;
-            this.blockNumber = blockNum;
             this.lowestGrade = lowestGrade;
             this.highestGrade = highestGrade;
             this.track = track;
@@ -215,31 +200,13 @@ namespace SLReports
                             DateTime.Parse(dataReader["TrackEnd"].ToString().Trim()),
                             int.Parse(dataReader["SchoolID"].ToString().Trim()),
                             daily);
-
-                    int blockNum = -1;
-                    if (!int.TryParse(dataReader["iblockNumber"].ToString().Trim(), out blockNum))
-                    {
-                        blockNum = -1;
-                    }
-
-                    int dayNum = -1;
-                    if (!int.TryParse(dataReader["iDayNumber"].ToString().Trim(), out dayNum))
-                    {
-                        dayNum = -1;
-                    }
-
-
+                    
                     SchoolClass newSchoolClass = new SchoolClass(
                             dataReader["ClassName"].ToString().Trim(),
                             dataReader["CourseName"].ToString().Trim(),
                             int.Parse(dataReader["iClassID"].ToString().Trim()),
                             int.Parse(dataReader["iCourseID"].ToString().Trim()),
-                            dataReader["TeacherFirstName"].ToString().Trim(),
-                            dataReader["TeacherLastName"].ToString().Trim(),
-                            dataReader["TeacherTitle"].ToString().Trim(),
                             dataReader["SchoolName"].ToString().Trim(),
-                            blockNum,
-                            dayNum,
                             newTrack,
                             dataReader["LowestGrade"].ToString().Trim(),
                             dataReader["HighestGrade"].ToString().Trim(),
@@ -291,19 +258,13 @@ namespace SLReports
                             DateTime.Parse(dataReader["TrackEnd"].ToString().Trim()),
                             int.Parse(dataReader["SchoolID"].ToString().Trim()),
                             daily);
-
-
+                    
                     SchoolClass newSchoolClass = new SchoolClass(
                             dataReader["ClassName"].ToString().Trim(),
                             dataReader["CourseName"].ToString().Trim(),
                             int.Parse(dataReader["iClassID"].ToString().Trim()),
                             int.Parse(dataReader["iCourseID"].ToString().Trim()),
-                            dataReader["TeacherFirstName"].ToString().Trim(),
-                            dataReader["TeacherLastName"].ToString().Trim(),
-                            dataReader["TeacherTitle"].ToString().Trim(),
                             dataReader["SchoolName"].ToString().Trim(),
-                            0,
-                            0,
                             newTrack,
                             dataReader["LowestGrade"].ToString().Trim(),
                             dataReader["HighestGrade"].ToString().Trim(),
@@ -339,11 +300,7 @@ namespace SLReports
 
             if (obj2 != null)
             {
-                if ((this.blockNumber != 0)  && (obj2.blockNumber != 0)) {
-                    return this.blockNumber.CompareTo(obj2.blockNumber);
-                } else {
-                    return this.name.CompareTo(obj2.name);
-                }
+                return this.name.CompareTo(obj2.name);                
             }
             else
             {

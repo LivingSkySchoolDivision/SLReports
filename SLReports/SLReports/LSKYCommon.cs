@@ -127,35 +127,7 @@ namespace SLReports
             return DateTime.Now.Year + "_" + DateTime.Now.Month + "_" + DateTime.Now.Day + "_" + DateTime.Now.Hour + "_" + DateTime.Now.Minute;
         }
 
-        public static string findClassNameForThisBlock(List<SchoolClass> classes, string block)
-        {
-            List<string> classNames = new List<string>();
-
-            int blockNum = -1;
-            if (int.TryParse(block, out blockNum))
-            {
-                foreach (SchoolClass thisclass in classes)
-                {
-                    if (thisclass.blockNumber == blockNum)
-                    {
-                        classNames.Add(thisclass.name);
-                    }
-                }
-            }
-
-            StringBuilder returnMe = new StringBuilder();
-            for (int x = 0; x < classNames.Count; x++)
-            {
-                returnMe.Append(classNames[x]);
-                if (x < classNames.Count - 1)
-                {
-                    returnMe.Append(", ");
-                }
-            }
-
-            return returnMe.ToString();
-        }
-
+        
         /// <summary>
         /// Loads mark data for a student for report cards. Loads terms, report periods, enrolled classes, class marks, outcomes, outcome marks, and attendance
         /// </summary>
@@ -167,6 +139,18 @@ namespace SLReports
         {
             Student returnedStudent = thisStudent;
 
+            // **************************************************************
+            // * Report Period Comments
+            // **************************************************************
+
+            // Load report period comments for the selected report periods
+            List<ReportPeriodComment> allRPComments = ReportPeriodComment.loadRPCommentsForStudent(connection, thisStudent.getStudentID());
+            List<ReportPeriodComment> filteredRPComments = ReportPeriodComment.getCommentsForTheseReportPeriods(allRPComments, theseReportPeriods);
+            returnedStudent.ReportPeriodComments = filteredRPComments;
+
+            // **************************************************************
+            // * Report Periods
+            // **************************************************************
             // Find the earliest report period and the last report period, for attendance dates
             DateTime earliestDate = DateTime.MaxValue;
             DateTime lastDate = DateTime.MinValue;
@@ -211,6 +195,9 @@ namespace SLReports
                 
             }
 
+            // **************************************************************
+            // * Terms
+            // **************************************************************
             // Derive some terms from the given report periods while we are cycling through them
             List<Term> detectedTerms = new List<Term>();
             foreach (int termid in detectedTermIDs)
@@ -241,17 +228,24 @@ namespace SLReports
                 }
             } 
             
+
             if (returnedStudent != null)
             {
                 returnedStudent.school = School.loadThisSchool(connection, thisStudent.getSchoolIDAsInt());
                 returnedStudent.track = Track.loadThisTrack(connection, returnedStudent.getTrackID());
                 returnedStudent.track.terms = detectedTerms;
 
+                // **************************************************************
+                // * Attendance
+                // **************************************************************
                 // Load this student's attendance
                 returnedStudent.absences = Absence.loadAbsencesForThisStudentAndTimePeriod(connection, thisStudent, earliestDate, lastDate);
                 
                 foreach (Term thisTerm in returnedStudent.track.terms)
                 {
+                    // **************************************************************
+                    // * Enrolled Classes
+                    // **************************************************************
                     // Load classes this student is enrolled in
                     thisTerm.Courses = SchoolClass.loadStudentEnrolledClassesForThisTerm(connection, returnedStudent, thisTerm);
 
@@ -262,84 +256,60 @@ namespace SLReports
                         // Put list of report periods into each class so we can easily reference it later
                         thisClass.ReportPeriods = reportPeriods;
 
-                        // Load outcomes and outcome marks
-                        List<Outcome> courseOutcomes = Outcome.loadObjectivesForThisCourse(connection, thisClass);
-                        List<OutcomeMark> courseOutcomeMarks_All = OutcomeMark.loadOutcomeMarksForThisCourse(connection, thisTerm, returnedStudent, thisClass);
-                        List<OutcomeMark> courseOutcomeMarks = new List<OutcomeMark>();
-                                                
-                        // Filter outcome marks to only the report periods that we care about
-                        foreach (OutcomeMark om in courseOutcomeMarks_All)
-                        {
-                            if (selectedReportPeriodIDs.Contains(om.reportPeriodID))
-                            {
-                                courseOutcomeMarks.Add(om);
-                            }
-                        }
+                        // **************************************************************
+                        // * Outcomes and Life Skills (or SLBs / Successful Learner Behaviors)
+                        // **************************************************************
+                        string lifeSkillsCategoryName = "Successful Learner Behaviours";
+                                                    
+                        //List<Outcome> classLifeSkills = Outcome.loadObjectivesForThisCourseByCategoryName(connection, thisClass, lifeSkillsCategoryName);
+                        
+                        List<OutcomeMark> classOutcomeMarks_All = OutcomeMark.loadOutcomeMarksForThisCourse(connection, thisTerm, returnedStudent, thisClass);
+                        
+                        // Split marks into life skills and not life skills
+                        List<Outcome> classNormalOutcomes = new List<Outcome>();
+                        List<Outcome> classLifeSkills = new List<Outcome>();
 
-                        // Put outcome marks into their parent outcome objects
-                        foreach (OutcomeMark objectivemark in courseOutcomeMarks)
+                        List<OutcomeMark> classMarks_LifeSkills = new List<OutcomeMark>();
+                        List<OutcomeMark> classMarks_Outcomes = new List<OutcomeMark>();                        
+                        
+                        foreach (OutcomeMark om in classOutcomeMarks_All)
                         {
-                            foreach (Outcome objective in courseOutcomes)
-                            {
-                                if (objectivemark.objectiveID == objective.id)
-                                {
-                                    objectivemark.objective = objective;
-                                }
-                            }
-
+                            // Associate some of the loaded report period objects with the outcome marks                            
                             foreach (ReportPeriod rp in reportPeriods)
                             {
-                                if (rp.ID == objectivemark.reportPeriodID)
+                                if (rp.ID == om.reportPeriodID)
                                 {
-                                    objectivemark.reportPeriod = rp;
+                                    om.reportPeriod = rp;
                                 }
                             }
-
-                        }
-
-                        foreach (Outcome objective in courseOutcomes)
-                        {
-                            foreach (OutcomeMark objectivemark in courseOutcomeMarks)
+                            
+                            // Split marks into life skills and not life skills lists
+                            if (om.outcome.category == lifeSkillsCategoryName)
                             {
-                                if (objective.id == objectivemark.objectiveID)
-                                {
-                                    objective.marks.Add(objectivemark);
-                                }
-                            }
-                        }
+                                classMarks_LifeSkills.Add(om);
 
-                        // Sort into life skills and non life skills
-                        List<Outcome> lifeSkillsOutcomes = new List<Outcome>();
-                        List<Outcome> normalOutcomes = new List<Outcome>();
-                        List<OutcomeMark> lifeSkillsOutcomeMarks = new List<OutcomeMark>();
-                        List<OutcomeMark> normalOutcomeMarks = new List<OutcomeMark>();                        
-                                                
-                        //string normalObjectiveCategoryName = "Outcomes";
-                        string lifeSkillsCategoryName = "Successful Learner Behaviours";
-
-                        foreach (Outcome o in courseOutcomes)
-                        {
-                            if (o.category == lifeSkillsCategoryName)
-                            {
-                                lifeSkillsOutcomes.Add(o);
-                                lifeSkillsOutcomeMarks.AddRange(o.marks);
-                                
+                                classLifeSkills.Add(om.outcome);
                             }
                             else
                             {
-                                normalOutcomes.Add(o);
-                                normalOutcomeMarks.AddRange(o.marks);
-                            }
-                        }                                                
+                                classMarks_Outcomes.Add(om);
 
+                                // While we are iterating through the list, derive a list of outcomes from the outcome marks, since we didn't load one earlier
+                                classNormalOutcomes.Add(om.outcome);
+                            }                            
+                        }
+
+                         
                         // Put the outcomes and outcome marks into the course object
-                        thisClass.Outcomes = normalOutcomes;
-                        thisClass.LifeSkills = lifeSkillsOutcomes;
-                        thisClass.OutcomeMarks = normalOutcomeMarks;
-                        thisClass.LifeSkillMarks = lifeSkillsOutcomeMarks;
+                        thisClass.Outcomes = classNormalOutcomes;
+                        thisClass.LifeSkills = classLifeSkills;
+                        thisClass.OutcomeMarks = classMarks_Outcomes;                        
+                        thisClass.LifeSkillMarks = classMarks_LifeSkills;                        
                     }
 
-                    // Load the class marks
+                    // **************************************************************
+                    // * Class marks and comments
+                    // **************************************************************
                     List<Mark> allMarks = new List<Mark>();
                     foreach (ReportPeriod thisReportPeriod in thisTerm.ReportPeriods)
                     {

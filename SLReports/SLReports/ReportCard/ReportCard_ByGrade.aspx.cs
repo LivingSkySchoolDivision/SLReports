@@ -219,8 +219,8 @@ namespace SLReports.ReportCard
                         // Send the report card
                         String fileName = "ReportCards_" + LSKYCommon.removeSpaces(selectedSchool.getName()) + "_Grade" + selectedGrade + "_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
                         if ((selectedReportPeriods.Count > 0) && (selectedStudents.Count > 0))
-                        {
-                            sendPDF(PDFReportCardParts.GeneratePDF(selectedStudents, selectedReportPeriods, anonymize, showPhotos, doubleSidedMode), fileName);
+                        {                            
+                            sendPDF(PDFReportCardParts.GeneratePDF(selectedStudents, selectedReportPeriods, anonymize, showPhotos, doubleSidedMode), fileName);                            
                         }
                     }
                 }

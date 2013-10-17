@@ -63,6 +63,39 @@ namespace SLReports
             return returnMe;
         }
 
+        public static List<Outcome> loadObjectivesForThisCourseByCategoryName(SqlConnection connection, SchoolClass course, string categoryName)
+        {
+            List<Outcome> returnMe = new List<Outcome>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM LSKY_CourseObjectives WHERE iCourseID=@COURSEID AND ObjectiveCategory=@CATNAME";
+            sqlCommand.Parameters.AddWithValue("@COURSEID", course.courseid);
+            sqlCommand.Parameters.AddWithValue("@CATNAME", categoryName);
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    returnMe.Add(new Outcome(
+                            int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
+                            int.Parse(dataReader["iCourseID"].ToString().Trim()),
+                            dataReader["cSubject"].ToString().Trim(),
+                            dataReader["mNotes"].ToString().Trim(),
+                            dataReader["ObjectiveCategory"].ToString().Trim(),
+                            dataReader["CourseName"].ToString().Trim(),
+                            dataReader["cCourseCode"].ToString().Trim()
+                            ));
+                }
+            }
+
+            sqlCommand.Connection.Close();
+            return returnMe;
+        }
+
         public static List<Outcome> loadAllObjectives(SqlConnection connection)
         {
             List<Outcome> returnMe = new List<Outcome>();

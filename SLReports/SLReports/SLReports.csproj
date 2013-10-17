@@ -312,6 +312,7 @@
       <DependentUpon>INAC_CSV.aspx</DependentUpon>
     </Compile>
     <Compile Include="INAC\LSKY_INAC.cs" />
+    <Compile Include="ReportPeriodComment.cs" />
     <Compile Include="ReportPeriods\ReportPeriodList.aspx.cs">
       <DependentUpon>ReportPeriodList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

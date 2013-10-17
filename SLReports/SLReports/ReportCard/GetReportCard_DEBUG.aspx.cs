@@ -79,74 +79,74 @@ namespace SLReports.ReportCard
 
             
             // Display data
-
-
-
             Response.Write("<BR><B>DEBUG DATA</b>");
             foreach (Student student in displayedStudents)
             {
-              Response.Write("<BR><hr><BR><b>" + student + "</B>");
-              Response.Write("<BR><b>Absense entries: </b>" + student.absences.Count);
-              Response.Write("<BR>&nbsp;<b>Track:</b> " + student.track);
-              foreach (Term term in student.track.terms)
-              {
-                  Response.Write("<BR>&nbsp;<b>Term:</b> " + term);
-                  foreach (ReportPeriod rp in term.ReportPeriods)
-                  {
-                      Response.Write("<BR>&nbsp;&nbsp;<b>Report Period:</b> " + rp);
-                      Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Marks: </b> " + rp.marks.Count);
-                      foreach (Mark mark in rp.marks)
-                      {
-                          Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>Mark: </b> " + mark);
-                      }
-                  }
-                  Response.Write("<BR><BR>&nbsp;&nbsp;<b>Classes:</b> " + term.Courses.Count);
-                  foreach (SchoolClass c in term.Courses)
-                  {
-                      Response.Write("<BR><BR>&nbsp;&nbsp;<b>Class:</b> " + c);
-                      Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Teacher:</b> " + c.teacherName);
-                      Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Marks:</b> " + c.Marks.Count);
-                      Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Outcome Marks:</b> " + c.OutcomeMarks.Count);                    
-                      foreach (ReportPeriod rp in term.ReportPeriods)
-                      {
-                          Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Report Period:</b> " + rp);
-                          foreach (Mark m in c.Marks)
-                          {
-                              if (m.reportPeriodID == rp.ID)
-                              {
-                                  Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>Mark</b> " + m);
-                              }
-                          }
-                          foreach (OutcomeMark om in c.OutcomeMarks)
-                          {
-                              if (om.reportPeriodID == rp.ID)
-                              {
-                                  Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>OutcomeMark:</b> " + om);
-                              }
-                          }
-                      }
-                      Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Outcomes:</b> " + c.Outcomes.Count);
-                      foreach (Outcome o in c.Outcomes)
-                      {
-                          Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>Outcome:</b> " + o);
-                          foreach (OutcomeMark om in o.marks)
-                          {
-                              Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>OutcomeMark:</b> " + om);
-                          }
-                      }
+                Response.Write("<BR><hr><BR><b>" + student + "</B>");                                
+                Response.Write("<BR><b>Absense entries: </b>" + student.absences.Count);
+                Response.Write("<BR>&nbsp;<b>Track:</b> " + student.track);
+                foreach (Term term in student.track.terms)
+                {                    
+                    Response.Write("<BR>&nbsp;<b>Term:</b> " + term);
+                    foreach (ReportPeriod rp in term.ReportPeriods)
+                    {
+                        Response.Write("<BR>&nbsp;&nbsp;<b>Report Period:</b> " + rp);
+                        Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Marks: </b> " + rp.marks.Count);
+                        foreach (Mark mark in rp.marks)
+                        {
+                            Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>Mark: </b> " + mark);
+                        }
+                    }
+                    Response.Write("<BR><BR>&nbsp;&nbsp;<b>Classes:</b> " + term.Courses.Count);
+                    foreach (SchoolClass c in term.Courses)
+                    {
+                        Response.Write("<BR><BR>&nbsp;&nbsp;<b>Class:</b> " + c);
+                        Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Teacher:</b> " + c.teacherName);
+                        Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Marks:</b> " + c.Marks.Count);
+                        Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Outcomes:</b> " + c.Outcomes.Count);
+                        Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Outcome Marks:</b> " + c.OutcomeMarks.Count);
+                        Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Life Skills:</b> " + c.LifeSkills.Count);
+                        Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Life Skills Marks:</b> " + c.LifeSkillMarks.Count);                    
+                        foreach (ReportPeriod rp in term.ReportPeriods)
+                        {
+                            Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Report Period:</b> " + rp);
+                            foreach (Mark m in c.Marks)
+                            {
+                                if (m.reportPeriodID == rp.ID)
+                                {
+                                    Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>Mark</b> " + m);
+                                }
+                            }
+                            foreach (OutcomeMark om in c.OutcomeMarks)
+                            {
+                                if (om.reportPeriodID == rp.ID)
+                                {
+                                    Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>OutcomeMark:</b> " + om);
+                                }
+                            }
+                        }
+                        Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Outcomes:</b> " + c.Outcomes.Count);
+                        foreach (Outcome o in c.Outcomes)
+                        {
+                            Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>Outcome:</b> " + o);
+                            foreach (OutcomeMark om in o.marks)
+                            {
+                                Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>OutcomeMark:</b> " + om);
+                            }
+                        }
 
-                      Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Life Skills / SLBs:</b> " + c.LifeSkills.Count);
-                      foreach (Outcome o in c.LifeSkills)
-                      {
-                          Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>Outcome</b> " + o);
-                          foreach (OutcomeMark om in o.marks)
-                          {
-                              Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>OutcomeMark:</b> " + om);
-                          }
-                      }
+                        Response.Write("<BR>&nbsp;&nbsp;&nbsp;<b>Life Skills / SLBs:</b> " + c.LifeSkills.Count);
+                        foreach (Outcome o in c.LifeSkills)
+                        {
+                            Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;<b>Outcome</b> " + o);
+                            foreach (OutcomeMark om in o.marks)
+                            {
+                                Response.Write("<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>OutcomeMark:</b> " + om);
+                            }
+                        }
                       
-                  }
-              }
+                    }
+                }
           
             }
 

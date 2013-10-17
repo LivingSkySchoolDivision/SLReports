@@ -115,50 +115,12 @@ namespace SLReports
             return returnMe;
 
         }
-
-        /*
-        public static List<TimeTableEntry> loadAllTimeTableEntries(SqlConnection connection)
-        {
-            List<TimeTableEntry> returnMe = new List<TimeTableEntry>();
-
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.Connection = connection;
-            sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = "SELECT * FROM LSKY_ClassSchedule ORDER BY iBlockNumber ASC, cName ASC;";
-            sqlCommand.Connection.Open();
-
-            SqlDataReader dataReader = sqlCommand.ExecuteReader();
-
-            if (dataReader.HasRows)
-            {
-                while (dataReader.Read())
-                {
-                    TimeTableEntry newTimeTableEntry = new TimeTableEntry(
-                            int.Parse(dataReader["iDayNumber"].ToString().Trim()),
-                            int.Parse(dataReader["iBlockNumber"].ToString().Trim()),
-                            int.Parse(dataReader["iSchoolID"].ToString().Trim()),
-                            int.Parse(dataReader["itermID"].ToString().Trim()),
-                            dataReader["Room"].ToString().Trim(),
-                            null
-                        );
-                    returnMe.Add(newTimeTableEntry);
-                }
-            }
-
-            sqlCommand.Connection.Close();
-
-
-            return returnMe;
-
-        }
-        */
-
+                
         public static List<TimeTableEntry> loadTimeTableEntries(SqlConnection connection, Term term, SchoolClass sclass)
         {
             return loadTimeTableEntries(connection, term.ID, sclass);
         }
-
-
+        
         public static TimeTableEntry getEarliest(List<TimeTableEntry> timetableentries)
         {
             TimeTableEntry returnMe = null;
