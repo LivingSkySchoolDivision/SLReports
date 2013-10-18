@@ -126,8 +126,7 @@ namespace SLReports
             sqlCommand.Connection.Close();
             return returnMe;
         }
-
-
+        
         public bool hasMarks()
         {
             if (marks.Count > 0)

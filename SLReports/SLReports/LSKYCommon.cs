@@ -231,10 +231,20 @@ namespace SLReports
 
             if (returnedStudent != null)
             {
-                returnedStudent.school = School.loadThisSchool(connection, thisStudent.getSchoolIDAsInt());
+                // **************************************************************
+                // * Load student data
+                // **************************************************************
+
+                // Load all outcome marks (which will also load the outcomes themselves). We will filter this list by class later
+                List<OutcomeMark> studentOutcomeMarks_All = OutcomeMark.loadOutcomeMarksForThisStudent(connection, reportPeriods, returnedStudent);
+                
+                returnedStudent.school = School.loadThisSchool(connection, thisStudent.getSchoolIDAsInt());                
                 returnedStudent.track = Track.loadThisTrack(connection, returnedStudent.getTrackID());
                 returnedStudent.track.terms = detectedTerms;
 
+                // Marks
+                List<Mark> studentMarks_All = Mark.loadMarksFromTheseReportPeriods(connection, reportPeriods, returnedStudent);
+                
                 // **************************************************************
                 // * Attendance
                 // **************************************************************
@@ -260,10 +270,18 @@ namespace SLReports
                         // * Outcomes and Life Skills (or SLBs / Successful Learner Behaviors)
                         // **************************************************************
                         string lifeSkillsCategoryName = "Successful Learner Behaviours";
-                                                    
-                        //List<Outcome> classLifeSkills = Outcome.loadObjectivesForThisCourseByCategoryName(connection, thisClass, lifeSkillsCategoryName);
                         
-                        List<OutcomeMark> classOutcomeMarks_All = OutcomeMark.loadOutcomeMarksForThisCourse(connection, thisTerm, returnedStudent, thisClass);
+                        // From the main list of this student's outcome marks, select just the ones for this course
+                        //List<OutcomeMark> classOutcomeMarks_All = OutcomeMark.loadOutcomeMarksForThisCourse(connection, thisTerm, returnedStudent, thisClass);
+
+                        List<OutcomeMark> classOutcomeMarks_All = new List<OutcomeMark>();
+                        foreach(OutcomeMark om in studentOutcomeMarks_All) 
+                        {
+                            if (om.courseID == thisClass.courseid)
+                            {
+                                classOutcomeMarks_All.Add(om);
+                            }
+                        }                        
                         
                         // Split marks into life skills and not life skills
                         List<Outcome> classNormalOutcomes = new List<Outcome>();
@@ -310,17 +328,8 @@ namespace SLReports
                     // **************************************************************
                     // * Class marks and comments
                     // **************************************************************
-                    List<Mark> allMarks = new List<Mark>();
-                    foreach (ReportPeriod thisReportPeriod in thisTerm.ReportPeriods)
-                    {
-                        thisReportPeriod.marks = Mark.loadMarksFromThisReportPeriod(connection, thisReportPeriod, returnedStudent);
-                        foreach (Mark m in thisReportPeriod.marks)
-                        {
-                            allMarks.Add(m);
-                        }
-                    }
 
-                    foreach (Mark m in allMarks)
+                    foreach (Mark m in studentMarks_All)
                     {
                         foreach (SchoolClass c in thisTerm.Courses)
                         {

@@ -13,21 +13,38 @@ namespace SLReports
         public int studentID { get; set; }
         public int objectiveID { get; set; }
         public int reportPeriodID { get; set; }
-        public int courseID { get; set; }
+        private int _courseID;
+        public int courseID {
+            get
+            {
+                if (this._courseID == 0)
+                {
+                    return this.outcome.courseid;
+                }
+                else
+                {
+                    return this._courseID;
+                }
+            }
+
+            set {
+                this._courseID = value;
+            } 
+        }
+
         public string cMark { get; set; }
         public float nMark { get; set; }
         
         public Outcome outcome { get; set; }
         public ReportPeriod reportPeriod { get; set; }
-
-
+        
         public OutcomeMark(int objectiveMarkID, int studentID, int objectiveID, int reportPeriodID, int courseID, string cmark, float nmark, Outcome outcome)
         {
             this.objectiveMarkID = objectiveMarkID;
             this.studentID = studentID;
             this.objectiveID = objectiveID;
             this.reportPeriodID = reportPeriodID;
-            this.courseID = courseID;
+            this._courseID = courseID;
             this.cMark = cmark;
             this.nMark = nmark;
             this.outcome = outcome;
@@ -54,7 +71,7 @@ namespace SLReports
                 hasReportPeriod = true;
             }
 
-            return "OutcomeMark: { ID: " + this.objectiveMarkID + ", Objective ID: " + this.objectiveID + ", nMark: " + this.nMark + ", cMark: " + this.cMark + ", Report Period: " + this.reportPeriodID + ", HasOutcomeInfo: " + LSKYCommon.boolToYesOrNo(hasObjectiveAlso) + " , HasReportPeriod: " + LSKYCommon.boolToYesOrNo(hasReportPeriod) + " }";
+            return "OutcomeMark: { ID: " + this.objectiveMarkID + ", Objective ID: " + this.objectiveID + ", Course ID: " + this.courseID + ", nMark: " + this.nMark + ", cMark: " + this.cMark + ", Report Period: " + this.reportPeriodID + ", HasOutcomeInfo: " + LSKYCommon.boolToYesOrNo(hasObjectiveAlso) + " , HasReportPeriod: " + LSKYCommon.boolToYesOrNo(hasReportPeriod) + " }";
         }
         
         public static List<OutcomeMark> loadOutcomeMarksForThisCourse(SqlConnection connection, Term term, Student student, SchoolClass course)
@@ -99,10 +116,11 @@ namespace SLReports
                 }
             }
 
+            dataReader.Close();
             sqlCommand.Connection.Close();
             return returnMe;
         }
-
+        
         public static List<OutcomeMark> loadOutcomeMarksForThisStudent(SqlConnection connection, Term term, Student student)
         {
             List<OutcomeMark> returnMe = new List<OutcomeMark>();
@@ -128,26 +146,200 @@ namespace SLReports
                             int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
                             int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
                             int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
-                            int.Parse(dataReader["iCourseID"].ToString().Trim()),
+                            int.Parse(dataReader["MarkCourseID"].ToString().Trim()),
                             dataReader["cMark"].ToString().Trim(),
                             (float)Math.Round(nMark, 1),
                             new Outcome(
-                                int.Parse(dataReader["iCourseObjectiveID"].ToString()),
-                                int.Parse(dataReader["ObjectiveCourseID"].ToString()),
-                                dataReader["cSubject"].ToString(),
-                                dataReader["cNotes"].ToString(),
-                                dataReader["OutcomeCategory"].ToString(),
-                                dataReader["CourseName"].ToString(),
-                                dataReader["cCourseCode"].ToString()
+                                int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
+                                int.Parse(dataReader["ObjectiveCourseID"].ToString().Trim()),
+                                dataReader["cSubject"].ToString().Trim(),
+                                dataReader["mNotes"].ToString().Trim(),
+                                dataReader["OutcomeCategory"].ToString().Trim(),
+                                dataReader["CourseName"].ToString().Trim(),
+                                dataReader["cCourseCode"].ToString().Trim()
+                                )
+                            ));
+                }
+            }
+            dataReader.Close();
+            sqlCommand.Connection.Close();
+            return returnMe;
+        }
+        
+        public static List<OutcomeMark> loadOutcomeMarksForThisStudent(SqlConnection connection, ReportPeriod reportPeriod, Student student)
+        {
+            List<OutcomeMark> returnMe = new List<OutcomeMark>();
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.Connection = connection;
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = "SELECT * FROM LSKY_ObjectiveMarks WHERE cStudentNumber=@StudentNum AND iReportPeriodID=@RepPeriodID;";
+            sqlCommand.Parameters.AddWithValue("@StudentNum", student.getStudentID());
+            sqlCommand.Parameters.AddWithValue("@RepPeriodID", reportPeriod.ID);
+            sqlCommand.Connection.Open();
+            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    float nMark = -1;
+                    float.TryParse(dataReader["nMark"].ToString().Trim(), out nMark);
+
+                    returnMe.Add(new OutcomeMark(
+                            int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
+                            int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
+                            int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
+                            int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
+                            int.Parse(dataReader["MarkCourseID"].ToString().Trim()),
+                            dataReader["cMark"].ToString().Trim(),
+                            (float)Math.Round(nMark, 1),
+                            new Outcome(
+                                int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
+                                int.Parse(dataReader["ObjectiveCourseID"].ToString().Trim()),
+                                dataReader["cSubject"].ToString().Trim(),
+                                dataReader["mNotes"].ToString().Trim(),
+                                dataReader["OutcomeCategory"].ToString().Trim(),
+                                dataReader["CourseName"].ToString().Trim(),
+                                dataReader["cCourseCode"].ToString().Trim()
                                 )
                             ));
                 }
             }
 
+            dataReader.Close();
             sqlCommand.Connection.Close();
             return returnMe;
         }
+
+        public static List<OutcomeMark> loadOutcomeMarksForThisStudent(SqlConnection connection, List<ReportPeriod> reportPeriods, Student student)
+        {
+            List<OutcomeMark> returnMe = new List<OutcomeMark>();
+
+            if (reportPeriods.Count > 0)
+            {
+                SqlCommand sqlCommand = new SqlCommand();
+                sqlCommand.Connection = connection;
+                sqlCommand.Connection.Open();
+
+                sqlCommand.CommandType = CommandType.Text;
+                sqlCommand.CommandText = "SELECT * FROM LSKY_ObjectiveMarks WHERE cStudentNumber=@StudentNum AND (";
+                sqlCommand.Parameters.AddWithValue("@StudentNum", student.getStudentID());
+
+                for (int x = 0; x < reportPeriods.Count; x++)
+                {
+                    ReportPeriod reportPeriod = reportPeriods[x];
+                    sqlCommand.CommandText += "iReportPeriodID=@RepPeriodID" + x;
+                    if (x < reportPeriods.Count - 1)
+                    {
+                        sqlCommand.CommandText += " OR ";
+                    }
+                    sqlCommand.Parameters.AddWithValue("@RepPeriodID" + x, reportPeriod.ID);
+                }
+
+                sqlCommand.CommandText += ")";
+
+                SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+                if (dataReader.HasRows)
+                {
+                    while (dataReader.Read())
+                    {
+                        float nMark = -1;
+                        float.TryParse(dataReader["nMark"].ToString().Trim(), out nMark);
+
+                        returnMe.Add(new OutcomeMark(
+                            int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
+                            int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
+                            int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
+                            int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
+                            int.Parse(dataReader["MarkCourseID"].ToString().Trim()),
+                            dataReader["cMark"].ToString().Trim(),
+                            (float)Math.Round(nMark, 1),
+                            new Outcome(
+                                int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
+                                int.Parse(dataReader["ObjectiveCourseID"].ToString().Trim()),
+                                dataReader["cSubject"].ToString().Trim(),
+                                dataReader["mNotes"].ToString().Trim(),
+                                dataReader["OutcomeCategory"].ToString().Trim(),
+                                dataReader["CourseName"].ToString().Trim(),
+                                dataReader["cCourseCode"].ToString().Trim()
+                                )
+                            ));
+                    }
+                }
+                dataReader.Close();
+                sqlCommand.Connection.Close();
+            }
+            
+            return returnMe;
+        }
+
+        public static List<OutcomeMark> loadOutcomeMarksForThisStudent(SqlConnection connection, List<Term> terms, Student student)
+        {
+            List<OutcomeMark> returnMe = new List<OutcomeMark>();
+
+            if (terms.Count > 0)
+            {
+                SqlCommand sqlCommand = new SqlCommand();
+                sqlCommand.Connection = connection;
+                sqlCommand.Connection.Open();
+
+                sqlCommand.CommandType = CommandType.Text;
+                sqlCommand.CommandText = "SELECT * FROM LSKY_ObjectiveMarks WHERE cStudentNumber=@StudentNum AND (";
+                sqlCommand.Parameters.AddWithValue("@StudentNum", student.getStudentID());
+
+                for (int x = 0; x < terms.Count; x++)
+                {
+                    Term term = terms[x];
+                    sqlCommand.CommandText += "iTermID=@TERMID" + x;
+                    if (x < terms.Count - 1)
+                    {
+                        sqlCommand.CommandText += " OR ";
+                    }
+                    sqlCommand.Parameters.AddWithValue("@TERMID" + x, term.ID);
+                }
+
+                sqlCommand.CommandText += ")";
+
+                SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+                if (dataReader.HasRows)
+                {
+                    while (dataReader.Read())
+                    {
+                        float nMark = -1;
+                        float.TryParse(dataReader["nMark"].ToString().Trim(), out nMark);
+
+                        returnMe.Add(new OutcomeMark(
+                            int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
+                            int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
+                            int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
+                            int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
+                            int.Parse(dataReader["MarkCourseID"].ToString().Trim()),
+                            dataReader["cMark"].ToString().Trim(),
+                            (float)Math.Round(nMark, 1),
+                            new Outcome(
+                                int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
+                                int.Parse(dataReader["ObjectiveCourseID"].ToString().Trim()),
+                                dataReader["cSubject"].ToString().Trim(),
+                                dataReader["mNotes"].ToString().Trim(),
+                                dataReader["OutcomeCategory"].ToString().Trim(),
+                                dataReader["CourseName"].ToString().Trim(),
+                                dataReader["cCourseCode"].ToString().Trim()
+                                )
+                            ));
+                    }
+                }
+                dataReader.Close();
+                sqlCommand.Connection.Close();
+            }
+
+            return returnMe;
+        }
+
         
+
         public static List<OutcomeMark> loadAllOutcomeMarks(SqlConnection connection)
         {
             List<OutcomeMark> returnMe = new List<OutcomeMark>();
@@ -171,17 +363,17 @@ namespace SLReports
                             int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
                             int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
                             int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
-                            int.Parse(dataReader["iCourseID"].ToString().Trim()),
+                            int.Parse(dataReader["MarkCourseID"].ToString().Trim()),
                             dataReader["cMark"].ToString().Trim(),
                             (float)Math.Round(nMark, 1),
                             new Outcome(
-                                int.Parse(dataReader["iCourseObjectiveID"].ToString()),
-                                int.Parse(dataReader["ObjectiveCourseID"].ToString()),
-                                dataReader["cSubject"].ToString(),
-                                dataReader["cNotes"].ToString(),
-                                dataReader["OutcomeCategory"].ToString(),
-                                dataReader["CourseName"].ToString(),
-                                dataReader["cCourseCode"].ToString()
+                                int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
+                                int.Parse(dataReader["ObjectiveCourseID"].ToString().Trim()),
+                                dataReader["cSubject"].ToString().Trim(),
+                                dataReader["mNotes"].ToString().Trim(),
+                                dataReader["OutcomeCategory"].ToString().Trim(),
+                                dataReader["CourseName"].ToString().Trim(),
+                                dataReader["cCourseCode"].ToString().Trim()
                                 )
                             ));
                 }
