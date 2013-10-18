@@ -23,8 +23,8 @@ namespace SLReports.ReportCard
         }
 
         #region Globals (Standard colors and fonts)
-        public static String ReportCardDatabase = LSKYCommon.dbConnectionString_SchoolLogicTest;
-        //public static String ReportCardDatabase = LSKYCommon.dbConnectionString_SchoolLogic;
+        //public static String ReportCardDatabase = LSKYCommon.dbConnectionString_SchoolLogicTest;
+        public static String ReportCardDatabase = LSKYCommon.dbConnectionString_SchoolLogic;
 
         private static iTextSharp.text.Image lskyLogo = iTextSharp.text.Image.GetInstance(@"https://sldata.lskysd.ca/SLReports/lsky_logo_text.png");
 
