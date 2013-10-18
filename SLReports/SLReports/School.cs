@@ -73,7 +73,7 @@ namespace SLReports
         }
 
 
-        public static School loadThisSchool(SqlConnection connection, int schoolID)
+        public static School loadThisSchool(SqlConnection connection, int schoolGovID)
         {
             School returnMe = null;
 
@@ -82,7 +82,36 @@ namespace SLReports
                 SqlCommand sqlCommand = new SqlCommand();
                 sqlCommand.Connection = connection;
                 sqlCommand.CommandType = CommandType.Text;
-                sqlCommand.CommandText = "SELECT * FROM LSKY_LSKYSchools WHERE govID=" + schoolID + ";";
+                sqlCommand.CommandText = "SELECT * FROM LSKY_LSKYSchools WHERE govID=" + schoolGovID + ";";
+                sqlCommand.Connection.Open();
+                SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
+
+                if (dbDataReader.HasRows)
+                {
+                    while (dbDataReader.Read())
+                    {
+                        returnMe = new School(dbDataReader["name"].ToString(), dbDataReader["internalID"].ToString(), dbDataReader["govID"].ToString(), dbDataReader["address"].ToString());
+                    }
+                }
+
+                sqlCommand.Connection.Close();
+            }
+            catch { }
+
+            return returnMe;
+        }
+
+        public static School loadThisSchool(SqlConnection connection, string schoolGovID)
+        {
+            School returnMe = null;
+
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand();
+                sqlCommand.Connection = connection;
+                sqlCommand.CommandType = CommandType.Text;
+                sqlCommand.CommandText = "SELECT * FROM LSKY_LSKYSchools WHERE govID=@GOVID;";
+                sqlCommand.Parameters.AddWithValue("@GOVID", schoolGovID);
                 sqlCommand.Connection.Open();
                 SqlDataReader dbDataReader = sqlCommand.ExecuteReader();
 

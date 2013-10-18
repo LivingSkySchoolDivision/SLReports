@@ -88,6 +88,7 @@
     <Content Include="FirstClassOfTheDay\index.aspx" />
     <Content Include="GovXML\enrollment.aspx" />
     <Content Include="GovXML\index.aspx" />
+    <Content Include="GradeBook\StudentIETasks.aspx" />
     <Content Include="icon_3d.gif" />
     <Content Include="icon_doc.gif" />
     <Content Include="icon_file_locked.gif" />
@@ -303,6 +304,13 @@
     </Compile>
     <Compile Include="FirstClassOfTheDay\index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="GradeBook\StudentIETasks.aspx.cs">
+      <DependentUpon>StudentIETasks.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GradeBook\StudentIETasks.aspx.designer.cs">
+      <DependentUpon>StudentIETasks.aspx</DependentUpon>
     </Compile>
     <Compile Include="INAC\INAC_CSV.aspx.cs">
       <DependentUpon>INAC_CSV.aspx</DependentUpon>
@@ -620,6 +628,8 @@
     <Compile Include="StudentStatuses\StatusesOnSameDay.aspx.designer.cs">
       <DependentUpon>StatusesOnSameDay.aspx</DependentUpon>
     </Compile>
+    <Compile Include="StudentTask.cs" />
+    <Compile Include="StudentTaskMark.cs" />
     <Compile Include="Teacher.cs" />
     <Compile Include="Term.cs" />
     <Compile Include="Testing.aspx.cs">
