@@ -43,6 +43,8 @@ namespace SLReports
         private string reserveHouse;
         private string treatyStatusNo;
 
+        public string parkingPermit { get; set; }
+
         public string aborigStatus { get; set; }
         public string language { get; set; }
 
@@ -316,7 +318,7 @@ namespace SLReports
             string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
             string phone, string gender, string instat, string instatcode, string homeRm, DateTime inDate, DateTime dateOfBirth, 
             string bandNo, string bandName, string reserveName, string reserveHouse, string treatyStatus, bool resideonreserve,
-            int trackid, bool hasPhoto, string ldapusername, int credits, int activeStatusID, string aboriginalStatus, string homeLanguage)
+            int trackid, bool hasPhoto, string ldapusername, int credits, int activeStatusID, string aboriginalStatus, string homeLanguage, string parkingPermit)
         {
             absences = new List<Absence>();
             contacts = new List<Contact>();
@@ -361,7 +363,7 @@ namespace SLReports
             this.bHasPhoto = hasPhoto;
             this.LDAPUserName = ldapusername;
             this.creditsEarned = credits;
-
+            this.parkingPermit = parkingPermit;
             this.language = homeLanguage;
             this.aborigStatus = aboriginalStatus;
         }
@@ -525,7 +527,8 @@ namespace SLReports
                             (int)credits,
                             int.Parse(dataReader["iActive_StudentStatusID"].ToString()),
                             dataReader["AboriginalStatus"].ToString().Trim(),
-                            dataReader["LanguageHome"].ToString().Trim()
+                            dataReader["LanguageHome"].ToString().Trim(),
+                            dataReader["ParkingPermit"].ToString().Trim()
                             );
                     //returnMe.setTrack(DateTime.Parse(dataReader["CurrentTrackStart"].ToString()), DateTime.Parse(dataReader["CurrentTrackEnd"].ToString()));
                 }
@@ -627,7 +630,8 @@ namespace SLReports
                             credits,
                             int.Parse(dataReader["iActive_StudentStatusID"].ToString()),
                             dataReader["AboriginalStatus"].ToString().Trim(),
-                            dataReader["LanguageHome"].ToString().Trim()
+                            dataReader["LanguageHome"].ToString().Trim(),
+                            dataReader["ParkingPermit"].ToString().Trim()
                             ));
                 }
             }
@@ -717,7 +721,8 @@ namespace SLReports
                             credits,
                             int.Parse(dataReader["iActive_StudentStatusID"].ToString()),
                             dataReader["AboriginalStatus"].ToString().Trim(),
-                            dataReader["LanguageHome"].ToString().Trim()
+                            dataReader["LanguageHome"].ToString().Trim(),
+                            dataReader["ParkingPermit"].ToString().Trim()
                             ));
                 }
             }
@@ -804,7 +809,8 @@ namespace SLReports
                             credits,
                             int.Parse(dataReader["iActive_StudentStatusID"].ToString()),
                             dataReader["AboriginalStatus"].ToString().Trim(),
-                            dataReader["LanguageHome"].ToString().Trim()
+                            dataReader["LanguageHome"].ToString().Trim(),
+                            dataReader["ParkingPermit"].ToString().Trim()
                             ));
                 }
             }
@@ -892,7 +898,8 @@ namespace SLReports
                             credits,
                             int.Parse(dataReader["iActive_StudentStatusID"].ToString()),
                             dataReader["AboriginalStatus"].ToString().Trim(),
-                            dataReader["LanguageHome"].ToString().Trim()
+                            dataReader["LanguageHome"].ToString().Trim(),
+                            dataReader["ParkingPermit"].ToString().Trim()
                             );
                     returnMe.Add(newStudent);
 

@@ -115,7 +115,7 @@ namespace SLReports.Staff
 
             panel_TablePanel.Controls.Clear();
 
-            panel_TablePanel.Controls.Add(buildStaffTable(new School("No School", "0", "0", ""), allStaff));
+            panel_TablePanel.Controls.Add(buildStaffTable(new School("No School", "0", "0", "", "default_logo.gif"), allStaff));
 
             foreach (School school in allSchools)
             {

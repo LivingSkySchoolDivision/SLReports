@@ -9,15 +9,15 @@ namespace SLReports
 {
     public class School : IComparable
     {
-        private string name;
-        private string schoolLogicID;
-        private string govID;
-
+        public string name { get; set; }
+        public string schoolLogicID { get; set; }
+        public string govID { get; set; }
         public string telephone { get; set; }
         public string email { get; set; }
         public string website { get; set; }
         public string address { get; set; }
-
+        public string logoPath { get; set; }
+        
         public string getName()
         {
             return this.name;
@@ -47,31 +47,15 @@ namespace SLReports
         {
             return this.name + "(" + govID + ")";
         }
-
-        /*
-        public School(string name, string slid, string govid)
-        {
-            this.name = name;
-            this.schoolLogicID = slid;
-            this.govID = govid;
-        }
-        */
-
-        public School(string name, string slid, string govid, string address)
+        
+        public School(string name, string slid, string govid, string address, string logoFileName)
         {
             this.name = name;
             this.schoolLogicID = slid;
             this.govID = govid;
             this.address = address;
+            this.logoPath = logoFileName;
         }
-
-        public School(string name, string slid, string govid, string phone, string email, string website)
-        {
-            this.name = name;
-            this.schoolLogicID = slid;
-            this.govID = govid;
-        }
-
 
         public static School loadThisSchool(SqlConnection connection, int schoolGovID)
         {
@@ -90,7 +74,7 @@ namespace SLReports
                 {
                     while (dbDataReader.Read())
                     {
-                        returnMe = new School(dbDataReader["name"].ToString(), dbDataReader["internalID"].ToString(), dbDataReader["govID"].ToString(), dbDataReader["address"].ToString());
+                        returnMe = new School(dbDataReader["name"].ToString(), dbDataReader["internalID"].ToString(), dbDataReader["govID"].ToString(), dbDataReader["address"].ToString(), dbDataReader["picture"].ToString());
                     }
                 }
 
@@ -119,7 +103,7 @@ namespace SLReports
                 {
                     while (dbDataReader.Read())
                     {
-                        returnMe = new School(dbDataReader["name"].ToString(), dbDataReader["internalID"].ToString(), dbDataReader["govID"].ToString(), dbDataReader["address"].ToString());
+                        returnMe = new School(dbDataReader["name"].ToString(), dbDataReader["internalID"].ToString(), dbDataReader["govID"].ToString(), dbDataReader["address"].ToString(), dbDataReader["picture"].ToString());
                     }
                 }
 
@@ -145,7 +129,7 @@ namespace SLReports
             {
                 while (dbDataReader.Read())
                 {
-                    returnMe = new School(dbDataReader["name"].ToString(), dbDataReader["internalID"].ToString(), dbDataReader["govID"].ToString(), dbDataReader["address"].ToString());
+                    returnMe = new School(dbDataReader["name"].ToString(), dbDataReader["internalID"].ToString(), dbDataReader["govID"].ToString(), dbDataReader["address"].ToString(), dbDataReader["picture"].ToString());
                 }
             }
 
@@ -172,7 +156,7 @@ namespace SLReports
                 {
                     while (dbDataReader.Read())
                     {
-                        returnMe.Add(new School(dbDataReader["name"].ToString(), dbDataReader["internalID"].ToString(), dbDataReader["govID"].ToString(), dbDataReader["address"].ToString()));
+                        returnMe.Add(new School(dbDataReader["name"].ToString(), dbDataReader["internalID"].ToString(), dbDataReader["govID"].ToString(), dbDataReader["address"].ToString(), dbDataReader["picture"].ToString()));
                     }
                 }
 

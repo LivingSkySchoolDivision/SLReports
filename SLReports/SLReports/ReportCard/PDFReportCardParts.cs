@@ -854,10 +854,32 @@ namespace SLReports.ReportCard
             float[] widths = new float[] { 50f, 400f, 50f };
             schoolNamePlateTable.SetWidths(widths);
 
-            PdfPCell schoolLogoCell = new PdfPCell();
-            schoolLogoCell.Border = 0;
-            schoolLogoCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
-            schoolNamePlateTable.AddCell(schoolLogoCell);
+            if (!string.IsNullOrEmpty(school.logoPath))
+            {
+                try
+                {
+                    iTextSharp.text.Image schoolLogo = iTextSharp.text.Image.GetInstance(@"https://sis.lskysd.ca/SchoolLogic/Images/" + school.logoPath);
+                    schoolLogo.ScaleAbsolute(50, 50);
+                    PdfPCell schoolLogoCell = new PdfPCell(schoolLogo);
+                    schoolLogoCell.Border = 0;
+                    schoolLogoCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                    schoolNamePlateTable.AddCell(schoolLogoCell);
+                }
+                catch
+                {
+                    PdfPCell schoolLogoCell = new PdfPCell();
+                    schoolLogoCell.Border = 0;
+                    schoolLogoCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                    schoolNamePlateTable.AddCell(schoolLogoCell);
+                }
+            }
+            else
+            {
+                PdfPCell schoolLogoCell = new PdfPCell();
+                schoolLogoCell.Border = 0;
+                schoolLogoCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                schoolNamePlateTable.AddCell(schoolLogoCell);
+            }            
             
             Paragraph SchoolNameParagraph = new Paragraph();
             SchoolNameParagraph.Add(new Phrase(school.getName(), font_large_bold));
@@ -872,7 +894,7 @@ namespace SLReports.ReportCard
             
             schoolNamePlateTable.AddCell(SchoolNameCell);
 
-            lskyLogo.ScalePercent(5);
+            lskyLogo.ScalePercent(4f);
             PdfPCell divisionLogoCell = new PdfPCell(lskyLogo);
             divisionLogoCell.Border = 0;
             divisionLogoCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
@@ -899,7 +921,7 @@ namespace SLReports.ReportCard
 
             if ((student == null) || (anonymize))
             {
-                student = new Student("John", "Smith", "John", "Smith", "J", "Demo", "000000000", "Demo School", "00000", "X", "Saskatchewan", "North Battleford", "Fake St", "123", "", "H0H0H0", "3065551234", "Male", "Instatus", "Instatuscode", "Homeroom Teacher", DateTime.Now.AddDays(-1), DateTime.Now, "000", "Band name", "Reserve Name", "House #", "000000000", false, 000, false, "user.name", 20, 0, "", "English");
+                student = new Student("John", "Smith", "John", "Smith", "J", "Demo", "000000000", "Demo School", "00000", "X", "Saskatchewan", "North Battleford", "Fake St", "123", "", "H0H0H0", "3065551234", "Male", "Instatus", "Instatuscode", "Homeroom Teacher", DateTime.Now.AddDays(-1), DateTime.Now, "000", "Band name", "Reserve Name", "House #", "000000000", false, 000, false, "user.name", 20, 0, "", "English", "PARKING");
             }
 
             PdfPTable nameplateTable = new PdfPTable(2);
