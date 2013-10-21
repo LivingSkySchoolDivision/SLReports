@@ -32,9 +32,7 @@
             <li>600000080 (Grade 9) Has invalid life skills - <a href="GetReportCardPDF_ByStudent.aspx?students=600000080;&reportperiods=282;&showphoto=true">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=600000080;&reportperiods=282;">Data</a></li>
             <li>11803 (Grade 12) Has life skills- <a href="GetReportCardPDF_ByStudent.aspx?students=11803;&reportperiods=282;283;&showphoto=true">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=11803;&reportperiods=282;283;">Data</a></li>
             <li>600003468 (Grade 8) Has life skills- <a href="GetReportCardPDF_ByStudent.aspx?students=600003468;&reportperiods=282;283;&showphoto=true">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=600003468;&reportperiods=282;283;">Data</a></li>
-            <li>600004389 - Math shows up twice<a href="GetReportCardPDF_ByStudent.aspx?students=600004389;&reportperiods=282;283;&showphoto=true">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=600004389;&reportperiods=282;283;">Data</a></li>
-            <li>600004295 - Health shows up twice <a href="GetReportCardPDF_ByStudent.aspx?students=600004295;&reportperiods=282;283;&showphoto=true">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=600004295;&reportperiods=282;283;">Data</a></li>
-            <li>600004268 - Has a HEALTH outcome in MATH <a href="GetReportCardPDF_ByStudent.aspx?students=600004268;&reportperiods=282;283;&showphoto=true">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=600004268;&reportperiods=282;283;">Data</a></li>
+            <li>600002057 Has report card comments- <a href="GetReportCardPDF_ByStudent.aspx?students=600002057;&reportperiods=282;283;&showphoto=true">PDF</a> <a href="GetReportCard_DEBUG.aspx?students=600002057;&reportperiods=282;283;">Data</a></li>
         </ul>
     </div>              
     </form>

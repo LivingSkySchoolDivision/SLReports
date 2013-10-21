@@ -1474,7 +1474,11 @@ namespace SLReports.ReportCard
             return attendanceTable;
         }
 
-
+        /// <summary>
+        /// Lists report period comments - also called "report CARD comments" within school logic
+        /// </summary>
+        /// <param name="comments"></param>
+        /// <returns></returns>
         private static PdfPTable reportPeriodCommentsSection(List<ReportPeriodComment> comments)
         {
             PdfPTable commentsTable = new PdfPTable(1);
@@ -1499,9 +1503,9 @@ namespace SLReports.ReportCard
                 Paragraph commentParagraph = new Paragraph();
                 if (comments.Count > 1)
                 {
-                    commentParagraph.Add(new Phrase(comment.reportPeriodName + ": ", font_body_bold));
+                    commentParagraph.Add(new Phrase(comment.reportPeriodName + ": ", font_small_bold));
                 }
-                commentParagraph.Add(new Phrase(comment.comment, font_body));
+                commentParagraph.Add(new Phrase(comment.comment, font_small));
 
                 PdfPCell commentCell = new PdfPCell(commentParagraph);
                 commentCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
