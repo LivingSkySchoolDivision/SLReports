@@ -43,7 +43,10 @@ namespace SLReports
         private string reserveHouse;
         private string treatyStatusNo;
 
+
         public string parkingPermit { get; set; }
+        public string lockerNumber { get; set; }
+        public string lockerCombination { get; set; }
 
         public string aborigStatus { get; set; }
         public string language { get; set; }
@@ -314,11 +317,12 @@ namespace SLReports
         }
 
         
-        public Student(string displayFirstName, string displayLastName, string legalfirstname, string legallastname, string legalmiddleName, string id, string govID, string schoolName, string schoolID,
-            string grade, string region, string city, string street, string houseno, string apartmentno, string postalcode,
-            string phone, string gender, string instat, string instatcode, string homeRm, DateTime inDate, DateTime dateOfBirth, 
-            string bandNo, string bandName, string reserveName, string reserveHouse, string treatyStatus, bool resideonreserve,
-            int trackid, bool hasPhoto, string ldapusername, int credits, int activeStatusID, string aboriginalStatus, string homeLanguage, string parkingPermit)
+        public Student(string displayFirstName, string displayLastName, string legalfirstname, string legallastname, string legalmiddleName, 
+            string id, string govID, string schoolName, string schoolID, string grade, string region, string city, string street, string houseno, 
+            string apartmentno, string postalcode, string phone, string gender, string instat, string instatcode, string homeRm, DateTime inDate, 
+            DateTime dateOfBirth, string bandNo, string bandName, string reserveName, string reserveHouse, string treatyStatus, bool resideonreserve,
+            int trackid, bool hasPhoto, string ldapusername, int credits, int activeStatusID, string aboriginalStatus, string homeLanguage, 
+            string parkingPermit, string lockerNum, string lockerCombo)
         {
             absences = new List<Absence>();
             contacts = new List<Contact>();
@@ -366,6 +370,8 @@ namespace SLReports
             this.parkingPermit = parkingPermit;
             this.language = homeLanguage;
             this.aborigStatus = aboriginalStatus;
+            this.lockerCombination = lockerCombo;
+            this.lockerNumber = lockerNum;
         }
 
         public string getBandNo()
@@ -528,7 +534,9 @@ namespace SLReports
                             int.Parse(dataReader["iActive_StudentStatusID"].ToString()),
                             dataReader["AboriginalStatus"].ToString().Trim(),
                             dataReader["LanguageHome"].ToString().Trim(),
-                            dataReader["ParkingPermit"].ToString().Trim()
+                            dataReader["ParkingPermit"].ToString().Trim(),
+                            dataReader["cLockerNumber"].ToString().Trim(),
+                            dataReader["cLockerCombination"].ToString().Trim()
                             );
                     //returnMe.setTrack(DateTime.Parse(dataReader["CurrentTrackStart"].ToString()), DateTime.Parse(dataReader["CurrentTrackEnd"].ToString()));
                 }
@@ -631,7 +639,9 @@ namespace SLReports
                             int.Parse(dataReader["iActive_StudentStatusID"].ToString()),
                             dataReader["AboriginalStatus"].ToString().Trim(),
                             dataReader["LanguageHome"].ToString().Trim(),
-                            dataReader["ParkingPermit"].ToString().Trim()
+                            dataReader["ParkingPermit"].ToString().Trim(),
+                            dataReader["cLockerNumber"].ToString().Trim(),
+                            dataReader["cLockerCombination"].ToString().Trim()
                             ));
                 }
             }
@@ -722,7 +732,9 @@ namespace SLReports
                             int.Parse(dataReader["iActive_StudentStatusID"].ToString()),
                             dataReader["AboriginalStatus"].ToString().Trim(),
                             dataReader["LanguageHome"].ToString().Trim(),
-                            dataReader["ParkingPermit"].ToString().Trim()
+                            dataReader["ParkingPermit"].ToString().Trim(),
+                            dataReader["cLockerNumber"].ToString().Trim(),
+                            dataReader["cLockerCombination"].ToString().Trim()
                             ));
                 }
             }
@@ -810,7 +822,9 @@ namespace SLReports
                             int.Parse(dataReader["iActive_StudentStatusID"].ToString()),
                             dataReader["AboriginalStatus"].ToString().Trim(),
                             dataReader["LanguageHome"].ToString().Trim(),
-                            dataReader["ParkingPermit"].ToString().Trim()
+                            dataReader["ParkingPermit"].ToString().Trim(),
+                            dataReader["cLockerNumber"].ToString().Trim(),
+                            dataReader["cLockerCombination"].ToString().Trim()
                             ));
                 }
             }
@@ -899,7 +913,9 @@ namespace SLReports
                             int.Parse(dataReader["iActive_StudentStatusID"].ToString()),
                             dataReader["AboriginalStatus"].ToString().Trim(),
                             dataReader["LanguageHome"].ToString().Trim(),
-                            dataReader["ParkingPermit"].ToString().Trim()
+                            dataReader["ParkingPermit"].ToString().Trim(),
+                            dataReader["cLockerNumber"].ToString().Trim(),
+                            dataReader["cLockerCombination"].ToString().Trim()
                             );
                     returnMe.Add(newStudent);
 
