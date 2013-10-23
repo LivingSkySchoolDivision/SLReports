@@ -172,7 +172,7 @@ namespace SLReports.Photos
 
             if ((StudNum.ToLower() == "blank") || (StudNum.ToLower() == "demo"))
             {
-                displayPhoto(createBlankPhoto("No Photo"), "image/png");
+                displayPhoto(createBlankPhoto("Photo"), "image/png");
             } 
             else 
             {
@@ -200,12 +200,14 @@ namespace SLReports.Photos
                                 }
                                 else
                                 {
+                                    // student has no photo
                                     displayPhoto(createBlankPhoto("Student has no photo"), "image/png");
                                 }
                             }
                         }
                         else
                         {
+                            // Student not found
                             displayPhoto(createBlankPhoto("Student not found"), "image/png");
                         }
 
@@ -213,7 +215,8 @@ namespace SLReports.Photos
                 }
                 else
                 {
-                    displayPhoto(createBlankPhoto("No student specified"), "image/png");
+                    // Student not specified
+                    displayPhoto(createBlankPhoto("Photo"), "image/png");
                 }
             }
 

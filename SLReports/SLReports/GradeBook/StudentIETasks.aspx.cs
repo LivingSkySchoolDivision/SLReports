@@ -90,7 +90,7 @@ namespace SLReports.GradeBook
             if (!IsPostBack)
             {
                 List<School> allSchools = new List<School>();
-                using (SqlConnection connection = new SqlConnection(LSKYCommon.dbConnectionString_SchoolLogicTest))
+                using (SqlConnection connection = new SqlConnection(LSKYCommon.dbConnectionString_SchoolLogic))
                 {
                     allSchools = School.loadAllSchools(connection);
                 }
@@ -109,7 +109,7 @@ namespace SLReports.GradeBook
         {            
             List<StudentTaskMark> allTaskMarks = new List<StudentTaskMark>();
             List<Student> allStudents = new List<Student>();
-            using (SqlConnection connection = new SqlConnection(LSKYCommon.dbConnectionString_SchoolLogicTest))
+            using (SqlConnection connection = new SqlConnection(LSKYCommon.dbConnectionString_SchoolLogic))
             {
                 School selectedSchool = School.loadThisSchool(connection, drpSchools.SelectedValue);
 

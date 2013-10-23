@@ -921,7 +921,7 @@ namespace SLReports.ReportCard
 
             if ((student == null) || (anonymize))
             {
-                student = new Student("John", "Smith", "John", "Smith", "J", "Demo", "000000000", "Demo School", "00000", "X", "Saskatchewan", "North Battleford", "Fake St", "123", "", "H0H0H0", "3065551234", "Male", "Instatus", "Instatuscode", "Homeroom Teacher", DateTime.Now.AddDays(-1), DateTime.Now, "000", "Band name", "Reserve Name", "House #", "000000000", false, 000, false, "user.name", 20, 0, "", "English", "PARKING", "LOCKER", "COMBINATION");
+                student = new Student("John", "Smith", "John", "Smith", "J", "Demo", "000000000", "Demo School", "00000", student.getGradeFormatted(), "Saskatchewan", "North Battleford", "Fake St", "123", "", "H0H0H0", "3065551234", "Male", "Instatus", "Instatuscode", "Homeroom Teacher", DateTime.Now.AddDays(-1), DateTime.Now, "000", "Band name", "Reserve Name", "House #", "000000000", false, 000, false, "user.name", 20, 0, "", "English", "PARKING", "LOCKER", "COMBINATION");
             }
 
             PdfPTable nameplateTable = new PdfPTable(2);
@@ -940,7 +940,7 @@ namespace SLReports.ReportCard
             PdfPCell photoCell = new PdfPCell(new Phrase("", font_large_italic));
             if (showPhotos)
             {
-                if (student.hasPhoto())
+                if (student.hasPhoto() || anonymize)
                 {
                     try
                     {
@@ -973,11 +973,7 @@ namespace SLReports.ReportCard
             }
 
             studentInformation.Add("Grade", student.getGradeFormatted());
-
-            if (student.creditsEarned > 0)
-            {
-                studentInformation.Add("Credits Earned", student.creditsEarned.ToString());
-            }
+                       
                         
             PdfPTable studentInfoTable = new PdfPTable(2);
             float[] studentInfoTableWidths = new float[] { 115f, 235f };
@@ -1501,7 +1497,7 @@ namespace SLReports.ReportCard
         /// </summary>
         /// <param name="comments"></param>
         /// <returns></returns>
-        private static PdfPTable reportPeriodCommentsSection(List<ReportPeriodComment> comments)
+        private static PdfPTable reportPeriodCommentsSection(List<ReportPeriodComment> comments, bool anon)
         {
             PdfPTable commentsTable = new PdfPTable(1);
             commentsTable.HorizontalAlignment = 1;
@@ -1527,7 +1523,15 @@ namespace SLReports.ReportCard
                 {
                     commentParagraph.Add(new Phrase(comment.reportPeriodName + ": ", font_small_bold));
                 }
-                commentParagraph.Add(new Phrase(comment.comment, font_small));
+
+                if (anon)
+                {
+                    commentParagraph.Add(new Phrase(LSKYCommon.getRandomLipsumString(), font_small));
+                }
+                else
+                {
+                    commentParagraph.Add(new Phrase(comment.comment, font_small));
+                }
 
                 PdfPCell commentCell = new PdfPCell(commentParagraph);
                 commentCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
@@ -2781,7 +2785,7 @@ namespace SLReports.ReportCard
                 // Report period comments (called "Report Card Comments" in SchoolLogic)
                 if (student.ReportPeriodComments.Count > 0)
                 {
-                    ReportCard.Add(PDFReportCardParts.reportPeriodCommentsSection(student.ReportPeriodComments));
+                    ReportCard.Add(PDFReportCardParts.reportPeriodCommentsSection(student.ReportPeriodComments, anonymize));
                 }
 
                 // Attendance summary
@@ -2790,10 +2794,7 @@ namespace SLReports.ReportCard
                     ReportCard.Add(PDFReportCardParts.attendanceSummaryByClassName(student));
                 }
                 ReportCard.Add(PDFReportCardParts.attendanceSummaryByPeriod(student));
-
-                // Report period comments (if applicable)
-                // TODO
-
+                
                 PageEventHandler.ResetPageNumbers(ReportCard);
             }
 
