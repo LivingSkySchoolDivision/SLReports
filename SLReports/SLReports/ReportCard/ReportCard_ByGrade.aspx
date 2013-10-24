@@ -33,6 +33,14 @@
                             <asp:TableCell VerticalAlign="Top"><b>Show student photos.</b></asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
+                            <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkClassAttendance" runat="server" Checked="true"/></asp:TableCell>
+                            <asp:TableCell Width="400" VerticalAlign="Top"><b>Show attendance summaries for each class</b><br />This will add short attendance summaries with each class, showing lates and absences. This will only apply to tracks that are set up for period attendance - this option is ignored if the track is set for daily attendance.</asp:TableCell>
+                        </asp:TableRow>
+                        <asp:TableRow>
+                            <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkShowLegend" runat="server" Checked="true"/></asp:TableCell>
+                            <asp:TableCell Width="400" VerticalAlign="Top"><b>Show legends on front page</b><br />Show a brief explanation of what outcome marks and "Life Skills" / "Successful Learner Behavior" marks mean.</asp:TableCell>
+                        </asp:TableRow>
+                        <asp:TableRow>
                             <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkAnonymize" runat="server" /></asp:TableCell>
                             <asp:TableCell Width="400" VerticalAlign="Top"><b>Anonymize data</b><br />Hide personal information from students, and show placeholder data instead.</asp:TableCell>
                         </asp:TableRow>

@@ -131,7 +131,6 @@
     <Content Include="ReportCard\index.aspx" />
     <Content Include="ReportCard\ReportCard_ByGrade.aspx" />
     <Content Include="ReportCard\ReportCard_ByStudent.aspx" />
-    <Content Include="ReportCard\ReportCard_Demo.aspx" />
     <Content Include="ReportPeriods\ReportPeriodList.aspx" />
     <Content Include="ReportPeriods\ReportPeriodsByDate.aspx" />
     <Content Include="SaskSubmitted\index.aspx" />
@@ -431,13 +430,6 @@
     </Compile>
     <Compile Include="ReportCard\ReportCard_ByStudent.aspx.designer.cs">
       <DependentUpon>ReportCard_ByStudent.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="ReportCard\ReportCard_Demo.aspx.cs">
-      <DependentUpon>ReportCard_Demo.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ReportCard\ReportCard_Demo.aspx.designer.cs">
-      <DependentUpon>ReportCard_Demo.aspx</DependentUpon>
     </Compile>
     <Compile Include="SchoolClass.cs" />
     <Compile Include="Courses\index.aspx.cs">

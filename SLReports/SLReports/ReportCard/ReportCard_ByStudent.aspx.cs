@@ -394,11 +394,14 @@ namespace SLReports.ReportCard
             if (chkDoubleSidedMode.Checked)
                 doublesided = true;
 
+            bool showClassAttendance = true;
+            bool showLegends = true;
+
             //Response.Redirect("GetReportCardPDF_ByStudent.aspx?students=" + studentList.ToString() + "&reportperiods=" + reportPeriodList.ToString() + "&debug=true");
             String fileName = "ReportCards_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
             if ((final_reportPeriods.Count > 0) && (final_students.Count > 0))
             {
-                sendPDF(PDFReportCardParts.GeneratePDF(final_students, final_reportPeriods, anonymize, showPhotos, doublesided), fileName);
+                sendPDF(PDFReportCardParts.GeneratePDF(final_students, final_reportPeriods, anonymize, showPhotos, doublesided, showClassAttendance, showLegends), fileName);
             } 
 
         }

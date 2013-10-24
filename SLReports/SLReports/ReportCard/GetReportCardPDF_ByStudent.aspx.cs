@@ -53,15 +53,27 @@ namespace SLReports.ReportCard
             }
 
             bool showPhoto = false;
-            if (!string.IsNullOrEmpty(Request.QueryString["showphoto"]))
+            if ((!string.IsNullOrEmpty(Request.QueryString["showphoto"])) || (!string.IsNullOrEmpty(Request.QueryString["showphotos"])))
             {
                 showPhoto = true;
-            } 
-            
+            }
+
             bool doubleSided = false;
             if (!string.IsNullOrEmpty(Request.QueryString["doublesided"]))
             {
                 doubleSided = true;
+            }
+
+            bool showClassAttendance = false;
+            if (!string.IsNullOrEmpty(Request.QueryString["showclassattendance"]))
+            {
+                showClassAttendance = true;
+            }
+
+            bool showLegends = false;
+            if ((!string.IsNullOrEmpty(Request.QueryString["showlegends"])) || (!string.IsNullOrEmpty(Request.QueryString["showlegend"])))
+            {
+                showLegends = true;
             } 
 
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
@@ -117,7 +129,7 @@ namespace SLReports.ReportCard
 
             if ((selectedReportPeriods.Count > 0) && (displayedStudents.Count > 0))
             {
-                sendPDF(PDFReportCardParts.GeneratePDF(displayedStudents, selectedReportPeriods, anonymize, showPhoto, doubleSided), fileName);
+                sendPDF(PDFReportCardParts.GeneratePDF(displayedStudents, selectedReportPeriods, anonymize, showPhoto, doubleSided, showClassAttendance, showLegends), fileName);
             }
         
 
