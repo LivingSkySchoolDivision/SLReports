@@ -18,8 +18,8 @@
         <br /><br />        
         <h1>Examples of students with specific data (For development purposes)</h1>
         <ul style="font-size: 14pt;">             
-            <li>Student with invalid life skills values - (<a href="GetReportCardPDF_ByStudent.aspx?students=600000080;&reportperiods=282;&showphoto=true&anon=true">Anonymized PDF</a>) (<a href="GetReportCardPDF_ByStudent.aspx?students=600000080;&reportperiods=282;&showphoto=true">Actual PDF</a>) (<a href="GetReportCard_DEBUG.aspx?students=600000080;&reportperiods=282;">Data</a>)</li>
-            <li>Student with a report card comment - (<a href="GetReportCardPDF_ByStudent.aspx?students=600002057;&reportperiods=282;283;&showphoto=true&anon=true">Anonymized PDF</a>) (<a href="GetReportCardPDF_ByStudent.aspx?students=600002057;&reportperiods=282;283;&showphoto=true">Actual PDF</a>) (<a href="GetReportCard_DEBUG.aspx?students=600002057;&reportperiods=282;283;">Data</a>)</li>
+            <li>Student with invalid life skills values - (<a href="GetReportCardPDF_ByStudent.aspx?students=600000080;&reportperiods=282;&showphoto=true&anon=true&showphoto=true">Anonymized PDF</a>) (<a href="GetReportCardPDF_ByStudent.aspx?students=600000080;&reportperiods=282;&showphoto=true&showphoto=true">Actual PDF</a>) (<a href="GetReportCard_DEBUG.aspx?students=600000080;&reportperiods=282;">Data</a>)</li>
+            <li>Student with a report card comment - (<a href="GetReportCardPDF_ByStudent.aspx?students=600002057;&reportperiods=282;283;&showphoto=true&anon=true&showphoto=true">Anonymized PDF</a>) (<a href="GetReportCardPDF_ByStudent.aspx?students=600002057;&reportperiods=282;283;&showphoto=true&showphoto=true">Actual PDF</a>) (<a href="GetReportCard_DEBUG.aspx?students=600002057;&reportperiods=282;283;">Data</a>)</li>
         </ul>
     </div>              
     </form>

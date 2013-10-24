@@ -2793,7 +2793,10 @@ namespace SLReports.ReportCard
                 {
                     ReportCard.Add(PDFReportCardParts.attendanceSummaryByClassName(student));
                 }
-                ReportCard.Add(PDFReportCardParts.attendanceSummaryByPeriod(student));
+                else
+                {
+                    ReportCard.Add(PDFReportCardParts.attendanceSummaryByPeriod(student));
+                }
                 
                 PageEventHandler.ResetPageNumbers(ReportCard);
             }
