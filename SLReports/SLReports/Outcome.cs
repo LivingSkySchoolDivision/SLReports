@@ -32,6 +32,7 @@ namespace SLReports
             this.courseCode = courseCode;
         }
 
+        
         public static List<Outcome> loadObjectivesForThisCourse(SqlConnection connection, SchoolClass course)
         {
             List<Outcome> returnMe = new List<Outcome>();
@@ -134,6 +135,25 @@ namespace SLReports
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Checks to see if the marks are not null/zero
+        /// </summary>
+        /// <returns></returns>
+        public bool hasValidMarks()
+        {
+            bool returnMe = false;
+
+            foreach (OutcomeMark mark in this.marks)
+            {
+                if ((!string.IsNullOrEmpty(mark.cMark)) || (mark.nMark > 0)) 
+                {
+                    returnMe = true;
+                }
+            }
+
+            return returnMe;
         }
 
         public override string ToString()
