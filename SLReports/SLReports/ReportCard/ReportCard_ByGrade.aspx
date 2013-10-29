@@ -29,7 +29,7 @@
                             <asp:TableCell Width="400" VerticalAlign="Top"><b>Format for printing on both sides of the page.</b><br />This will add extra pages to the end of report cards, when necesary, to ensure that one report card does not start on the back of the previous report card.</asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
-                            <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkShowPhotos" runat="server" Checked="true"/></asp:TableCell>
+                            <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkShowPhotos" runat="server" Checked="false"/></asp:TableCell>
                             <asp:TableCell VerticalAlign="Top"><b>Show student photos.</b></asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
@@ -41,7 +41,7 @@
                             <asp:TableCell Width="400" VerticalAlign="Top"><b>Show legends on front page</b><br />Show a brief explanation of what outcome marks and "Life Skills" / "Successful Learner Behavior" marks mean.</asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
-                            <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkAnonymize" runat="server" /></asp:TableCell>
+                            <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkAnonymize" runat="server" Checked="false" /></asp:TableCell>
                             <asp:TableCell Width="400" VerticalAlign="Top"><b>Anonymize data</b><br />Hide personal information from students, and show placeholder data instead.</asp:TableCell>
                         </asp:TableRow>
                     </asp:Table>
