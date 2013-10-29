@@ -188,7 +188,7 @@ namespace SLReports.ReportCard
 
 
             if (Single.TryParse(value, out parsedValue))
-            {
+            {                
                 Single percentFill = parsedValue / maxvalue;
                 BaseColor fillColor = GetFillColor(parsedValue);
                 borderColor = GetBorderColor(parsedValue);
@@ -367,8 +367,6 @@ namespace SLReports.ReportCard
                     canvas.MoveTo((float)(width * 0.25) * 3, (float)CanvasPaddingY);
                     canvas.LineTo((float)(width * 0.25) * 3, (float)height + CanvasPaddingY);
                     canvas.Stroke();
-
-                    
                 }
                 else
                 {
@@ -2956,7 +2954,7 @@ namespace SLReports.ReportCard
                     else
                     {
                         determinedBarStyle_Outcomes = OutcomeBarStyle.Slider;
-                        determinedBarStyle_LifeSkills = OutcomeBarStyle.Table;
+                        determinedBarStyle_LifeSkills = OutcomeBarStyle.LifeSkills;
                     }
                 }
 
