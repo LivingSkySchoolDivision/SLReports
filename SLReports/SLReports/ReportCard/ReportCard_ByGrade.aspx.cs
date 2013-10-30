@@ -224,11 +224,15 @@ namespace SLReports.ReportCard
                         if (chkShowLegend.Checked)
                             showLegends = true;
 
+                        bool showAttendanceSummary = false;
+                        if (chkShowAttendanceSummary.Checked)
+                            showAttendanceSummary = true;
+
                         // Send the report card
                         String fileName = "ReportCards_" + LSKYCommon.removeSpaces(selectedSchool.getName()) + "_Grade" + selectedGrade + "_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
                         if ((selectedReportPeriods.Count > 0) && (selectedStudents.Count > 0))
-                        {                            
-                            sendPDF(PDFReportCardParts.GeneratePDF(selectedStudents, selectedReportPeriods, anonymize, showPhotos, doubleSidedMode, showClassAttendance, showLegends), fileName);                            
+                        {
+                            sendPDF(PDFReportCardParts.GeneratePDF(selectedStudents, selectedReportPeriods, anonymize, showPhotos, doubleSidedMode, showClassAttendance, showLegends, showAttendanceSummary), fileName);                            
                         }
                     }
                 }

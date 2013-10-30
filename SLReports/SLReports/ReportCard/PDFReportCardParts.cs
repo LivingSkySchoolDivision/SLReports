@@ -30,6 +30,7 @@ namespace SLReports.ReportCard
         private static iTextSharp.text.Image lskyLogo = iTextSharp.text.Image.GetInstance(@"https://sldata.lskysd.ca/SLReports/lsky_logo_text.png");
 
         // Database to use (so we can switch it easily for testing)
+        //public static String ReportCardDatabase = LSKYCommon.dbConnectionString_SchoolLogic;
         public static String ReportCardDatabase = LSKYCommon.dbConnectionString_SchoolLogic;
         
         // Common Fonts
@@ -44,14 +45,11 @@ namespace SLReports.ReportCard
         private static Font font_small_bold = FontFactory.GetFont("Verdana", 8, Font.BOLD, BaseColor.BLACK);
         private static Font font_small_bold_white = FontFactory.GetFont("Verdana", 8, Font.BOLD, BaseColor.WHITE);
         private static Font font_small_italic = FontFactory.GetFont("Verdana", 8, Font.ITALIC, BaseColor.BLACK);
-        private static Font font_very_small = FontFactory.GetFont("Verdana", 5, BaseColor.BLACK);
-        private static Font font_very_small_bold = FontFactory.GetFont("Verdana", 5, Font.BOLD, BaseColor.BLACK);       
+        private static Font font_very_small = FontFactory.GetFont("Verdana", 6, BaseColor.BLACK);
+        private static Font font_very_small_bold = FontFactory.GetFont("Verdana", 6, Font.BOLD, BaseColor.BLACK);       
               
-        // ==== Spacing ====
-
         // Spacing between different sections of the page
-        const int standardElementSpacing = 8;
-        
+        const int standardElementSpacing = 8;       
         
         #endregion
 
@@ -138,11 +136,11 @@ namespace SLReports.ReportCard
         /// <param name="content">A PdfContentByte object for the document</param>
         /// <param name="value">The value of the outcome mark to display</param>
         /// <returns></returns>
-        private static iTextSharp.text.Image displayOutcomeBar(PdfContentByte content, String value, OutcomeBarStyle style = OutcomeBarStyle.Slider)
+        private static iTextSharp.text.Image displayOutcomeBar(PdfContentByte content, String value, OutcomeBarStyle style, bool shortStrings = false)
         {
             if (style == OutcomeBarStyle.JustNumber)
             {
-                return outcomeBar_JustNumber(content, value);
+                return outcomeBar_JustNumber(content, value, shortStrings);
             }
             else if (style == OutcomeBarStyle.Minimal)
             {
@@ -715,7 +713,7 @@ namespace SLReports.ReportCard
             return iTextSharp.text.Image.GetInstance(canvas); ;
         }
 
-        public static iTextSharp.text.Image outcomeBar_JustNumber(PdfContentByte content, String value, bool fillBackground = false)
+        public static iTextSharp.text.Image outcomeBar_JustNumber(PdfContentByte content, String value, bool shortStrings = false, bool fillBackground = false)
         {
             int width = 125;
             int height = 25; // This should be an "odd" number, so that things centered vertically are actually centered
@@ -723,27 +721,37 @@ namespace SLReports.ReportCard
             int CanvasPaddingX = 1;
             int CanvasPaddingY = 1;
 
-            int rectancleCurveRadius = 2;
-
-            string barContent = value;
-
             BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
             PdfTemplate canvas = content.CreateTemplate(width + 2, height + 2);
             canvas.SetFontAndSize(bf, 14);
-
-            if (value.ToLower() == "ie")
+            string barContent = value;
+            if (!shortStrings)
             {
-                canvas.SetFontAndSize(bf, 10);
-                barContent = "Insufficient Evidence";
-                barWidth = width;
+                if (value.ToLower() == "ie")
+                {
+                    width = 125;
+                    canvas = content.CreateTemplate(width + 2, height + 2);
+                    canvas.SetFontAndSize(bf, 10);
+                    barContent = "Insufficient Evidence";
+                    width = 125;
+                    barWidth = width;
+                }
+
+                if (value.ToLower() == "nym")
+                {
+                    width = 125;
+                    canvas = content.CreateTemplate(width + 2, height + 2);
+                    canvas.SetFontAndSize(bf, 10);
+                    barContent = "Not Yet Meeting";
+                    barWidth = width;
+                }
             }
 
-            if (value.ToLower() == "nym")
-            {
-                canvas.SetFontAndSize(bf, 10);
-                barContent = "Not Yet Meeting";
-                barWidth = width;
-            }            
+            int rectancleCurveRadius = 2;
+
+
+
+            
 
             // Colors
             BaseColor borderColor = new BaseColor(0.7f, 0.7f, 0.7f, 0.5f);
@@ -1801,7 +1809,7 @@ namespace SLReports.ReportCard
             outcomeLegendTable.TotalWidth = 250;
             outcomeLegendTable.LockedWidth = true;
 
-            float[] widths = new float[] { 1.25f, 0.75f };
+            float[] widths = new float[] { 1.35f, 0.65f };
             outcomeLegendTable.SetWidths(widths);
 
             PdfPCell Cell_Title = new PdfPCell(new Phrase("Achievement Legend", font_legend_title));
@@ -1834,9 +1842,9 @@ namespace SLReports.ReportCard
                 Cell_LegendItemTitle.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
                 Cell_LegendItemTitle.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
                 outcomeLegendTable.AddCell(Cell_LegendItemTitle);
-                             
+
+                //PdfPCell Cell_Bar = new PdfPCell();
                 PdfPCell Cell_Bar = new PdfPCell();
-                //Cell_Bar = new PdfPCell(displayOutcomeBar(content, item.Value, barStyle));
                 Cell_Bar.AddElement(displayOutcomeBar(content, item.Value, barStyle));
                 Cell_Bar.Border = 0;            
                 Cell_Bar.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
@@ -2050,9 +2058,7 @@ namespace SLReports.ReportCard
 
             return legendTable;
         }
-
         
-
         /// <summary>
         /// The "Outcome" sub-section of a class section - this is called for each outcome that has marks
         /// </summary>
@@ -2062,37 +2068,59 @@ namespace SLReports.ReportCard
         /// <param name="barStyle"></param>
         /// <returns></returns>
         private static PdfPCell outcomeChunk(Outcome outcome, SchoolClass course, PdfContentByte content, OutcomeBarStyle barStyle = OutcomeBarStyle.Slider)
-        {                      
-            int ObjectivesTableDebuggingBorder = 0;
+        {   
+            int ObjectivesTableDebuggingBorder = Rectangle.NO_BORDER;
 
             // The container for this objective
-            PdfPTable objectiveChunkTable = new PdfPTable(3);                        
+            PdfPTable objectiveChunkTable = new PdfPTable(2);
+            objectiveChunkTable.KeepTogether = false;
+            objectiveChunkTable.SetWidths(new float[] { 5f, 1f });
+
+            // Add an extra column if this outcome has more than one mark, so we can display the report period the mark came from
+            if (outcome.marks.Count > 1)
+            {
+                objectiveChunkTable = new PdfPTable(3);
+                objectiveChunkTable.KeepTogether = false;
+                objectiveChunkTable.SetWidths(new float[] { 4.25f, 0.75f, 1f });
+            }
            
             if (outcome.marks.Count > 0)
-            {                    
-                PdfPCell objectiveMarksCell = new PdfPCell();
-
-                // Set up the description cell
+            {   
+                // Outcome Description
                 PdfPCell objectiveDescriptionCell = new PdfPCell();
-
+                objectiveDescriptionCell.Rowspan = outcome.marks.Count;
                 String outcomeDescription = outcome.notes;
-
-                objectiveDescriptionCell.AddElement(new Phrase(outcomeDescription, font_small));                
-                objectiveDescriptionCell.Border = ObjectivesTableDebuggingBorder;
-                //objectiveDescriptionCell.PaddingBottom = 7;
+                objectiveDescriptionCell.AddElement(new Paragraph(outcomeDescription, font_small));                
+                objectiveDescriptionCell.Border = ObjectivesTableDebuggingBorder;                
                 objectiveDescriptionCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
                 objectiveDescriptionCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+                objectiveDescriptionCell.PaddingLeft = 5;
+                objectiveChunkTable.AddCell(objectiveDescriptionCell);
+                               
 
-                // Set up the marks cell
-                PdfPTable marksTable = new PdfPTable(2);                
-                float[] marksTableWidths = new float[] { 1f, 3f };
-                marksTable.SetWidths(marksTableWidths);
+
+                // Marks                
+                PdfPCell objectiveMarksCell = new PdfPCell();
 
                 foreach (OutcomeMark objectivemark in outcome.marks)
                 {
+                    // If there is more than 1 mark for this outcome, display a report period in a new cell (otherwise this cell doesn't exist)
+                    if (outcome.marks.Count > 1)
+                    {
+                        PdfPCell reportPeriodCell = new PdfPCell(new Paragraph(objectivemark.reportPeriod.name + ":", font_very_small));
+                        reportPeriodCell.Border = ObjectivesTableDebuggingBorder;
+                        reportPeriodCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
+                        reportPeriodCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+                        objectiveChunkTable.AddCell(reportPeriodCell);
+                    }
+
+
+                    // Display the mark
                     PdfPCell markCell = new PdfPCell();
 
                     // Figure out which mark to display here
+                    #region Determine which mark to display and how to display it
+
                     bool displayNMark = false; // If this is false, display the cMark instead
 
                     // k-9 always uses the cMark
@@ -2114,13 +2142,19 @@ namespace SLReports.ReportCard
                     {
                         // If nMark is 1-4, display it as an outcome bar
                         if ((objectivemark.nMark >= 1) && (objectivemark.nMark <= 4)) {
+
                             // Display as an outcome bar
+
+                            // Strings instead of number test
+                            //PdfPCell Temp_MarkCell = new PdfPCell(new Phrase(LSKYCommon.getOutcomeString(objectivemark.cMark), font_body_bold));
+
                             PdfPCell Temp_MarkCell = new PdfPCell();
+                            Temp_MarkCell.AddElement((displayOutcomeBar(content, objectivemark.cMark, barStyle)));
+
                             Temp_MarkCell.Border = ObjectivesTableDebuggingBorder;
-                            Temp_MarkCell.Padding = 0;
+                            Temp_MarkCell.Padding = 2;
                             Temp_MarkCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
                             Temp_MarkCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
-                            Temp_MarkCell.AddElement((displayOutcomeBar(content, objectivemark.cMark, barStyle)));
                             markCell = Temp_MarkCell;
 
                         } else {
@@ -2139,18 +2173,24 @@ namespace SLReports.ReportCard
                         if (!string.IsNullOrEmpty(objectivemark.cMark))
                         {
                             // Display an outcome bar
+                            
+                            // Strings instead of number test
+                            //PdfPCell Temp_MarkCell = new PdfPCell(new Phrase(LSKYCommon.getOutcomeString(objectivemark.cMark), font_body_bold));
+
                             PdfPCell Temp_MarkCell = new PdfPCell();
+                            Temp_MarkCell.AddElement((displayOutcomeBar(content, objectivemark.cMark, barStyle)));                            
+
                             Temp_MarkCell.Border = ObjectivesTableDebuggingBorder;
                             Temp_MarkCell.Padding = 0;
                             Temp_MarkCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
                             Temp_MarkCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
-                            Temp_MarkCell.AddElement((displayOutcomeBar(content, objectivemark.cMark, barStyle)));
+                            
                             markCell = Temp_MarkCell;
                         }
                         else
                         {
                             // Display an empty cell or an error
-                            PdfPCell Temp_ReportPeriodCell = new PdfPCell(displayOutcomeBar(content, "NO MARK", barStyle));
+                            PdfPCell Temp_ReportPeriodCell = new PdfPCell(new Phrase("-", font_body_bold));
                             Temp_ReportPeriodCell.Border = ObjectivesTableDebuggingBorder;
                             Temp_ReportPeriodCell.Padding = 2;
                             Temp_ReportPeriodCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
@@ -2159,43 +2199,19 @@ namespace SLReports.ReportCard
                             
                         }
                     }
+                    #endregion
 
-                    // Display the report period
-                    Paragraph reportPeriodParagraph = new Paragraph();
-                    if (outcome.marks.Count > 1)
-                    {
-                        reportPeriodParagraph.Add(new Phrase(objectivemark.reportPeriod.name + ":", font_very_small_bold));
-                    }
+                    objectiveChunkTable.AddCell(markCell);
 
-                    PdfPCell reportPeriodCell = new PdfPCell(reportPeriodParagraph);
-                    reportPeriodCell.Padding = 2;
-                    reportPeriodCell.PaddingLeft = 10;
-                    reportPeriodCell.Border = ObjectivesTableDebuggingBorder;
-                    reportPeriodCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
-                    reportPeriodCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
-                        
-                    marksTable.AddCell(reportPeriodCell);
-                    marksTable.AddCell(markCell);
                 }
 
                 objectiveMarksCell.Border = ObjectivesTableDebuggingBorder;
                 objectiveMarksCell.Padding = 0;
-                objectiveMarksCell.AddElement(marksTable);
-
-                // Build the final table to return
-                objectiveChunkTable.KeepTogether = false;
-                float[] objectivesTableWidths = new float[] { 0.05f, 4.65f, 1.75f };
-
-                // Add a buffer between objectives
-                PdfPCell bufferCell = new PdfPCell();
-                bufferCell.Border = ObjectivesTableDebuggingBorder;
-                objectiveChunkTable.AddCell(bufferCell);
-
-                objectiveChunkTable.AddCell(objectiveDescriptionCell);
+                objectiveMarksCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
+                objectiveMarksCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                objectiveMarksCell.AddElement(objectiveChunkTable);
                 objectiveChunkTable.AddCell(objectiveMarksCell);
-                //objectiveChunkTable.AddCell(marksTable);
-
-                objectiveChunkTable.SetWidths(objectivesTableWidths); 
+                                
             }                       
             
 
@@ -2375,6 +2391,7 @@ namespace SLReports.ReportCard
             Font font_class_section_titles = FontFactory.GetFont("Verdana", 10, Font.BOLD, BaseColor.BLACK);
             Font font_class_title = FontFactory.GetFont("Verdana", 14, Font.BOLD, BaseColor.BLACK);
             Font font_class_teacher = FontFactory.GetFont("Verdana", 8, BaseColor.BLACK);
+            Font font_numeric_mark = FontFactory.GetFont("Verdana", 12, Font.NORMAL, BaseColor.BLACK);
             
             // Table that the whole "class" will be displayed in
             PdfPTable classTable = new PdfPTable(2);            
@@ -2417,25 +2434,7 @@ namespace SLReports.ReportCard
             classTitleCell.Padding = 0;
             classTitleCell.SetLeading(0, 1.25f);
             classTitleCell.PaddingLeft = 0;
-            classTitleTable.AddCell(classTitleCell);
-
-            // *********************************
-            // * Teacher name cell
-            // *********************************
-            /*
-            PdfPCell classTeacherCell = new PdfPCell(new Phrase(course.teacherName, font_small));
-            if (anonymize)
-            {
-                classTeacherCell = new PdfPCell(new Phrase("Mr. Teacher", font_small));
-            }            
-            classTeacherCell.Border = 0;
-            classTeacherCell.SetLeading(0, 1.25f);
-            classTeacherCell.Padding = 0;
-            classTeacherCell.PaddingLeft = 0;            
-            classTitleTable.AddCell(classTeacherCell);
-
-            */
-
+            classTitleTable.AddCell(classTitleCell);    
 
             PdfPCell classTitleTableContainer = new PdfPCell(classTitleTable);
             classTitleTableContainer.Border = 0;
@@ -2448,29 +2447,7 @@ namespace SLReports.ReportCard
             // *********************************
 
             #region Course marks
-
-            /*
-             - k-9: always use the cMark
-              - if cMark is null, ignore
-              - k-9 classes never have class marks, only outcomes with marks
-
-             - 10-12:
-              - if nMark is non-zero, display nMark
-	            - If an nMark is between 1 and 4, display as a number bar, otherwise display as a percent
-
-              - if nMark is zero, check cMark
-	            - if cMark is null, then this mark is invalid so ignore it
-  	            - if cMark is 'IE', display 'IE'
-  	            - if cMark is 'NYM', display 'NYM'
-  	            - if cMark is none of the above, display the cMark (as a number bar)
-
-             - 10-12
-               - if nMark is non-zero, display nMark (check for number bar)
-               - if nMark is 0, display 'IE'            
-             */
             
-            // Display the class mark
-
             // Create a blank cell that we can use later
             PdfPCell blankCell = new PdfPCell(new Paragraph(""));
             blankCell.Border = 0;
@@ -2480,10 +2457,18 @@ namespace SLReports.ReportCard
             // Should we even display a mark at all? Don't display if the class is k-9
             if (course.isHighSchoolLevel())
             {
+                // *********************************
+                // * High School
+                // *********************************
+
                 // Is the class outcome based? If yes, only display the final report period                
                 // If the class is not outcome based, display all marks
                 if (course.hasOutcomes())
                 {
+                    // *********************************
+                    // * High School - Outcome based class
+                    // *********************************
+
                     // Only display the final report period of the term (in percents)
                     if (course.term.FinalReportPeriod != null)
                     {
@@ -2515,7 +2500,7 @@ namespace SLReports.ReportCard
 
                                     // Display the mark as an outcome bar
                                     PdfPTable embeddedMarkTable = new PdfPTable(1);
-                                    PdfPCell markCell = new PdfPCell(displayOutcomeBar(content, finalMark.cMark, outcomeBarStyle));
+                                    PdfPCell markCell = new PdfPCell(displayOutcomeBar(content, finalMark.cMark, outcomeBarStyle, true));
                                     markCell.Border = Rectangle.BOX;
                                     markCell.BorderColor = markBoxBorderColor;
                                     markCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
@@ -2562,7 +2547,7 @@ namespace SLReports.ReportCard
                             {
                                 // Display the cMark
                                 PdfPTable embeddedMarkTable = new PdfPTable(1);
-                                PdfPCell markCell = new PdfPCell(displayOutcomeBar(content, finalMark.cMark, outcomeBarStyle));
+                                PdfPCell markCell = new PdfPCell(displayOutcomeBar(content, finalMark.cMark, outcomeBarStyle, true));
                                 markCell.Border = Rectangle.BOX;
                                 markCell.BorderColor = markBoxBorderColor;
                                 markCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
@@ -2608,6 +2593,10 @@ namespace SLReports.ReportCard
                 }
                 else
                 {
+                    // *********************************
+                    // * High School - Not outcome based class
+                    // *********************************
+
                     // Course has no outcomes
 
                     // Display all marks from all given report periods
@@ -2668,11 +2657,11 @@ namespace SLReports.ReportCard
                                 // If the nMark exists, display it
                                 //  - if the nMark is between 1-4, it is an outcome
                                 // if the cMark 
-
+                                
                                 if (MarkForThisReportPeriod.nMark > 4)
                                 {
                                     // Display the mark as a percent
-                                    PdfPCell markCell = new PdfPCell(new Phrase(Math.Round(MarkForThisReportPeriod.nMark, 0) + "%"));
+                                    PdfPCell markCell = new PdfPCell(new Phrase(Math.Round(MarkForThisReportPeriod.nMark, 0) + "%", font_numeric_mark));
                                     markCell.Border = Rectangle.BOX;
                                     markCell.Padding = 5;
                                     markCell.PaddingBottom = 7;
@@ -2685,17 +2674,31 @@ namespace SLReports.ReportCard
                                     string markToDisplay = string.Empty;
                                     if (MarkForThisReportPeriod.nMark > 0)
                                     {
-                                        markToDisplay = MarkForThisReportPeriod.nMark.ToString();
+                                        // If the number is a whole number with decimal places, round off the decimal places
+                                        // Otherwise show one decimal place
+
+                                        decimal workingNMark = Math.Round(MarkForThisReportPeriod.nMark, 1);
+
+                                        // If the decimal is ".0", we don't need to know that, so round it to the nearest whole number.
+                                        // If there is a nonzero decimal, don't round.
+                                        if ((workingNMark % 1) == 0)
+                                        {
+                                            // Number is a whole number
+                                            workingNMark = Math.Round(MarkForThisReportPeriod.nMark, 0);
+                                        }
+
+                                        markToDisplay = workingNMark.ToString();
                                     }
                                     else
                                     {
                                         markToDisplay = MarkForThisReportPeriod.cMark;
                                     }
-
-                                    PdfPCell markCell = new PdfPCell(displayOutcomeBar(content, markToDisplay, outcomeBarStyle));
-                                    markCell.Border = 0;
+                                    
+                                    //PdfPCell markCell = new PdfPCell(displayOutcomeBar(content, markToDisplay, outcomeBarStyle, true), false);
+                                    //PdfPCell markCell = new PdfPCell(new Phrase(LSKYCommon.getOutcomeString(markToDisplay), font_numeric_mark));
+                                    PdfPCell markCell = new PdfPCell(new Phrase(markToDisplay, font_numeric_mark));
+                                    markCell.Border = Rectangle.BOX;
                                     markCell.Padding = 5;
-                                    markCell.PaddingBottom = 7;
                                     markCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
                                     embeddedMarkTable.AddCell(markCell);
                                 }
@@ -2734,6 +2737,10 @@ namespace SLReports.ReportCard
             }
             else
             {
+                // *********************************
+                // * k-9
+                // *********************************
+
                 // Class is not high school level, so there is no such thing as class marks for it
                 classTable.AddCell(blankCell);
             }
@@ -2899,7 +2906,7 @@ namespace SLReports.ReportCard
         /// <param name="outcomeBarStyle"></param>
         /// <param name="lifeSkillsBarStyle"></param>
         /// <returns></returns>
-        public static MemoryStream GeneratePDF(List<Student> students, List<ReportPeriod> reportPeriods, bool anonymize, bool showPhotos, bool doubleSidedMode, bool showClassAttendance, bool showLegends, OutcomeBarStyle outcomeBarStyle = OutcomeBarStyle.Slider, OutcomeBarStyle lifeSkillsBarStyle = OutcomeBarStyle.LifeSkills)
+        public static MemoryStream GeneratePDF(List<Student> students, List<ReportPeriod> reportPeriods, bool anonymize, bool showPhotos, bool doubleSidedMode, bool showClassAttendance, bool showLegends, bool showAttendanceSummary, OutcomeBarStyle outcomeBarStyle = OutcomeBarStyle.Slider, OutcomeBarStyle lifeSkillsBarStyle = OutcomeBarStyle.LifeSkills)
         {
             MemoryStream memstream = new MemoryStream();
             Document ReportCard = new Document(PageSize.LETTER);
@@ -3000,18 +3007,20 @@ namespace SLReports.ReportCard
                 }
 
                 // Attendance summary
-                // Display the period attendance summary always for now - in the future figure out a way to allow the user to choose
-                ReportCard.Add(PDFReportCardParts.attendanceSummaryByPeriod(student));
+                if (showAttendanceSummary)
+                {
+                    // Display the period attendance summary always for now - in the future figure out a way to allow the user to choose
+                    ReportCard.Add(PDFReportCardParts.attendanceSummaryByPeriod(student));
 
-                //if (!student.track.daily)
-                //{
+                    //if (!student.track.daily)
+                    //{
                     //ReportCard.Add(PDFReportCardParts.attendanceSummaryByClassName(student, true));
-                //}
-                //else
-                //{
-                //ReportCard.Add(PDFReportCardParts.attendanceSummaryByPeriod(student));
-                //}
-                
+                    //}
+                    //else
+                    //{
+                    //ReportCard.Add(PDFReportCardParts.attendanceSummaryByPeriod(student));
+                    //}
+                }
                 PageEventHandler.ResetPageNumbers(ReportCard);
             }
 

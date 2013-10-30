@@ -103,13 +103,13 @@ namespace SLReports.ReportCard {
         protected global::System.Web.UI.WebControls.CheckBox chkDoubleSidedMode;
         
         /// <summary>
-        /// chkShowPhotos control.
+        /// chkShowAttendanceSummary control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkShowPhotos;
+        protected global::System.Web.UI.WebControls.CheckBox chkShowAttendanceSummary;
         
         /// <summary>
         /// chkClassAttendance control.
@@ -128,6 +128,15 @@ namespace SLReports.ReportCard {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkShowLegend;
+        
+        /// <summary>
+        /// chkShowPhotos control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkShowPhotos;
         
         /// <summary>
         /// chkAnonymize control.

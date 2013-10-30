@@ -74,6 +74,12 @@ namespace SLReports.ReportCard
             if ((!string.IsNullOrEmpty(Request.QueryString["showlegends"])) || (!string.IsNullOrEmpty(Request.QueryString["showlegend"])))
             {
                 showLegends = true;
+            }
+
+            bool showAttendanceSummary = false;
+            if ((!string.IsNullOrEmpty(Request.QueryString["showattendancesummary"])) || (!string.IsNullOrEmpty(Request.QueryString["showattendancesummaries"])))
+            {
+                showAttendanceSummary = true;
             } 
 
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
@@ -129,7 +135,7 @@ namespace SLReports.ReportCard
 
             if ((selectedReportPeriods.Count > 0) && (displayedStudents.Count > 0))
             {
-                sendPDF(PDFReportCardParts.GeneratePDF(displayedStudents, selectedReportPeriods, anonymize, showPhoto, doubleSided, showClassAttendance, showLegends), fileName);
+                sendPDF(PDFReportCardParts.GeneratePDF(displayedStudents, selectedReportPeriods, anonymize, showPhoto, doubleSided, showClassAttendance, showLegends, showAttendanceSummary), fileName);
             }
         
 

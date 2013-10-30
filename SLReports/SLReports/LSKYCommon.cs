@@ -127,7 +127,53 @@ namespace SLReports
             return DateTime.Now.Year + "_" + DateTime.Now.Month + "_" + DateTime.Now.Day + "_" + DateTime.Now.Hour + "_" + DateTime.Now.Minute;
         }
 
-        
+        /// <summary>
+        /// Converts an outcome number into a description of what the outcome number means
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string getOutcomeString(string outcomeValue)
+        {
+            decimal value = -1;
+            if (decimal.TryParse(outcomeValue, out value))
+            {
+                if (value == (decimal)1)
+                {
+                    return "Beginning";
+                }
+                else if (value == (decimal)1.5)
+                {
+                    return "Beginning+";
+                }
+                else if (value == (decimal)2)
+                {
+                    return "Approaching";
+                }
+                else if (value == (decimal)2.5)
+                {
+                    return "Approaching+";
+                }
+                else if (value == (decimal)3)
+                {
+                    return "Proficient";
+                }
+                else if (value == (decimal)3.5)
+                {
+                    return "Proficient+";
+                }
+                else if (value == (decimal)4)
+                {
+                    return "Master";
+                }
+                else if (value == 0)
+                {
+                    return "Insufficient Evidence";
+                }                
+            }
+
+            return outcomeValue;            
+        }
+
         /// <summary>
         /// Loads mark data for a student for report cards. Loads terms, report periods, enrolled classes, class marks, outcomes, outcome marks, and attendance
         /// </summary>
@@ -313,7 +359,21 @@ namespace SLReports
                                 classMarks_Outcomes.Add(om);
 
                                 // While we are iterating through the list, derive a list of outcomes from the outcome marks, since we didn't load one earlier
-                                classNormalOutcomes.Add(om.outcome);
+
+                                // Check to see if this outcome exists already
+                                bool outcomeExists = false;
+                                foreach (Outcome o in classNormalOutcomes)
+                                {
+                                    if (o.id == om.outcome.id)
+                                    {
+                                        outcomeExists = true;
+                                        o.marks.Add(om);
+                                    }
+                                }
+                                if (!outcomeExists)
+                                {
+                                    classNormalOutcomes.Add(om.outcome);
+                                }                                
                             }                            
                         }
 
