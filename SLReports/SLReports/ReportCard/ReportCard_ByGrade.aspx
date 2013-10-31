@@ -53,7 +53,7 @@
             </asp:TableRow>
             <asp:TableRow ID="tblrow_Options2" Visible="false">
                 <asp:TableCell VerticalAlign="Top">
-                    <b>Administrative Comment</b><br /><p style="font-size: 8pt;">The contents of this text box are added to every report card.</p>
+                    <b>Administrative Comment</b><br /><p style="font-size: 8pt;">The contents of this text box are added to the bottom of the last page of every report card..</p>
                 </asp:TableCell>                
                 <asp:TableCell ColumnSpan="2">                    
                     <asp:TextBox id="txtAdminComment" runat="server" TextMode="MultiLine" Height="150" Width="100%" Wrap="false" CssClass="large_text_area"></asp:TextBox>

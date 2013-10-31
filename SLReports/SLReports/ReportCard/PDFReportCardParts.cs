@@ -1124,7 +1124,6 @@ namespace SLReports.ReportCard
 
         }
 
-
         /// <summary>
         /// Title of the document - this section displays that this is a progress report, and what date ranges are covered in the report
         /// </summary>
@@ -1160,10 +1159,11 @@ namespace SLReports.ReportCard
             reportNamePlateTable.SpacingAfter = standardElementSpacing + 5;            
 
             Paragraph reportName = new Paragraph();
-            reportName.Add(new Phrase("Progress report for", font_title));
+            reportName.Add(new Phrase("Progress report", font_title));
             reportName.Add(Chunk.NEWLINE);
-            reportName.Add(new Phrase(earliestDate.ToLongDateString(), font_date_bold));
-            reportName.Add(new Phrase(" to ", font_date));
+            //reportName.Add(new Phrase(earliestDate.ToLongDateString(), font_date_bold));            
+            //reportName.Add(new Phrase(" to ", font_date));
+            //reportName.Add(new Phrase("Report period ending ", font_date));
             reportName.Add(new Phrase(latestDate.ToLongDateString(), font_date_bold));
 
             PdfPCell reportNameCell = new PdfPCell(reportName);

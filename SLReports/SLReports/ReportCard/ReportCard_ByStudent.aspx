@@ -7,8 +7,8 @@
         <asp:Table ID="Table1" runat="server">
             <asp:TableRow>
                 <asp:TableCell VerticalAlign="Top" Width="200"><b>Choose a school</b></asp:TableCell>
-                <asp:TableCell VerticalAlign="Top"><asp:DropDownList ID="drpSchools" runat="server"></asp:DropDownList></asp:TableCell>
-                <asp:TableCell VerticalAlign="Top"><asp:Button ID="btnSchool" runat="server" Text="Select School" OnClick="btnSchool_Click" /></asp:TableCell>
+                <asp:TableCell VerticalAlign="Top" Width="400"><asp:DropDownList ID="drpSchools" runat="server"></asp:DropDownList></asp:TableCell>
+                <asp:TableCell VerticalAlign="Top" Width="100"><asp:Button ID="btnSchool" runat="server" Text="Select School" OnClick="btnSchool_Click" /></asp:TableCell>
             </asp:TableRow>
             <asp:TableRow ID="tblrow_Grade" Visible="false">
                 <asp:TableCell VerticalAlign="Top"><b>Choose a student</b></asp:TableCell>
@@ -53,7 +53,7 @@
             </asp:TableRow>
             <asp:TableRow ID="tblrow_Options2" Visible="false">
                 <asp:TableCell VerticalAlign="Top">
-                    <b>Administrative Comment</b><br /><p style="font-size: 8pt;">The contents of this text box are added to every report card.</p>
+                    <b>Administrative Comment</b><br /><p style="font-size: 8pt;">The contents of this text box are added to the bottom of the last page of every report card.</p>
                 </asp:TableCell>                
                 <asp:TableCell ColumnSpan="2">                    
                     <asp:TextBox id="txtAdminComment" runat="server" TextMode="MultiLine" Height="150" Width="100%" Wrap="false" CssClass="large_text_area"></asp:TextBox>
