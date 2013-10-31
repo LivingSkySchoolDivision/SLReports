@@ -3,6 +3,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Main" runat="server">
     <h2>Report Cards: Individual Student</h2>
+    <p style="font-size: 8pt;">(<a href="ReportCard_ByGrade.aspx">Click here to create report cards a grade level at a time</a>)</p>
     <form id="Form1" runat="server">
         <asp:Table ID="Table1" runat="server">
             <asp:TableRow>
@@ -16,7 +17,9 @@
                 <asp:TableCell VerticalAlign="Top"><asp:Button ID="btnGrade" runat="server" Text="Select Student" OnClick="btnStudent_Click" /></asp:TableCell>
             </asp:TableRow>
             <asp:TableRow ID="tblrow_ReportPeriod" Visible="false">
-                <asp:TableCell VerticalAlign="Top"><b>Choose report periods</b><br /><p style="font-size: 8pt;">Place a check beside each report period that should show up on the report card.</p></asp:TableCell>
+                <asp:TableCell VerticalAlign="Top"><b>Choose report periods</b><br />
+                    <p style="font-size: 8pt;">Place a check beside each report period that should show up on the report card.</p>
+                </asp:TableCell>
                 <asp:TableCell VerticalAlign="Top"><asp:CheckBoxList ID="chkReportPeriods" runat="server"></asp:CheckBoxList><br /><br /></asp:TableCell>
                 <asp:TableCell VerticalAlign="Top"></asp:TableCell>
             </asp:TableRow>

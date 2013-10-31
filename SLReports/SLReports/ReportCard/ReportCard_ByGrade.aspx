@@ -3,12 +3,13 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Main" runat="server">
     <h2>Report Cards: By Grade</h2>
+    <p style="font-size: 8pt;">(<a href="ReportCard_ByStudent.aspx">Click here to create a report card for an individual student</a>)</p>
     <form runat="server">
         <asp:Table ID="Table1" runat="server">
             <asp:TableRow>
                 <asp:TableCell VerticalAlign="Top" Width="200"><b>Choose a school</b></asp:TableCell>
-                <asp:TableCell VerticalAlign="Top"><asp:DropDownList ID="drpSchools" runat="server"></asp:DropDownList></asp:TableCell>
-                <asp:TableCell VerticalAlign="Top"><asp:Button ID="btnSchool" runat="server" Text="Select School" OnClick="btnSchool_Click" /></asp:TableCell>
+                <asp:TableCell VerticalAlign="Top" Width="400"><asp:DropDownList ID="drpSchools" runat="server"></asp:DropDownList></asp:TableCell>
+                <asp:TableCell VerticalAlign="Top" Width="100"><asp:Button ID="btnSchool" runat="server" Text="Select School" OnClick="btnSchool_Click" /></asp:TableCell>
             </asp:TableRow>
             <asp:TableRow ID="tblrow_Grade" Visible="false">
                 <asp:TableCell VerticalAlign="Top"><b>Choose a grade</b></asp:TableCell>
