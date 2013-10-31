@@ -14,7 +14,7 @@ namespace SLReports.ReportCard
         // So that the database can be quickly changed
         //string sqlConnectionString = LSKYCommon.dbConnectionString_SchoolLogic;
         string sqlConnectionString = PDFReportCardParts.ReportCardDatabase;
-        
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -33,13 +33,13 @@ namespace SLReports.ReportCard
                     newItem.Value = school.getGovID().ToString();
                     drpSchools.Items.Add(newItem);
                 }
-            }   
+            }
         }
 
         protected void btnSchool_Click(object sender, EventArgs e)
         {
             drpGrades.Items.Clear();
-            
+
             // Parse the selected school ID
             int schoolID = -1;
             if (int.TryParse(drpSchools.SelectedValue, out schoolID))
@@ -75,7 +75,7 @@ namespace SLReports.ReportCard
                 tblrow_Options.Visible = false;
                 tblrow_Options2.Visible = false;
                 tblrow_Options3.Visible = false;
-                
+
             }
         }
 
@@ -96,9 +96,9 @@ namespace SLReports.ReportCard
                 }
 
                 if (selectedSchool != null)
-                {                                        
+                {
                     // Get some report periods to display
-                    List<Track> schoolTracks = new List<Track>();                    
+                    List<Track> schoolTracks = new List<Track>();
                     List<ReportPeriod> schoolReportPeriod = new List<ReportPeriod>();
                     using (SqlConnection connection = new SqlConnection(sqlConnectionString))
                     {
@@ -134,7 +134,7 @@ namespace SLReports.ReportCard
                     tblrow_Options2.Visible = true;
                     tblrow_Options3.Visible = true;
                 }
-            
+
             }
 
         }
@@ -156,8 +156,8 @@ namespace SLReports.ReportCard
                     if (selectedSchool != null)
                     {
                         // Load all students
-                        List<Student> schoolStudents = new List<Student>();                        
-                        schoolStudents = Student.loadStudentsFromThisSchool(connection, schoolID);                        
+                        List<Student> schoolStudents = new List<Student>();
+                        schoolStudents = Student.loadStudentsFromThisSchool(connection, schoolID);
 
                         // Filter out the ones for that grade
                         List<Student> selectedStudents = new List<Student>();
@@ -181,7 +181,7 @@ namespace SLReports.ReportCard
                             if (item.Selected)
                             {
                                 int parsedValue = -1;
-                                if (int.TryParse(item.Value, out parsedValue)) 
+                                if (int.TryParse(item.Value, out parsedValue))
                                 {
                                     if (!selectedReportPeriodIDs.Contains(parsedValue))
                                     {
@@ -204,7 +204,7 @@ namespace SLReports.ReportCard
                         List<Student> studentsWithMarks = new List<Student>();
                         foreach (Student student in selectedStudents)
                         {
-                            studentsWithMarks.Add(LSKYCommon.loadStudentMarkData(connection, student, selectedReportPeriods));                            
+                            studentsWithMarks.Add(LSKYCommon.loadStudentMarkData(connection, student, selectedReportPeriods));
                         }
 
                         // Options
@@ -238,11 +238,11 @@ namespace SLReports.ReportCard
                         String fileName = "ReportCards_" + LSKYCommon.removeSpaces(selectedSchool.getName()) + "_Grade" + selectedGrade + "_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
                         if ((selectedReportPeriods.Count > 0) && (selectedStudents.Count > 0))
                         {
-                            sendPDF(PDFReportCardParts.GeneratePDF(selectedStudents, selectedReportPeriods, anonymize, showPhotos, doubleSidedMode, showClassAttendance, showLegends, showAttendanceSummary, adminComment), fileName);                            
+                            sendPDF(PDFReportCardParts.GeneratePDF(selectedStudents, selectedReportPeriods, anonymize, showPhotos, doubleSidedMode, showClassAttendance, showLegends, showAttendanceSummary, adminComment), fileName);
                         }
                     }
                 }
-            }    
+            }
 
         }
 

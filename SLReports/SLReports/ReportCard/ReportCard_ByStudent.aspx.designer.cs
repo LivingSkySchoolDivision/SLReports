@@ -13,49 +13,13 @@ namespace SLReports.ReportCard {
     public partial class ReportCard_ByStudent {
         
         /// <summary>
-        /// tbl_Step1 control.
+        /// Form1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Table tbl_Step1;
-        
-        /// <summary>
-        /// drpSchools control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList drpSchools;
-        
-        /// <summary>
-        /// btn_Step1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btn_Step1;
-        
-        /// <summary>
-        /// tbl_Step2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Table tbl_Step2;
-        
-        /// <summary>
-        /// lblSelectedSchool control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSelectedSchool;
+        protected global::System.Web.UI.HtmlControls.HtmlForm Form1;
         
         /// <summary>
         /// Table1 control.
@@ -67,103 +31,76 @@ namespace SLReports.ReportCard {
         protected global::System.Web.UI.WebControls.Table Table1;
         
         /// <summary>
-        /// tblRow_StudentsByFirstName control.
+        /// drpSchools control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TableRow tblRow_StudentsByFirstName;
+        protected global::System.Web.UI.WebControls.DropDownList drpSchools;
         
         /// <summary>
-        /// drpStudentsByFirstName control.
+        /// btnSchool control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList drpStudentsByFirstName;
+        protected global::System.Web.UI.WebControls.Button btnSchool;
         
         /// <summary>
-        /// btnByFirstName control.
+        /// tblrow_Grade control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnByFirstName;
+        protected global::System.Web.UI.WebControls.TableRow tblrow_Grade;
         
         /// <summary>
-        /// tblRow_StudentsByLastName control.
+        /// drpStudents control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TableRow tblRow_StudentsByLastName;
+        protected global::System.Web.UI.WebControls.DropDownList drpStudents;
         
         /// <summary>
-        /// drpStudentsByLastName control.
+        /// btnGrade control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList drpStudentsByLastName;
+        protected global::System.Web.UI.WebControls.Button btnGrade;
         
         /// <summary>
-        /// btnByLastName control.
+        /// tblrow_ReportPeriod control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnByLastName;
+        protected global::System.Web.UI.WebControls.TableRow tblrow_ReportPeriod;
         
         /// <summary>
-        /// tblRow_StudentsByID control.
+        /// chkReportPeriods control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TableRow tblRow_StudentsByID;
+        protected global::System.Web.UI.WebControls.CheckBoxList chkReportPeriods;
         
         /// <summary>
-        /// drpStudentsByID control.
+        /// tblrow_Options control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList drpStudentsByID;
-        
-        /// <summary>
-        /// btnByID control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnByID;
-        
-        /// <summary>
-        /// lstSelectedStudents control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBoxList lstSelectedStudents;
-        
-        /// <summary>
-        /// btnUnSelectStudents control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnUnSelectStudents;
+        protected global::System.Web.UI.WebControls.TableRow tblrow_Options;
         
         /// <summary>
         /// Table2 control.
@@ -175,168 +112,6 @@ namespace SLReports.ReportCard {
         protected global::System.Web.UI.WebControls.Table Table2;
         
         /// <summary>
-        /// btn_BackToStep1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btn_BackToStep1;
-        
-        /// <summary>
-        /// btn_Step2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btn_Step2;
-        
-        /// <summary>
-        /// tbl_Step3 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Table tbl_Step3;
-        
-        /// <summary>
-        /// lblSelectedSchool2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSelectedSchool2;
-        
-        /// <summary>
-        /// lblSelectedStudents control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSelectedStudents;
-        
-        /// <summary>
-        /// Table4 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Table Table4;
-        
-        /// <summary>
-        /// drpReportPeriods control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList drpReportPeriods;
-        
-        /// <summary>
-        /// btnAddReportPeriod control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAddReportPeriod;
-        
-        /// <summary>
-        /// lstSelectedReportPeriods control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBoxList lstSelectedReportPeriods;
-        
-        /// <summary>
-        /// btnUnSelectReportPeriod control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnUnSelectReportPeriod;
-        
-        /// <summary>
-        /// Table3 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Table Table3;
-        
-        /// <summary>
-        /// btn_BackToStep2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btn_BackToStep2;
-        
-        /// <summary>
-        /// btn_Step3 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btn_Step3;
-        
-        /// <summary>
-        /// tbl_Step4 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Table tbl_Step4;
-        
-        /// <summary>
-        /// lblSelectedSchool3 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSelectedSchool3;
-        
-        /// <summary>
-        /// lblSelectedStudents2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSelectedStudents2;
-        
-        /// <summary>
-        /// lblSelectedReportPeriods control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSelectedReportPeriods;
-        
-        /// <summary>
-        /// Table6 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Table Table6;
-        
-        /// <summary>
         /// chkDoubleSidedMode control.
         /// </summary>
         /// <remarks>
@@ -344,6 +119,33 @@ namespace SLReports.ReportCard {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkDoubleSidedMode;
+        
+        /// <summary>
+        /// chkShowAttendanceSummary control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkShowAttendanceSummary;
+        
+        /// <summary>
+        /// chkClassAttendance control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkClassAttendance;
+        
+        /// <summary>
+        /// chkShowLegend control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkShowLegend;
         
         /// <summary>
         /// chkShowPhotos control.
@@ -364,30 +166,39 @@ namespace SLReports.ReportCard {
         protected global::System.Web.UI.WebControls.CheckBox chkAnonymize;
         
         /// <summary>
-        /// Table7 control.
+        /// tblrow_Options2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Table Table7;
+        protected global::System.Web.UI.WebControls.TableRow tblrow_Options2;
         
         /// <summary>
-        /// btn_BackToStep3 control.
+        /// txtAdminComment control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btn_BackToStep3;
+        protected global::System.Web.UI.WebControls.TextBox txtAdminComment;
         
         /// <summary>
-        /// btn_Step4 control.
+        /// tblrow_Options3 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btn_Step4;
+        protected global::System.Web.UI.WebControls.TableRow tblrow_Options3;
+        
+        /// <summary>
+        /// btnReportPeriod control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnReportPeriod;
     }
 }

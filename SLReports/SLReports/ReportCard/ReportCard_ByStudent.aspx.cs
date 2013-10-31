@@ -12,16 +12,17 @@ namespace SLReports.ReportCard
 {
     public partial class ReportCard_ByStudent : System.Web.UI.Page
     {
-        // So that the database can be quickly changed
-        string sqlConnectionString = PDFReportCardParts.ReportCardDatabase;
 
+        // So that the database can be quickly changed
+        //string sqlConnectionString = LSKYCommon.dbConnectionString_SchoolLogic;
+        string sqlConnectionString = PDFReportCardParts.ReportCardDatabase;
+        
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Load list of schools
             if (!IsPostBack)
             {
+                // Load schools
                 List<School> allSchools = new List<School>();
-
                 using (SqlConnection connection = new SqlConnection(sqlConnectionString))
                 {
                     allSchools = School.loadAllSchools(connection);
@@ -29,171 +30,71 @@ namespace SLReports.ReportCard
 
                 foreach (School school in allSchools)
                 {
-                    if (school != null)
-                    {
-                        ListItem newItem = new ListItem();
-                        newItem.Text = school.getName();
-                        newItem.Value = school.getGovIDAsString();
-                        drpSchools.Items.Add(newItem);
-                    }
+                    ListItem newItem = new ListItem();
+                    newItem.Text = school.getName();
+                    newItem.Value = school.getGovID().ToString();
+                    drpSchools.Items.Add(newItem);
                 }
             }
         }
 
-        /// <summary>
-        /// Selects a school and then loads students into the dropdown lists
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void btnStep1_Click(object sender, EventArgs e)
+        protected void btnSchool_Click(object sender, EventArgs e)
         {
-            List<Student> schoolStudents = new List<Student>();
-            schoolStudents.Clear();
+            drpStudents.Items.Clear();
 
-            lstSelectedStudents.Items.Clear();
-
-            drpStudentsByID.Items.Clear();
-            drpStudentsByFirstName.Items.Clear();
-            drpStudentsByLastName.Items.Clear();
-
-            // Validate the input, just in case
-            int schoolID = 0;
-            if (int.TryParse(drpSchools.SelectedValue, out schoolID)) 
+            // Parse the selected school ID
+            int schoolID = -1;
+            if (int.TryParse(drpSchools.SelectedValue, out schoolID))
             {
+                // Load all students
+                List<Student> schoolStudents = new List<Student>();
                 using (SqlConnection connection = new SqlConnection(sqlConnectionString))
                 {
-                    // Load students
-                    School selectedSchool = School.loadThisSchool(connection, schoolID);                    
-                    if (selectedSchool != null) 
-                    {
-                        lblSelectedSchool.Text = selectedSchool.getName();
-                        lblSelectedSchool2.Text = selectedSchool.getName();
-
-                        schoolStudents = Student.loadStudentsFromThisSchool(connection, selectedSchool.getGovID());
-                        foreach (Student student in schoolStudents)
-                        {
-                            ListItem newStudentItemByFirstName = new ListItem();
-                            newStudentItemByFirstName.Text = student.getFirstName() + " " + student.getLastName() + " (" + student.getStudentID() + ")";
-                            newStudentItemByFirstName.Value = student.getStudentID();
-                            drpStudentsByFirstName.Items.Add(newStudentItemByFirstName);
-
-                            ListItem newStudentItemByLastName = new ListItem();
-                            newStudentItemByLastName.Text = student.getLastName() + ", " + student.getFirstName() + " (" + student.getStudentID() + ")"; ;
-                            newStudentItemByLastName.Value = student.getStudentID();
-                            drpStudentsByLastName.Items.Add(newStudentItemByLastName);
-
-                            ListItem newStudentItemByID = new ListItem();
-                            newStudentItemByID.Text = student.getStudentID() + " " + student.getDisplayName();
-                            newStudentItemByID.Value = student.getStudentID();
-                            drpStudentsByID.Items.Add(newStudentItemByID);
-
-                            tbl_Step1.Visible = false;
-                            tbl_Step2.Visible = true;
-                        
-                        }
-                    }               
-                }                
-            }
-        }
-
-        private Student findStudentByID(List<Student> haystack, string id)
-        {
-            foreach (Student student in haystack)
-            {
-                if (student.getStudentID() == id)
-                {
-                    return student;
+                    schoolStudents = Student.loadStudentsFromThisSchool(connection, schoolID);
                 }
-            }
-            return null;
-        }
 
-        private void pickStudent(ListItem item) 
-        {
-            /*
-            List<ListItem> currentItems = new List<ListItem>();
-            foreach (ListItem i in lstSelectedStudents.Items)
-            {
-                currentItems.Add(i);
-            }
-            
-            */
+                // Populate list of students
 
-            bool alreadyExists = false;
-            foreach (ListItem i in lstSelectedStudents.Items)
-            {
-                if (i.Value == item.Value)
+                // Get all grades               
+                foreach (Student student in schoolStudents)
                 {
-                    alreadyExists = true;
+                    ListItem newItem = new ListItem();
+                    newItem.Text = student.getLastName() + ", " + student.getFirstName() + " (" + student.getStudentID() + ")" ;
+                    newItem.Value = student.getStudentID();
+                    drpStudents.Items.Add(newItem);
                 }
+
+                tblrow_Grade.Visible = true;
+                tblrow_ReportPeriod.Visible = false;
+                tblrow_Options.Visible = false;
+                tblrow_Options2.Visible = false;
+                tblrow_Options3.Visible = false;
+
             }
+        }
 
-            if (!alreadyExists)
+        protected void btnStudent_Click(object sender, EventArgs e)
+        {
+            chkReportPeriods.Items.Clear();
+            // Parse the selected school ID
+            int schoolID = -1;
+            if (int.TryParse(drpSchools.SelectedValue, out schoolID))
             {
-                item.Selected = false;
-                lstSelectedStudents.Items.Add(item);
-            }            
-        }
-
-        protected void btnByFirstName_Click(object sender, EventArgs e)
-        {
-            pickStudent(drpStudentsByFirstName.SelectedItem);
-            
-        }
-        protected void btnByLastName_Click(object sender, EventArgs e)
-        {
-            pickStudent(drpStudentsByLastName.SelectedItem);
-            //lstSelectedStudents.Items.Add(drpStudentsByLastName.SelectedItem);
-        }
-
-        protected void btnByID_Click(object sender, EventArgs e)
-        {
-            pickStudent(drpStudentsByID.SelectedItem);
-            //lstSelectedStudents.Items.Add(drpStudentsByID.SelectedItem);
-        }
-
-        protected void btnUnSelectStudents_Click(object sender, EventArgs e)
-        {
-            List<ListItem> newItems = new List<ListItem>();
-
-            foreach (ListItem item in lstSelectedStudents.Items)
-            {
-                if (!item.Selected)
+                School selectedSchool = null;
+                using (SqlConnection connection = new SqlConnection(sqlConnectionString))
                 {
-                    newItems.Add(item);
+                    // Load the school
+                    selectedSchool = School.loadThisSchool(connection, schoolID);
                 }
-            }
 
-            lstSelectedStudents.Items.Clear();
-
-            foreach (ListItem item in newItems)
-            {
-                lstSelectedStudents.Items.Add(item);
-            }
-        }        
-
-        protected void btn_BackToStep1_Click(object sender, EventArgs e)
-        {
-            lstSelectedStudents.Items.Clear();
-            tbl_Step1.Visible = true;
-            tbl_Step2.Visible = false;
-        }
-
-        protected void btn_Step2_Click(object sender, EventArgs e)
-        {
-            // Only proceed if there are students selected
-            if (lstSelectedStudents.Items.Count > 0)
-            {
-                lblSelectedStudents.Text = "(" + lstSelectedStudents.Items.Count + ") students selected";
-
-                // Get selected school
-                int schoolID = 0;
-                if (int.TryParse(drpSchools.SelectedValue, out schoolID)) 
+                if (selectedSchool != null)
                 {
+                    // Get some report periods to display
+                    List<Track> schoolTracks = new List<Track>();
+                    List<ReportPeriod> schoolReportPeriod = new List<ReportPeriod>();
                     using (SqlConnection connection = new SqlConnection(sqlConnectionString))
                     {
-                        School selectedSchool = School.loadThisSchool(connection, schoolID);
-                        List<Track> schoolTracks = Track.loadAllTracksFromThisSchool(connection, selectedSchool);
+                        schoolTracks = Track.loadAllTracksFromThisSchool(connection, selectedSchool);
                         foreach (Track track in schoolTracks)
                         {
                             track.terms = Term.loadTermsFromThisTrack(connection, track);
@@ -203,45 +104,137 @@ namespace SLReports.ReportCard
                             }
                         }
 
+                        schoolReportPeriod = ReportPeriod.loadReportPeriodsFromThisSchool(connection, selectedSchool);
+                    }
 
-                        drpReportPeriods.Items.Clear();
-                        foreach (Track track in schoolTracks)
+                    foreach (Track track in schoolTracks)
+                    {
+                        foreach (Term term in track.terms)
                         {
-                            if (track != null)
+                            foreach (ReportPeriod rp in term.ReportPeriods)
                             {
-                                foreach (Term term in track.terms)
+                                ListItem newItem = new ListItem();
+                                newItem.Text = track.name + " - " + term.name + " - " + rp.name;
+                                newItem.Value = rp.ID.ToString();
+                                chkReportPeriods.Items.Add(newItem);
+                            }
+                        }
+                    }
+
+                    tblrow_ReportPeriod.Visible = true;
+                    tblrow_Options.Visible = true;
+                    tblrow_Options2.Visible = true;
+                    tblrow_Options3.Visible = true;
+                }
+
+            }
+
+        }
+
+        protected void btnGenerate_Click(object sender, EventArgs e)
+        {
+
+            // Parse the selected school ID
+            int schoolID = -1;
+            if (int.TryParse(drpSchools.SelectedValue, out schoolID))
+            {
+                School selectedSchool = null;
+                using (SqlConnection connection = new SqlConnection(sqlConnectionString))
+                {
+                    // Load the school
+                    selectedSchool = School.loadThisSchool(connection, schoolID);
+
+                    if (selectedSchool != null)
+                    {
+                        // Load the selected student
+                        Student selectedStudent = Student.loadThisStudent(connection, drpStudents.SelectedValue);
+
+                        if (selectedStudent != null)
+                        {
+                            List<Student> selectedStudents = new List<Student>();
+                            selectedStudents.Add(selectedStudent);
+
+                            // Load checked report periods
+                            List<int> selectedReportPeriodIDs = new List<int>();
+                            List<ReportPeriod> selectedReportPeriods = new List<ReportPeriod>();
+
+                            foreach (ListItem item in chkReportPeriods.Items)
+                            {
+                                if (item.Selected)
                                 {
-                                    if (term != null)
+                                    int parsedValue = -1;
+                                    if (int.TryParse(item.Value, out parsedValue))
                                     {
-                                        foreach (ReportPeriod rp in term.ReportPeriods)
+                                        if (!selectedReportPeriodIDs.Contains(parsedValue))
                                         {
-                                            if (rp != null)
-                                            {
-                                                ListItem newItem = new ListItem();
-                                                newItem.Value = rp.ID.ToString();
-                                                newItem.Text = track.name + " - " + term.name + " - " + rp.name;
-                                                drpReportPeriods.Items.Add(newItem);
-                                            }
+                                            selectedReportPeriodIDs.Add(parsedValue);
                                         }
                                     }
                                 }
                             }
-                        }
 
-                        tbl_Step2.Visible = false;
-                        tbl_Step3.Visible = true;
+                            if (selectedReportPeriodIDs.Count > 0)
+                            {
+
+                                foreach (int reportPeriodID in selectedReportPeriodIDs)
+                                {
+                                    ReportPeriod loadedReportPeriod = ReportPeriod.loadThisReportPeriod(connection, reportPeriodID);
+                                    if (loadedReportPeriod != null)
+                                    {
+                                        selectedReportPeriods.Add(loadedReportPeriod);
+                                    }
+                                }
+
+                                // Load student mark data
+                                List<Student> studentsWithMarks = new List<Student>();
+                                foreach (Student student in selectedStudents)
+                                {
+                                    studentsWithMarks.Add(LSKYCommon.loadStudentMarkData(connection, student, selectedReportPeriods));
+                                }
+
+                                // Options
+                                bool doubleSidedMode = false;
+                                if (chkDoubleSidedMode.Checked)
+                                    doubleSidedMode = true;
+
+                                bool anonymize = false;
+                                if (chkAnonymize.Checked)
+                                    anonymize = true;
+
+                                bool showPhotos = false;
+                                if (chkShowPhotos.Checked)
+                                    showPhotos = true;
+
+                                bool showClassAttendance = false;
+                                if (chkClassAttendance.Checked)
+                                    showClassAttendance = true;
+
+                                bool showLegends = false;
+                                if (chkShowLegend.Checked)
+                                    showLegends = true;
+
+                                bool showAttendanceSummary = false;
+                                if (chkShowAttendanceSummary.Checked)
+                                    showAttendanceSummary = true;
+
+                                string adminComment = txtAdminComment.Text;
+
+                                // Send the report card
+                                String fileName = "ReportCards_" + selectedStudent.getStudentID() + "_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
+                                if ((selectedReportPeriods.Count > 0) && (selectedStudents.Count > 0))
+                                {
+                                    sendPDF(PDFReportCardParts.GeneratePDF(selectedStudents, selectedReportPeriods, anonymize, showPhotos, doubleSidedMode, showClassAttendance, showLegends, showAttendanceSummary, adminComment), fileName);
+                                }
+                            }
+                            else
+                            {
+                                // No report periods were selected - should display some kind of error here                                
+                            }
+                        }
                     }
                 }
             }
-        }
 
-        protected void btn_BackToStep2_Click(object sender, EventArgs e)
-        {
-            // Clear the list of report periods
-            lstSelectedReportPeriods.Items.Clear();
-
-            tbl_Step2.Visible = true;
-            tbl_Step3.Visible = false;
         }
 
         protected void sendPDF(System.IO.MemoryStream PDFData, string filename)
@@ -256,156 +249,7 @@ namespace SLReports.ReportCard
             Response.OutputStream.Write(PDFData.GetBuffer(), 0, PDFData.GetBuffer().Length);
             Response.OutputStream.Flush();
             Response.OutputStream.Close();
-            Response.End();
-        }
-
-        protected void btn_Step3_Click(object sender, EventArgs e)
-        {
-            
-            
-            
-            
-             
-        }
-
-
-        private void pickReportPeriod(ListItem item)
-        {           
-            bool alreadyExists = false;
-            foreach (ListItem i in lstSelectedReportPeriods.Items)
-            {
-                if (i.Value == item.Value)
-                {
-                    alreadyExists = true;
-                }
-            }
-
-            if (!alreadyExists)
-            {
-                item.Selected = false;
-                lstSelectedReportPeriods.Items.Add(item);
-            }
-        }
-
-        protected void btnAddReportPeriod_Click(object sender, EventArgs e)
-        {
-            pickReportPeriod(drpReportPeriods.SelectedItem);
-            
-        }
-
-        protected void btnUnSelectReportPeriod_Click(object sender, EventArgs e)
-        {
-            List<ListItem> newItems = new List<ListItem>();
-
-            foreach (ListItem item in lstSelectedReportPeriods.Items)
-            {
-                if (!item.Selected)
-                {
-                    newItems.Add(item);
-                }
-            }
-
-            lstSelectedReportPeriods.Items.Clear();
-            foreach (ListItem item in newItems)
-            {
-                lstSelectedReportPeriods.Items.Add(item);
-            }
-        }
-
-        protected void btn_BackToStep3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void btn_Step4_Click(object sender, EventArgs e)
-        {
-            // Do some validation before actually doing this
-            // Load student data for selected students
-            List<Student> final_students = new List<Student>();
-            List<ReportPeriod> final_reportPeriods = new List<ReportPeriod>();
-
-
-            using (SqlConnection connection = new SqlConnection(sqlConnectionString))
-            {
-                // We need to do a final validation on the selected items, because they come from
-                //  web forms that could have been modified in transit.
-
-                foreach (ListItem item in lstSelectedReportPeriods.Items)
-                {
-                    if (!string.IsNullOrEmpty(item.Value))
-                    {
-                        int rpID = -1;
-                        if (int.TryParse(item.Value, out rpID))
-                        {
-                            ReportPeriod thisRP = ReportPeriod.loadThisReportPeriod(connection, rpID);
-                            if (thisRP != null)
-                            {
-                                final_reportPeriods.Add(thisRP);
-                            }
-                        }
-                    }
-                }
-
-                if (final_reportPeriods.Count > 0)
-                {
-                    foreach (ListItem item in lstSelectedStudents.Items)
-                    {
-                        if (!string.IsNullOrEmpty(item.Value))
-                        {
-                            int studentID = -1;
-                            if (int.TryParse(item.Value, out studentID))
-                            {
-                                Student thisStudent = Student.loadThisStudent(connection, studentID.ToString());
-                                if (thisStudent != null)
-                                {
-                                    //final_students.Add(LSKYCommon.loadStudentMarkData(connection, thisStudent, final_reportPeriods));
-                                    final_students.Add(thisStudent);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Generate a list of student IDs
-            StringBuilder studentList = new StringBuilder();
-            foreach (Student student in final_students)
-            {
-                studentList.Append(student.getStudentID());
-                studentList.Append(";");
-            }
-
-            StringBuilder reportPeriodList = new StringBuilder();
-            foreach (ReportPeriod reportPeriod in final_reportPeriods)
-            {
-                reportPeriodList.Append(reportPeriod.ID);
-                reportPeriodList.Append(";");
-            }
-
-            bool anonymize = true;
-            if (chkAnonymize.Checked)
-                anonymize = true;
-
-            bool showPhotos = true;
-            if (chkShowPhotos.Checked)
-                showPhotos = true;
-
-            bool doublesided = true;
-            if (chkDoubleSidedMode.Checked)
-                doublesided = true;
-
-            bool showClassAttendance = true;
-            bool showLegends = true;
-            bool showAttendanceSummary = true;
-            string adminComment = string.Empty;
-
-            //Response.Redirect("GetReportCardPDF_ByStudent.aspx?students=" + studentList.ToString() + "&reportperiods=" + reportPeriodList.ToString() + "&debug=true");
-            String fileName = "ReportCards_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
-            if ((final_reportPeriods.Count > 0) && (final_students.Count > 0))
-            {
-                sendPDF(PDFReportCardParts.GeneratePDF(final_students, final_reportPeriods, anonymize, showPhotos, doublesided, showClassAttendance, showLegends, showAttendanceSummary, adminComment), fileName);
-            } 
-
+            //Response.End();
         }
     }
 }
