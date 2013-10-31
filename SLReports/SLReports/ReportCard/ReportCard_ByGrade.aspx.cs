@@ -14,7 +14,7 @@ namespace SLReports.ReportCard
         // So that the database can be quickly changed
         //string sqlConnectionString = LSKYCommon.dbConnectionString_SchoolLogic;
         string sqlConnectionString = PDFReportCardParts.ReportCardDatabase;
-
+        
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -73,6 +73,8 @@ namespace SLReports.ReportCard
                 tblrow_Grade.Visible = true;
                 tblrow_ReportPeriod.Visible = false;
                 tblrow_Options.Visible = false;
+                tblrow_Options2.Visible = false;
+                tblrow_Options3.Visible = false;
                 
             }
         }
@@ -129,6 +131,8 @@ namespace SLReports.ReportCard
 
                     tblrow_ReportPeriod.Visible = true;
                     tblrow_Options.Visible = true;
+                    tblrow_Options2.Visible = true;
+                    tblrow_Options3.Visible = true;
                 }
             
             }
@@ -228,11 +232,13 @@ namespace SLReports.ReportCard
                         if (chkShowAttendanceSummary.Checked)
                             showAttendanceSummary = true;
 
+                        string adminComment = txtAdminComment.Text;
+
                         // Send the report card
                         String fileName = "ReportCards_" + LSKYCommon.removeSpaces(selectedSchool.getName()) + "_Grade" + selectedGrade + "_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
                         if ((selectedReportPeriods.Count > 0) && (selectedStudents.Count > 0))
                         {
-                            sendPDF(PDFReportCardParts.GeneratePDF(selectedStudents, selectedReportPeriods, anonymize, showPhotos, doubleSidedMode, showClassAttendance, showLegends, showAttendanceSummary), fileName);                            
+                            sendPDF(PDFReportCardParts.GeneratePDF(selectedStudents, selectedReportPeriods, anonymize, showPhotos, doubleSidedMode, showClassAttendance, showLegends, showAttendanceSummary, adminComment), fileName);                            
                         }
                     }
                 }

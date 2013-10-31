@@ -148,6 +148,33 @@ namespace SLReports.ReportCard {
         protected global::System.Web.UI.WebControls.CheckBox chkAnonymize;
         
         /// <summary>
+        /// tblrow_Options2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TableRow tblrow_Options2;
+        
+        /// <summary>
+        /// txtAdminComment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAdminComment;
+        
+        /// <summary>
+        /// tblrow_Options3 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TableRow tblrow_Options3;
+        
+        /// <summary>
         /// btnReportPeriod control.
         /// </summary>
         /// <remarks>

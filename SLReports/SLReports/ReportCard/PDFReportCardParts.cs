@@ -2388,7 +2388,7 @@ namespace SLReports.ReportCard
             // Fonts for this section
             Font font_class_comments = FontFactory.GetFont("Verdana", 8, Font.NORMAL, BaseColor.BLACK);
             Font font_class_comments_bold = FontFactory.GetFont("Verdana", 8, Font.BOLD, BaseColor.BLACK);
-            Font font_class_section_titles = FontFactory.GetFont("Verdana", 10, Font.BOLD, BaseColor.BLACK);
+            Font font_class_section_titles = FontFactory.GetFont("Verdana", 9, Font.BOLD, BaseColor.BLACK);
             Font font_class_title = FontFactory.GetFont("Verdana", 14, Font.BOLD, BaseColor.BLACK);
             Font font_class_teacher = FontFactory.GetFont("Verdana", 8, BaseColor.BLACK);
             Font font_numeric_mark = FontFactory.GetFont("Verdana", 12, Font.NORMAL, BaseColor.BLACK);
@@ -2895,6 +2895,30 @@ namespace SLReports.ReportCard
 
         }
 
+        private static PdfPTable administrativeCommentsSection(string comments)
+        {
+            Font font_comment = FontFactory.GetFont("Verdana", 8, BaseColor.BLACK);
+
+            PdfPTable commentsTable = new PdfPTable(1);
+            commentsTable.HorizontalAlignment = 1;
+            commentsTable.TotalWidth = 500;
+            commentsTable.LockedWidth = true;
+            commentsTable.SpacingBefore = 10;
+            commentsTable.SpacingAfter = standardElementSpacing;
+            commentsTable.KeepTogether = true;
+
+            PdfPCell titleCell = new PdfPCell(new Paragraph(comments, font_comment));
+            titleCell.Border = Rectangle.TOP_BORDER;
+            titleCell.BorderColor = new BaseColor(0.6f, 0.6f, 0.6f);
+            titleCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+            titleCell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+            titleCell.Colspan = 5;
+            titleCell.PaddingBottom = 2;
+            commentsTable.AddCell(titleCell);
+            
+            return commentsTable;
+        }
+        
         /// <summary>
         /// Piece together the report card parts into a document that can be sent out
         /// </summary>
@@ -2906,7 +2930,7 @@ namespace SLReports.ReportCard
         /// <param name="outcomeBarStyle"></param>
         /// <param name="lifeSkillsBarStyle"></param>
         /// <returns></returns>
-        public static MemoryStream GeneratePDF(List<Student> students, List<ReportPeriod> reportPeriods, bool anonymize, bool showPhotos, bool doubleSidedMode, bool showClassAttendance, bool showLegends, bool showAttendanceSummary, OutcomeBarStyle outcomeBarStyle = OutcomeBarStyle.Slider, OutcomeBarStyle lifeSkillsBarStyle = OutcomeBarStyle.LifeSkills)
+        public static MemoryStream GeneratePDF(List<Student> students, List<ReportPeriod> reportPeriods, bool anonymize, bool showPhotos, bool doubleSidedMode, bool showClassAttendance, bool showLegends, bool showAttendanceSummary, string adminComments, OutcomeBarStyle outcomeBarStyle = OutcomeBarStyle.Slider, OutcomeBarStyle lifeSkillsBarStyle = OutcomeBarStyle.LifeSkills)
         {
             MemoryStream memstream = new MemoryStream();
             Document ReportCard = new Document(PageSize.LETTER);
@@ -3020,7 +3044,16 @@ namespace SLReports.ReportCard
                     //{
                     //ReportCard.Add(PDFReportCardParts.attendanceSummaryByPeriod(student));
                     //}
+
                 }
+
+                // Administrative comment
+                if (!string.IsNullOrEmpty(adminComments))
+                {
+                    ReportCard.Add(administrativeCommentsSection(adminComments));
+                }
+
+                // Reset the page numbers for the next student
                 PageEventHandler.ResetPageNumbers(ReportCard);
             }
 

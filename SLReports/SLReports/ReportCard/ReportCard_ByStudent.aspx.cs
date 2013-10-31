@@ -397,12 +397,13 @@ namespace SLReports.ReportCard
             bool showClassAttendance = true;
             bool showLegends = true;
             bool showAttendanceSummary = true;
+            string adminComment = string.Empty;
 
             //Response.Redirect("GetReportCardPDF_ByStudent.aspx?students=" + studentList.ToString() + "&reportperiods=" + reportPeriodList.ToString() + "&debug=true");
             String fileName = "ReportCards_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
             if ((final_reportPeriods.Count > 0) && (final_students.Count > 0))
             {
-                sendPDF(PDFReportCardParts.GeneratePDF(final_students, final_reportPeriods, anonymize, showPhotos, doublesided, showClassAttendance, showLegends, showAttendanceSummary), fileName);
+                sendPDF(PDFReportCardParts.GeneratePDF(final_students, final_reportPeriods, anonymize, showPhotos, doublesided, showClassAttendance, showLegends, showAttendanceSummary, adminComment), fileName);
             } 
 
         }

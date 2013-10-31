@@ -22,6 +22,10 @@
     font-size: 16pt;
 }
 
+.large_text_area {
+    border: 1px solid #777777;
+}
+
 .navigation_table_name {
     font-size: 16pt;
     padding: 5px;

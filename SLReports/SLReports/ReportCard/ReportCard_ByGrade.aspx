@@ -6,7 +6,7 @@
     <form runat="server">
         <asp:Table ID="Table1" runat="server">
             <asp:TableRow>
-                <asp:TableCell VerticalAlign="Top"><b>Choose a school</b></asp:TableCell>
+                <asp:TableCell VerticalAlign="Top" Width="200"><b>Choose a school</b></asp:TableCell>
                 <asp:TableCell VerticalAlign="Top"><asp:DropDownList ID="drpSchools" runat="server"></asp:DropDownList></asp:TableCell>
                 <asp:TableCell VerticalAlign="Top"><asp:Button ID="btnSchool" runat="server" Text="Select School" OnClick="btnSchool_Click" /></asp:TableCell>
             </asp:TableRow>
@@ -16,13 +16,13 @@
                 <asp:TableCell VerticalAlign="Top"><asp:Button ID="btnGrade" runat="server" Text="Select Grade" OnClick="btnGrade_Click" /></asp:TableCell>
             </asp:TableRow>
             <asp:TableRow ID="tblrow_ReportPeriod" Visible="false">
-                <asp:TableCell VerticalAlign="Top"><b>Choose report periods</b></asp:TableCell>
+                <asp:TableCell VerticalAlign="Top"><b>Choose report periods</b><br /><p style="font-size: 8pt;">Place a check beside each report period that should show up on the report card.</p></asp:TableCell>
                 <asp:TableCell VerticalAlign="Top"><asp:CheckBoxList ID="chkReportPeriods" runat="server"></asp:CheckBoxList><br /><br /></asp:TableCell>
                 <asp:TableCell VerticalAlign="Top"></asp:TableCell>
             </asp:TableRow>
             <asp:TableRow ID="tblrow_Options" Visible="false">
                 <asp:TableCell VerticalAlign="Top"><b>Options</b></asp:TableCell>
-                <asp:TableCell VerticalAlign="Top">
+                <asp:TableCell VerticalAlign="Top" ColumnSpan="2">
                     <asp:Table runat="server" CellPadding="5">
                         <asp:TableRow>
                             <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkDoubleSidedMode" runat="server" Checked="true"/></asp:TableCell>
@@ -49,8 +49,18 @@
                             <asp:TableCell Width="400" VerticalAlign="Top"><b>Anonymize data</b><br />Hide personal information from students, and show placeholder data instead.</asp:TableCell>
                         </asp:TableRow>
                     </asp:Table>
+                </asp:TableCell>                
+            </asp:TableRow>
+            <asp:TableRow ID="tblrow_Options2" Visible="false">
+                <asp:TableCell VerticalAlign="Top">
+                    <b>Administrative Comment</b><br /><p style="font-size: 8pt;">The contents of this text box are added to every report card.</p>
+                </asp:TableCell>                
+                <asp:TableCell ColumnSpan="2">                    
+                    <asp:TextBox id="txtAdminComment" runat="server" TextMode="MultiLine" Height="150" Width="100%" Wrap="false" CssClass="large_text_area"></asp:TextBox>
                 </asp:TableCell>
-                <asp:TableCell VerticalAlign="Bottom"><asp:Button ID="btnReportPeriod" runat="server" Text="Generate report cards" OnClick="btnReportPeriod_Click" /></asp:TableCell>
+            </asp:TableRow>
+            <asp:TableRow ID="tblrow_Options3" HorizontalAlign="Right" Visible="false">
+                <asp:TableCell ColumnSpan="3" VerticalAlign="Bottom"><asp:Button ID="btnReportPeriod" runat="server" Text="Generate report cards" OnClick="btnReportPeriod_Click" /></asp:TableCell>
             </asp:TableRow>
         </asp:Table>
     </form>    
