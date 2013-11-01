@@ -94,25 +94,30 @@ namespace SLReports
                 {
                     float nMark = -1;
                     float.TryParse(dataReader["nMark"].ToString().Trim(), out nMark);
-                    
-                    returnMe.Add(new OutcomeMark(
-                            int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
-                            int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
-                            int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
-                            int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
-                            int.Parse(dataReader["MarkCourseID"].ToString().Trim()),
-                            dataReader["cMark"].ToString().Trim(),
-                            (float)Math.Round(nMark, 1),
-                            new Outcome(
+                    string cMark = dataReader["cMark"].ToString().Trim();
+
+                    // Only load the outcome mark if it is nonzero/nonnull, since SchoolLogic neve deletes "blanked out" marks
+                    if ((nMark > 0) || (!string.IsNullOrEmpty(cMark)))
+                    {
+                        returnMe.Add(new OutcomeMark(
+                                int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
+                                int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
                                 int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
-                                int.Parse(dataReader["ObjectiveCourseID"].ToString().Trim()),
-                                dataReader["cSubject"].ToString().Trim(),
-                                dataReader["mNotes"].ToString().Trim(),
-                                dataReader["OutcomeCategory"].ToString().Trim(),
-                                dataReader["CourseName"].ToString().Trim(),
-                                dataReader["cCourseCode"].ToString().Trim()
-                                )
-                            ));
+                                int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
+                                int.Parse(dataReader["MarkCourseID"].ToString().Trim()),
+                                cMark,
+                                (float)Math.Round(nMark, 1),
+                                new Outcome(
+                                    int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
+                                    int.Parse(dataReader["ObjectiveCourseID"].ToString().Trim()),
+                                    dataReader["cSubject"].ToString().Trim(),
+                                    dataReader["mNotes"].ToString().Trim(),
+                                    dataReader["OutcomeCategory"].ToString().Trim(),
+                                    dataReader["CourseName"].ToString().Trim(),
+                                    dataReader["cCourseCode"].ToString().Trim()
+                                    )
+                                ));
+                    }
                 }
             }
 
@@ -140,25 +145,30 @@ namespace SLReports
                 {
                     float nMark = -1;
                     float.TryParse(dataReader["nMark"].ToString().Trim(), out nMark);
+                    string cMark = dataReader["cMark"].ToString().Trim();
 
-                    returnMe.Add(new OutcomeMark(
-                            int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
-                            int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
-                            int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
-                            int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
-                            int.Parse(dataReader["MarkCourseID"].ToString().Trim()),
-                            dataReader["cMark"].ToString().Trim(),
-                            (float)Math.Round(nMark, 1),
-                            new Outcome(
+                    // Only load the outcome mark if it is nonzero/nonnull, since SchoolLogic neve deletes "blanked out" marks
+                    if ((nMark > 0) || (!string.IsNullOrEmpty(cMark)))
+                    {
+                        returnMe.Add(new OutcomeMark(
+                                int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
+                                int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
                                 int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
-                                int.Parse(dataReader["ObjectiveCourseID"].ToString().Trim()),
-                                dataReader["cSubject"].ToString().Trim(),
-                                dataReader["mNotes"].ToString().Trim(),
-                                dataReader["OutcomeCategory"].ToString().Trim(),
-                                dataReader["CourseName"].ToString().Trim(),
-                                dataReader["cCourseCode"].ToString().Trim()
-                                )
-                            ));
+                                int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
+                                int.Parse(dataReader["MarkCourseID"].ToString().Trim()),
+                                cMark,
+                                (float)Math.Round(nMark, 1),
+                                new Outcome(
+                                    int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
+                                    int.Parse(dataReader["ObjectiveCourseID"].ToString().Trim()),
+                                    dataReader["cSubject"].ToString().Trim(),
+                                    dataReader["mNotes"].ToString().Trim(),
+                                    dataReader["OutcomeCategory"].ToString().Trim(),
+                                    dataReader["CourseName"].ToString().Trim(),
+                                    dataReader["cCourseCode"].ToString().Trim()
+                                    )
+                                ));
+                    }
                 }
             }
             dataReader.Close();
@@ -185,25 +195,30 @@ namespace SLReports
                 {
                     float nMark = -1;
                     float.TryParse(dataReader["nMark"].ToString().Trim(), out nMark);
+                    string cMark = dataReader["cMark"].ToString().Trim();
 
-                    returnMe.Add(new OutcomeMark(
-                            int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
-                            int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
-                            int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
-                            int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
-                            int.Parse(dataReader["MarkCourseID"].ToString().Trim()),
-                            dataReader["cMark"].ToString().Trim(),
-                            (float)Math.Round(nMark, 1),
-                            new Outcome(
+                    // Only load the outcome mark if it is nonzero/nonnull, since SchoolLogic neve deletes "blanked out" marks
+                    if ((nMark > 0) || (!string.IsNullOrEmpty(cMark)))
+                    {
+                        returnMe.Add(new OutcomeMark(
+                                int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
+                                int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
                                 int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
-                                int.Parse(dataReader["ObjectiveCourseID"].ToString().Trim()),
-                                dataReader["cSubject"].ToString().Trim(),
-                                dataReader["mNotes"].ToString().Trim(),
-                                dataReader["OutcomeCategory"].ToString().Trim(),
-                                dataReader["CourseName"].ToString().Trim(),
-                                dataReader["cCourseCode"].ToString().Trim()
-                                )
-                            ));
+                                int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
+                                int.Parse(dataReader["MarkCourseID"].ToString().Trim()),
+                                cMark,
+                                (float)Math.Round(nMark, 1),
+                                new Outcome(
+                                    int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
+                                    int.Parse(dataReader["ObjectiveCourseID"].ToString().Trim()),
+                                    dataReader["cSubject"].ToString().Trim(),
+                                    dataReader["mNotes"].ToString().Trim(),
+                                    dataReader["OutcomeCategory"].ToString().Trim(),
+                                    dataReader["CourseName"].ToString().Trim(),
+                                    dataReader["cCourseCode"].ToString().Trim()
+                                    )
+                                ));
+                    }
                 }
             }
 
@@ -247,25 +262,30 @@ namespace SLReports
                     {
                         float nMark = -1;
                         float.TryParse(dataReader["nMark"].ToString().Trim(), out nMark);
+                        string cMark = dataReader["cMark"].ToString().Trim();
 
-                        returnMe.Add(new OutcomeMark(
-                            int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
-                            int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
-                            int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
-                            int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
-                            int.Parse(dataReader["MarkCourseID"].ToString().Trim()),
-                            dataReader["cMark"].ToString().Trim(),
-                            (float)Math.Round(nMark, 1),
-                            new Outcome(
+                        // Only load the outcome mark if it is nonzero/nonnull, since SchoolLogic neve deletes "blanked out" marks
+                        if ((nMark > 0) || (!string.IsNullOrEmpty(cMark)))
+                        {
+                            returnMe.Add(new OutcomeMark(
+                                int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
+                                int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
                                 int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
-                                int.Parse(dataReader["ObjectiveCourseID"].ToString().Trim()),
-                                dataReader["cSubject"].ToString().Trim(),
-                                dataReader["mNotes"].ToString().Trim(),
-                                dataReader["OutcomeCategory"].ToString().Trim(),
-                                dataReader["CourseName"].ToString().Trim(),
-                                dataReader["cCourseCode"].ToString().Trim()
-                                )
-                            ));
+                                int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
+                                int.Parse(dataReader["MarkCourseID"].ToString().Trim()),
+                                cMark,
+                                (float)Math.Round(nMark, 1),
+                                new Outcome(
+                                    int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
+                                    int.Parse(dataReader["ObjectiveCourseID"].ToString().Trim()),
+                                    dataReader["cSubject"].ToString().Trim(),
+                                    dataReader["mNotes"].ToString().Trim(),
+                                    dataReader["OutcomeCategory"].ToString().Trim(),
+                                    dataReader["CourseName"].ToString().Trim(),
+                                    dataReader["cCourseCode"].ToString().Trim()
+                                    )
+                                ));
+                        }
                     }
                 }
                 dataReader.Close();
@@ -310,25 +330,30 @@ namespace SLReports
                     {
                         float nMark = -1;
                         float.TryParse(dataReader["nMark"].ToString().Trim(), out nMark);
+                        string cMark = dataReader["cMark"].ToString().Trim();
 
-                        returnMe.Add(new OutcomeMark(
-                            int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
-                            int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
-                            int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
-                            int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
-                            int.Parse(dataReader["MarkCourseID"].ToString().Trim()),
-                            dataReader["cMark"].ToString().Trim(),
-                            (float)Math.Round(nMark, 1),
-                            new Outcome(
+                        // Only load the outcome mark if it is nonzero/nonnull, since SchoolLogic neve deletes "blanked out" marks
+                        if ((nMark > 0) || (!string.IsNullOrEmpty(cMark)))
+                        {
+                            returnMe.Add(new OutcomeMark(
+                                int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
+                                int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
                                 int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
-                                int.Parse(dataReader["ObjectiveCourseID"].ToString().Trim()),
-                                dataReader["cSubject"].ToString().Trim(),
-                                dataReader["mNotes"].ToString().Trim(),
-                                dataReader["OutcomeCategory"].ToString().Trim(),
-                                dataReader["CourseName"].ToString().Trim(),
-                                dataReader["cCourseCode"].ToString().Trim()
-                                )
-                            ));
+                                int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
+                                int.Parse(dataReader["MarkCourseID"].ToString().Trim()),
+                                cMark,
+                                (float)Math.Round(nMark, 1),
+                                new Outcome(
+                                    int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
+                                    int.Parse(dataReader["ObjectiveCourseID"].ToString().Trim()),
+                                    dataReader["cSubject"].ToString().Trim(),
+                                    dataReader["mNotes"].ToString().Trim(),
+                                    dataReader["OutcomeCategory"].ToString().Trim(),
+                                    dataReader["CourseName"].ToString().Trim(),
+                                    dataReader["cCourseCode"].ToString().Trim()
+                                    )
+                                ));
+                        }
                     }
                 }
                 dataReader.Close();
@@ -357,25 +382,30 @@ namespace SLReports
                 {
                     float nMark = -1;
                     float.TryParse(dataReader["nMark"].ToString().Trim(), out nMark);
+                    string cMark = dataReader["cMark"].ToString().Trim();
 
-                    returnMe.Add(new OutcomeMark(
-                            int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
-                            int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
-                            int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
-                            int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
-                            int.Parse(dataReader["MarkCourseID"].ToString().Trim()),
-                            dataReader["cMark"].ToString().Trim(),
-                            (float)Math.Round(nMark, 1),
-                            new Outcome(
+                    // Only load the outcome mark if it is nonzero/nonnull, since SchoolLogic neve deletes "blanked out" marks
+                    if ((nMark > 0) || (!string.IsNullOrEmpty(cMark)))
+                    {
+                        returnMe.Add(new OutcomeMark(
+                                int.Parse(dataReader["iStudentCourseObjectiveID"].ToString().Trim()),
+                                int.Parse(dataReader["cStudentNumber"].ToString().Trim()),
                                 int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
-                                int.Parse(dataReader["ObjectiveCourseID"].ToString().Trim()),
-                                dataReader["cSubject"].ToString().Trim(),
-                                dataReader["mNotes"].ToString().Trim(),
-                                dataReader["OutcomeCategory"].ToString().Trim(),
-                                dataReader["CourseName"].ToString().Trim(),
-                                dataReader["cCourseCode"].ToString().Trim()
-                                )
-                            ));
+                                int.Parse(dataReader["iReportPeriodID"].ToString().Trim()),
+                                int.Parse(dataReader["MarkCourseID"].ToString().Trim()),
+                                cMark,
+                                (float)Math.Round(nMark, 1),
+                                new Outcome(
+                                    int.Parse(dataReader["iCourseObjectiveID"].ToString().Trim()),
+                                    int.Parse(dataReader["ObjectiveCourseID"].ToString().Trim()),
+                                    dataReader["cSubject"].ToString().Trim(),
+                                    dataReader["mNotes"].ToString().Trim(),
+                                    dataReader["OutcomeCategory"].ToString().Trim(),
+                                    dataReader["CourseName"].ToString().Trim(),
+                                    dataReader["cCourseCode"].ToString().Trim()
+                                    )
+                                ));
+                    }
                 }
             }
 
