@@ -2267,8 +2267,9 @@ namespace SLReports.ReportCard
 
 
                 // Display column names
-                PdfPCell rpHeadingCell = new PdfPCell(new Phrase("Report Period", font_small_bold));
+                PdfPCell rpHeadingCell = new PdfPCell(new Phrase("Successful Learner Behaviors", font_small_bold));
                 rpHeadingCell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
+                rpHeadingCell.VerticalAlignment = PdfPCell.ALIGN_BOTTOM;
                 rpHeadingCell.Border = lifeSkillsTableBorder;
                 lifeSkillChunkTable.AddCell(rpHeadingCell);
                 foreach (string lifeSkillName in lifeSkillsNames)
@@ -2276,6 +2277,7 @@ namespace SLReports.ReportCard
                     PdfPCell columnHeadingCell = new PdfPCell(new Phrase(lifeSkillName, font_small_bold));
                     columnHeadingCell.Border = lifeSkillsTableBorder;
                     columnHeadingCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                    columnHeadingCell.VerticalAlignment = PdfPCell.ALIGN_BOTTOM;
                     lifeSkillChunkTable.AddCell(columnHeadingCell);
                 }
 
@@ -2298,7 +2300,7 @@ namespace SLReports.ReportCard
                     PdfPCell rpNamecell = new PdfPCell(new Phrase(reportPeriodName, font_small));
                     rpNamecell.Border = lifeSkillsTableBorder;
                     rpNamecell.HorizontalAlignment = PdfPCell.ALIGN_LEFT;
-                    rpNamecell.VerticalAlignment = PdfPCell.ALIGN_TOP;
+                    rpNamecell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
                     lifeSkillChunkTable.AddCell(rpNamecell);
 
                     foreach (string lifeSkillName in lifeSkillsNames)
@@ -2428,7 +2430,7 @@ namespace SLReports.ReportCard
             {
                 //courseTitleParagraph.Add(new Phrase(" (Outcome based class)", font_small_italic));
             }
-
+            
             PdfPCell classTitleCell = new PdfPCell(courseTitleParagraph);
             classTitleCell.Border = 0;
             classTitleCell.Padding = 0;
