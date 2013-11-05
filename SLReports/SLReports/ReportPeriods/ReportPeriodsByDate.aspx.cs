@@ -184,11 +184,11 @@ namespace SLReports.ReportPeriods
                     }
                 }
 
-                if ((DateTime.Now >= rp.DateOpens) && (DateTime.Now <= rp.DateCloses))
+                if ((DateTime.Today >= rp.DateOpens) && (DateTime.Today <= rp.DateCloses.AddDays(1)))
                 {
                     tblOpenReportPeriods.Rows.Add(addOpenReportPeriodRow(rp, termString, schoolString));
                 }
-                else if (rp.DateOpens > DateTime.Now)
+                else if (rp.DateOpens > DateTime.Today)
                 {
                     tblReportPeriodsUpcoming.Rows.Add(addUpcomingReportPeriodRow(rp, termString, schoolString));
                 }
