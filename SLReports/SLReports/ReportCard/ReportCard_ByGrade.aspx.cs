@@ -207,6 +207,9 @@ namespace SLReports.ReportCard
                             studentsWithMarks.Add(LSKYCommon.loadStudentMarkData(connection, student, selectedReportPeriods));
                         }
 
+                        // Sort students by Homeroom, and then by last name                        
+                        List<Student> reportcardStudents = studentsWithMarks.OrderBy(c => c.getHomeRoom()).ThenBy(c => c.getLastName()).ToList<Student>();
+
                         // Options
                         bool doubleSidedMode = false;
                         if (chkDoubleSidedMode.Checked)
@@ -236,9 +239,9 @@ namespace SLReports.ReportCard
 
                         // Send the report card
                         String fileName = "ReportCards_" + LSKYCommon.removeSpaces(selectedSchool.getName()) + "_Grade" + selectedGrade + "_" + DateTime.Today.Year + "_" + DateTime.Today.Month + "_" + DateTime.Today.Day + ".pdf";
-                        if ((selectedReportPeriods.Count > 0) && (selectedStudents.Count > 0))
+                        if ((selectedReportPeriods.Count > 0) && (reportcardStudents.Count > 0))
                         {
-                            sendPDF(PDFReportCardParts.GeneratePDF(selectedStudents, selectedReportPeriods, anonymize, showPhotos, doubleSidedMode, showClassAttendance, showLegends, showAttendanceSummary, adminComment), fileName);
+                            sendPDF(PDFReportCardParts.GeneratePDF(reportcardStudents, selectedReportPeriods, anonymize, showPhotos, doubleSidedMode, showClassAttendance, showLegends, showAttendanceSummary, adminComment), fileName);
                         }
                     }
                 }
