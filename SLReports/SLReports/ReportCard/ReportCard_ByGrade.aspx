@@ -60,8 +60,13 @@
                     <asp:TextBox id="txtAdminComment" runat="server" TextMode="MultiLine" Height="150" Width="100%" Wrap="false" CssClass="large_text_area"></asp:TextBox>
                 </asp:TableCell>
             </asp:TableRow>
-            <asp:TableRow ID="tblrow_Options3" HorizontalAlign="Right" Visible="false">
-                <asp:TableCell ColumnSpan="3" VerticalAlign="Bottom"><asp:Button ID="btnReportPeriod" runat="server" Text="Generate report cards" OnClick="btnReportPeriod_Click" /></asp:TableCell>
+            <asp:TableRow ID="tblrow_Options3"  Visible="false">
+                <asp:TableCell VerticalAlign="Top" HorizontalAlign="Left">
+                    <p style="font-size: 8pt;"><b>Note:</b> Report cards are sorted by home-room, then by last name</p>
+                </asp:TableCell>
+                <asp:TableCell ColumnSpan="2" VerticalAlign="Bottom" HorizontalAlign="Right">
+                    <asp:Button ID="btnReportPeriod" runat="server" Text="Generate report cards" OnClick="btnReportPeriod_Click" />
+                </asp:TableCell>
             </asp:TableRow>
         </asp:Table>
     </form>    
