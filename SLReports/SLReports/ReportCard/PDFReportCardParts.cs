@@ -2149,7 +2149,7 @@ namespace SLReports.ReportCard
                             //PdfPCell Temp_MarkCell = new PdfPCell(new Phrase(LSKYCommon.getOutcomeString(objectivemark.cMark), font_body_bold));
 
                             PdfPCell Temp_MarkCell = new PdfPCell();
-                            Temp_MarkCell.AddElement((displayOutcomeBar(content, objectivemark.cMark, barStyle)));
+                            Temp_MarkCell.AddElement((displayOutcomeBar(content, objectivemark.nMark.ToString(), barStyle)));
 
                             Temp_MarkCell.Border = ObjectivesTableDebuggingBorder;
                             Temp_MarkCell.Padding = 2;
