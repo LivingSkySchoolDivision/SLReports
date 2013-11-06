@@ -14,7 +14,7 @@
             <asp:TableRow ID="tblrow_Grade" Visible="false">
                 <asp:TableCell VerticalAlign="Top"><b>Choose a student</b></asp:TableCell>
                 <asp:TableCell VerticalAlign="Top"><asp:DropDownList ID="drpStudents" runat="server"></asp:DropDownList></asp:TableCell>
-                <asp:TableCell VerticalAlign="Top"><asp:Button ID="btnGrade" runat="server" Text="Select Student" OnClick="btnStudent_Click" /></asp:TableCell>
+                <asp:TableCell VerticalAlign="Top"><asp:Button ID="btnStudent" runat="server" Text="Select Student" OnClick="btnStudent_Click" /></asp:TableCell>
             </asp:TableRow>
             <asp:TableRow ID="tblrow_ReportPeriod" Visible="false">
                 <asp:TableCell VerticalAlign="Top"><b>Choose report periods</b><br />

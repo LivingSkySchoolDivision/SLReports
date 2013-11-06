@@ -70,6 +70,7 @@ namespace SLReports.ReportCard
                     drpGrades.Items.Add(newItem);
                 }
 
+                btnGrade.Visible = true;
                 tblrow_Grade.Visible = true;
                 tblrow_ReportPeriod.Visible = false;
                 tblrow_Options.Visible = false;
@@ -128,7 +129,7 @@ namespace SLReports.ReportCard
                             }
                         }
                     }
-
+                    btnGrade.Visible = false;
                     tblrow_ReportPeriod.Visible = true;
                     tblrow_Options.Visible = true;
                     tblrow_Options2.Visible = true;
