@@ -150,7 +150,7 @@ namespace SLReports.ReportPeriods
                 delegate(ReportPeriod first,
                 ReportPeriod next)
                 {
-                    return first.endDate.CompareTo(next.endDate);
+                    return first.DateCloses.CompareTo(next.DateCloses);
                 }
                 );
 
@@ -184,7 +184,7 @@ namespace SLReports.ReportPeriods
                     }
                 }
 
-                if ((DateTime.Today >= rp.DateOpens) && (DateTime.Today <= rp.DateCloses.AddDays(1)))
+                if ((DateTime.Today >= rp.DateOpens) && (DateTime.Today <= rp.DateCloses))
                 {
                     tblOpenReportPeriods.Rows.Add(addOpenReportPeriodRow(rp, termString, schoolString));
                 }
