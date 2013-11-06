@@ -24,30 +24,30 @@
             <asp:TableRow ID="tblrow_Options" Visible="false">
                 <asp:TableCell VerticalAlign="Top"><b>Options</b></asp:TableCell>
                 <asp:TableCell VerticalAlign="Top" ColumnSpan="2">
-                    <asp:Table runat="server" CellPadding="5">
+                    <asp:Table runat="server" CellPadding="6">
                         <asp:TableRow>
                             <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkDoubleSidedMode" runat="server" Checked="true"/></asp:TableCell>
-                            <asp:TableCell Width="400" VerticalAlign="Top"><b>Format for printing on both sides of the page</b><br />This will add extra pages to the end of report cards, when necesary, to ensure that one report card does not start on the back of the previous report card.</asp:TableCell>
+                            <asp:TableCell Width="500" VerticalAlign="Top"><b>Format for printing on both sides of the page</b><br /><div class="checkbox_description">This will add extra pages to the end of report cards, when necesary, to ensure that one report card does not start on the back of the previous report card.</div></asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkShowAttendanceSummary" runat="server" Checked="true"/></asp:TableCell>
-                            <asp:TableCell Width="400" VerticalAlign="Top"><b>Show attendance summary</b><br />Shows a summary of all absences at the end of the report card.</asp:TableCell>
+                            <asp:TableCell VerticalAlign="Top"><b>Show attendance summary</b><br /><div class="checkbox_description">Shows a summary of all absences at the end of the report card.</div></asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkClassAttendance" runat="server" Checked="true"/></asp:TableCell>
-                            <asp:TableCell Width="400" VerticalAlign="Top"><b>Show attendance summaries for each class</b><br />This will add short attendance summaries with each class, showing lates and absences. This will only apply to tracks that are set up for period attendance - this option is ignored if the track is set for daily attendance.</asp:TableCell>
+                            <asp:TableCell VerticalAlign="Top"><b>Show attendance summaries for each class</b><br /><div class="checkbox_description">This will add short attendance summaries with each class, showing lates and absences. This will only apply to tracks that are set up for period attendance - this option is ignored if the track is set for daily attendance.</div></asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkShowLegend" runat="server" Checked="true"/></asp:TableCell>
-                            <asp:TableCell Width="400" VerticalAlign="Top"><b>Show legends on front page</b><br />Show a brief explanation of what outcome marks and "Life Skills" / "Successful Learner Behavior" marks mean.</asp:TableCell>
+                            <asp:TableCell VerticalAlign="Top"><b>Show legends on front page</b><br /><div class="checkbox_description">Show a brief explanation of what outcome marks and "Life Skills" / "Successful Learner Behavior" marks mean.</div></asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkShowPhotos" runat="server" Checked="false"/></asp:TableCell>
-                            <asp:TableCell VerticalAlign="Top"><b>Show student photos</b></asp:TableCell>
+                            <asp:TableCell VerticalAlign="Top"><b>Show student photos</b><div class="checkbox_description"></div></asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
-                            <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkAnonymize" runat="server" Checked="false" /></asp:TableCell>
-                            <asp:TableCell Width="400" VerticalAlign="Top"><b>Anonymize data</b><br />Hide personal information from students, and show placeholder data instead.</asp:TableCell>
+                            <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkSortByHomeRoom" runat="server"/></asp:TableCell>
+                            <asp:TableCell VerticalAlign="Top"><b>Sort report cards by home-room</b><br /><div class="checkbox_description">If unchecked, students will be sorted by last name.</div></asp:TableCell>
                         </asp:TableRow>
                     </asp:Table>
                 </asp:TableCell>                
@@ -62,7 +62,6 @@
             </asp:TableRow>
             <asp:TableRow ID="tblrow_Options3"  Visible="false">
                 <asp:TableCell VerticalAlign="Top" HorizontalAlign="Left">
-                    <p style="font-size: 8pt;"><b>Note:</b> Report cards are sorted by home-room, then by last name</p>
                 </asp:TableCell>
                 <asp:TableCell ColumnSpan="2" VerticalAlign="Bottom" HorizontalAlign="Right">
                     <asp:Button ID="btnReportPeriod" runat="server" Text="Generate report cards" OnClick="btnReportPeriod_Click" />

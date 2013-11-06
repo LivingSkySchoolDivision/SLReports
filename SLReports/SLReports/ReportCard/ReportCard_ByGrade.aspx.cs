@@ -207,8 +207,16 @@ namespace SLReports.ReportCard
                             studentsWithMarks.Add(LSKYCommon.loadStudentMarkData(connection, student, selectedReportPeriods));
                         }
 
-                        // Sort students by Homeroom, and then by last name                        
-                        List<Student> reportcardStudents = studentsWithMarks.OrderBy(c => c.getHomeRoom()).ThenBy(c => c.getLastName()).ToList<Student>();
+                        // Sort students
+                        List<Student> reportcardStudents = new List<Student>();
+                        if (chkSortByHomeRoom.Checked)
+                        {
+                            reportcardStudents = studentsWithMarks.OrderBy(c => c.getHomeRoom()).ThenBy(c => c.getLastName()).ToList<Student>();
+                        }
+                        else
+                        {
+                            reportcardStudents = studentsWithMarks.OrderBy(c => c.getLastName()).ToList<Student>();
+                        }
 
                         // Options
                         bool doubleSidedMode = false;
@@ -216,8 +224,6 @@ namespace SLReports.ReportCard
                             doubleSidedMode = true;
 
                         bool anonymize = false;
-                        if (chkAnonymize.Checked)
-                            anonymize = true;
 
                         bool showPhotos = false;
                         if (chkShowPhotos.Checked)

@@ -157,15 +157,6 @@ namespace SLReports.ReportCard {
         protected global::System.Web.UI.WebControls.CheckBox chkShowPhotos;
         
         /// <summary>
-        /// chkAnonymize control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkAnonymize;
-        
-        /// <summary>
         /// tblrow_Options2 control.
         /// </summary>
         /// <remarks>

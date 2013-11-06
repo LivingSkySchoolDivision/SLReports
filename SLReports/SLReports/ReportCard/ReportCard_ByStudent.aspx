@@ -47,10 +47,6 @@
                             <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkShowPhotos" runat="server" Checked="false"/></asp:TableCell>
                             <asp:TableCell VerticalAlign="Top"><b>Show student photos</b></asp:TableCell>
                         </asp:TableRow>
-                        <asp:TableRow>
-                            <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkAnonymize" runat="server" Checked="false" /></asp:TableCell>
-                            <asp:TableCell Width="400" VerticalAlign="Top"><b>Anonymize data</b><br />Hide personal information from students, and show placeholder data instead.</asp:TableCell>
-                        </asp:TableRow>
                     </asp:Table>
                 </asp:TableCell>                
             </asp:TableRow>
