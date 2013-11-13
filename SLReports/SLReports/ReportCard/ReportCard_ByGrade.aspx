@@ -27,7 +27,7 @@
                     <asp:Table runat="server" CellPadding="6">
                         <asp:TableRow>
                             <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkDoubleSidedMode" runat="server" Checked="true"/></asp:TableCell>
-                            <asp:TableCell Width="500" VerticalAlign="Top"><b>Format for printing on both sides of the page</b><br /><div class="checkbox_description">This will add extra pages to the end of report cards, when necesary, to ensure that one report card does not start on the back of the previous report card.</div></asp:TableCell>
+                            <asp:TableCell Width="500" VerticalAlign="Top"><b>I will be printing on both sides of the page</b><br /><div class="checkbox_description">This will add extra pages to the end of report cards, when necesary, to ensure that one report card does not start on the back of the previous report card.</div></asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkShowAttendanceSummary" runat="server" Checked="true"/></asp:TableCell>
@@ -36,10 +36,6 @@
                         <asp:TableRow>
                             <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkClassAttendance" runat="server" Checked="true"/></asp:TableCell>
                             <asp:TableCell VerticalAlign="Top"><b>Show attendance summaries for each class</b><br /><div class="checkbox_description">This will add short attendance summaries with each class, showing lates and absences. This will only apply to tracks that are set up for period attendance - this option is ignored if the track is set for daily attendance.</div></asp:TableCell>
-                        </asp:TableRow>
-                        <asp:TableRow>
-                            <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkShowLegend" runat="server" Checked="true"/></asp:TableCell>
-                            <asp:TableCell VerticalAlign="Top"><b>Show legends on front page</b><br /><div class="checkbox_description">Show a brief explanation of what outcome marks and "Life Skills" / "Successful Learner Behavior" marks mean.</div></asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkShowPhotos" runat="server" Checked="false"/></asp:TableCell>

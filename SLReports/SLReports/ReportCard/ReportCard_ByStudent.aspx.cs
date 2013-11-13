@@ -209,9 +209,7 @@ namespace SLReports.ReportCard
                                 if (chkClassAttendance.Checked)
                                     showClassAttendance = true;
 
-                                bool showLegends = false;
-                                if (chkShowLegend.Checked)
-                                    showLegends = true;
+                                bool showLegends = true;
 
                                 bool showAttendanceSummary = false;
                                 if (chkShowAttendanceSummary.Checked)

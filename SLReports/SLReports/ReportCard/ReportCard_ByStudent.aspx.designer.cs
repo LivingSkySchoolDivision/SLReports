@@ -139,15 +139,6 @@ namespace SLReports.ReportCard {
         protected global::System.Web.UI.WebControls.CheckBox chkClassAttendance;
         
         /// <summary>
-        /// chkShowLegend control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkShowLegend;
-        
-        /// <summary>
         /// chkShowPhotos control.
         /// </summary>
         /// <remarks>
