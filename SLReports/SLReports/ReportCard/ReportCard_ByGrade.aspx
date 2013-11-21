@@ -44,7 +44,15 @@
                         <asp:TableRow>
                             <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkSortByHomeRoom" runat="server"/></asp:TableCell>
                             <asp:TableCell VerticalAlign="Top"><b>Sort report cards by home-room</b><br /><div class="checkbox_description">If unchecked, students will be sorted by last name.</div></asp:TableCell>
+<<<<<<< local
+                        </asp:TableRow>
+                        <asp:TableRow>
+                            <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkAnonymize" runat="server"/></asp:TableCell>
+                            <asp:TableCell VerticalAlign="Top"><b>Anonymize data</b><br /><div class="checkbox_description">Check this to strip report cards of personal information. Use this if you are showing the report card to others.</div></asp:TableCell>
+                        </asp:TableRow>
+=======
                         </asp:TableRow>                        
+>>>>>>> other
                     </asp:Table>
                 </asp:TableCell>                
             </asp:TableRow>

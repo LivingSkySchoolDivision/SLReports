@@ -43,6 +43,10 @@
                             <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkShowPhotos" runat="server" Checked="false"/></asp:TableCell>
                             <asp:TableCell VerticalAlign="Top"><b>Show student photos</b></asp:TableCell>
                         </asp:TableRow>
+                        <asp:TableRow>
+                            <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkAnonymize" runat="server"/></asp:TableCell>
+                            <asp:TableCell VerticalAlign="Top"><b>Anonymize data</b><br /><div class="checkbox_description">Check this to strip report cards of personal information. Use this if you are showing the report card to others.</div></asp:TableCell>
+                        </asp:TableRow>
                     </asp:Table>
                 </asp:TableCell>                
             </asp:TableRow>

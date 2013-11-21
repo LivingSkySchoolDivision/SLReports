@@ -200,6 +200,8 @@ namespace SLReports.ReportCard
                                     doubleSidedMode = true;
 
                                 bool anonymize = false;
+                                if (chkAnonymize.Checked)
+                                    anonymize = true;
 
                                 bool showPhotos = false;
                                 if (chkShowPhotos.Checked)
