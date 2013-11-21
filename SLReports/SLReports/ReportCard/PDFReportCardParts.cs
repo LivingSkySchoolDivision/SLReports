@@ -1896,7 +1896,7 @@ namespace SLReports.ReportCard
                 lifeSkills.Add("Leadership",    "Independent, takes initiative.");
                 lifeSkills.Add("Self-Directed", "Arrives on time, prepared to advance learning, strong work habits.");
             }
-            else if (gradeLevel >= 7)
+            else if (gradeLevel >= 6)
             {
                 lifeSkills.Add("Engagement",    "Active in learning, faces new challenges confidently, completes work.");
                 lifeSkills.Add("Citizenship",   "Respectful to others and property, takes responsibility for actions and decisions.");

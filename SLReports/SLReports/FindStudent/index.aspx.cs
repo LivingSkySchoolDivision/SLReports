@@ -99,6 +99,26 @@ namespace SLReports.FindStudent
             cell_ldap.Text = "LDAP Username";
             newRow.Cells.Add(cell_ldap);
 
+            TableCell cell_parking = new TableCell();
+            cell_parking.Width = 250;
+            cell_parking.Text = "Parking Permit";
+            newRow.Cells.Add(cell_parking);
+
+            TableCell cell_telephone = new TableCell();
+            cell_telephone.Width = 250;
+            cell_telephone.Text = "Telephone";
+            newRow.Cells.Add(cell_telephone);
+
+            TableCell cell_contacts = new TableCell();
+            cell_contacts.Width = 250;
+            cell_contacts.Text = "Contacts";
+            newRow.Cells.Add(cell_contacts);
+
+            TableCell cell_locker = new TableCell();
+            cell_locker.Width = 250;
+            cell_locker.Text = "Locker Number";
+            newRow.Cells.Add(cell_locker);
+
             return newRow;
         }
 
@@ -155,15 +175,38 @@ namespace SLReports.FindStudent
             cell_ldap.Text = highLightSeachString(student.LDAPUserName, searchString);
             newRow.Cells.Add(cell_ldap);
 
+            TableCell cell_parking = new TableCell();
+            cell_parking.Text = highLightSeachString(student.parkingPermit, searchString);
+            newRow.Cells.Add(cell_parking);
+
+            TableCell cell_telephone = new TableCell();
+            cell_telephone.Text = highLightSeachString(student.getTelephone(), searchString);
+            newRow.Cells.Add(cell_telephone);
+
+            TableCell cell_contacts = new TableCell();
+            foreach (Contact contact in student.contacts)
+            {
+                cell_contacts.Text += highLightSeachString(contact.firstName + " " + contact.lastName, searchString);
+            }
+            newRow.Cells.Add(cell_contacts);
+
+            TableCell cell_locker = new TableCell();
+            cell_locker.Text = highLightSeachString(student.lockerNumber, searchString);
+            newRow.Cells.Add(cell_locker);
+
             return newRow;
         }
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
+            // TODO: Split multiple words and search for combinations of them
+            // TODO: Explain why search results were found - make a string that says what field the match was found in (and maybe store this in a custom object)
+            // Organize search results into categories based on the field - group all first names together, etc.
+
             List<Student> allStudents = new List<Student>(); 
             List<Student> searchResults = new List<Student>();
 
-            String searchQuery = txtSearch.Text;
+            String searchQuery = txtSearch.Text.ToLower().Trim();
 
             String dbConnectionString = ConfigurationManager.ConnectionStrings["SchoolLogicDatabase"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(dbConnectionString))
@@ -173,6 +216,19 @@ namespace SLReports.FindStudent
 
             foreach (Student student in allStudents)
             {
+                // Search all contacts
+                bool contactsFound = false;
+                foreach (Contact contact in student.contacts)
+                {
+                    if (
+                        (contact.lastName.Contains(searchQuery)) ||
+                        (contact.firstName.Contains(searchQuery)) ||
+                        (contact.telephone.Contains(searchQuery))
+                        ) {
+                        contactsFound = true;
+                    }
+                }
+
                 if (
                     (student.getStudentID().ToLower().Contains(searchQuery.ToLower())) ||
                     (student.getFirstName().ToLower().Contains(searchQuery.ToLower())) ||
@@ -180,6 +236,10 @@ namespace SLReports.FindStudent
                     (student.getGovernmentID().ToLower().Contains(searchQuery.ToLower())) ||
                     (student.getStatusNo().ToLower().Contains(searchQuery.ToLower())) ||
                     (student.LDAPUserName.ToLower().Contains(searchQuery.ToLower())) ||
+                    (student.parkingPermit.ToLower().Contains(searchQuery.ToLower())) ||
+                    (student.getTelephone().ToLower().Contains(searchQuery.ToLower())) ||
+                    (student.lockerNumber.ToLower().Contains(searchQuery.ToLower())) ||
+                    (contactsFound) ||
                     (student.getLegalMiddleName().ToLower().Contains(searchQuery.ToLower()))
                     )
                 {

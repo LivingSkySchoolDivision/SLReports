@@ -44,7 +44,7 @@
                         <asp:TableRow>
                             <asp:TableCell VerticalAlign="Top"><asp:CheckBox ID="chkSortByHomeRoom" runat="server"/></asp:TableCell>
                             <asp:TableCell VerticalAlign="Top"><b>Sort report cards by home-room</b><br /><div class="checkbox_description">If unchecked, students will be sorted by last name.</div></asp:TableCell>
-                        </asp:TableRow>
+                        </asp:TableRow>                        
                     </asp:Table>
                 </asp:TableCell>                
             </asp:TableRow>
